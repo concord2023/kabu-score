@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ja"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1220"><link rel="manifest" href="manifest.json">
+<title>株スコア 0–100</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#0b1220;color:#eef2f7;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif}
+main{max-width:780px;margin:auto;padding:20px 14px 45px}.brand{color:#5eead4;font-weight:800;font-size:13px;letter-spacing:.12em}
+h1{margin:5px 0;font-size:28px}.sub{color:#9aa8bd;margin:0 0 18px}.row{display:flex;gap:8px}.input{flex:1;min-width:0;padding:14px;border-radius:12px;border:1px solid #293750;background:#111b2d;color:white;font-size:18px}
+button{padding:12px 16px;border:0;border-radius:12px;background:#5eead4;color:#05201c;font-weight:800;font-size:15px}
+.card{margin-top:13px;padding:17px;border:1px solid #293750;background:#111b2d;border-radius:17px}.top{display:flex;justify-content:space-between;gap:12px}.name{font-size:21px;font-weight:800}.muted,.note{color:#9aa8bd;font-size:12px}.score{font-size:54px;font-weight:900}.score small{font-size:16px;color:#9aa8bd}.badge{display:inline-block;padding:6px 9px;border-radius:999px;background:#1c2a40;color:#5eead4;font-weight:800;font-size:12px}
+.bar{height:9px;background:#26334a;border-radius:8px;overflow:hidden;margin:10px 0 14px}.bar span{display:block;height:100%;background:#5eead4}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.metric{background:#0d1728;padding:12px;border-radius:12px}.metric b{display:block;font-size:19px}.metric span{font-size:11px;color:#9aa8bd}
+table{width:100%;border-collapse:collapse}td{padding:9px 0;border-bottom:1px solid #293750}td:last-child{text-align:right;font-weight:800}.chips{display:flex;gap:7px;flex-wrap:wrap}.chip{border:1px solid #31415c;border-radius:999px;padding:7px 9px;font-size:12px;color:#cbd5e1}
+.smallbtn{background:#18253a;color:#dbe5f2;border:1px solid #31415c;padding:8px 10px;font-size:12px}.watch{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #293750}
+@media(max-width:430px){.score{font-size:46px}h1{font-size:25px}}
+</style></head>
+<body><main>
+<div class="brand">KABU SCORE</div><h1>日本株スコア 0–100</h1>
+<p class="sub">銘柄を選ぶだけ。下落・出来高・市場環境・日経比から現在の状態を確認。</p>
+<div class="row"><input id="code" class="input" value="285A" inputmode="text" placeholder="例：285A / 7203"><button onclick="analyze()">分析</button></div>
+
+<section class="card"><div class="top"><div><div id="name" class="name">キオクシアHD</div><div id="meta" class="muted">285A · デモデータ</div></div><div style="text-align:right"><div id="score" class="score">62<small>/100</small></div><div id="badge" class="badge">監視強化</div></div></div>
+<div class="bar"><span id="bar" style="width:62%"></span></div>
+<div class="grid">
+<div class="metric"><b id="m6">66.42</b><span>6日 騰落レシオ</span></div><div class="metric"><b id="m10">70.50</b><span>10日 騰落レシオ</span></div>
+<div class="metric"><b id="m25">105.61</b><span>25日 騰落レシオ</span></div><div class="metric"><b id="mday">-6.99%</b><span>当日騰落率</span></div>
+<div class="metric"><b id="mvol">1.08x</b><span>出来高 / 20日平均</span></div><div class="metric"><b id="mrel">-5.06pt</b><span>日経比 相対弱さ</span></div>
+</div></section>
+
+<section class="card"><b>スコア内訳</b><table>
+<tr><td>6日 騰落レシオ</td><td id="s6">+22</td></tr><tr><td>10日 騰落レシオ</td><td id="s10">+16</td></tr>
+<tr><td>25日 騰落レシオ</td><td id="s25">+0</td></tr><tr><td>急落</td><td id="sd">+16</td></tr>
+<tr><td>出来高</td><td id="sv">+0</td></tr><tr><td>日経比の弱さ</td><td id="sr">+8</td></tr>
+</table><p class="note">試作のスコア式です。投資判断・利益を保証するものではありません。</p></section>
+
+<section class="card"><b>お気に入り</b><div class="row" style="margin-top:10px"><button onclick="addWatch()">この銘柄を追加</button><button class="smallbtn" onclick="clearWatch()">一覧クリア</button></div><div id="watch"></div></section>
+
+<section class="card"><b>完成版で接続する部分</b><div class="chips" style="margin-top:10px">
+<span class="chip">株価API</span><span class="chip">市場全体の騰落</span><span class="chip">毎日自動更新</span><span class="chip">過去検証</span><span class="chip">70点通知</span><span class="chip">RSI</span><span class="chip">移動平均</span>
+</div><p class="note">このパッケージは公開用フロントエンドまで完成。リアルデータ接続にはAPIキーとサーバー側の定期更新処理が必要です。</p></section>
+</main>
+<script>
+const D={"285A":{n:"キオクシアHD",s:62,a:66.42,b:70.50,c:105.61,d:-6.99,v:1.08,r:-5.06,x:[22,16,0,16,0,8]},
+"7203":{n:"トヨタ自動車",s:48,a:78.2,b:86.4,c:112.1,d:-3.1,v:1.21,r:-2.0,x:[16,11,0,11,5,5]},
+"7974":{n:"任天堂",s:34,a:91.5,b:103.2,c:118.5,d:-1.8,v:1.06,r:-1.1,x:[5,0,0,6,0,0]}};
+function analyze(){let k=document.getElementById("code").value.trim().toUpperCase()||"285A",d=D[k]||{n:"サンプル銘柄",s:40,a:82,b:89,c:110,d:-3,v:1.15,r:-2.4,x:[16,11,0,11,5,3]};
+name.textContent=d.n;meta.textContent=k+" · デモデータ";score.innerHTML=d.s+"<small>/100</small>";bar.style.width=d.s+"%";
+badge.textContent=d.s>=70?"買い候補":d.s>=50?"監視強化":d.s>=40?"注目":"様子見";
+m6.textContent=d.a.toFixed(2);m10.textContent=d.b.toFixed(2);m25.textContent=d.c.toFixed(2);mday.textContent=(d.d>0?"+":"")+d.d.toFixed(2)+"%";mvol.textContent=d.v.toFixed(2)+"x";mrel.textContent=(d.r>0?"+":"")+d.r.toFixed(2)+"pt";
+["s6","s10","s25","sd","sv","sr"].forEach((id,i)=>document.getElementById(id).textContent="+"+d.x[i]);}
+function addWatch(){let k=document.getElementById("code").value.trim().toUpperCase();if(!k)return;let a=JSON.parse(localStorage.getItem("watch")||"[]");if(!a.includes(k))a.push(k);localStorage.setItem("watch",JSON.stringify(a));renderWatch();}
+function clearWatch(){localStorage.removeItem("watch");renderWatch();}
+function renderWatch(){let a=JSON.parse(localStorage.getItem("watch")||"[]");watch.innerHTML=a.length?a.map(k=>`<div class="watch"><span>${k}　${(D[k]?.n||"登録銘柄")}</span><button class="smallbtn" onclick="document.getElementById('code').value='${k}';analyze()">分析</button></div>`).join(""):'<p class="note">まだ登録されていません。</p>'}
+document.getElementById("code").addEventListener("keydown",e=>{if(e.key==="Enter")analyze()});renderWatch();
+</script></body></html>

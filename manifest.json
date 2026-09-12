@@ -1,0 +1,9 @@
+{
+  "name": "株スコア 0–100",
+  "short_name": "株スコア",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#0b1220",
+  "background_color": "#0b1220",
+  "lang": "ja"
+}
