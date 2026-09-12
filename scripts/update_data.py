@@ -16,7 +16,7 @@ def get(path, params=None):
         url += '?' + urllib.parse.urlencode(params)
     req = urllib.request.Request(url, headers={
         'Authorization': f'Bearer {TOKEN}',
-        'User-Agent': 'kabu-score/7.0'
+        'User-Agent': 'kabu-score/8.0'
     })
     with urllib.request.urlopen(req, timeout=30) as r:
         return json.load(r)
@@ -83,64 +83,38 @@ class TableParser(HTMLParser):
             self._table = None
 
 def fetch_breadth_and_nikkei(target_date):
-    # The daily report is normally published later the same day / overnight.
-    # Use the report for the target date; if absent, try the next calendar day.
-    dt = datetime.strptime(target_date, '%Y-%m-%d').date()
-    candidates = [dt, dt + timedelta(days=1), dt + timedelta(days=2)]
-    last_error = None
+    """Fetch daily Prime advance/decline counts and calculate 6/10/15/25-day breadth."""
+    url = 'https://tofuhardboiled.com/updownratio/'
+    req = urllib.request.Request(url, headers={'User-Agent':'Mozilla/5.0 (compatible; kabu-score/8.0)'})
+    with urllib.request.urlopen(req, timeout=30) as r:
+        html = r.read().decode('utf-8', errors='ignore')
 
-    for d in candidates:
-        url = f'https://www.teitenkansoku.online/{d:%Y/%m/%d}/{d:%Y年%m月%d日}/'
-        try:
-            req = urllib.request.Request(url, headers={'User-Agent':'Mozilla/5.0'})
-            with urllib.request.urlopen(req, timeout=30) as r:
-                html = r.read().decode('utf-8', errors='ignore')
-
-            p = TableParser()
-            p.feed(html)
-
-            breadth = None
-            nikkei_change = None
-            nikkei_value = None
-
-            for table in p.tables:
-                for row in table:
-                    if len(row) >= 5 and row[0] == target_date:
-                        # Breadth table: date, 25d, 15d, 10d, 6d
-                        try:
-                            vals = [float(row[i].replace(',', '').replace('%','')) for i in range(1,5)]
-                            if all(0 < x < 1000 for x in vals):
-                                breadth = {
-                                    '25d': vals[0],
-                                    '15d': vals[1],
-                                    '10d': vals[2],
-                                    '6d': vals[3],
-                                    'source': '何でも定点観測（東証プライム）'
-                                }
-                        except Exception:
-                            pass
-
-                    # Main index table often has: 日経225, date, value, change, change%
-                    if len(row) >= 5 and row[0] == '日経225' and row[1] in (target_date, target_date[5:].replace('-','/')):
-                        try:
-                            nikkei_value = float(row[2].replace(',',''))
-                            nikkei_change = float(row[4].replace('%',''))
-                        except Exception:
-                            pass
-
-            if breadth:
-                return {
-                    'date': target_date,
-                    'breadth': breadth,
-                    'nikkei_value': nikkei_value,
-                    'nikkei_change': nikkei_change,
-                    'source_url': url
-                }
-            last_error = f'No breadth row found in {url}'
-        except Exception as e:
-            last_error = str(e)
-
-    return {'date': target_date, 'error': last_error}
+    p = TableParser(); p.feed(html)
+    daily = []
+    for table in p.tables:
+        for row in table:
+            if len(row) >= 10 and re.fullmatch(r'\d{4}/\d{2}/\d{2}', row[0]):
+                try:
+                    daily.append((row[0], int(row[3].replace(',','')), int(row[4].replace(',','')), float(row[2].replace(',',''))))
+                except Exception:
+                    pass
+    daily.sort(key=lambda x:x[0], reverse=True)
+    target = target_date.replace('-','/')
+    idx = next((i for i,x in enumerate(daily) if x[0]==target), None)
+    if idx is None:
+        raise RuntimeError(f'Breadth source has no row for {target_date}. Run after the source daily update (normally after 20:00 JST).')
+    def ratio(n):
+        part=daily[idx:idx+n]
+        if len(part)<n: return None
+        up=sum(x[1] for x in part); down=sum(x[2] for x in part)
+        return round(up/down*100,2) if down else None
+    breadth={'6d':ratio(6),'10d':ratio(10),'15d':ratio(15),'25d':ratio(25),
+             'source':'豆腐ハードボイルド（東証プライムの値上がり・値下がり銘柄数から算出）'}
+    nikkei_value=daily[idx][3]
+    nikkei_change=None
+    if idx+1<len(daily) and daily[idx+1][3]:
+        nikkei_change=round((nikkei_value/daily[idx+1][3]-1)*100,2)
+    return {'date':target_date,'breadth':breadth,'nikkei_value':nikkei_value,'nikkei_change':nikkei_change,'source_url':url}
 
 def pct(a,b):
     return ((a/b)-1)*100 if a is not None and b not in (None,0) else None
@@ -274,7 +248,7 @@ def calc(rows, breadth_info):
 
 # Determine the most recent stock date from the first successful symbol.
 out={'updated_at':datetime.now(timezone(timedelta(hours=9))).isoformat(),
-     'source':'IRBANK API + 何でも定点観測',
+     'source':'IRBANK API + 豆腐ハードボイルド（騰落銘柄数から算出）',
      'stocks':{},'diagnostics':[]}
 
 for code in codes:
