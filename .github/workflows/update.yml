@@ -1,25 +1,20 @@
 name: Update stock scores
-
 on:
   workflow_dispatch:
   schedule:
     - cron: '30 9 * * 1-5'
-
 permissions:
   contents: write
-
 jobs:
   update:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Update data from IRBANK and market breadth
+      - name: Update data from IRBANK
         env:
           IRBANK_API_KEY: ${{ secrets.IRBANK_API_KEY }}
         run: python scripts/update_data.py
-
       - name: Commit updated data
         run: |
           git config user.name "github-actions[bot]"
