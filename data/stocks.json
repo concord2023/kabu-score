@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-09-13T02:02:12.868562+09:00",
-  "source": "IRBANK API + 何でも定点観測",
+  "updated_at": "2026-09-13T08:38:08.247915+09:00",
+  "source": "IRBANK API + 豆腐ハードボイルド（騰落銘柄数から算出）",
   "stocks": {
     "7203": {
       "date": "2026-09-11",
@@ -16,7 +16,7 @@
       "ret10": -2.73,
       "ret20": 0.36,
       "rsi14": 42.1,
-      "score": 3,
+      "score": 34,
       "score_max": 100,
       "data_points": 500,
       "rows_received": 500,
@@ -27,21 +27,22 @@
         "ma60_ready": true
       },
       "breadth": {
-        "6d": null,
-        "10d": null,
-        "15d": null,
-        "25d": null
+        "6d": 66.42,
+        "10d": 70.5,
+        "15d": 86.85,
+        "25d": 105.61,
+        "source": "豆腐ハードボイルド（東証プライムの値上がり・値下がり銘柄数から算出）"
       },
-      "breadth_points": 0,
+      "breadth_points": 31,
       "breadth_breakdown": {
-        "6d": 0,
-        "10d": 0,
-        "15d": 0,
-        "25d": 0
+        "6d": 13,
+        "10d": 8,
+        "15d": 4,
+        "25d": 6
       },
-      "nikkei_change": null,
-      "nikkei_value": null,
-      "relative_strength": null,
+      "nikkei_change": -1.93,
+      "nikkei_value": 64011.34,
+      "relative_strength": 3.17,
       "relative_points": 0,
       "score_breakdown": {
         "daily_drop": 0,
@@ -49,11 +50,11 @@
         "vs20": 0,
         "rsi14": 0,
         "vs60": 0,
-        "breadth": 0,
+        "breadth": 31,
         "relative_strength": 0
       },
-      "breadth_source": null,
-      "breadth_error": "'ascii' codec can't encode character '\\u5e74' in position 20: ordinal not in range(128)",
+      "breadth_source": "https://tofuhardboiled.com/updownratio/",
+      "breadth_error": null,
       "code": "7203",
       "name": "トヨタ自動車",
       "market": "Prime",
@@ -78,7 +79,7 @@
       "ret10": -10.01,
       "ret20": -9.07,
       "rsi14": 31.9,
-      "score": 11,
+      "score": 42,
       "score_max": 100,
       "data_points": 500,
       "rows_received": 500,
@@ -89,21 +90,22 @@
         "ma60_ready": true
       },
       "breadth": {
-        "6d": null,
-        "10d": null,
-        "15d": null,
-        "25d": null
+        "6d": 66.42,
+        "10d": 70.5,
+        "15d": 86.85,
+        "25d": 105.61,
+        "source": "豆腐ハードボイルド（東証プライムの値上がり・値下がり銘柄数から算出）"
       },
-      "breadth_points": 0,
+      "breadth_points": 31,
       "breadth_breakdown": {
-        "6d": 0,
-        "10d": 0,
-        "15d": 0,
-        "25d": 0
+        "6d": 13,
+        "10d": 8,
+        "15d": 4,
+        "25d": 6
       },
-      "nikkei_change": null,
-      "nikkei_value": null,
-      "relative_strength": null,
+      "nikkei_change": -1.93,
+      "nikkei_value": 64011.34,
+      "relative_strength": 3.23,
       "relative_points": 0,
       "score_breakdown": {
         "daily_drop": 0,
@@ -111,11 +113,11 @@
         "vs20": 6,
         "rsi14": 5,
         "vs60": 0,
-        "breadth": 0,
+        "breadth": 31,
         "relative_strength": 0
       },
-      "breadth_source": null,
-      "breadth_error": "'ascii' codec can't encode character '\\u5e74' in position 20: ordinal not in range(128)",
+      "breadth_source": "https://tofuhardboiled.com/updownratio/",
+      "breadth_error": null,
       "code": "7974",
       "name": "任天堂",
       "market": "Prime",
@@ -140,7 +142,7 @@
       "ret10": 12.8,
       "ret20": 0.54,
       "rsi14": 55.5,
-      "score": 22,
+      "score": 61,
       "score_max": 100,
       "data_points": 422,
       "rows_received": 422,
@@ -151,33 +153,34 @@
         "ma60_ready": true
       },
       "breadth": {
-        "6d": null,
-        "10d": null,
-        "15d": null,
-        "25d": null
+        "6d": 66.42,
+        "10d": 70.5,
+        "15d": 86.85,
+        "25d": 105.61,
+        "source": "豆腐ハードボイルド（東証プライムの値上がり・値下がり銘柄数から算出）"
       },
-      "breadth_points": 0,
+      "breadth_points": 31,
       "breadth_breakdown": {
-        "6d": 0,
-        "10d": 0,
-        "15d": 0,
-        "25d": 0
+        "6d": 13,
+        "10d": 8,
+        "15d": 4,
+        "25d": 6
       },
-      "nikkei_change": null,
-      "nikkei_value": null,
-      "relative_strength": null,
-      "relative_points": 0,
+      "nikkei_change": -1.93,
+      "nikkei_value": 64011.34,
+      "relative_strength": -5.06,
+      "relative_points": 8,
       "score_breakdown": {
         "daily_drop": 12,
         "volume": 0,
         "vs20": 0,
         "rsi14": 0,
         "vs60": 10,
-        "breadth": 0,
-        "relative_strength": 0
+        "breadth": 31,
+        "relative_strength": 8
       },
-      "breadth_source": null,
-      "breadth_error": "'ascii' codec can't encode character '\\u5e74' in position 20: ordinal not in range(128)",
+      "breadth_source": "https://tofuhardboiled.com/updownratio/",
+      "breadth_error": null,
       "code": "285A",
       "name": "キオクシアホールディングス",
       "market": "Prime",
@@ -197,14 +200,15 @@
       "data_points": 500,
       "rsi14": 42.1,
       "breadth": {
-        "6d": null,
-        "10d": null,
-        "15d": null,
-        "25d": null
+        "6d": 66.42,
+        "10d": 70.5,
+        "15d": 86.85,
+        "25d": 105.61,
+        "source": "豆腐ハードボイルド（東証プライムの値上がり・値下がり銘柄数から算出）"
       },
-      "nikkei_change": null,
-      "relative_strength": null,
-      "score": 3
+      "nikkei_change": -1.93,
+      "relative_strength": 3.17,
+      "score": 34
     },
     {
       "code": "7974",
@@ -213,14 +217,15 @@
       "data_points": 500,
       "rsi14": 31.9,
       "breadth": {
-        "6d": null,
-        "10d": null,
-        "15d": null,
-        "25d": null
+        "6d": 66.42,
+        "10d": 70.5,
+        "15d": 86.85,
+        "25d": 105.61,
+        "source": "豆腐ハードボイルド（東証プライムの値上がり・値下がり銘柄数から算出）"
       },
-      "nikkei_change": null,
-      "relative_strength": null,
-      "score": 11
+      "nikkei_change": -1.93,
+      "relative_strength": 3.23,
+      "score": 42
     },
     {
       "code": "285A",
@@ -229,14 +234,15 @@
       "data_points": 422,
       "rsi14": 55.5,
       "breadth": {
-        "6d": null,
-        "10d": null,
-        "15d": null,
-        "25d": null
+        "6d": 66.42,
+        "10d": 70.5,
+        "15d": 86.85,
+        "25d": 105.61,
+        "source": "豆腐ハードボイルド（東証プライムの値上がり・値下がり銘柄数から算出）"
       },
-      "nikkei_change": null,
-      "relative_strength": null,
-      "score": 22
+      "nikkei_change": -1.93,
+      "relative_strength": -5.06,
+      "score": 61
     }
   ]
 }
