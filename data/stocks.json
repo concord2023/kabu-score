@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-09-13T01:53:35.041506+09:00",
-  "source": "IRBANK API",
+  "updated_at": "2026-09-13T02:02:12.868562+09:00",
+  "source": "IRBANK API + 何でも定点観測",
   "stocks": {
     "7203": {
       "date": "2026-09-11",
@@ -16,8 +16,8 @@
       "ret10": -2.73,
       "ret20": 0.36,
       "rsi14": 42.1,
-      "score": 5,
-      "score_max": 75,
+      "score": 3,
+      "score_max": 100,
       "data_points": 500,
       "rows_received": 500,
       "diagnostic": {
@@ -26,21 +26,34 @@
         "ma20_ready": true,
         "ma60_ready": true
       },
-      "score_breakdown": {
-        "daily_drop": 0,
-        "volume": 5,
-        "vs20": 0,
-        "rsi14": 0,
-        "vs60": 0
-      },
       "breadth": {
         "6d": null,
         "10d": null,
         "15d": null,
         "25d": null
       },
+      "breadth_points": 0,
+      "breadth_breakdown": {
+        "6d": 0,
+        "10d": 0,
+        "15d": 0,
+        "25d": 0
+      },
       "nikkei_change": null,
+      "nikkei_value": null,
       "relative_strength": null,
+      "relative_points": 0,
+      "score_breakdown": {
+        "daily_drop": 0,
+        "volume": 3,
+        "vs20": 0,
+        "rsi14": 0,
+        "vs60": 0,
+        "breadth": 0,
+        "relative_strength": 0
+      },
+      "breadth_source": null,
+      "breadth_error": "'ascii' codec can't encode character '\\u5e74' in position 20: ordinal not in range(128)",
       "code": "7203",
       "name": "トヨタ自動車",
       "market": "Prime",
@@ -65,8 +78,8 @@
       "ret10": -10.01,
       "ret20": -9.07,
       "rsi14": 31.9,
-      "score": 17,
-      "score_max": 75,
+      "score": 11,
+      "score_max": 100,
       "data_points": 500,
       "rows_received": 500,
       "diagnostic": {
@@ -75,21 +88,34 @@
         "ma20_ready": true,
         "ma60_ready": true
       },
-      "score_breakdown": {
-        "daily_drop": 0,
-        "volume": 0,
-        "vs20": 9,
-        "rsi14": 8,
-        "vs60": 0
-      },
       "breadth": {
         "6d": null,
         "10d": null,
         "15d": null,
         "25d": null
       },
+      "breadth_points": 0,
+      "breadth_breakdown": {
+        "6d": 0,
+        "10d": 0,
+        "15d": 0,
+        "25d": 0
+      },
       "nikkei_change": null,
+      "nikkei_value": null,
       "relative_strength": null,
+      "relative_points": 0,
+      "score_breakdown": {
+        "daily_drop": 0,
+        "volume": 0,
+        "vs20": 6,
+        "rsi14": 5,
+        "vs60": 0,
+        "breadth": 0,
+        "relative_strength": 0
+      },
+      "breadth_source": null,
+      "breadth_error": "'ascii' codec can't encode character '\\u5e74' in position 20: ordinal not in range(128)",
       "code": "7974",
       "name": "任天堂",
       "market": "Prime",
@@ -114,8 +140,8 @@
       "ret10": 12.8,
       "ret20": 0.54,
       "rsi14": 55.5,
-      "score": 30,
-      "score_max": 75,
+      "score": 22,
+      "score_max": 100,
       "data_points": 422,
       "rows_received": 422,
       "diagnostic": {
@@ -124,21 +150,34 @@
         "ma20_ready": true,
         "ma60_ready": true
       },
-      "score_breakdown": {
-        "daily_drop": 15,
-        "volume": 0,
-        "vs20": 0,
-        "rsi14": 0,
-        "vs60": 15
-      },
       "breadth": {
         "6d": null,
         "10d": null,
         "15d": null,
         "25d": null
       },
+      "breadth_points": 0,
+      "breadth_breakdown": {
+        "6d": 0,
+        "10d": 0,
+        "15d": 0,
+        "25d": 0
+      },
       "nikkei_change": null,
+      "nikkei_value": null,
       "relative_strength": null,
+      "relative_points": 0,
+      "score_breakdown": {
+        "daily_drop": 12,
+        "volume": 0,
+        "vs20": 0,
+        "rsi14": 0,
+        "vs60": 10,
+        "breadth": 0,
+        "relative_strength": 0
+      },
+      "breadth_source": null,
+      "breadth_error": "'ascii' codec can't encode character '\\u5e74' in position 20: ordinal not in range(128)",
       "code": "285A",
       "name": "キオクシアホールディングス",
       "market": "Prime",
@@ -157,9 +196,15 @@
       "rows_received": 500,
       "data_points": 500,
       "rsi14": 42.1,
-      "ret5": -1.62,
-      "ret10": -2.73,
-      "vs60": 2.85
+      "breadth": {
+        "6d": null,
+        "10d": null,
+        "15d": null,
+        "25d": null
+      },
+      "nikkei_change": null,
+      "relative_strength": null,
+      "score": 3
     },
     {
       "code": "7974",
@@ -167,9 +212,15 @@
       "rows_received": 500,
       "data_points": 500,
       "rsi14": 31.9,
-      "ret5": -8.44,
-      "ret10": -10.01,
-      "vs60": 3.95
+      "breadth": {
+        "6d": null,
+        "10d": null,
+        "15d": null,
+        "25d": null
+      },
+      "nikkei_change": null,
+      "relative_strength": null,
+      "score": 11
     },
     {
       "code": "285A",
@@ -177,9 +228,15 @@
       "rows_received": 422,
       "data_points": 422,
       "rsi14": 55.5,
-      "ret5": -0.79,
-      "ret10": 12.8,
-      "vs60": -16.06
+      "breadth": {
+        "6d": null,
+        "10d": null,
+        "15d": null,
+        "25d": null
+      },
+      "nikkei_change": null,
+      "relative_strength": null,
+      "score": 22
     }
   ]
 }
