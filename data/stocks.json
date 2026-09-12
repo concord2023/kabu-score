@@ -1,26 +1,7 @@
 {
-  "updated_at": "2026-09-13T01:07:14.493046+09:00",
+  "updated_at": "2026-09-13T01:22:13.391819+09:00",
   "source": "IRBANK API",
   "stocks": {
-    "285A": {
-      "date": "2026-09-11",
-      "price": 54030,
-      "change": -6.99,
-      "volume": 28051100,
-      "volume_ratio": 0.79,
-      "vs20": 0.74,
-      "score": 24,
-      "breadth_pending": true,
-      "code": "285A",
-      "name": "キオクシアホールディングス",
-      "market": "Prime",
-      "industry": "電気機器",
-      "attribution": {
-        "source_label": "JPX 東京証券取引所",
-        "license_note": "株価・信用取引残高データは JPX 東京証券取引所 (東証マーケットインフォメーション) の情報を出典とし、加工は IRBANK が実施。本データは IRBANK 登録ユーザー向けの提供であり、第三者への再配信・転載は許諾されていない。",
-        "processed_by": "IRBANK"
-      }
-    },
     "7203": {
       "date": "2026-09-11",
       "price": 3031,
@@ -53,6 +34,25 @@
       "name": "任天堂",
       "market": "Prime",
       "industry": "その他製品",
+      "attribution": {
+        "source_label": "JPX 東京証券取引所",
+        "license_note": "株価・信用取引残高データは JPX 東京証券取引所 (東証マーケットインフォメーション) の情報を出典とし、加工は IRBANK が実施。本データは IRBANK 登録ユーザー向けの提供であり、第三者への再配信・転載は許諾されていない。",
+        "processed_by": "IRBANK"
+      }
+    },
+    "285A": {
+      "date": "2026-09-11",
+      "price": 54030,
+      "change": -6.99,
+      "volume": 28051100,
+      "volume_ratio": 0.79,
+      "vs20": 0.74,
+      "score": 24,
+      "breadth_pending": true,
+      "code": "285A",
+      "name": "キオクシアホールディングス",
+      "market": "Prime",
+      "industry": "電気機器",
       "attribution": {
         "source_label": "JPX 東京証券取引所",
         "license_note": "株価・信用取引残高データは JPX 東京証券取引所 (東証マーケットインフォメーション) の情報を出典とし、加工は IRBANK が実施。本データは IRBANK 登録ユーザー向けの提供であり、第三者への再配信・転載は許諾されていない。",
