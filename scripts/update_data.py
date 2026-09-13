@@ -16,7 +16,7 @@ def get(path, params=None):
         url += '?' + urllib.parse.urlencode(params)
     req = urllib.request.Request(url, headers={
         'Authorization': f'Bearer {TOKEN}',
-        'User-Agent': 'kabu-score/8.0'
+        'User-Agent': 'kabu-score/9.0'
     })
     with urllib.request.urlopen(req, timeout=30) as r:
         return json.load(r)
@@ -85,7 +85,7 @@ class TableParser(HTMLParser):
 def fetch_breadth_and_nikkei(target_date):
     """Fetch daily Prime advance/decline counts and calculate 6/10/15/25-day breadth."""
     url = 'https://tofuhardboiled.com/updownratio/'
-    req = urllib.request.Request(url, headers={'User-Agent':'Mozilla/5.0 (compatible; kabu-score/8.0)'})
+    req = urllib.request.Request(url, headers={'User-Agent':'Mozilla/5.0 (compatible; kabu-score/9.0)'})
     with urllib.request.urlopen(req, timeout=30) as r:
         html = r.read().decode('utf-8', errors='ignore')
 
@@ -115,6 +115,75 @@ def fetch_breadth_and_nikkei(target_date):
     if idx+1<len(daily) and daily[idx+1][3]:
         nikkei_change=round((nikkei_value/daily[idx+1][3]-1)*100,2)
     return {'date':target_date,'breadth':breadth,'nikkei_value':nikkei_value,'nikkei_change':nikkei_change,'source_url':url}
+
+
+
+def fetch_supply(code, target_date):
+    """Fetch weekly credit/stock-lending supply data from IRBANK public page.
+    Returns the latest weekly row on or before target_date.
+    """
+    url=f'https://irbank.net/{code}/zandaka'
+    req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 (compatible; kabu-score/9.0)'})
+    with urllib.request.urlopen(req,timeout=30) as r:
+        html=r.read().decode('utf-8',errors='ignore')
+    p=TableParser(); p.feed(html)
+    rows=[]
+    for table in p.tables:
+        for row in table:
+            if len(row)>=4 and re.fullmatch(r'\d{4}/\d{2}/\d{2}',row[0]):
+                try:
+                    vals=[]
+                    for c in row[1:4]:
+                        m=re.search(r'-?[0-9,]+',c.replace('−','-'))
+                        vals.append(int(m.group(0).replace(',','')) if m else None)
+                    rows.append((row[0],vals[0],vals[1],vals[2]))
+                except Exception:
+                    pass
+    if not rows:
+        raise RuntimeError(f'No supply rows found for {code}')
+    rows=sorted(set(rows),key=lambda x:x[0],reverse=True)
+    td=target_date.replace('-','/')
+    chosen=next((x for x in rows if x[0]<=td),None)
+    if chosen is None:
+        raise RuntimeError(f'No supply row on/before {target_date} for {code}')
+    d,buy,sell,lend=chosen
+    prev=next((x for x in rows if x[0]<d),None)
+    buy_chg=(buy-prev[1]) if prev and buy is not None and prev[1] is not None else None
+    sell_chg=(sell-prev[2]) if prev and sell is not None and prev[2] is not None else None
+    lend_chg=(lend-prev[3]) if prev and lend is not None and prev[3] is not None else None
+    total_short=(sell or 0)+(lend or 0)
+    ratio=(buy/sell) if buy is not None and sell not in (None,0) else None
+    return {
+      'date':d,'buy_balance':buy,'sell_balance':sell,'loan_balance':lend,
+      'sell_plus_loan':total_short if (sell is not None or lend is not None) else None,
+      'credit_ratio':round(ratio,2) if ratio is not None else None,
+      'buy_change':buy_chg,'sell_change':sell_chg,'loan_change':lend_chg,
+      'source_url':url,
+      'source_note':'IRBANK 東証信用取引残高＋貸借取引貸付残高（週次）'
+    }
+
+def supply_points(s):
+    """Experimental 15-point supply score; deliberately conservative until backtest.
+    Positive when long-side inventory is being reduced or short-side supply rises.
+    """
+    if not s: return 0,{}
+    p=0
+    detail={}
+    bc=s.get('buy_change'); sc=s.get('sell_change'); lc=s.get('loan_change')
+    if bc is not None:
+        detail['buy_balance_change']='improving' if bc<0 else 'heavy' if bc>0 else 'flat'
+        p += 4 if bc<0 else 0
+    if sc is not None:
+        detail['sell_balance_change']='supportive' if sc>0 else 'less_short' if sc<0 else 'flat'
+        p += 3 if sc>0 else 0
+    if lc is not None:
+        detail['loan_balance_change']='supportive' if lc>0 else 'less_lending' if lc<0 else 'flat'
+        p += 3 if lc>0 else 0
+    r=s.get('credit_ratio')
+    detail['credit_ratio_level']=r
+    if r is not None:
+        p += 5 if r<=3 else 3 if r<=6 else 1 if r<=10 else 0
+    return min(p,15),detail
 
 def pct(a,b):
     return ((a/b)-1)*100 if a is not None and b not in (None,0) else None
@@ -177,7 +246,7 @@ def relative_points(x):
     if x <= -2: return 3
     return 0
 
-def calc(rows, breadth_info):
+def calc(rows, breadth_info, supply_info=None):
     vals=[]
     for x in rows:
         raw=x.get('adj_close') if x.get('adj_close') is not None else x.get('close')
@@ -214,7 +283,9 @@ def calc(rows, breadth_info):
     rel=(change-nikkei_change) if change is not None and nikkei_change is not None else None
     relp=relative_points(rel)
 
-    total=min(daily+vol+weak+rp+tp+bp+relp,100)
+    sp, sdetail = supply_points(supply_info)
+    # Experimental 100-point model: supply is visible and scored, but calibration remains provisional.
+    total=min(daily+vol+weak+rp+tp+bp+relp+sp,100)
 
     return {
       'date':rows[0].get('date'),'price':close,
@@ -237,10 +308,13 @@ def calc(rows, breadth_info):
       'nikkei_change':nikkei_change,
       'nikkei_value':(breadth_info or {}).get('nikkei_value'),
       'relative_strength':round(rel,2) if rel is not None else None,
+      'supply':supply_info or {'date':None},
+      'supply_points':sp,
+      'supply_breakdown':sdetail,
       'relative_points':relp,
       'score_breakdown':{
         'daily_drop':daily,'volume':vol,'vs20':weak,'rsi14':rp,'vs60':tp,
-        'breadth':bp,'relative_strength':relp
+        'breadth':bp,'relative_strength':relp,'supply':sp
       },
       'breadth_source':(breadth_info or {}).get('source_url'),
       'breadth_error':(breadth_info or {}).get('error')
@@ -248,7 +322,7 @@ def calc(rows, breadth_info):
 
 # Determine the most recent stock date from the first successful symbol.
 out={'updated_at':datetime.now(timezone(timedelta(hours=9))).isoformat(),
-     'source':'IRBANK API + 豆腐ハードボイルド（騰落銘柄数から算出）',
+     'source':'IRBANK API + 豆腐ハードボイルド（騰落銘柄数から算出） + IRBANK需給（週次）',
      'stocks':{},'diagnostics':[]}
 
 for code in codes:
@@ -259,7 +333,8 @@ for code in codes:
             raise ValueError('No price rows returned')
         # Fetch market breadth once for the stock's latest date.
         breadth_info=fetch_breadth_and_nikkei(rows[0]['date'])
-        s=calc(rows,breadth_info)
+        supply_info=fetch_supply(code,rows[0]['date'])
+        s=calc(rows,breadth_info,supply_info)
         s.update({'code':code,'name':info.get('name',code),'market':info.get('market'),
                   'industry':info.get('industry'),'attribution':attribution})
         out['stocks'][code]=s
@@ -267,7 +342,7 @@ for code in codes:
           'code':code,'status':'ok','rows_received':len(rows),
           'data_points':s['data_points'],'rsi14':s['rsi14'],
           'breadth':s['breadth'],'nikkei_change':s['nikkei_change'],
-          'relative_strength':s['relative_strength'],'score':s['score']
+          'relative_strength':s['relative_strength'],'supply':s.get('supply'),'score':s['score']
         })
     except Exception as e:
         out['stocks'][code]={'code':code,'name':code,'error':str(e)}
