@@ -1,0 +1,21 @@
+name: Backtest 285A v2
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip pandas requests
+      - name: Run 285A v2 backtest
+        env:
+          IRBANK_API_KEY: ${{ secrets.IRBANK_API_KEY }}
+        run: python scripts/backtest_285a_v2.py
+      - name: Upload v2 results
+        uses: actions/upload-artifact@v4
+        with:
+          name: backtest-285A-v2
+          path: backtest_285a_v2_output/
