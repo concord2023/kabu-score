@@ -118,48 +118,69 @@ def fetch_breadth_and_nikkei(target_date):
 
 
 
-def fetch_supply(code, target_date):
-    """Fetch weekly credit/stock-lending supply data from IRBANK public page.
-    Returns the latest weekly row on or before target_date.
+def fetch_supply(code, target_date, security_name=None):
+    """Fetch current IRBANK supply/credit metrics through the authenticated API.
+    We deliberately do not scrape irbank.net HTML because GitHub Actions can be
+    blocked by the public website (403). Screening exposes the current supply
+    metrics and week-over-week changes through the API.
     """
-    url=f'https://irbank.net/{code}/zandaka'
-    req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 (compatible; kabu-score/9.0)'})
-    with urllib.request.urlopen(req,timeout=30) as r:
-        html=r.read().decode('utf-8',errors='ignore')
-    p=TableParser(); p.feed(html)
-    rows=[]
-    for table in p.tables:
-        for row in table:
-            if len(row)>=4 and re.fullmatch(r'\d{4}/\d{2}/\d{2}',row[0]):
-                try:
-                    vals=[]
-                    for c in row[1:4]:
-                        m=re.search(r'-?[0-9,]+',c.replace('−','-'))
-                        vals.append(int(m.group(0).replace(',','')) if m else None)
-                    rows.append((row[0],vals[0],vals[1],vals[2]))
-                except Exception:
-                    pass
-    if not rows:
-        raise RuntimeError(f'No supply rows found for {code}')
-    rows=sorted(set(rows),key=lambda x:x[0],reverse=True)
-    td=target_date.replace('-','/')
-    chosen=next((x for x in rows if x[0]<=td),None)
-    if chosen is None:
-        raise RuntimeError(f'No supply row on/before {target_date} for {code}')
-    d,buy,sell,lend=chosen
-    prev=next((x for x in rows if x[0]<d),None)
-    buy_chg=(buy-prev[1]) if prev and buy is not None and prev[1] is not None else None
-    sell_chg=(sell-prev[2]) if prev and sell is not None and prev[2] is not None else None
-    lend_chg=(lend-prev[3]) if prev and lend is not None and prev[3] is not None else None
-    total_short=(sell or 0)+(lend or 0)
-    ratio=(buy/sell) if buy is not None and sell not in (None,0) else None
+    name = security_name or code
+    fields = [
+        'marginBuyBalance', 'marginSellBalance',
+        'marginBuyBalanceChangeWow', 'marginSellBalanceChangeWow',
+        'marginRatio', 'jsfLoanRatio', 'marginBuyToFloatRatio'
+    ]
+    result = {}
+    errors = []
+    for field in fields:
+        try:
+            params = {
+                'name': name,
+                'sort_by': field,
+                'sort_order': 'desc',
+                'as_of': target_date,
+                'limit': 100
+            }
+            data = get('/screening', params)
+            matches = data.get('securities') or []
+            # Name matching is normally exact enough; prefer exact security name.
+            match = next((x for x in matches if x.get('name') == name), None)
+            if match is None and matches:
+                match = matches[0]
+            if match:
+                for m in match.get('metrics') or []:
+                    result[m.get('field')] = m.get('value')
+                    result[m.get('field') + '_as_of'] = m.get('as_of')
+        except Exception as e:
+            errors.append(f'{field}: {e}')
+
+    if not result:
+        raise RuntimeError('IRBANK API supply metrics unavailable: ' + ('; '.join(errors) if errors else 'no matching metrics'))
+
+    buy = result.get('marginBuyBalance')
+    sell = result.get('marginSellBalance')
+    buy_chg = result.get('marginBuyBalanceChangeWow')
+    sell_chg = result.get('marginSellBalanceChangeWow')
+    ratio = result.get('marginRatio')
+    jsf_ratio = result.get('jsfLoanRatio')
+    buy_float = result.get('marginBuyToFloatRatio')
+
     return {
-      'date':d,'buy_balance':buy,'sell_balance':sell,'loan_balance':lend,
-      'sell_plus_loan':total_short if (sell is not None or lend is not None) else None,
-      'credit_ratio':round(ratio,2) if ratio is not None else None,
-      'buy_change':buy_chg,'sell_change':sell_chg,'loan_change':lend_chg,
-      'source_url':url,
-      'source_note':'IRBANK 東証信用取引残高＋貸借取引貸付残高（週次）'
+        'date': result.get('marginBuyBalance_as_of') or result.get('marginRatio_as_of') or target_date,
+        'buy_balance': buy,
+        'sell_balance': sell,
+        'loan_balance': None,
+        'sell_plus_loan': None,
+        'credit_ratio': ratio,
+        'jsf_loan_ratio': jsf_ratio,
+        'buy_to_float_ratio': buy_float,
+        'buy_change': buy_chg,
+        'sell_change': sell_chg,
+        'loan_change': None,
+        'source_url': 'https://api.irbank.net/v1/screening',
+        'source_note': 'IRBANK API スクリーニング（東証信用残・日証金貸借倍率等）',
+        'api_partial': bool(errors),
+        'api_errors': errors
     }
 
 def supply_points(s):
@@ -183,6 +204,15 @@ def supply_points(s):
     detail['credit_ratio_level']=r
     if r is not None:
         p += 5 if r<=3 else 3 if r<=6 else 1 if r<=10 else 0
+    jr=s.get('jsf_loan_ratio')
+    detail['jsf_loan_ratio']=jr
+    if jr is not None:
+        # Lower JSF loan ratio means less long-side financing relative to stock lending.
+        p += 2 if jr<=1 else 1 if jr<=2 else 0
+    bf=s.get('buy_to_float_ratio')
+    detail['buy_to_float_ratio']=bf
+    if bf is not None:
+        p += 2 if bf<=5 else 1 if bf<=10 else 0
     return min(p,15),detail
 
 def pct(a,b):
@@ -333,7 +363,7 @@ for code in codes:
             raise ValueError('No price rows returned')
         # Fetch market breadth once for the stock's latest date.
         breadth_info=fetch_breadth_and_nikkei(rows[0]['date'])
-        supply_info=fetch_supply(code,rows[0]['date'])
+        supply_info=fetch_supply(code,rows[0]['date'], info.get('name', code))
         s=calc(rows,breadth_info,supply_info)
         s.update({'code':code,'name':info.get('name',code),'market':info.get('market'),
                   'industry':info.get('industry'),'attribution':attribution})
