@@ -1,0 +1,25 @@
+name: 285A v3 backtest
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 12 * * 6'
+permissions:
+  contents: write
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install pandas requests lxml html5lib beautifulsoup4
+      - run: python backtest_285a_v3.py
+        env:
+          IRBANK_API_KEY: ${{ secrets.IRBANK_API_KEY }}
+      - name: Package results
+        run: zip -r backtest-285A-v3.zip backtest_285a_v3_output
+      - uses: actions/upload-artifact@v4
+        with:
+          name: backtest-285A-v3
+          path: backtest-285A-v3.zip
