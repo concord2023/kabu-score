@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-09-13T08:38:08.247915+09:00",
-  "source": "IRBANK API + 豆腐ハードボイルド（騰落銘柄数から算出）",
+  "updated_at": "2026-09-13T10:11:19.946060+09:00",
+  "source": "IRBANK API + 豆腐ハードボイルド（騰落銘柄数から算出） + IRBANK需給（週次）",
   "stocks": {
     "7203": {
       "date": "2026-09-11",
@@ -16,7 +16,7 @@
       "ret10": -2.73,
       "ret20": 0.36,
       "rsi14": 42.1,
-      "score": 34,
+      "score": 44,
       "score_max": 100,
       "data_points": 500,
       "rows_received": 500,
@@ -43,6 +43,31 @@
       "nikkei_change": -1.93,
       "nikkei_value": 64011.34,
       "relative_strength": 3.17,
+      "supply": {
+        "date": "2026-09-11",
+        "buy_balance": 16378100,
+        "sell_balance": 2491000,
+        "loan_balance": null,
+        "sell_plus_loan": null,
+        "credit_ratio": 6.574909674829386,
+        "jsf_loan_ratio": 96.64423076923077,
+        "buy_to_float_ratio": 0.2588524001111709,
+        "buy_change": -475100,
+        "sell_change": 147300,
+        "loan_change": null,
+        "source_url": "https://api.irbank.net/v1/screening",
+        "source_note": "IRBANK API スクリーニング（東証信用残・日証金貸借倍率等）",
+        "api_partial": false,
+        "api_errors": []
+      },
+      "supply_points": 10,
+      "supply_breakdown": {
+        "buy_balance_change": "improving",
+        "sell_balance_change": "supportive",
+        "credit_ratio_level": 6.574909674829386,
+        "jsf_loan_ratio": 96.64423076923077,
+        "buy_to_float_ratio": 0.2588524001111709
+      },
       "relative_points": 0,
       "score_breakdown": {
         "daily_drop": 0,
@@ -51,7 +76,8 @@
         "rsi14": 0,
         "vs60": 0,
         "breadth": 31,
-        "relative_strength": 0
+        "relative_strength": 0,
+        "supply": 10
       },
       "breadth_source": "https://tofuhardboiled.com/updownratio/",
       "breadth_error": null,
@@ -79,7 +105,7 @@
       "ret10": -10.01,
       "ret20": -9.07,
       "rsi14": 31.9,
-      "score": 42,
+      "score": 45,
       "score_max": 100,
       "data_points": 500,
       "rows_received": 500,
@@ -106,6 +132,31 @@
       "nikkei_change": -1.93,
       "nikkei_value": 64011.34,
       "relative_strength": 3.23,
+      "supply": {
+        "date": "2026-09-11",
+        "buy_balance": 8041400,
+        "sell_balance": 856700,
+        "loan_balance": null,
+        "sell_plus_loan": null,
+        "credit_ratio": 9.38648301622505,
+        "jsf_loan_ratio": 247.02564102564102,
+        "buy_to_float_ratio": 1.1789775059759648,
+        "buy_change": 228800,
+        "sell_change": -212400,
+        "loan_change": null,
+        "source_url": "https://api.irbank.net/v1/screening",
+        "source_note": "IRBANK API スクリーニング（東証信用残・日証金貸借倍率等）",
+        "api_partial": false,
+        "api_errors": []
+      },
+      "supply_points": 3,
+      "supply_breakdown": {
+        "buy_balance_change": "heavy",
+        "sell_balance_change": "less_short",
+        "credit_ratio_level": 9.38648301622505,
+        "jsf_loan_ratio": 247.02564102564102,
+        "buy_to_float_ratio": 1.1789775059759648
+      },
       "relative_points": 0,
       "score_breakdown": {
         "daily_drop": 0,
@@ -114,7 +165,8 @@
         "rsi14": 5,
         "vs60": 0,
         "breadth": 31,
-        "relative_strength": 0
+        "relative_strength": 0,
+        "supply": 3
       },
       "breadth_source": "https://tofuhardboiled.com/updownratio/",
       "breadth_error": null,
@@ -142,7 +194,7 @@
       "ret10": 12.8,
       "ret20": 0.54,
       "rsi14": 55.5,
-      "score": 61,
+      "score": 69,
       "score_max": 100,
       "data_points": 422,
       "rows_received": 422,
@@ -169,6 +221,31 @@
       "nikkei_change": -1.93,
       "nikkei_value": 64011.34,
       "relative_strength": -5.06,
+      "supply": {
+        "date": "2026-09-11",
+        "buy_balance": 13506700,
+        "sell_balance": 1014400,
+        "loan_balance": null,
+        "sell_plus_loan": null,
+        "credit_ratio": 13.31496451104101,
+        "jsf_loan_ratio": 622.8823529411765,
+        "buy_to_float_ratio": 5.269218514546805,
+        "buy_change": -2659100,
+        "sell_change": 557300,
+        "loan_change": null,
+        "source_url": "https://api.irbank.net/v1/screening",
+        "source_note": "IRBANK API スクリーニング（東証信用残・日証金貸借倍率等）",
+        "api_partial": false,
+        "api_errors": []
+      },
+      "supply_points": 8,
+      "supply_breakdown": {
+        "buy_balance_change": "improving",
+        "sell_balance_change": "supportive",
+        "credit_ratio_level": 13.31496451104101,
+        "jsf_loan_ratio": 622.8823529411765,
+        "buy_to_float_ratio": 5.269218514546805
+      },
       "relative_points": 8,
       "score_breakdown": {
         "daily_drop": 12,
@@ -177,7 +254,8 @@
         "rsi14": 0,
         "vs60": 10,
         "breadth": 31,
-        "relative_strength": 8
+        "relative_strength": 8,
+        "supply": 8
       },
       "breadth_source": "https://tofuhardboiled.com/updownratio/",
       "breadth_error": null,
@@ -208,7 +286,24 @@
       },
       "nikkei_change": -1.93,
       "relative_strength": 3.17,
-      "score": 34
+      "supply": {
+        "date": "2026-09-11",
+        "buy_balance": 16378100,
+        "sell_balance": 2491000,
+        "loan_balance": null,
+        "sell_plus_loan": null,
+        "credit_ratio": 6.574909674829386,
+        "jsf_loan_ratio": 96.64423076923077,
+        "buy_to_float_ratio": 0.2588524001111709,
+        "buy_change": -475100,
+        "sell_change": 147300,
+        "loan_change": null,
+        "source_url": "https://api.irbank.net/v1/screening",
+        "source_note": "IRBANK API スクリーニング（東証信用残・日証金貸借倍率等）",
+        "api_partial": false,
+        "api_errors": []
+      },
+      "score": 44
     },
     {
       "code": "7974",
@@ -225,7 +320,24 @@
       },
       "nikkei_change": -1.93,
       "relative_strength": 3.23,
-      "score": 42
+      "supply": {
+        "date": "2026-09-11",
+        "buy_balance": 8041400,
+        "sell_balance": 856700,
+        "loan_balance": null,
+        "sell_plus_loan": null,
+        "credit_ratio": 9.38648301622505,
+        "jsf_loan_ratio": 247.02564102564102,
+        "buy_to_float_ratio": 1.1789775059759648,
+        "buy_change": 228800,
+        "sell_change": -212400,
+        "loan_change": null,
+        "source_url": "https://api.irbank.net/v1/screening",
+        "source_note": "IRBANK API スクリーニング（東証信用残・日証金貸借倍率等）",
+        "api_partial": false,
+        "api_errors": []
+      },
+      "score": 45
     },
     {
       "code": "285A",
@@ -242,7 +354,24 @@
       },
       "nikkei_change": -1.93,
       "relative_strength": -5.06,
-      "score": 61
+      "supply": {
+        "date": "2026-09-11",
+        "buy_balance": 13506700,
+        "sell_balance": 1014400,
+        "loan_balance": null,
+        "sell_plus_loan": null,
+        "credit_ratio": 13.31496451104101,
+        "jsf_loan_ratio": 622.8823529411765,
+        "buy_to_float_ratio": 5.269218514546805,
+        "buy_change": -2659100,
+        "sell_change": 557300,
+        "loan_change": null,
+        "source_url": "https://api.irbank.net/v1/screening",
+        "source_note": "IRBANK API スクリーニング（東証信用残・日証金貸借倍率等）",
+        "api_partial": false,
+        "api_errors": []
+      },
+      "score": 69
     }
   ]
 }
