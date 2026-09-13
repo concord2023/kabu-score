@@ -1,0 +1,244 @@
+name: 285A v3 backtest
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 12 * * 6'
+
+permissions:
+  contents: read
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip pandas requests lxml html5lib beautifulsoup4
+
+      - name: Create v3 script
+        shell: bash
+        run: |
+          cat > backtest_285a_v3.py <<'PY'
+          import os, math, traceback
+          from datetime import datetime, timedelta
+          import requests
+          import pandas as pd
+
+          API='https://api.irbank.net/v1'
+          TOKEN=os.environ.get('IRBANK_API_KEY')
+          CODE='285A'
+          BREADTH_URL='https://tofuhardboiled.com/updownratio/'
+          HEADERS={'Authorization':f'Bearer {TOKEN}'} if TOKEN else {}
+
+          def get_json(url, params=None):
+              r=requests.get(url, headers=HEADERS, params=params, timeout=60)
+              r.raise_for_status()
+              return r.json()
+
+          def get_prices(code):
+              rows=[]; cursor=None
+              for _ in range(20):
+                  p={'security_code':code,'limit':500}
+                  if cursor: p['cursor']=cursor
+                  j=get_json(f'{API}/securities/{code}/prices', p)
+                  data=j.get('prices',j.get('data',[])) or []
+                  rows.extend(data)
+                  cursor=j.get('next_cursor')
+                  if not cursor: break
+              out=[]
+              for x in rows:
+                  d=x.get('date') or x.get('as_of')
+                  c=x.get('close')
+                  v=x.get('volume',0)
+                  if d and c is not None:
+                      out.append({'date':pd.to_datetime(d).date(),'close':float(c),'volume':float(v or 0)})
+              return pd.DataFrame(out).drop_duplicates('date').sort_values('date').reset_index(drop=True)
+
+          def pct(a,b):
+              return (a/b-1)*100 if b not in (None,0) and a is not None else None
+
+          def rsi14(vals):
+              if len(vals)<15: return None
+              gains=[]; losses=[]
+              for k in range(len(vals)-14,len(vals)):
+                  d=vals[k]-vals[k-1]
+                  gains.append(max(d,0)); losses.append(max(-d,0))
+              ag=sum(gains)/14; al=sum(losses)/14
+              return 100.0 if al==0 else 100-100/(1+ag/al)
+
+          def percentile(hist,x):
+              h=pd.Series(hist).dropna()
+              if len(h)<40 or x is None: return None
+              return float((h<x).mean()*100 + (h==x).mean()*50)
+
+          def features(df,i):
+              if i<60: return None
+              c=df.close.tolist(); v=df.volume.tolist(); p=c[i]
+              ma20=sum(c[i-19:i+1])/20; ma60=sum(c[i-59:i+1])/60
+              av20=sum(v[i-19:i+1])/20 if i>=19 else None
+              f={'ret1_pct':pct(c[i],c[i-1]),'ret5_pct':pct(c[i],c[i-5]),
+                 'ret10_pct':pct(c[i],c[i-10]),'ret20_pct':pct(c[i],c[i-20]),
+                 'vs20_pct':pct(p,ma20),'vs60_pct':pct(p,ma60),
+                 'rsi14':rsi14(c[:i+1]),'volume_ratio':v[i]/av20 if av20 else None}
+              start=max(60,i-252)
+              for key in ['vs20_pct','vs60_pct','ret1_pct','ret5_pct','ret20_pct']:
+                  vals=[]
+                  for j in range(start,i):
+                      cc=c[:j+1]; vv=v[:j+1]
+                      m20=sum(cc[j-19:j+1])/20; m60=sum(cc[j-59:j+1])/60
+                      z={'vs20_pct':pct(cc[j],m20),'vs60_pct':pct(cc[j],m60),
+                         'ret1_pct':pct(cc[j],cc[j-1]),'ret5_pct':pct(cc[j],cc[j-5]),
+                         'ret20_pct':pct(cc[j],cc[j-20])}[key]
+                      vals.append(z)
+                  f[key+'_pctile']=percentile(vals,f[key])
+              f['rsi14_pctile']=percentile([rsi14(c[:j+1]) for j in range(start,i)],f['rsi14'])
+              return f
+
+          def fetch_breadth():
+              r=requests.get(BREADTH_URL,timeout=60)
+              r.raise_for_status()
+              tables=pd.read_html(r.text)
+              target=None
+              for t in tables:
+                  cols=[str(x) for x in t.columns]
+                  if '日付' in cols and '上昇' in cols and '下落' in cols:
+                      target=t.copy(); break
+              if target is None:
+                  raise RuntimeError('breadth table not found')
+              target['date']=pd.to_datetime(target['日付']).dt.date
+              target['up']=pd.to_numeric(target['上昇'],errors='coerce')
+              target['down']=pd.to_numeric(target['下落'],errors='coerce')
+              target=target.dropna(subset=['date','up','down']).sort_values('date').reset_index(drop=True)
+              rows=[]
+              for i,row in target.iterrows():
+                  rec={'date':row['date']}
+                  for n in (6,10,15,25):
+                      a=target.iloc[max(0,i-n+1):i+1]['up'].sum()
+                      b=target.iloc[max(0,i-n+1):i+1]['down'].sum()
+                      rec[f'breadth{n}']=a/b*100 if b else None
+                  rows.append(rec)
+              return pd.DataFrame(rows)
+
+          def fetch_supply_snapshot(d):
+              fields=['marginBuyBalance','marginSellBalance','marginBuyBalanceChangeWow','marginSellBalanceChangeWow','marginRatio','jsfLoanRatio','marginBuyToFloatRatio']
+              result={}; actual=[]; errors=[]
+              for field in fields:
+                  try:
+                      p={'name':'キオクシアホールディングス','sort_by':field,'sort_order':'desc','as_of':d.isoformat(),'limit':100}
+                      j=get_json(f'{API}/screening',p)
+                      sec=j.get('securities') or []
+                      m=next((x for x in sec if x.get('name')=='キオクシアホールディングス'),None)
+                      if m:
+                          for x in m.get('metrics',[]) or []:
+                              result[x.get('field')]=x.get('value')
+                              if x.get('as_of'): actual.append(pd.to_datetime(x['as_of']).date())
+                  except Exception as e:
+                      errors.append(f'{field}: {e}')
+              if not result: return None
+              result['supply_asof']=max(actual) if actual else d
+              result['api_errors']=' | '.join(errors)
+              return result
+
+          def load_supply(dates):
+              cache={}; rows=[]
+              for d in sorted(set(dates)):
+                  prev=d-timedelta(days=1)
+                  while prev.weekday()!=4: prev-=timedelta(days=1)
+                  # Use the prior Friday only. Cache makes this one API snapshot per week.
+                  if prev not in cache: cache[prev]=fetch_supply_snapshot(prev)
+                  rows.append({'date':d,**(cache[prev] or {})})
+              return pd.DataFrame(rows)
+
+          def breadth_score(b):
+              p=0
+              for key,w in [('breadth6',18),('breadth10',10),('breadth15',4),('breadth25',3)]:
+                  x=b.get(key)
+                  if x is not None: p += max(0,min(1,(120-x)/60))*w
+              return round(p,1)
+
+          def supply_score(s):
+              if not s: return 0
+              p=0; bc=s.get('marginBuyBalanceChangeWow'); sc=s.get('marginSellBalanceChangeWow'); cr=s.get('marginRatio'); bf=s.get('marginBuyToFloatRatio')
+              if bc is not None: p += 5 if bc<0 else -3 if bc>0 else 0
+              if sc is not None: p += 4 if sc>0 else -2 if sc<0 else 0
+              if cr is not None: p += 3 if cr<=10 else 1 if cr<=20 else -2 if cr>=30 else 0
+              if bf is not None: p += 2 if bf<=5 else 1 if bf<=10 else 0
+              return round(max(0,min(12,p)),1)
+
+          def score_row(f,b,s):
+              # Candidate score: higher means more rebound-like, not automatically "buy".
+              rp=0
+              for key,w in [('vs20_pctile',25),('vs60_pctile',20),('rsi14_pctile',15),('ret1_pctile',12),('ret5_pctile',8)]:
+                  z=f.get(key)
+                  if z is not None: rp += max(0,min(w,(50-z)/50*w))
+              rp += breadth_score(b)*0.5 + supply_score(s)*0.8
+              risk=0
+              for key,w in [('vs20_pctile',22),('vs60_pctile',18),('ret1_pctile',15),('rsi14_pctile',10)]:
+                  z=f.get(key)
+                  if z is not None: risk += max(0,min(w,(20-z)/20*w))
+              if s:
+                  if s.get('marginBuyBalanceChangeWow') and s['marginBuyBalanceChangeWow']>0: risk+=7
+                  if s.get('marginSellBalanceChangeWow') and s['marginSellBalanceChangeWow']<0: risk+=5
+              return round(max(0,min(100,rp)),1),round(max(0,min(100,risk)),1)
+
+          def main():
+              if not TOKEN: raise SystemExit('IRBANK_API_KEY missing')
+              os.makedirs('backtest_285a_v3_output',exist_ok=True)
+              prices=get_prices(CODE)
+              breadth=fetch_breadth()
+              merged=prices.merge(breadth,on='date',how='inner').sort_values('date').reset_index(drop=True)
+              if len(merged)<80: raise SystemExit(f'Not enough breadth overlap: {len(merged)}')
+              supply=load_supply(list(merged.date))
+              merged=merged.merge(supply,on='date',how='left')
+              rows=[]
+              for i in range(60,len(merged)-20):
+                  f=features(merged,i)
+                  if not f: continue
+                  b={k:merged.loc[i,k] for k in ['breadth6','breadth10','breadth15','breadth25']}
+                  s={k:merged.loc[i,k] for k in ['marginBuyBalance','marginSellBalance','marginBuyBalanceChangeWow','marginSellBalanceChangeWow','marginRatio','jsfLoanRatio','marginBuyToFloatRatio','supply_asof','api_errors']}
+                  rr,risk=score_row(f,b,s)
+                  row={'date':merged.loc[i,'date'],'close':merged.loc[i,'close'],**f,**b,**s,'breadth_score':breadth_score(b),'supply_score':supply_score(s),'rebound_score':rr,'risk_score':risk}
+                  for n in (5,10,20): row[f'fwd{n}']=pct(merged.loc[i+n,'close'],merged.loc[i,'close'])
+                  rows.append(row)
+              out=pd.DataFrame(rows)
+              out.to_csv('backtest_285a_v3_output/285A_v3_daily.csv',index=False)
+              with open('backtest_285a_v3_output/README.txt','w',encoding='utf-8') as f:
+                  f.write('285A v3 research prototype. Market breadth + stock-specific trailing percentiles + point-in-time prior-Friday supply snapshots.\n')
+                  f.write(f'rows={len(out)}\n')
+              print(out.tail(3).to_string(index=False))
+
+          if __name__=='__main__': main()
+          PY
+          python -m py_compile backtest_285a_v3.py
+
+      - name: Run v3 backtest
+        run: |
+          set -o pipefail
+          python backtest_285a_v3.py 2>&1 | tee backtest_285a_v3_output.log
+        env:
+          IRBANK_API_KEY: ${{ secrets.IRBANK_API_KEY }}
+
+      - name: Package results
+        if: always()
+        run: |
+          mkdir -p backtest_285a_v3_output
+          if [ ! -f backtest_285a_v3_output/README.txt ]; then
+            printf 'v3 failed before producing normal output. See backtest_285a_v3_output.log\n' > backtest_285a_v3_output/README.txt
+          fi
+          zip -r backtest-285A-v3.zip backtest_285a_v3_output backtest_285a_v3_output.log || true
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backtest-285A-v3
+          path: backtest-285A-v3.zip
+          if-no-files-found: warn
