@@ -71,7 +71,7 @@ def get(path, params=None, retries=4):
     raise RuntimeError(f'IRBANK request failed after retries: {url}: {last_error}')
 
 
-def get_all_prices(code, minimum=320):
+def get_all_prices(code, minimum=120):
     # 500 rows is enough for the current 320-row target in one request.
     data = get(f'/securities/{code}/prices', {'limit': 500})
     rows = data.get('prices') or []
@@ -215,52 +215,49 @@ def screening_metric(name, target_date, field):
     return None, None
 
 
-def fetch_supply(code, target_date, security_name=None):
-    """Fetch practical supply/demand context without the old burst of 7 calls.
-
-    We keep five low-frequency screening metrics: buy/sell balances, their
-    week-over-week changes, and margin ratio. These are context indicators;
-    they are not a standalone BUY trigger.
+def fetch_supply_batch(target_date, watch_items):
+    """Fetch five supply metrics for all watchlist stocks using five market-wide
+    screening calls instead of five calls per stock. This keeps the daily request
+    count low enough for API daily limits and avoids all-or-nothing supply data loss.
     """
-    name = security_name or code
     fields = [
         'marginBuyBalance', 'marginSellBalance',
         'marginBuyBalanceChangeWow', 'marginSellBalanceChangeWow',
         'marginRatio'
     ]
-    result = {}
+    by_code = {str(item.get('code') if isinstance(item, dict) else item):
+               (item.get('name') if isinstance(item, dict) else str(item))
+               for item in watch_items}
+    result = {code: {'date': target_date, 'source_url': 'https://api.irbank.net/v1/screening',
+                     'source_note': 'IRBANK API スクリーニング（信用買い残・信用売り残・前週比・信用倍率）'}
+              for code in by_code}
     errors = []
     for field in fields:
         try:
             data = get('/screening', {
-                'name': name, 'sort_by': field, 'sort_order': 'desc',
+                'sort_by': field, 'sort_order': 'desc',
                 'as_of': target_date, 'limit': 100
             })
-            matches = data.get('securities') or []
-            match = next((x for x in matches if x.get('name') == name), None)
-            if match is None and matches:
-                match = matches[0]
-            if match:
-                for m in match.get('metrics') or []:
-                    result[m.get('field')] = m.get('value')
-                    result[m.get('field') + '_as_of'] = m.get('as_of')
+            for sec in data.get('securities') or []:
+                code = str(sec.get('security_code') or '')
+                if code not in result:
+                    continue
+                for m in sec.get('metrics') or []:
+                    if m.get('field') == field:
+                        result[code][field] = m.get('value')
+                        result[code][field + '_as_of'] = m.get('as_of')
         except Exception as e:
             errors.append(f'{field}: {e}')
-
-    if not result:
-        raise RuntimeError('IRBANK API supply metrics unavailable: ' + ('; '.join(errors) if errors else 'no matching metrics'))
-
-    return {
-        'date': result.get('marginBuyBalance_as_of') or result.get('marginRatio_as_of') or target_date,
-        'buy_balance': result.get('marginBuyBalance'),
-        'sell_balance': result.get('marginSellBalance'),
-        'credit_ratio': result.get('marginRatio'),
-        'buy_change': result.get('marginBuyBalanceChangeWow'),
-        'sell_change': result.get('marginSellBalanceChangeWow'),
-        'source_url': 'https://api.irbank.net/v1/screening',
-        'source_note': 'IRBANK API スクリーニング（信用買い残・信用売り残・前週比・信用倍率）',
-        'api_partial': bool(errors), 'api_errors': errors
-    }
+    for code, r in result.items():
+        r['date'] = r.get('marginBuyBalance_as_of') or r.get('marginRatio_as_of') or target_date
+        r['buy_balance'] = r.get('marginBuyBalance')
+        r['sell_balance'] = r.get('marginSellBalance')
+        r['credit_ratio'] = r.get('marginRatio')
+        r['buy_change'] = r.get('marginBuyBalanceChangeWow')
+        r['sell_change'] = r.get('marginSellBalanceChangeWow')
+        r['api_partial'] = any(k not in r for k in fields)
+        r['api_errors'] = errors
+    return result, errors
 
 
 def supply_points(s):
@@ -729,14 +726,27 @@ def calc(rows, breadth_info=None, supply_info=None):
 # never used as a hard buy veto.
 breadth_cache = None
 breadth_error = None
+supply_batch_cache = {}
+supply_batch_errors = []
 
 out = {
     'updated_at': now_jst().isoformat(),
     'source': 'IRBANK API + 豆腐ハードボイルド（騰落銘柄数）',
-    'api_strategy': 'price:1 call/stock, supply:5 calls/stock, breadth:1 call/run (rate-limited)',
+    'api_strategy': 'price:1 call/stock + supply:5 market-wide calls/run + breadth:1 call/run (rate-limited)',
     'stocks': {},
     'diagnostics': [],
 }
+
+# Supply is fetched once per metric for the whole watchlist (5 calls total).
+try:
+    # Target date is based on the latest available price date from the first stock.
+    probe_code = str(watch[0].get('code') if isinstance(watch[0], dict) else watch[0])
+    probe_rows, _ = get_all_prices(probe_code)
+    probe_date = probe_rows[0]['date']
+    supply_batch_cache, supply_batch_errors = fetch_supply_batch(probe_date, watch)
+except Exception as e:
+    supply_batch_cache = {}
+    supply_batch_errors = [str(e)]
 
 for item in watch:
     if isinstance(item, str):
@@ -757,10 +767,11 @@ for item in watch:
                 breadth_error = str(e)
                 breadth_cache = None
 
-        try:
-            supply_info = fetch_supply(code, target_date, name)
-        except Exception as e:
-            supply_info = {'date': target_date, 'status': 'unavailable', 'error': str(e), 'source_url': 'https://api.irbank.net/v1/screening'}
+        supply_info = supply_batch_cache.get(code) or {
+            'date': target_date, 'status': 'unavailable',
+            'error': '; '.join(supply_batch_errors) if supply_batch_errors else 'supply batch unavailable',
+            'source_url': 'https://api.irbank.net/v1/screening'
+        }
 
         s = calc(rows, breadth_cache, supply_info)
         regime = classify_regime(rows, s.get('candle_signal'))
