@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-15T06:53:14.842921+09:00",
+  "updated_at": "2026-09-15T07:25:37.752240+09:00",
   "source": "IRBANK API + 豆腐ハードボイルド（騰落銘柄数）",
   "api_strategy": "price:1 call/stock + supply:5 market-wide calls/run + breadth:1 call/run (rate-limited)",
   "stocks": {
