@@ -7,7 +7,7 @@ with open('watchlist.json', encoding='utf-8') as f:
     watch = json.load(f).get('stocks', [])
 
 priority = {'BUY_CANDIDATE':0,'WATCH':1,'INSUFFICIENT':2,'AVOID':3}
-state_bonus = {'UPTREND_PULLBACK':0,'DOWNTREND_REVERSAL_WAIT':1,'UPTREND':2,'RANGE_TRANSITION':3,'DOWNTREND_CONTINUED':4,'UNKNOWN':5}
+state_bonus = {'DOWNTREND_REVERSAL_CONFIRMED':0,'UPTREND_PULLBACK':1,'DOWNTREND_REVERSAL_WAIT':2,'UPTREND':3,'RANGE_TRANSITION':4,'DOWNTREND_CONTINUED':5,'UNKNOWN':6}
 items = []
 
 def pick_metrics(s):
@@ -17,7 +17,7 @@ def pick_metrics(s):
         'weekly_ma26','weekly_ma52','weekly_vs13','weekly_vs26','weekly_vs52',
         'weekly_ma13_slope4w','weekly_ma26_slope4w','daily_vs20','supply','supply_status',
         'supply_reason','nikkei_change','relative_strength','breadth','score','score_breakdown',
-        'condition_checks','candle_signal','chart_history','interpretation','high20','low20','high60','low60','weekly_direction','weekly_points','daily_ret1','daily_ret5','daily_ret10','daily_ret20'
+        'condition_checks','candle_signal','breakout_signal','chart_history','interpretation','high20','low20','high60','low60','weekly_direction','weekly_points','daily_ret1','daily_ret5','daily_ret10','daily_ret20'
     ]
     return {k:s.get(k) for k in keys if k in s}
 

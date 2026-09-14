@@ -59,7 +59,7 @@ def weekly_metrics(rows):
     return result
 
 
-def classify_regime(rows):
+def classify_regime(rows, candle_signal=None):
     wm = weekly_metrics(rows)
     vals = [_close(r) for r in rows]
     vals = [x for x in vals if x is not None]
@@ -105,9 +105,13 @@ def classify_regime(rows):
     elif weekly_dir == 'DOWN':
         stabilized = (ret1 is not None and ret1 > 0 and ret5 is not None and ret5 >= -5 and
                       ((ret20 is not None and ret20 < 0) or (vs20 is not None and vs20 > 0)))
-        if stabilized:
+        candle_confirmed = bool(candle_signal and candle_signal.get('status') == '大底反転サイン')
+        if stabilized and candle_confirmed and vs20 is not None and vs20 >= 0:
+            state = 'DOWNTREND_REVERSAL_CONFIRMED'
+            reason = '週足は下向きだが、日足が20日MAを回復し、大底反転ローソク足も確認。反転確認済み。'
+        elif stabilized:
             state = 'DOWNTREND_REVERSAL_WAIT'
-            reason = '週足は下向きだが、日足に下げ止まり/反発の兆候。反転確認待ち。'
+            reason = '週足は下向きだが、日足に下げ止まり/反発の兆候。ローソク足・20日MAの反転確認待ち。'
         else:
             state = 'DOWNTREND_CONTINUED'
             reason = '週足・日足とも弱く、まだ反転条件が整っていない。'
@@ -130,32 +134,59 @@ def decide(stock, regime):
     vs60 = _f(stock.get('vs60')); ret1 = _f(stock.get('change')); ret5 = _f(stock.get('ret5')); ret10 = _f(stock.get('ret10'))
     missing = []
     checks = []
-    if regime['regime'] == 'DOWNTREND_REVERSAL_WAIT':
+
+    # 1) Range-breakout branch. This is intentionally separate from bottom
+    # reversal: a stock can be a valid buy after breaking out of a base even
+    # when it is nowhere near a bottom.
+    bo = stock.get('breakout_signal') or {}
+    if bo.get('confirmed'):
+        conds = [
+            ('20日レンジ高値を突破', True, bo.get('breakout_level'), '直近5営業日で20日高値を終値突破'),
+            ('突破日の出来高1.5倍以上', bool(bo.get('volume_ok')), bo.get('breakout_volume_ratio'), '突破日出来高比>=1.5'),
+            ('現在も突破水準を維持', bool(bo.get('held')), bo.get('distance_from_breakout'), '突破水準を維持'),
+            ('20日MAより上', bool(bo.get('ma20_ok')), stock.get('vs20'), '現在値>20日MA'),
+            ('5日騰落率がプラス', bool(bo.get('trend_ok')), bo.get('ret5'), '5日騰落率>0%'),
+        ]
+        checks = [{'label':a,'ok':bool(b),'value':c,'rule':d} for a,b,c,d in conds]
+        signal='BUY_CANDIDATE'
+        reason='レンジ抜け・再上昇型の暫定買い候補。突破日の出来高増加、突破水準維持、20日MA上、短期上昇を確認。'
+        candle=stock.get('candle_signal') or {}
+        if candle.get('status') in ('大底反転サイン','反転サイン'):
+            reason += f" 🕯️{candle.get('status')}"
+        return {'signal':signal,'signal_reason':reason,'missing_conditions':[],
+                'condition_checks':checks,'one_condition_away':False}
+
+    # 2) Bottom-reversal branch. Being positive on the day alone is NOT enough.
+    if regime['regime'] in ('DOWNTREND_REVERSAL_WAIT','DOWNTREND_REVERSAL_CONFIRMED'):
         conds = [
             ('60日MAより5%以上下', vs60 is not None and vs60 <= -5, vs60, 'vs60<=-5%'),
-            ('当日プラス', ret1 is not None and ret1 > 0, ret1, '当日騰落率>0%'),
             ('5日騰落率が-5%以上', ret5 is not None and ret5 >= -5, ret5, '5日騰落率>=-5%'),
             ('10日騰落率が-10%以上', ret10 is not None and ret10 >= -10, ret10, '10日騰落率>=-10%')
         ]
         for label, ok, value, rule in conds:
             checks.append({'label': label, 'ok': bool(ok), 'value': value, 'rule': rule})
-            if not ok:
-                missing.append(label)
-        signal = 'BUY_CANDIDATE' if not missing else 'WATCH'
-        reason = '反転4条件をすべて満たした暫定買い候補。' if not missing else '反転待ち。未達条件: ' + ' / '.join(missing)
-    elif regime['regime'] in ('UPTREND', 'UPTREND_PULLBACK', 'RANGE_TRANSITION'):
-        signal = 'WATCH'
-        reason = '方向/押し目を監視。上昇・押し目買い条件は検証後にBUYへ昇格。'
-        checks = [
-            {'label':'週足方向', 'ok': regime.get('weekly_direction') == 'UP', 'value': regime.get('weekly_direction'), 'rule':'週足で方向判定'},
-            {'label':'日足20MA', 'ok': _f(regime.get('daily_vs20')) is not None, 'value': regime.get('daily_vs20'), 'rule':'20日MAからの乖離を確認'}
-        ]
+            if not ok: missing.append(label)
+        candle = stock.get('candle_signal') or {}
+        if regime['regime'] == 'DOWNTREND_REVERSAL_CONFIRMED' and not missing and candle.get('status') == '大底反転サイン':
+            signal='BUY_CANDIDATE'; reason='下降トレンド中だが、20日MA回復・大底反転サイン・反転条件を確認した暫定買い候補。'
+        else:
+            signal='WATCH'
+            reason='下降トレンドの反転待ち。BUYにはしません。未達/確認待ち: ' + (' / '.join(missing) if missing else '大底反転確認または20日MA回復')
+    elif regime['regime'] in ('UPTREND','UPTREND_PULLBACK','RANGE_TRANSITION'):
+        signal='WATCH'
+        reason='方向/押し目を監視。レンジ抜け条件が確認できればBUY候補へ。'
+        checks=[
+            {'label':'週足方向','ok':regime.get('weekly_direction')=='UP','value':regime.get('weekly_direction'),'rule':'週足で方向判定'},
+            {'label':'日足20MA','ok':_f(regime.get('daily_vs20')) is not None,'value':regime.get('daily_vs20'),'rule':'20日MAからの乖離を確認'}]
     elif regime['regime'] == 'DOWNTREND_CONTINUED':
-        signal = 'AVOID'; reason = '下降継続のため現時点では回避。'
+        signal='AVOID'; reason='下降継続のため現時点では回避。'
     else:
-        signal = 'INSUFFICIENT'; reason = 'データ不足。'
-    candle = stock.get('candle_signal') or {}
-    if candle.get('status') in ('大底反転サイン', '反転サイン'):
+        signal='INSUFFICIENT'; reason='データ不足。'
+
+    candle=stock.get('candle_signal') or {}
+    if candle.get('status') in ('大底反転サイン','反転サイン'):
         reason += f" 🕯️{candle.get('status')}：{candle.get('reason','')}"
-    return {'signal': signal, 'signal_reason': reason, 'missing_conditions': missing,
-            'condition_checks': checks, 'one_condition_away': len(missing) == 1}
+    if bo.get('status') in ('レンジ抜け候補','ブレイク失敗警戒'):
+        reason += f" 📈{bo.get('status')}：{bo.get('reason','')}"
+    return {'signal':signal,'signal_reason':reason,'missing_conditions':missing,
+            'condition_checks':checks,'one_condition_away':len(missing)==1}

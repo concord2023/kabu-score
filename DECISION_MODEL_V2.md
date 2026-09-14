@@ -34,3 +34,14 @@ If exactly one is missing, `one_condition_away=true`.
 7. INSUFFICIENT
 
 Relative strength and supply/demand are ranking/context factors, not hard gates.
+
+
+## 2026-09-14 BUY判定の厳格化
+- DOWNTREND_REVERSAL_WAIT は BUY_CANDIDATE にしない。常に WATCH。
+- BUY_CANDIDATE は DOWNTREND_REVERSAL_CONFIRMED のみ。
+- 反転確認には週足下降、日足20MA回復、大底反転ローソク足、反転4条件を要求。
+- これにより「下降・反転待ちなのにBUY候補」という表示矛盾を防止。
+
+
+## レンジ抜け・再上昇
+大底反転とは別系統で、直近20営業日の高値を終値で突破し、突破日の出来高増加、20日MA上、突破水準維持、短期上昇、過熱度を確認した場合に「レンジ抜け・再上昇」としてBUY候補を判定する。

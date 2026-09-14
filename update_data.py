@@ -499,6 +499,85 @@ def candle_reversal_signals(rows):
         'ret20': round(ret20, 1) if ret20 is not None else None,
     }
 
+def breakout_signal(rows):
+    """Detect a recent range breakout with price/volume confirmation.
+
+    A breakout is different from a bottom reversal. We use the *intraday high*
+    of the prior 20 sessions as the range ceiling, then require a closing
+    breakout, strong breakout-day volume, and continued holding above that
+    level. This catches bases that start a new up-leg instead of waiting for a
+    bottom pattern.
+    """
+    def n(v):
+        try:
+            return float(v) if v is not None else None
+        except (TypeError, ValueError):
+            return None
+
+    closes=[]; highs=[]; vols=[]; dates=[]
+    for r in rows[:45]:
+        c=n(r.get('adj_close') if r.get('adj_close') is not None else r.get('close'))
+        h=n(r.get('high'))
+        v=n(r.get('volume'))
+        if c is not None:
+            closes.append(c); highs.append(h if h is not None else c); vols.append(v); dates.append(r.get('date'))
+    if len(closes) < 22:
+        return {'status':'データ不足','is_breakout':False,'confirmed':False,'reason':'レンジ判定に必要な日足データ不足'}
+
+    current=closes[0]
+    ma20=sum(closes[1:21])/20
+    current_range_high=max(highs[1:21])
+    candidates=[]
+    for i in range(min(6, len(closes)-20)):
+        prior_highs=highs[i+1:i+21]
+        if len(prior_highs)<20: continue
+        level=max(prior_highs)
+        c=closes[i]
+        v=vols[i] if i < len(vols) else None
+        base=[x for x in vols[i+1:i+21] if x is not None and x>0]
+        vr=(v/(sum(base)/len(base))) if v is not None and base else None
+        # Close at least 0.5% above the prior range ceiling.
+        if c > level*1.005:
+            candidates.append({'i':i,'date':dates[i],'close':c,'level':level,'volume_ratio':vr})
+    if not candidates:
+        return {
+            'status':'なし','is_breakout':False,'confirmed':False,
+            'breakout_level':round(current_range_high,2),'breakout_date':None,
+            'breakout_volume_ratio':None,'distance_from_breakout':round((current/current_range_high-1)*100,2),
+            'reason':'直近6営業日に20日レンジ高値を明確に終値突破した形跡なし'
+        }
+
+    b=candidates[0]
+    held=current >= b['level']*0.99
+    volume_ok=b['volume_ratio'] is not None and b['volume_ratio']>=1.5
+    ma_ok=current > ma20
+    ret5=(current/closes[5]-1)*100 if len(closes)>5 else None
+    trend_ok=ret5 is not None and ret5>0
+    dist=(current/b['level']-1)*100
+    extension_ok=dist <= 15
+    confirmed=held and volume_ok and ma_ok and trend_ok and extension_ok
+    if confirmed:
+        status='レンジ抜け・再上昇'
+        strength='強'
+        reason=f"{b['date']}に20日レンジ高値{b['level']:.0f}円を終値で上抜け。突破日の出来高比{b['volume_ratio']:.1f}倍、現在も突破水準を維持。"
+    elif held:
+        status='レンジ抜け候補'
+        strength='中'
+        reason=f"{b['date']}にレンジ高値を上抜け。突破後は水準を維持しているが、出来高/20MA/上昇継続/過熱度の確認待ち。"
+    else:
+        status='ブレイク失敗警戒'
+        strength='弱'
+        reason=f"一度レンジ高値を上抜けたが、現在は突破水準{b['level']:.0f}円を下回る。"
+    return {
+        'status':status,'strength':strength,'is_breakout':True,'confirmed':confirmed,
+        'breakout_level':round(b['level'],2),'breakout_date':b['date'],
+        'breakout_volume_ratio':round(b['volume_ratio'],2) if b['volume_ratio'] is not None else None,
+        'distance_from_breakout':round(dist,2),'held':held,'volume_ok':volume_ok,
+        'ma20_ok':ma_ok,'trend_ok':trend_ok,'extension_ok':extension_ok,
+        'ret5':round(ret5,2) if ret5 is not None else None,
+        'reason':reason
+    }
+
 def calc(rows, breadth_info=None, supply_info=None):
     vals = []
     for x in rows:
@@ -573,6 +652,7 @@ def calc(rows, breadth_info=None, supply_info=None):
     else: range_text = '60日レンジ上側（高値圏）'
     momentum_text = '反発' if change is not None and change > 0 else '下落' if change is not None and change < 0 else '横ばい'
     candle_signal = candle_reversal_signals(rows)
+    breakout = breakout_signal(rows)
 
     # Keep a compact recent history for the UI chart.  The chart is intentionally
     # presentation data only; decisions continue to use the full calculation above.
@@ -617,6 +697,7 @@ def calc(rows, breadth_info=None, supply_info=None):
         'score': total, 'score_max': 100,
         'data_points': len(vals), 'rows_received': len(rows),
         'candle_signal': candle_signal,
+        'breakout_signal': breakout,
         'chart_history': chart_history,
         'interpretation': {
             'vs5': deviation_text(d5, '5日MA'), 'vs20': deviation_text(d20, '20日MA'), 'vs60': deviation_text(d60, '60日MA'),
@@ -682,7 +763,7 @@ for item in watch:
             supply_info = {'date': target_date, 'status': 'unavailable', 'error': str(e), 'source_url': 'https://api.irbank.net/v1/screening'}
 
         s = calc(rows, breadth_cache, supply_info)
-        regime = classify_regime(rows)
+        regime = classify_regime(rows, s.get('candle_signal'))
         decision = decide(s, regime)
         s.update(regime)
         s.update(decision)
