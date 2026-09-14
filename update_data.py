@@ -574,6 +574,24 @@ def calc(rows, breadth_info=None, supply_info=None):
     momentum_text = '反発' if change is not None and change > 0 else '下落' if change is not None and change < 0 else '横ばい'
     candle_signal = candle_reversal_signals(rows)
 
+    # Keep a compact recent history for the UI chart.  The chart is intentionally
+    # presentation data only; decisions continue to use the full calculation above.
+    chart_history = []
+    for idx, r in enumerate(rows[:61]):
+        raw_close = r.get('adj_close') if r.get('adj_close') is not None else r.get('close')
+        if raw_close is None: continue
+        close_i = float(raw_close)
+        prev20 = [float((z.get('adj_close') if z.get('adj_close') is not None else z.get('close'))) for z in rows[idx+1:idx+21]
+                  if (z.get('adj_close') if z.get('adj_close') is not None else z.get('close')) is not None]
+        prev60 = [float((z.get('adj_close') if z.get('adj_close') is not None else z.get('close'))) for z in rows[idx+1:idx+61]
+                  if (z.get('adj_close') if z.get('adj_close') is not None else z.get('close')) is not None]
+        chart_history.append({
+            'date': r.get('date'), 'close': round(close_i,2),
+            'ma20': round(statistics.mean(prev20),2) if len(prev20)>=20 else None,
+            'ma60': round(statistics.mean(prev60),2) if len(prev60)>=60 else None,
+        })
+    chart_history.reverse()
+
     return {
         'date': rows[0].get('date'), 'price': close,
         'change': round(change, 2) if change is not None else None,
@@ -599,6 +617,7 @@ def calc(rows, breadth_info=None, supply_info=None):
         'score': total, 'score_max': 100,
         'data_points': len(vals), 'rows_received': len(rows),
         'candle_signal': candle_signal,
+        'chart_history': chart_history,
         'interpretation': {
             'vs5': deviation_text(d5, '5日MA'), 'vs20': deviation_text(d20, '20日MA'), 'vs60': deviation_text(d60, '60日MA'),
             'rsi': rsi_text, 'volume': volume_text, 'range60': range_text, 'momentum': momentum_text,
