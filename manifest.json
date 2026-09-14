@@ -1,7 +1,7 @@
 {
   "name": "株スコア",
   "short_name": "株スコア",
-  "start_url": "./dashboard.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#f5f6f8",
   "theme_color": "#111111",

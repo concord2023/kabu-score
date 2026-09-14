@@ -360,6 +360,100 @@ def relative_points(x):
     return 0
 
 
+
+def candle_reversal_signals(rows):
+    """Detect simple bullish reversal candlestick patterns near a potential bottom.
+
+    This is an alert layer, not a validated BUY rule. It deliberately favors
+    recall: the dashboard should tell the user that a bottom/reversal pattern
+    appeared so it can be checked together with weekly direction, volume and
+    follow-through.
+    """
+    def n(v):
+        try: return float(v) if v is not None else None
+        except (TypeError, ValueError): return None
+
+    def candle(i):
+        r=rows[i]
+        o,h,l,c=map(lambda k:n(r.get(k)),('open','high','low','close'))
+        if None in (o,h,l,c): return None
+        body=abs(c-o); rng=max(h-l,1e-9)
+        upper=h-max(o,c); lower=min(o,c)-l
+        return {'date':r.get('date'),'open':o,'high':h,'low':l,'close':c,
+                'body':body,'range':rng,'upper':upper,'lower':lower,
+                'bull':c>o,'bear':c<o}
+
+    cs=[candle(i) for i in range(min(len(rows),8))]
+    if not cs or cs[0] is None: return {'status':'データ不足','patterns':[], 'recent_patterns':[], 'bottom_zone':False, 'confirmation':'不明'}
+
+    found=[]
+    # Current day and previous 1-2 days: patterns are still actionable context.
+    for i,c in enumerate(cs[:3]):
+        if c is None: continue
+        prev=cs[i+1] if i+1<len(cs) else None
+        prev2=cs[i+2] if i+2<len(cs) else None
+        if c['range'] and c['lower'] >= max(c['body'],0.01)*2 and c['upper'] <= max(c['body'],0.01)*1.2 and c['close'] >= c['low'] + c['range']*0.55:
+            found.append(('hammer','下ヒゲの長いハンマー'))
+        if c['body'] <= c['range']*0.10 and c['lower'] > c['upper']:
+            found.append(('doji_lower_shadow','下ヒゲ付き小陰/十字'))
+        if prev and prev['bear'] and c['bull'] and c['open'] <= prev['close'] and c['close'] >= prev['open']:
+            found.append(('bullish_engulfing','陽線の包み足'))
+        if prev and prev['bear'] and c['bull'] and c['close'] > (prev['open']+prev['close'])/2 and c['close'] < prev['open']:
+            found.append(('piercing','切り返し（Piercing）'))
+        if prev and abs(c['low']/prev['low']-1) <= 0.005 and c['bull'] and c['close'] > c['open']:
+            found.append(('tweezer_bottom','毛抜き底'))
+        if prev and prev2 and prev2['bear'] and prev2['body'] > prev2['range']*0.35 and abs(prev['close']-prev['open']) <= prev['range']*0.25 and c['bull'] and c['close'] > (prev2['open']+prev2['close'])/2:
+            found.append(('morning_star','明けの明星型'))
+        if prev and prev['bear'] and c['bull'] and c['close'] > prev['high']:
+            found.append(('bullish_breakout','前日高値を上抜く陽線'))
+
+    # Deduplicate by pattern, preserving first occurrence.
+    unique=[]; seen=set()
+    for code,label in found:
+        if code not in seen:
+            seen.add(code); unique.append({'code':code,'label':label})
+
+    # Potential bottom zone from the most recent price context.
+    closes=[]
+    for r in rows[:61]:
+        v=n(r.get('adj_close') if r.get('adj_close') is not None else r.get('close'))
+        if v is not None: closes.append(v)
+    bottom_zone=False; zone_reason='底値圏ではない/判定材料不足'
+    if len(closes)>=21:
+        low20=min(closes[1:21]); pos20=(closes[0]-low20)/low20*100 if low20 else None
+        low60=min(closes[1:61]) if len(closes)>=61 else None
+        pos60=(closes[0]-low60)/low60*100 if low60 else None
+        high60=max(closes[1:61]) if len(closes)>=61 else None
+        dd=(closes[0]/high60-1)*100 if high60 else None
+        bottom_zone = (pos20 is not None and pos20 <= 8) or (pos60 is not None and pos60 <= 12) or (dd is not None and dd <= -20)
+        if bottom_zone: zone_reason='直近安値に近く、下落後の底値圏を監視'
+
+    current=cs[0]
+    confirmation='未確認'
+    if current and len(cs)>1 and cs[1]:
+        if current['bull'] and current['close'] > cs[1]['high']:
+            confirmation='翌日/当日フォロー確認'
+        elif current['bull']:
+            confirmation='反発は出たが上値確認待ち'
+        else:
+            confirmation='まだ陰線。反転確認待ち'
+
+    # Only expose a signal when a bullish reversal pattern exists.
+    recent = unique
+    if not recent:
+        status='なし'
+        strength='—'
+        reason='ローソク足の明確な反転パターンは直近3営業日に未検出。'
+    else:
+        strength='強' if bottom_zone and len(recent)>=1 else '中'
+        status='大底反転サイン' if bottom_zone else '反転サイン'
+        reason=f"{', '.join(x['label'] for x in recent)}。{zone_reason}。{confirmation}。"
+
+    return {'status':status,'strength':strength,'patterns':recent,
+            'recent_patterns':recent,'bottom_zone':bottom_zone,
+            'zone_reason':zone_reason,'confirmation':confirmation,'reason':reason,
+            'lookback_days':3}
+
 def calc(rows, breadth_info=None, supply_info=None):
     vals = []
     for x in rows:
@@ -433,6 +527,7 @@ def calc(rows, breadth_info=None, supply_info=None):
     elif range_position60 < 80: range_text = '60日レンジやや上'
     else: range_text = '60日レンジ上側（高値圏）'
     momentum_text = '反発' if change is not None and change > 0 else '下落' if change is not None and change < 0 else '横ばい'
+    candle_signal = candle_reversal_signals(rows)
 
     return {
         'date': rows[0].get('date'), 'price': close,
@@ -458,6 +553,7 @@ def calc(rows, breadth_info=None, supply_info=None):
         'rsi14': round(rsi, 1) if rsi is not None else None,
         'score': total, 'score_max': 100,
         'data_points': len(vals), 'rows_received': len(rows),
+        'candle_signal': candle_signal,
         'interpretation': {
             'vs5': deviation_text(d5, '5日MA'), 'vs20': deviation_text(d20, '20日MA'), 'vs60': deviation_text(d60, '60日MA'),
             'rsi': rsi_text, 'volume': volume_text, 'range60': range_text, 'momentum': momentum_text,
@@ -492,7 +588,7 @@ breadth_error = None
 out = {
     'updated_at': now_jst().isoformat(),
     'source': 'IRBANK API + 豆腐ハードボイルド（騰落銘柄数）',
-    'api_strategy': 'price:1 call/stock, supply:2 calls/stock, breadth:1 call/run',
+    'api_strategy': 'price:1 call/stock, supply:5 calls/stock, breadth:1 call/run (rate-limited)',
     'stocks': {},
     'diagnostics': [],
 }

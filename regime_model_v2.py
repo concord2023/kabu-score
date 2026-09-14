@@ -154,5 +154,8 @@ def decide(stock, regime):
         signal = 'AVOID'; reason = '下降継続のため現時点では回避。'
     else:
         signal = 'INSUFFICIENT'; reason = 'データ不足。'
+    candle = stock.get('candle_signal') or {}
+    if candle.get('status') in ('大底反転サイン', '反転サイン'):
+        reason += f" 🕯️{candle.get('status')}：{candle.get('reason','')}"
     return {'signal': signal, 'signal_reason': reason, 'missing_conditions': missing,
             'condition_checks': checks, 'one_condition_away': len(missing) == 1}
