@@ -1,10 +1,9 @@
 {
-  "name": "株判定 V2",
-  "short_name": "株判定V2",
-  "lang": "ja",
-  "start_url": "./dashboard.html",
+  "name": "株スコア V2",
+  "short_name": "株スコア",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#f5f6f8",
   "theme_color": "#111111",
-  "icons": []
+  "lang": "ja"
 }

@@ -1,1 +1,55 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>株判定 V2</title><link rel="manifest" href="./manifest.json"><meta name="theme-color" content="#111111"><style>body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#f5f6f8;margin:0;color:#111}.wrap{max-width:900px;margin:auto;padding:16px}.card{background:#fff;border-radius:16px;padding:16px;margin:10px 0;box-shadow:0 1px 6px #0001}h1{font-size:22px}table{width:100%;border-collapse:collapse}th,td{padding:9px 6px;border-bottom:1px solid #eee;text-align:left;font-size:13px}.buy{font-weight:700}.muted{color:#666}.pill{padding:4px 8px;border-radius:999px;background:#eee}.top{display:flex;justify-content:space-between;gap:10px;align-items:center}</style></head><body><div class="wrap"><div class="card"><div class="top"><h1>株判定 V2</h1><span id="date" class="muted"></span></div><div id="market" class="muted">市場環境を読み込み中…</div></div><div class="card"><h2>今日の判定</h2><div id="summary"></div><table><thead><tr><th>銘柄</th><th>状態</th><th>判定</th><th>相対強度</th></tr></thead><tbody id="rows"></tbody></table></div></div><script>const jp={UPTREND:'🟢 上昇トレンド',UPTREND_PULLBACK:'🟡 上昇・押し目',DOWNTREND_REVERSAL_WAIT:'🟠 下降・反転待ち',DOWNTREND_CONTINUED:'🔴 下降継続',RANGE_TRANSITION:'🟣 レンジ・転換',UNKNOWN:'⚪ 判定不能'};const sg={BUY_CANDIDATE:'BUY候補',WATCH:'WATCH',AVOID:'AVOID',INSUFFICIENT:'データ不足'};fetch('data/decision_ranking.json?'+Date.now()).then(r=>r.json()).then(d=>{document.getElementById('date').textContent=d.updated_at||'';let n=d.market_context?.nikkei_change;document.getElementById('market').textContent=n==null?'市場データなし':`日経平均日次変化: ${Number(n).toFixed(2)}%（市場は参考情報。買い禁止条件ではありません）`;let a=d.stocks||[];let buy=a.filter(x=>x.signal==='BUY_CANDIDATE').length;document.getElementById('summary').textContent=buy?`今日のBUY候補: ${buy}銘柄`:'今日は確定BUY候補なし';document.getElementById('rows').innerHTML=a.map(x=>`<tr><td><b>${x.name||x.code}</b><br><span class="muted">${x.code}</span></td><td>${jp[x.signal_state]||x.signal_state||''}</td><td class="${x.signal==='BUY_CANDIDATE'?'buy':''}">${sg[x.signal]||x.signal||''}<br><span class="muted">${x.one_condition_away?'あと1条件':''}</span></td><td>${x.relative_strength==null?'—':Number(x.relative_strength).toFixed(2)+'pt'}</td></tr>`).join('')}).catch(e=>{document.getElementById('summary').textContent='データを読み込めませんでした'}); if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});</script></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111111">
+<link rel="manifest" href="./manifest.json">
+<title>株スコア V2</title>
+<style>
+:root{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;color:#111;background:#f4f6f8}
+body{margin:0}.wrap{max-width:960px;margin:auto;padding:14px}.card{background:#fff;border-radius:18px;padding:16px;margin:10px 0;box-shadow:0 2px 10px #00000010}h1{font-size:23px;margin:0 0 6px}h2{font-size:18px;margin:0 0 12px}.muted{color:#667085;font-size:13px}.hero{display:flex;gap:10px;align-items:center}.heroicon{font-size:30px}.summary{font-size:20px;font-weight:800;margin:8px 0}.ok{color:#087f5b}.warn{color:#a15c00}.bad{color:#b42318}.pill{display:inline-block;border-radius:999px;padding:4px 8px;font-size:12px;background:#eef2f6}.buy{font-weight:800}.row{border-top:1px solid #edf0f2;padding:11px 0}.top{display:flex;justify-content:space-between;gap:10px}.name{font-weight:700}.signal{font-weight:700}.reason{margin-top:5px;color:#667085;font-size:12px;line-height:1.5}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}.metric{background:#f7f8fa;border-radius:12px;padding:10px}.metric b{display:block;font-size:15px;margin-top:2px}@media(min-width:700px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}.row{display:grid;grid-template-columns:45px 1.3fr 1fr 1fr 1fr;align-items:center;gap:8px}.mobilelabel{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <div class="hero"><div class="heroicon">📈</div><div><h1>株スコア V2</h1><div class="muted">週足＝方向、日足＝タイミング。18銘柄を毎日判定。</div></div></div>
+    <div id="date" class="muted" style="margin-top:10px">更新情報を読み込み中…</div>
+    <div id="market" class="muted" style="margin-top:5px"></div>
+  </div>
+
+  <div class="card">
+    <h2>今日の判定</h2>
+    <div id="summary" class="summary">読み込み中…</div>
+    <div id="note" class="muted"></div>
+  </div>
+
+  <div class="card">
+    <h2>18銘柄ランキング</h2>
+    <div id="rows"></div>
+  </div>
+
+  <div class="card">
+    <div class="muted">判定の考え方</div>
+    <div class="reason">🟢 上昇トレンド：週足方向が上。<br>🟡 上昇・押し目：上昇方向の中で日足が押している。<br>🟠 下降・反転待ち：週足は下だが、底打ちの兆候を監視。<br>🔴 下降継続：まだ下落が続く可能性を優先。<br>🟣 レンジ・転換：方向が決め切れない。<br>BUY候補は現時点では反転4条件の暫定ルールのみ。検証前の上昇・押し目条件はWATCHのまま。</div>
+  </div>
+</div>
+<script>
+const jp={UPTREND:'🟢 上昇トレンド',UPTREND_PULLBACK:'🟡 上昇・押し目',DOWNTREND_REVERSAL_WAIT:'🟠 下降・反転待ち',DOWNTREND_CONTINUED:'🔴 下降継続',RANGE_TRANSITION:'🟣 レンジ・転換',UNKNOWN:'⚪ 判定不能'};
+const sg={BUY_CANDIDATE:'BUY候補',WATCH:'WATCH',AVOID:'AVOID',INSUFFICIENT:'データ不足'};
+const cls=s=>s==='BUY_CANDIDATE'?'buy':s==='AVOID'?'bad':s==='INSUFFICIENT'?'warn':'';
+function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+fetch('./data/decision_ranking.json?'+Date.now()).then(r=>{if(!r.ok)throw Error('まだ日次データがありません');return r.json()}).then(d=>{
+ const a=d.ranking||[], sum=d.summary||{};
+ document.getElementById('date').textContent='最終更新: '+esc(d.updated_at||'—');
+ document.getElementById('market').textContent='市場は参考情報として使用。市場全体が弱くても強い銘柄は残し、買い禁止フィルターにはしません。';
+ const buy=sum.buy_candidates||0;
+ document.getElementById('summary').innerHTML=buy?`<span class="ok">今日のBUY候補：${buy}銘柄</span>`:'今日は買い候補なし';
+ document.getElementById('note').textContent=`WATCH ${sum.watch||0} / AVOID ${sum.avoid||0} / データ不足 ${sum.insufficient||0}`;
+ document.getElementById('rows').innerHTML=a.map(x=>`<div class="row"><div>${esc(x.rank||'')}</div><div><div class="name">${esc(x.name||x.code)}</div><div class="muted">${esc(x.code)}</div></div><div>${jp[x.regime]||esc(x.regime||'')}</div><div class="signal ${cls(x.signal)}">${sg[x.signal]||esc(x.signal||'')}${x.one_condition_away?'<br><span class="pill">あと1条件</span>':''}</div><div><span class="muted">相対強度</span><br>${x.relative_strength==null?'—':Number(x.relative_strength).toFixed(2)+'pt'}</div>${x.signal_reason?`<div class="reason" style="grid-column:1/-1">${esc(x.signal_reason)}</div>`:''}</div>`).join('');
+}).catch(e=>{document.getElementById('summary').textContent='日次データ待ち';document.getElementById('note').textContent=e.message;});
+if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script>
+</body>
+</html>

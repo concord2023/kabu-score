@@ -1,48 +1,30 @@
-"""Backtest the provisional V2 reversal BUY rule on local daily CSV files.
-
-CSV columns required: date and adj_close/close. This is deliberately a simple
-research tool, not a performance guarantee. It uses only information available
-on each signal date and measures forward 5/10/20 trading-day returns.
+"""Conservative backtest for the current reversal BUY hypothesis.
+Input: a CSV with newest row first and a close/adj_close column.
+This is a diagnostic, not proof of profitability.
 """
-import csv, glob, os
+import csv, sys
 from statistics import mean
-from regime_model_v2 import classify
 
-ROOT=os.path.dirname(__file__)
+def pct(a,b): return (a/b-1)*100 if b else None
 
-def load(path):
-    with open(path, encoding='utf-8-sig', newline='') as f:
-        rows=list(csv.DictReader(f))
-    out=[]
+def main(path):
+    with open(path,encoding='utf-8-sig',newline='') as f: rows=list(csv.DictReader(f))
+    rows=rows[::-1]
+    vals=[]
     for r in rows:
-        c=r.get('adj_close') or r.get('close')
-        if not r.get('date') or c in (None,''): continue
-        rr=dict(r); rr['adj_close']=float(c); out.append(rr)
-    out.sort(key=lambda x:x['date'], reverse=True)
-    return out
-
-def ret(a,b): return (b/a-1)*100
-
-for path in sorted(glob.glob(os.path.join(ROOT,'*.csv'))):
-    rows=load(path)
-    if len(rows)<80: continue
-    # chronological index i; classifier gets newest-first slice ending at i
-    signals=[]
-    chron=list(reversed(rows))
-    for i in range(60, len(chron)-20):
-        hist=list(reversed(chron[:i+1]))
-        d=classify(hist)
-        if d.get('signal')=='BUY_CANDIDATE':
-            px=chron[i]['adj_close']
-            signals.append({
-                'date':chron[i]['date'],
-                'fwd5':ret(px,chron[i+5]['adj_close']),
-                'fwd10':ret(px,chron[i+10]['adj_close']),
-                'fwd20':ret(px,chron[i+20]['adj_close']),
-            })
-    print(os.path.basename(path), 'signals=',len(signals))
-    if signals:
-        for k in ('fwd5','fwd10','fwd20'):
-            vals=[x[k] for x in signals]
-            win=sum(v>0 for v in vals)/len(vals)*100
-            print(f'  {k}: avg={mean(vals):.2f}% win={win:.1f}%')
+        v=r.get('adj_close') or r.get('close')
+        try: vals.append(float(v))
+        except: vals.append(None)
+    sig=[]
+    for i in range(60,len(vals)-20):
+        if any(vals[j] is None for j in range(i-60,i+21)): continue
+        ma60=mean(vals[i-60:i])
+        vs60=pct(vals[i],ma60); ret1=pct(vals[i],vals[i-1]); ret5=pct(vals[i],vals[i-5]); ret10=pct(vals[i],vals[i-10])
+        if vs60<=-5 and ret1>0 and ret5>=-5 and ret10>=-10:
+            sig.append((pct(vals[i+5],vals[i]),pct(vals[i+10],vals[i]),pct(vals[i+20],vals[i])))
+    print('signals',len(sig))
+    if sig:
+        for n,k in ((5,0),(10,1),(20,2)):
+            xs=[x[k] for x in sig]
+            print(f'fwd{n}_avg',round(mean(xs),2),'win',round(sum(x>0 for x in xs)/len(xs)*100,1))
+if __name__=='__main__': main(sys.argv[1])

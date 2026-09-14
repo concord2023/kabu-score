@@ -1,23 +1,10 @@
-# 株判定V2 最終状態
+# 最終セットアップ
 
-## できていること
-- 18銘柄ウォッチリスト
-- 日次株価取得（最大500件/ページ、320営業日以上を取得）
-- 調整後終値で週足13/26/52週MAと傾き計算
-- 週足=方向、日足=タイミング
-- 上昇/押し目/下降反転待ち/下降継続/レンジ/判定不能
-- BUY候補/WATCH/AVOID/INSUFFICIENT
-- 「あと1条件」表示
-- 市場環境と相対強度を参考情報として表示（買い禁止フィルターではない）
-- 需給データは取得できれば加点、取得失敗しても株価判定は継続
-- 毎日更新用 GitHub Actions
-- スマホ表示用ダッシュボード + PWA用 manifest/service worker
-- V2暫定BUY条件のバックテストスクリプト
+1. GitHub `concord2023/kabu-score` にこのZIPの中身をアップロード。
+2. 既存の同名ファイルは上書き。古い不要ファイルは削除不要。
+3. `.github/workflows/daily-update.yml` はその場所に置く。
+4. Repository Secrets に `IRBANK_API_KEY` を設定。
+5. Actions → Daily stock update → Run workflow を1回実行。
+6. 成功後、GitHub Pagesを開く。
 
-## あなたに残る操作
-コード側で残っている外部操作は、IRBANK APIキーをGitHubリポジトリのActions secret `IRBANK_API_KEY` に登録することだけです。APIキーはチャットへ貼らないでください。
-
-その後 GitHub Actions の `Daily stock update` を手動実行すれば初回データが生成され、以後平日朝に自動更新されます。
-
-## 注意
-BUY_CANDIDATEは現時点では「検証済み利益保証」ではなく、反転4条件を満たした候補です。上昇トレンド押し目・継続上昇のBUY条件はバックテストで十分な件数を確認してから有効化します。
+Pagesの入口は `index.html`。旧 `dashboard.html` を入口にしない。
