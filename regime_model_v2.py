@@ -129,17 +129,30 @@ def classify_regime(rows):
 def decide(stock, regime):
     vs60 = _f(stock.get('vs60')); ret1 = _f(stock.get('change')); ret5 = _f(stock.get('ret5')); ret10 = _f(stock.get('ret10'))
     missing = []
+    checks = []
     if regime['regime'] == 'DOWNTREND_REVERSAL_WAIT':
-        conds = [('60日MAより5%以上下', vs60 is not None and vs60 <= -5), ('当日プラス', ret1 is not None and ret1 > 0),
-                 ('5日騰落率が-5%以上', ret5 is not None and ret5 >= -5), ('10日騰落率が-10%以上', ret10 is not None and ret10 >= -10)]
-        missing = [name for name, ok in conds if not ok]
+        conds = [
+            ('60日MAより5%以上下', vs60 is not None and vs60 <= -5, vs60, 'vs60<=-5%'),
+            ('当日プラス', ret1 is not None and ret1 > 0, ret1, '当日騰落率>0%'),
+            ('5日騰落率が-5%以上', ret5 is not None and ret5 >= -5, ret5, '5日騰落率>=-5%'),
+            ('10日騰落率が-10%以上', ret10 is not None and ret10 >= -10, ret10, '10日騰落率>=-10%')
+        ]
+        for label, ok, value, rule in conds:
+            checks.append({'label': label, 'ok': bool(ok), 'value': value, 'rule': rule})
+            if not ok:
+                missing.append(label)
         signal = 'BUY_CANDIDATE' if not missing else 'WATCH'
         reason = '反転4条件をすべて満たした暫定買い候補。' if not missing else '反転待ち。未達条件: ' + ' / '.join(missing)
     elif regime['regime'] in ('UPTREND', 'UPTREND_PULLBACK', 'RANGE_TRANSITION'):
         signal = 'WATCH'
         reason = '方向/押し目を監視。上昇・押し目買い条件は検証後にBUYへ昇格。'
+        checks = [
+            {'label':'週足方向', 'ok': regime.get('weekly_direction') == 'UP', 'value': regime.get('weekly_direction'), 'rule':'週足で方向判定'},
+            {'label':'日足20MA', 'ok': _f(regime.get('daily_vs20')) is not None, 'value': regime.get('daily_vs20'), 'rule':'20日MAからの乖離を確認'}
+        ]
     elif regime['regime'] == 'DOWNTREND_CONTINUED':
         signal = 'AVOID'; reason = '下降継続のため現時点では回避。'
     else:
         signal = 'INSUFFICIENT'; reason = 'データ不足。'
-    return {'signal': signal, 'signal_reason': reason, 'missing_conditions': missing, 'one_condition_away': len(missing) == 1}
+    return {'signal': signal, 'signal_reason': reason, 'missing_conditions': missing,
+            'condition_checks': checks, 'one_condition_away': len(missing) == 1}

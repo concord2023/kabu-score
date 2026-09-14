@@ -1,55 +1,52 @@
 <!doctype html>
 <html lang="ja">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#111111">
-<link rel="manifest" href="./manifest.json">
-<title>株スコア V2</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111111"><link rel="manifest" href="./manifest.json">
+<title>株スコア V3</title>
 <style>
-:root{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;color:#111;background:#f4f6f8}
-body{margin:0}.wrap{max-width:960px;margin:auto;padding:14px}.card{background:#fff;border-radius:18px;padding:16px;margin:10px 0;box-shadow:0 2px 10px #00000010}h1{font-size:23px;margin:0 0 6px}h2{font-size:18px;margin:0 0 12px}.muted{color:#667085;font-size:13px}.hero{display:flex;gap:10px;align-items:center}.heroicon{font-size:30px}.summary{font-size:20px;font-weight:800;margin:8px 0}.ok{color:#087f5b}.warn{color:#a15c00}.bad{color:#b42318}.pill{display:inline-block;border-radius:999px;padding:4px 8px;font-size:12px;background:#eef2f6}.buy{font-weight:800}.row{border-top:1px solid #edf0f2;padding:11px 0}.top{display:flex;justify-content:space-between;gap:10px}.name{font-weight:700}.signal{font-weight:700}.reason{margin-top:5px;color:#667085;font-size:12px;line-height:1.5}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}.metric{background:#f7f8fa;border-radius:12px;padding:10px}.metric b{display:block;font-size:15px;margin-top:2px}@media(min-width:700px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}.row{display:grid;grid-template-columns:45px 1.3fr 1fr 1fr 1fr;align-items:center;gap:8px}.mobilelabel{display:none}}
+:root{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;color:#111;background:#f3f5f7}
+body{margin:0}.wrap{max-width:980px;margin:auto;padding:12px}.card{background:#fff;border-radius:18px;padding:15px;margin:10px 0;box-shadow:0 2px 12px #0000000b}h1{font-size:22px;margin:0 0 5px}h2{font-size:18px;margin:0 0 10px}.muted{color:#667085;font-size:12px}.hero{display:flex;gap:10px;align-items:center}.heroicon{font-size:29px}.summary{font-size:20px;font-weight:800;margin:8px 0}.ok{color:#087f5b}.warn{color:#a15c00}.bad{color:#b42318}.pill{display:inline-block;border-radius:999px;padding:4px 8px;font-size:11px;background:#eef2f6}.buy{font-weight:800}.row{border-top:1px solid #edf0f2;padding:13px 0}.top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.name{font-weight:750;font-size:15px}.signal{font-weight:750}.reason{margin-top:5px;color:#667085;font-size:12px;line-height:1.55}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:10px}.metric{background:#f7f8fa;border-radius:11px;padding:9px}.metric span{display:block;color:#667085;font-size:10px}.metric b{display:block;font-size:14px;margin-top:2px}.section{margin-top:10px;border-top:1px solid #edf0f2;padding-top:9px}.section-title{font-size:12px;font-weight:750;margin-bottom:6px}.detail{background:#fafbfc;border-radius:12px;padding:10px;margin-top:8px}.bar{height:7px;border-radius:99px;background:#e9edf1;overflow:hidden;margin-top:5px}.bar i{display:block;height:100%;background:#64748b}.checks{display:grid;gap:5px}.check{display:flex;justify-content:space-between;gap:8px;font-size:12px}.yes{color:#087f5b;font-weight:700}.no{color:#b42318;font-weight:700}.tag{font-size:10px;padding:2px 6px;border-radius:999px;background:#eef2f6}.risk{font-weight:700}.risk-high{color:#b42318}.risk-mid{color:#a15c00}.risk-low{color:#087f5b}.small{font-size:11px;line-height:1.5}.disclosure{margin-top:8px;font-size:12px;color:#475467;cursor:pointer}.source{font-size:10px;color:#98a2b3;margin-top:8px}
 </style>
 </head>
-<body>
-<div class="wrap">
-  <div class="card">
-    <div class="hero"><div class="heroicon">📈</div><div><h1>株スコア V2</h1><div class="muted">週足＝方向、日足＝タイミング。18銘柄を毎日判定。</div></div></div>
-    <div id="date" class="muted" style="margin-top:10px">更新情報を読み込み中…</div>
-    <div id="market" class="muted" style="margin-top:5px"></div>
-  </div>
-
-  <div class="card">
-    <h2>今日の判定</h2>
-    <div id="summary" class="summary">読み込み中…</div>
-    <div id="note" class="muted"></div>
-  </div>
-
-  <div class="card">
-    <h2>18銘柄ランキング</h2>
-    <div id="rows"></div>
-  </div>
-
-  <div class="card">
-    <div class="muted">判定の考え方</div>
-    <div class="reason">🟢 上昇トレンド：週足方向が上。<br>🟡 上昇・押し目：上昇方向の中で日足が押している。<br>🟠 下降・反転待ち：週足は下だが、底打ちの兆候を監視。<br>🔴 下降継続：まだ下落が続く可能性を優先。<br>🟣 レンジ・転換：方向が決め切れない。<br>BUY候補は現時点では反転4条件の暫定ルールのみ。検証前の上昇・押し目条件はWATCHのまま。</div>
-  </div>
+<body><div class="wrap">
+<div class="card"><div class="hero"><div class="heroicon">📈</div><div><h1>株スコア</h1><div class="muted">週足＝方向、日足＝タイミング。価格・移動平均・乖離率・勢い・出来高・需給・市場との相対強度をまとめて表示。</div></div></div><div id="date" class="muted" style="margin-top:9px">読み込み中…</div><div id="market" class="muted" style="margin-top:4px"></div></div>
+<div class="card"><h2>今日の判定</h2><div id="summary" class="summary">読み込み中…</div><div id="note" class="muted"></div></div>
+<div class="card"><h2>18銘柄ランキング</h2><div class="muted">順位だけでなく、各銘柄の「なぜそう判定したか」を開いて確認できます。</div><div id="rows"></div></div>
+<div class="card"><div class="muted">この画面で見るポイント</div><div class="small" style="margin-top:6px">① <b>週足の方向</b>で上昇・下降・レンジを分ける。② <b>日足の20日MA乖離</b>や5/10/20日騰落率で押し目・下げ止まりを見る。③ <b>需給</b>は信用倍率と買い残/売り残の増減から「重い・改善方向」を表示。④ <b>買いサイン</b>は暫定ルールで、条件が揃う前はWATCH。モデル未検証の条件を勝手にBUYへ昇格しません。</div></div>
 </div>
 <script>
 const jp={UPTREND:'🟢 上昇トレンド',UPTREND_PULLBACK:'🟡 上昇・押し目',DOWNTREND_REVERSAL_WAIT:'🟠 下降・反転待ち',DOWNTREND_CONTINUED:'🔴 下降継続',RANGE_TRANSITION:'🟣 レンジ・転換',UNKNOWN:'⚪ 判定不能'};
 const sg={BUY_CANDIDATE:'BUY候補',WATCH:'WATCH',AVOID:'AVOID',INSUFFICIENT:'データ不足'};
-const cls=s=>s==='BUY_CANDIDATE'?'buy':s==='AVOID'?'bad':s==='INSUFFICIENT'?'warn':'';
-function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
-fetch('./data/decision_ranking.json?'+Date.now()).then(r=>{if(!r.ok)throw Error('まだ日次データがありません');return r.json()}).then(d=>{
- const a=d.ranking||[], sum=d.summary||{};
- document.getElementById('date').textContent='最終更新: '+esc(d.updated_at||'—');
- document.getElementById('market').textContent='市場は参考情報として使用。市場全体が弱くても強い銘柄は残し、買い禁止フィルターにはしません。';
- const buy=sum.buy_candidates||0;
- document.getElementById('summary').innerHTML=buy?`<span class="ok">今日のBUY候補：${buy}銘柄</span>`:'今日は買い候補なし';
- document.getElementById('note').textContent=`WATCH ${sum.watch||0} / AVOID ${sum.avoid||0} / データ不足 ${sum.insufficient||0}`;
- document.getElementById('rows').innerHTML=a.map(x=>`<div class="row"><div>${esc(x.rank||'')}</div><div><div class="name">${esc(x.name||x.code)}</div><div class="muted">${esc(x.code)}</div></div><div>${jp[x.regime]||esc(x.regime||'')}</div><div class="signal ${cls(x.signal)}">${sg[x.signal]||esc(x.signal||'')}${x.one_condition_away?'<br><span class="pill">あと1条件</span>':''}</div><div><span class="muted">相対強度</span><br>${x.relative_strength==null?'—':Number(x.relative_strength).toFixed(2)+'pt'}</div>${x.signal_reason?`<div class="reason" style="grid-column:1/-1">${esc(x.signal_reason)}</div>`:''}</div>`).join('');
+const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const f=(v,d=2,s='')=>v==null?'—':Number(v).toFixed(d)+s;
+const pct=(v)=>f(v,2,'%');
+function supplyText(x){return x.details?.supply_status||'データ不足'}
+function supplyClass(v){return v==='重い'?'risk-high':v==='改善方向'||v==='軽い'?'risk-low':'risk-mid'}
+function metric(label,v,unit=''){return `<div class="metric"><span>${label}</span><b>${v==null?'—':esc(v)+unit}</b></div>`}
+function conditionRows(cs){return (cs||[]).map(c=>`<div class="check"><span>${esc(c.label)}</span><span class="${c.ok?'yes':'no'}">${c.ok?'✓ 達成':'× 未達'}</span></div>`).join('')}
+function stockDetail(x){const d=x.details||{}, s=d.supply||{};const checks=d.condition_checks||[];const rs=d.relative_strength;const pos=d.range_position60;const risk=d.drawdown60;
+ let riskLabel=risk==null?'—':Number(risk)<=-25?'高い':Number(risk)<=-12?'中程度':'小さめ';
+ return `<div class="detail">
+ <div class="section-title">📌 まず数字を見る</div><div class="grid">
+ ${metric('株価',d.price)}${metric('前日比',d.change,'%')}${metric('5日騰落率',d.ret5,'%')}${metric('10日騰落率',d.ret10,'%')}
+ ${metric('20日騰落率',d.ret20,'%')}${metric('RSI(14)',d.rsi14)}${metric('出来高/20日平均',d.volume_ratio,'倍')}${metric('20日変動率',d.volatility20,'%')}
+ </div>
+ <div class="section"><div class="section-title">📐 移動平均と乖離率</div><div class="grid">
+ ${metric('5日MA',d.ma5)}${metric('5日MA乖離',d.vs5,'%')}${metric('20日MA',d.ma20)}${metric('20日MA乖離',d.vs20,'%')}${metric('60日MA',d.ma60)}${metric('60日MA乖離',d.vs60,'%')}${metric('60日高値から',d.drawdown60,'%')}${metric('60日レンジ位置',d.range_position60,'%')}
+ </div><div class="small" style="margin-top:6px">60日レンジ位置は、直近60日安値=0%、高値=100%。下側なら底値圏、上側なら高値圏に近い、という位置関係を見るための数字です。</div></div>
+ <div class="section"><div class="section-title">📅 週足＝方向</div><div class="grid">${metric('13週MA乖離',d.weekly_vs13,'%')}${metric('26週MA乖離',d.weekly_vs26,'%')}${metric('52週MA乖離',d.weekly_vs52,'%')}${metric('13週MA 4週傾き',d.weekly_ma13_slope4w,'%')}${metric('26週MA 4週傾き',d.weekly_ma26_slope4w,'%')}${metric('週足方向',d.weekly_direction)}</div><div class="reason">${esc(x.regime_reason||'')}</div></div>
+ <div class="section"><div class="section-title">📦 需給</div><div class="grid">${metric('需給判定',supplyText(x))}${metric('信用倍率',s.credit_ratio,'倍')}${metric('信用買い残',s.buy_balance)}${metric('信用売り残',s.sell_balance)}${metric('買い残 前週比',s.buy_change)}${metric('売り残 前週比',s.sell_change)}</div><div class="small risk ${supplyClass(supplyText(x))}" style="margin-top:6px">${esc(d.supply_reason||'需給データなし')}</div><div class="small" style="margin-top:4px">※「重い」は信用倍率や買い残増加などから見た需給上の注意。価格が上がらないと断定する指標ではありません。</div></div>
+ <div class="section"><div class="section-title">🎯 買いサインまで</div>${checks.length?`<div class="checks">${conditionRows(checks)}</div>`:`<div class="reason">${esc(x.signal_reason||'')}</div>`}${x.one_condition_away?'<div style="margin-top:7px"><span class="pill">あと1条件で暫定BUY候補</span></div>':''}<div class="reason">${esc(x.signal_reason||'')}</div></div>
+ <div class="section"><div class="section-title">🌐 市場との比較</div><div class="grid">${metric('日経平均 前日比',d.nikkei_change,'%')}${metric('この銘柄−日経',rs,'%')}${metric('6日騰落比',d.breadth?.['6d'])}${metric('10日騰落比',d.breadth?.['10d'])}</div><div class="small" style="margin-top:5px">相対強度がプラスなら、同日の市場全体より強い動き。市場が弱くても銘柄が強いケースを残すための参考情報です。</div></div>
+ <div class="section"><div class="section-title">⚠️ 下値リスクの目安</div><div class="small">60日高値からの下落率：<span class="risk ${riskLabel==='高い'?'risk-high':riskLabel==='中程度'?'risk-mid':'risk-low'}">${pct(risk)}（${riskLabel}）</span></div><div class="bar"><i style="width:${Math.max(0,Math.min(100,Math.abs(Number(risk)||0)*2))}%"></i></div></div>
+ <div class="source">データ取得日: ${esc(d.date||'—')} / 需給: ${esc(s.date||'—')}</div>
+ </div>`}
+fetch('./data/decision_ranking.json?'+Date.now()).then(r=>{if(!r.ok)throw Error('日次データがありません');return r.json()}).then(d=>{
+ const a=d.ranking||[],sum=d.summary||{};document.getElementById('date').textContent='最終更新: '+esc(d.updated_at||'—');
+ const first=a.find(x=>x.details?.nikkei_change!=null);document.getElementById('market').textContent=first?`日経平均 前日比 ${f(first.details.nikkei_change,2,'%')} / 市場は参考情報で、買い禁止フィルターにはしません。`:'市場データ待ち';
+ const buy=sum.buy_candidates||0;document.getElementById('summary').innerHTML=buy?`<span class="ok">今日のBUY候補：${buy}銘柄</span>`:'今日は買い候補なし';document.getElementById('note').textContent=`WATCH ${sum.watch||0} / AVOID ${sum.avoid||0} / データ不足 ${sum.insufficient||0}`;
+ document.getElementById('rows').innerHTML=a.map(x=>`<div class="row"><div class="top"><div><div class="name">${esc(x.name||x.code)}</div><div class="muted">${esc(x.code)}　${x.price==null?'':f(x.price)}　${x.change==null?'':f(x.change,2,'%')}</div></div><div style="text-align:right"><div>${jp[x.regime]||esc(x.regime||'')}</div><div class="signal">${sg[x.signal]||esc(x.signal||'')} ${x.one_condition_away?'<span class="pill">あと1条件</span>':''}</div></div></div><div class="reason">${esc(x.signal_reason||x.regime_reason||'')}</div><div class="disclosure" onclick="this.nextElementSibling.hidden=!this.nextElementSibling.hidden">▶ 中間情報を開く</div><div hidden>${stockDetail(x)}</div></div>`).join('');
 }).catch(e=>{document.getElementById('summary').textContent='日次データ待ち';document.getElementById('note').textContent=e.message;});
 if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
-</script>
-</body>
-</html>
+</script></body></html>

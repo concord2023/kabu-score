@@ -215,49 +215,85 @@ def screening_metric(name, target_date, field):
     return None, None
 
 
-def fetch_supply(code, target_date, security_name):
-    """Low-frequency supply/demand context using two screening calls.
+def fetch_supply(code, target_date, security_name=None):
+    """Fetch practical supply/demand context without the old burst of 7 calls.
 
-    We intentionally use current margin buy/sell balances only. The old version
-    made seven screening requests per stock, which exceeded the 60/minute API
-    rate limit for an 18-stock watchlist. Credit ratio is derived as
-    buy_balance / sell_balance when both are available.
+    We keep five low-frequency screening metrics: buy/sell balances, their
+    week-over-week changes, and margin ratio. These are context indicators;
+    they are not a standalone BUY trigger.
     """
-    buy, buy_as_of = screening_metric(security_name, target_date, 'marginBuyBalance')
-    sell, sell_as_of = screening_metric(security_name, target_date, 'marginSellBalance')
-    ratio = None
-    if buy is not None and sell not in (None, 0):
-        ratio = buy / sell
+    name = security_name or code
+    fields = [
+        'marginBuyBalance', 'marginSellBalance',
+        'marginBuyBalanceChangeWow', 'marginSellBalanceChangeWow',
+        'marginRatio'
+    ]
+    result = {}
+    errors = []
+    for field in fields:
+        try:
+            data = get('/screening', {
+                'name': name, 'sort_by': field, 'sort_order': 'desc',
+                'as_of': target_date, 'limit': 100
+            })
+            matches = data.get('securities') or []
+            match = next((x for x in matches if x.get('name') == name), None)
+            if match is None and matches:
+                match = matches[0]
+            if match:
+                for m in match.get('metrics') or []:
+                    result[m.get('field')] = m.get('value')
+                    result[m.get('field') + '_as_of'] = m.get('as_of')
+        except Exception as e:
+            errors.append(f'{field}: {e}')
+
+    if not result:
+        raise RuntimeError('IRBANK API supply metrics unavailable: ' + ('; '.join(errors) if errors else 'no matching metrics'))
 
     return {
-        'date': buy_as_of or sell_as_of or target_date,
-        'buy_balance': buy,
-        'sell_balance': sell,
-        'credit_ratio': round(ratio, 3) if ratio is not None else None,
+        'date': result.get('marginBuyBalance_as_of') or result.get('marginRatio_as_of') or target_date,
+        'buy_balance': result.get('marginBuyBalance'),
+        'sell_balance': result.get('marginSellBalance'),
+        'credit_ratio': result.get('marginRatio'),
+        'buy_change': result.get('marginBuyBalanceChangeWow'),
+        'sell_change': result.get('marginSellBalanceChangeWow'),
         'source_url': 'https://api.irbank.net/v1/screening',
-        'source_note': 'IRBANK API スクリーニング（信用買い残・信用売り残から算出）',
-        'method': 'buy_balance / sell_balance',
+        'source_note': 'IRBANK API スクリーニング（信用買い残・信用売り残・前週比・信用倍率）',
+        'api_partial': bool(errors), 'api_errors': errors
     }
 
 
 def supply_points(s):
-    """Experimental supply score; visible for context, not a BUY gate."""
+    """Experimental context score. Visible to the user; not a BUY gate."""
     if not s:
         return 0, {}
     p = 0
     detail = {}
-    r = s.get('credit_ratio')
-    detail['credit_ratio'] = r
+    bc, sc, r = s.get('buy_change'), s.get('sell_change'), s.get('credit_ratio')
+    detail['buy_balance_change'] = '減少（改善方向）' if bc is not None and bc < 0 else '増加（重い方向）' if bc is not None and bc > 0 else '横ばい/不明'
+    detail['sell_balance_change'] = '増加（改善方向）' if sc is not None and sc > 0 else '減少（支え弱化）' if sc is not None and sc < 0 else '横ばい/不明'
+    if bc is not None and bc < 0: p += 4
+    if sc is not None and sc > 0: p += 3
+    detail['credit_ratio_level'] = r
     if r is not None:
-        p += 6 if r <= 2 else 4 if r <= 3 else 2 if r <= 5 else 0
-    buy = s.get('buy_balance')
-    sell = s.get('sell_balance')
-    detail['buy_balance'] = buy
-    detail['sell_balance'] = sell
-    if buy is not None and sell is not None:
-        p += 2 if sell > 0 else 0
-    return min(p, 8), detail
+        p += 5 if r <= 3 else 3 if r <= 6 else 1 if r <= 10 else 0
+    return min(p, 12), detail
 
+
+def supply_status(s):
+    if not s or s.get('credit_ratio') is None:
+        return 'データ不足', '信用倍率データが取得できないため需給判定は保留。'
+    r = float(s['credit_ratio'])
+    bc, sc = s.get('buy_change'), s.get('sell_change')
+    if bc is not None and bc > 0 and r >= 6:
+        return '重い', f'信用倍率{r:.2f}倍で、買い残も前週比増加。上値の重さに注意。'
+    if bc is not None and bc < 0 and (sc is None or sc >= 0):
+        return '改善方向', f'信用倍率{r:.2f}倍。買い残が前週比減少して需給は改善方向。'
+    if r >= 10:
+        return '重い', f'信用倍率{r:.2f}倍と高め。買い残の整理が進むかを確認。'
+    if r <= 3:
+        return '軽い', f'信用倍率{r:.2f}倍で、買い残の偏りは比較的小さい。'
+    return '中立', f'信用倍率{r:.2f}倍。需給だけでは方向を決めにくい。'
 
 def pct(a, b):
     return ((a / b) - 1) * 100 if a is not None and b not in (None, 0) else None
@@ -359,6 +395,7 @@ def calc(rows, breadth_info=None, supply_info=None):
     rel = (change - nikkei_change) if change is not None and nikkei_change is not None else None
     relp = relative_points(rel)
     sp, sdetail = supply_points(supply_info)
+    sstatus, sreason = supply_status(supply_info)
     total = min(daily + vol + weak + rp + tp + bp + relp + sp, 100)
 
     return {

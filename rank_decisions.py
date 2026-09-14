@@ -10,6 +10,17 @@ priority = {'BUY_CANDIDATE':0,'WATCH':1,'INSUFFICIENT':2,'AVOID':3}
 state_bonus = {'UPTREND_PULLBACK':0,'DOWNTREND_REVERSAL_WAIT':1,'UPTREND':2,'RANGE_TRANSITION':3,'DOWNTREND_CONTINUED':4,'UNKNOWN':5}
 items = []
 
+def pick_metrics(s):
+    keys = [
+        'price','change','volume','ma5','ma20','ma60','vs5','vs20','vs60','ret5','ret10','ret20','rsi14',
+        'volume_ratio','drawdown60','range_position60','volatility20','weekly_ma13',
+        'weekly_ma26','weekly_ma52','weekly_vs13','weekly_vs26','weekly_vs52',
+        'weekly_ma13_slope4w','weekly_ma26_slope4w','daily_vs20','supply','supply_status',
+        'supply_reason','nikkei_change','relative_strength','breadth','score','score_breakdown',
+        'condition_checks'
+    ]
+    return {k:s.get(k) for k in keys if k in s}
+
 for item in watch:
     if isinstance(item, str):
         code, default_name = item, item
@@ -22,7 +33,7 @@ for item in watch:
             'regime': 'UNKNOWN', 'regime_reason': s.get('error') or '日次データを取得できませんでした。',
             'signal': 'INSUFFICIENT', 'signal_reason': 'データ取得失敗。次回更新で再試行します。',
             'one_condition_away': False, 'missing_conditions': [], 'relative_strength': None,
-            'score': None, 'sort_key': (2, 9, 9, 999)
+            'score': None, 'details': {}, 'sort_key': (2, 9, 9, 999)
         })
         continue
     sig = s.get('signal', 'INSUFFICIENT')
@@ -31,7 +42,7 @@ for item in watch:
         'code': code, 'name': s.get('name', default_name), 'price': s.get('price'), 'change': s.get('change'),
         'regime': s.get('regime'), 'regime_reason': s.get('regime_reason'), 'signal': sig,
         'signal_reason': s.get('signal_reason'), 'one_condition_away': s.get('one_condition_away', False),
-        'missing_conditions': s.get('missing_conditions', []), 'relative_strength': rs, 'score': s.get('score'),
+        'missing_conditions': s.get('missing_conditions', []), 'relative_strength': rs, 'score': s.get('score'), 'details': pick_metrics(s),
         'sort_key': (priority.get(sig, 9), 0 if s.get('one_condition_away') else 1,
                      state_bonus.get(s.get('regime'), 9), -(rs if rs is not None else -999))
     })

@@ -1,9 +1,10 @@
 {
-  "name": "株スコア V2",
+  "name": "株スコア",
   "short_name": "株スコア",
-  "start_url": "./index.html",
+  "start_url": "./dashboard.html",
   "display": "standalone",
   "background_color": "#f5f6f8",
   "theme_color": "#111111",
-  "lang": "ja"
+  "lang": "ja",
+  "scope": "./"
 }
