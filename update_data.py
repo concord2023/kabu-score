@@ -375,14 +375,23 @@ def calc(rows, breadth_info=None, supply_info=None):
     base = [float(v) for v in vols[1:21] if v is not None]
     vr = (float(vols[0]) / statistics.mean(base)) if vols and vols[0] is not None and base else None
 
+    ma5 = statistics.mean(vals[1:6]) if len(vals) >= 6 else None
     ma20 = statistics.mean(vals[1:21]) if len(vals) >= 21 else None
     ma60 = statistics.mean(vals[1:61]) if len(vals) >= 61 else None
+    high20 = max(vals[1:21]) if len(vals) >= 21 else None
+    low20 = min(vals[1:21]) if len(vals) >= 21 else None
+    high60 = max(vals[1:61]) if len(vals) >= 61 else None
+    low60 = min(vals[1:61]) if len(vals) >= 61 else None
     r5 = pct(vals[0], vals[5]) if len(vals) > 5 else None
     r10 = pct(vals[0], vals[10]) if len(vals) > 10 else None
     r20 = pct(vals[0], vals[20]) if len(vals) > 20 else None
     rsi = rsi14(vals)
+    d5 = pct(vals[0], ma5)
     d20 = pct(vals[0], ma20)
     d60 = pct(vals[0], ma60)
+    drawdown60 = pct(vals[0], high60)
+    range_position60 = ((vals[0]-low60)/(high60-low60)*100) if high60 is not None and low60 is not None and high60 != low60 else None
+    volatility20 = (statistics.stdev(vals[:20]) / statistics.mean(vals[:20]) * 100) if len(vals) >= 20 and statistics.mean(vals[:20]) else None
 
     daily = 15 if change is not None and change <= -7 else 12 if change is not None and change <= -5 else 9 if change is not None and change <= -3 else 6 if change is not None and change <= -2 else 3 if change is not None and change <= -1 else 0
     vol = 10 if vr is not None and vr >= 1.8 else 8 if vr is not None and vr >= 1.5 else 6 if vr is not None and vr >= 1.3 else 3 if vr is not None and vr >= 1.15 else 0
@@ -398,21 +407,61 @@ def calc(rows, breadth_info=None, supply_info=None):
     sstatus, sreason = supply_status(supply_info)
     total = min(daily + vol + weak + rp + tp + bp + relp + sp, 100)
 
+    def deviation_text(v, ma):
+        if v is None: return '判定不可'
+        if v <= -10: return f'{ma}から大きく下（弱い）'
+        if v <= -5: return f'{ma}から下（押し目/下落）'
+        if v < 0: return f'{ma}をやや下回る'
+        if v < 5: return f'{ma}付近'
+        if v < 10: return f'{ma}を上回る'
+        return f'{ma}から大きく上（高値警戒）'
+    if rsi is None: rsi_text = '判定不可'
+    elif rsi <= 30: rsi_text = '売られ過ぎ寄り'
+    elif rsi <= 40: rsi_text = '弱め'
+    elif rsi < 60: rsi_text = '中立'
+    elif rsi < 70: rsi_text = '強め'
+    else: rsi_text = '過熱警戒'
+    if vr is None: volume_text = '判定不可'
+    elif vr >= 1.8: volume_text = '出来高急増'
+    elif vr >= 1.3: volume_text = '出来高増'
+    elif vr >= 0.8: volume_text = '平常圏'
+    else: volume_text = '出来高少なめ'
+    if range_position60 is None: range_text = '判定不可'
+    elif range_position60 <= 20: range_text = '60日レンジ下側（底値圏）'
+    elif range_position60 <= 40: range_text = '60日レンジやや下'
+    elif range_position60 < 60: range_text = '60日レンジ中間'
+    elif range_position60 < 80: range_text = '60日レンジやや上'
+    else: range_text = '60日レンジ上側（高値圏）'
+    momentum_text = '反発' if change is not None and change > 0 else '下落' if change is not None and change < 0 else '横ばい'
+
     return {
         'date': rows[0].get('date'), 'price': close,
         'change': round(change, 2) if change is not None else None,
         'volume': vols[0] if vols else None,
         'volume_ratio': round(vr, 2) if vr is not None else None,
+        'ma5': round(ma5, 2) if ma5 is not None else None,
         'ma20': round(ma20, 2) if ma20 is not None else None,
         'ma60': round(ma60, 2) if ma60 is not None else None,
+        'vs5': round(d5, 2) if d5 is not None else None,
         'vs20': round(d20, 2) if d20 is not None else None,
         'vs60': round(d60, 2) if d60 is not None else None,
+        'high20': round(high20, 2) if high20 is not None else None,
+        'low20': round(low20, 2) if low20 is not None else None,
+        'high60': round(high60, 2) if high60 is not None else None,
+        'low60': round(low60, 2) if low60 is not None else None,
+        'drawdown60': round(drawdown60, 2) if drawdown60 is not None else None,
+        'range_position60': round(range_position60, 1) if range_position60 is not None else None,
+        'volatility20': round(volatility20, 2) if volatility20 is not None else None,
         'ret5': round(r5, 2) if r5 is not None else None,
         'ret10': round(r10, 2) if r10 is not None else None,
         'ret20': round(r20, 2) if r20 is not None else None,
         'rsi14': round(rsi, 1) if rsi is not None else None,
         'score': total, 'score_max': 100,
         'data_points': len(vals), 'rows_received': len(rows),
+        'interpretation': {
+            'vs5': deviation_text(d5, '5日MA'), 'vs20': deviation_text(d20, '20日MA'), 'vs60': deviation_text(d60, '60日MA'),
+            'rsi': rsi_text, 'volume': volume_text, 'range60': range_text, 'momentum': momentum_text,
+        },
         'diagnostic': {
             'usable_points': len(vals), 'rsi_ready': len(vals) >= 15,
             'ma20_ready': len(vals) >= 21, 'ma60_ready': len(vals) >= 61,
