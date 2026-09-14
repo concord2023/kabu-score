@@ -17,7 +17,7 @@ def pick_metrics(s):
         'weekly_ma26','weekly_ma52','weekly_vs13','weekly_vs26','weekly_vs52',
         'weekly_ma13_slope4w','weekly_ma26_slope4w','daily_vs20','supply','supply_status',
         'supply_reason','nikkei_change','relative_strength','breadth','score','score_breakdown',
-        'condition_checks','candle_signal','breakout_signal','chart_history','interpretation','high20','low20','high60','low60','weekly_direction','weekly_points','daily_ret1','daily_ret5','daily_ret10','daily_ret20'
+        'condition_checks','candle_signal','breakout_signal','signal_icons','chart_history','interpretation','high20','low20','high60','low60','weekly_direction','weekly_points','daily_ret1','daily_ret5','daily_ret10','daily_ret20'
     ]
     return {k:s.get(k) for k in keys if k in s}
 
@@ -42,7 +42,7 @@ for item in watch:
         'code': code, 'name': s.get('name', default_name), 'price': s.get('price'), 'change': s.get('change'),
         'regime': s.get('regime'), 'regime_reason': s.get('regime_reason'), 'signal': sig,
         'signal_reason': s.get('signal_reason'), 'one_condition_away': s.get('one_condition_away', False),
-        'missing_conditions': s.get('missing_conditions', []), 'relative_strength': rs, 'score': s.get('score'), 'details': pick_metrics(s),
+        'missing_conditions': s.get('missing_conditions', []), 'relative_strength': rs, 'score': s.get('score'), 'signal_icons': s.get('signal_icons', []), 'details': pick_metrics(s),
         'sort_key': (priority.get(sig, 9), 0 if s.get('one_condition_away') else 1,
                      state_bonus.get(s.get('regime'), 9), -(rs if rs is not None else -999))
     })

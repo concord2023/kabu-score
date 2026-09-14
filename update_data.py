@@ -296,6 +296,72 @@ def pct(a, b):
     return ((a / b) - 1) * 100 if a is not None and b not in (None, 0) else None
 
 
+def signal_icons(candle_signal, breakout, supply_info, volume_ratio, price_change, vs20, ret5, range_position60):
+    """Expose independent technical/supply clues as icons.
+
+    These are clues, not recommendations. Each icon can light independently;
+    the aggregate BUY decision remains separate in regime_model_v2.decide().
+    """
+    icons = []
+    candle = candle_signal or {}
+    supply = supply_info or {}
+
+    # Aggregate BUY is deliberately not inferred here.
+    # Bottom-volume: meaningful volume appearing in a genuine bottom zone.
+    bottom_volume = bool(candle.get('bottom_zone')) and volume_ratio is not None and volume_ratio >= 1.5
+    if bottom_volume:
+        icons.append({
+            'code': 'BOTTOM_VOLUME', 'icon': '💥', 'label': '大底出来高',
+            'strength': 'strong' if volume_ratio >= 2.0 else 'medium',
+            'reason': f"底値圏で出来高が{volume_ratio:.1f}倍。反転の裏付け候補。"
+        })
+
+    # Candlestick reversal clue.
+    if candle.get('status') in ('大底反転サイン', '大底反転候補'):
+        icons.append({
+            'code': 'BOTTOM_REVERSAL', 'icon': '🕯️', 'label': '大底反転',
+            'strength': 'strong' if candle.get('status') == '大底反転サイン' else 'medium',
+            'reason': candle.get('reason', '')
+        })
+
+    # Breakout clue is independent from pullback/bottom logic.
+    if breakout.get('confirmed'):
+        icons.append({
+            'code': 'RANGE_BREAKOUT', 'icon': '📈', 'label': 'レンジブレイク',
+            'strength': 'strong', 'reason': breakout.get('reason', '')
+        })
+    elif breakout.get('status') == 'レンジ抜け候補':
+        icons.append({
+            'code': 'RANGE_BREAKOUT_WATCH', 'icon': '📈', 'label': 'ブレイク候補',
+            'strength': 'medium', 'reason': breakout.get('reason', '')
+        })
+
+    # Supply-side buying clue: improving margin balance / lighter supply.
+    bc = supply.get('buy_change')
+    sc = supply.get('sell_change')
+    cr = supply.get('credit_ratio')
+    supply_buy = (bc is not None and bc < 0) or (sc is not None and sc > 0)
+    if supply_buy:
+        parts=[]
+        if bc is not None and bc < 0: parts.append('買い残減少')
+        if sc is not None and sc > 0: parts.append('売り残増加')
+        if cr is not None and cr <= 6: parts.append(f'信用倍率{cr:.1f}倍')
+        icons.append({
+            'code': 'SUPPLY_BUY', 'icon': '📦', 'label': '需給買いサイン',
+            'strength': 'strong' if (bc is not None and bc < 0 and sc is not None and sc > 0) else 'medium',
+            'reason': '・'.join(parts) + '。需給改善方向の参考サイン。'
+        })
+
+    # Overextension warning is useful beside positive clues.
+    if vs20 is not None and vs20 >= 15:
+        icons.append({
+            'code': 'EXTENDED', 'icon': '⚠️', 'label': '過熱警戒',
+            'strength': 'medium', 'reason': f'20日MAから{vs20:.1f}%上方。追い買いは慎重に。'
+        })
+
+    return icons
+
+
 def rsi14(vals):
     if len(vals) < 15:
         return None
@@ -650,6 +716,7 @@ def calc(rows, breadth_info=None, supply_info=None):
     momentum_text = '反発' if change is not None and change > 0 else '下落' if change is not None and change < 0 else '横ばい'
     candle_signal = candle_reversal_signals(rows)
     breakout = breakout_signal(rows)
+    icons = signal_icons(candle_signal, breakout, supply_info, vr, change, d20, r5, range_position60)
 
     # Keep a compact recent history for the UI chart.  The chart is intentionally
     # presentation data only; decisions continue to use the full calculation above.
@@ -695,6 +762,7 @@ def calc(rows, breadth_info=None, supply_info=None):
         'data_points': len(vals), 'rows_received': len(rows),
         'candle_signal': candle_signal,
         'breakout_signal': breakout,
+        'signal_icons': icons,
         'chart_history': chart_history,
         'interpretation': {
             'vs5': deviation_text(d5, '5日MA'), 'vs20': deviation_text(d20, '20日MA'), 'vs60': deviation_text(d60, '60日MA'),

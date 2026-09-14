@@ -6,5 +6,9 @@
   "background_color": "#f5f6f8",
   "theme_color": "#111111",
   "lang": "ja",
-  "scope": "./"
+  "scope": "./",
+  "shortcuts": [
+    {"name":"今日の一覧","short_name":"一覧","url":"./index.html"},
+    {"name":"サイン一覧","short_name":"サイン","url":"./signals.html"}
+  ]
 }
