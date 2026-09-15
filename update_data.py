@@ -313,6 +313,10 @@ def fetch_supply_batch(target_date, watch_items):
         row['credit_ratio'] = row.get('marginRatio')
         row['buy_change'] = row.get('marginBuyBalanceChangeWow')
         row['sell_change'] = row.get('marginSellBalanceChangeWow')
+        # Net credit balance = buy balance - sell balance.
+        # Net weekly change = buy-balance change - sell-balance change.
+        row['net_balance'] = (row['buy_balance'] - row['sell_balance']) if row.get('buy_balance') is not None and row.get('sell_balance') is not None else None
+        row['net_change'] = (row['buy_change'] - row['sell_change']) if row.get('buy_change') is not None and row.get('sell_change') is not None else None
 
         if not row['missing_fields']:
             row['status'] = 'complete'
@@ -329,16 +333,27 @@ def fetch_supply_batch(target_date, watch_items):
     return result, errors
 
 def supply_points(s):
-    """Experimental context score. Visible to the user; not a BUY gate."""
+    """Supply context score using net credit-balance pressure.
+
+    Net change = buy-balance change minus sell-balance change.
+    Negative means the future sell-pressure side is shrinking relative to
+    future buy-pressure side, so supply is improving.
+    """
     if not s:
         return 0, {}
     p = 0
     detail = {}
     bc, sc, r = s.get('buy_change'), s.get('sell_change'), s.get('credit_ratio')
+    net_change = s.get('net_change')
     detail['buy_balance_change'] = '減少（改善方向）' if bc is not None and bc < 0 else '増加（重い方向）' if bc is not None and bc > 0 else '横ばい/不明'
     detail['sell_balance_change'] = '増加（改善方向）' if sc is not None and sc > 0 else '減少（支え弱化）' if sc is not None and sc < 0 else '横ばい/不明'
-    if bc is not None and bc < 0: p += 4
-    if sc is not None and sc > 0: p += 3
+    detail['net_change'] = net_change
+    if net_change is not None:
+        detail['net_change_direction'] = '改善' if net_change < 0 else '悪化' if net_change > 0 else '横ばい'
+        if net_change < 0:
+            p += 5
+        elif net_change == 0:
+            p += 1
     detail['credit_ratio_level'] = r
     if r is not None:
         p += 5 if r <= 3 else 3 if r <= 6 else 1 if r <= 10 else 0
@@ -350,21 +365,33 @@ def supply_status(s):
         return 'データ不足', '信用倍率データが取得できないため需給判定は保留。'
     r = float(s['credit_ratio'])
     bc, sc = s.get('buy_change'), s.get('sell_change')
-    if bc is not None and bc > 0 and r >= 6:
-        return '重い', f'信用倍率{r:.2f}倍で、買い残も前週比増加。上値の重さに注意。'
-    if bc is not None and bc < 0 and (sc is None or sc >= 0):
-        return '改善方向', f'信用倍率{r:.2f}倍。買い残が前週比減少して需給は改善方向。'
+    net_change = s.get('net_change')
+
+    # The ratio describes the level; the net change describes the direction.
+    # Both are used so that a small increase in sell-balance cannot mask a
+    # much larger increase in buy-balance.
     if r >= 10:
-        return '重い', f'信用倍率{r:.2f}倍と高め。買い残の整理が進むかを確認。'
+        if net_change is not None and net_change < 0:
+            return '重い', f'信用倍率{r:.2f}倍と高水準。ただしネット需給は改善（買い残前週比−売り残前週比={net_change:,.0f}）。まだ重さは残る。'
+        return '重い', f'信用倍率{r:.2f}倍と高水準。買い残−売り残のネット需給も軽くなく、上値の重さに注意。'
+
+    if net_change is not None and net_change > 0:
+        return '重い', f'信用倍率{r:.2f}倍。ネット需給が悪化（買い残前週比−売り残前週比={net_change:,.0f}）しており、買い残増加が売り残増加を上回る。'
+
+    if net_change is not None and net_change < 0:
+        if r <= 3:
+            return '軽い', f'信用倍率{r:.2f}倍で、ネット需給も改善（{net_change:,.0f}）。買い残−売り残の偏りが小さく、需給は軽い。'
+        return '改善方向', f'信用倍率{r:.2f}倍。ネット需給が改善（買い残前週比−売り残前週比={net_change:,.0f}）。'
+
     if r <= 3:
-        return '軽い', f'信用倍率{r:.2f}倍で、買い残の偏りは比較的小さい。'
-    return '中立', f'信用倍率{r:.2f}倍。需給だけでは方向を決めにくい。'
+        return '軽い', f'信用倍率{r:.2f}倍で、買い残−売り残の偏りは比較的小さい。'
+    return '中立', f'信用倍率{r:.2f}倍。ネット需給の方向が確認できず、需給だけでは方向を決めにくい。'
 
 def pct(a, b):
     return ((a / b) - 1) * 100 if a is not None and b not in (None, 0) else None
 
 
-def signal_icons(candle_signal, breakout, supply_info, volume_ratio, price_change, vs20, ret5, range_position60):
+def signal_icons(candle_signal, breakout, supply_info, volume_ratio, price_change, vs20, ret5, range_position60, rsi_daily=None, rsi_weekly=None):
     """Expose independent technical/supply clues as icons.
 
     These are clues, not recommendations. Each icon can light independently;
@@ -404,20 +431,47 @@ def signal_icons(candle_signal, breakout, supply_info, volume_ratio, price_chang
             'strength': 'medium', 'reason': breakout.get('reason', '')
         })
 
-    # Supply-side buying clue: improving margin balance / lighter supply.
+    # Supply-side buying clue: use BOTH the credit-ratio level and the net
+    # weekly change.  A small increase in sell-balance must not trigger a BUY
+    # icon when buy-balance is increasing much more.
     bc = supply.get('buy_change')
     sc = supply.get('sell_change')
     cr = supply.get('credit_ratio')
-    supply_buy = (bc is not None and bc < 0) or (sc is not None and sc > 0)
-    if supply_buy:
-        parts=[]
-        if bc is not None and bc < 0: parts.append('買い残減少')
-        if sc is not None and sc > 0: parts.append('売り残増加')
-        if cr is not None and cr <= 6: parts.append(f'信用倍率{cr:.1f}倍')
+    net_change = supply.get('net_change')
+    if net_change is not None and cr is not None and net_change < 0 and cr <= 6:
         icons.append({
             'code': 'SUPPLY_BUY', 'icon': '📦', 'label': '需給買いサイン',
-            'strength': 'strong' if (bc is not None and bc < 0 and sc is not None and sc > 0) else 'medium',
-            'reason': '・'.join(parts) + '。需給改善方向の参考サイン。'
+            'strength': 'strong' if cr <= 3 else 'medium',
+            'reason': f'ネット需給改善（買い残前週比−売り残前週比={net_change:,.0f}）＋信用倍率{cr:.2f}倍。買い残増加より売り残増加／買い残減少が優勢。'
+        })
+    elif net_change is not None and net_change < 0 and cr is not None:
+        icons.append({
+            'code': 'SUPPLY_IMPROVING', 'icon': '📦', 'label': '需給改善',
+            'strength': 'medium',
+            'reason': f'ネット需給は改善（買い残前週比−売り残前週比={net_change:,.0f}）だが、信用倍率{cr:.2f}倍のため「需給買い」までは付けない。'
+        })
+
+    # Explicit RSI threshold clues. These are independent warning/opportunity
+    # icons and do not alter the aggregate BUY decision.
+    if rsi_daily is not None and rsi_daily < 30:
+        icons.append({
+            'code': 'RSI_DAILY_OVERSOLD', 'icon': '🔵', 'label': '日足RSI30割れ',
+            'strength': 'strong', 'reason': f'日足RSI(14)={rsi_daily:.1f}。30未満の売られ過ぎ水準。'
+        })
+    elif rsi_daily is not None and rsi_daily > 70:
+        icons.append({
+            'code': 'RSI_DAILY_OVERBOUGHT', 'icon': '🔴', 'label': '日足RSI70超え',
+            'strength': 'strong', 'reason': f'日足RSI(14)={rsi_daily:.1f}。70超の買われ過ぎ水準。'
+        })
+    if rsi_weekly is not None and rsi_weekly < 30:
+        icons.append({
+            'code': 'RSI_WEEKLY_OVERSOLD', 'icon': '🔵', 'label': '週足RSI30割れ',
+            'strength': 'strong', 'reason': f'週足RSI(14)={rsi_weekly:.1f}。30未満の売られ過ぎ水準。'
+        })
+    elif rsi_weekly is not None and rsi_weekly > 70:
+        icons.append({
+            'code': 'RSI_WEEKLY_OVERBOUGHT', 'icon': '🔴', 'label': '週足RSI70超え',
+            'strength': 'strong', 'reason': f'週足RSI(14)={rsi_weekly:.1f}。70超の買われ過ぎ水準。'
         })
 
     # Overextension warning is useful beside positive clues.
@@ -442,6 +496,28 @@ def rsi14(vals):
     if al == 0:
         return 100.0
     return 100 - (100 / (1 + ag / al))
+
+
+def weekly_closes(rows):
+    """Return one closing price per ISO calendar week, newest first."""
+    seen = set()
+    closes = []
+    for row in rows:
+        date = row.get('date')
+        if not date:
+            continue
+        try:
+            key = __import__('datetime').date.fromisoformat(date).isocalendar()[:2]
+        except Exception:
+            continue
+        if key in seen:
+            continue
+        raw = row.get('adj_close') if row.get('adj_close') is not None else row.get('close')
+        if raw is None:
+            continue
+        seen.add(key)
+        closes.append(float(raw))
+    return closes
 
 
 def breadth_points(b):
@@ -735,6 +811,8 @@ def calc(rows, breadth_info=None, supply_info=None):
     r10 = pct(vals[0], vals[10]) if len(vals) > 10 else None
     r20 = pct(vals[0], vals[20]) if len(vals) > 20 else None
     rsi = rsi14(vals)
+    weekly_vals = weekly_closes(rows)
+    rsi_weekly = rsi14(weekly_vals)
     d5 = pct(vals[0], ma5)
     d20 = pct(vals[0], ma20)
     d60 = pct(vals[0], ma60)
@@ -784,7 +862,7 @@ def calc(rows, breadth_info=None, supply_info=None):
     momentum_text = '反発' if change is not None and change > 0 else '下落' if change is not None and change < 0 else '横ばい'
     candle_signal = candle_reversal_signals(rows)
     breakout = breakout_signal(rows)
-    icons = signal_icons(candle_signal, breakout, supply_info, vr, change, d20, r5, range_position60)
+    icons = signal_icons(candle_signal, breakout, supply_info, vr, change, d20, r5, range_position60, rsi, rsi_weekly)
 
     # Keep a compact recent history for the UI chart.  The chart is intentionally
     # presentation data only; decisions continue to use the full calculation above.
@@ -826,6 +904,7 @@ def calc(rows, breadth_info=None, supply_info=None):
         'ret10': round(r10, 2) if r10 is not None else None,
         'ret20': round(r20, 2) if r20 is not None else None,
         'rsi14': round(rsi, 1) if rsi is not None else None,
+        'rsi14_weekly': round(rsi_weekly, 1) if rsi_weekly is not None else None,
         'score': total, 'score_max': 100,
         'data_points': len(vals), 'rows_received': len(rows),
         'candle_signal': candle_signal,
@@ -837,7 +916,7 @@ def calc(rows, breadth_info=None, supply_info=None):
             'rsi': rsi_text, 'volume': volume_text, 'range60': range_text, 'momentum': momentum_text,
         },
         'diagnostic': {
-            'usable_points': len(vals), 'rsi_ready': len(vals) >= 15,
+            'usable_points': len(vals), 'rsi_ready': len(vals) >= 15, 'weekly_rsi_ready': len(weekly_vals) >= 15, 'weekly_points': len(weekly_vals),
             'ma20_ready': len(vals) >= 21, 'ma60_ready': len(vals) >= 61,
         },
         'breadth': (breadth_info or {}).get('breadth') or {'6d': None, '10d': None, '15d': None, '25d': None},
