@@ -391,7 +391,7 @@ def pct(a, b):
     return ((a / b) - 1) * 100 if a is not None and b not in (None, 0) else None
 
 
-def signal_icons(candle_signal, breakout, supply_info, volume_ratio, price_change, vs20, ret5, range_position60, rsi_daily=None, rsi_weekly=None):
+def signal_icons(candle_signal, breakout, supply_info, volume_ratio, price_change, vs20, ret5, range_position60, rsi_daily=None, rsi_weekly=None, bb_daily=None, bb_weekly=None):
     """Expose independent technical/supply clues as icons.
 
     These are clues, not recommendations. Each icon can light independently;
@@ -473,6 +473,13 @@ def signal_icons(candle_signal, breakout, supply_info, volume_ratio, price_chang
             'code': 'RSI_WEEKLY_OVERBOUGHT', 'icon': '🔴', 'label': '週足RSI70超え',
             'strength': 'strong', 'reason': f'週足RSI(14)={rsi_weekly:.1f}。70超の買われ過ぎ水準。'
         })
+
+    # Bollinger-band breakout clues. These are independent signals and do not
+    # automatically change the aggregate BUY decision. We use closing-price
+    # breaks outside +/-2 sigma, not intraday touches.
+    for bb in (bb_daily, bb_weekly):
+        if bb:
+            icons.append(bb)
 
     # Overextension warning is useful beside positive clues.
     if vs20 is not None and vs20 >= 15:
@@ -785,6 +792,34 @@ def breakout_signal(rows):
         'reason':reason
     }
 
+def bollinger(vals, period=25, sigma=2):
+    """Return Bollinger middle/upper/lower for newest-first close values."""
+    if len(vals) < period:
+        return None, None, None
+    window = vals[:period]
+    mid = statistics.mean(window)
+    sd = statistics.stdev(window) if len(window) >= 2 else 0.0
+    return mid, mid + sigma * sd, mid - sigma * sd
+
+def bollinger_signal(current, mid, upper, lower, timeframe, period):
+    if current is None or upper is None or lower is None:
+        return None
+    if current > upper:
+        return {
+            'code': f'BB_{timeframe}_UPPER_BREAK', 'icon': '🟠',
+            'label': f'{"日足" if timeframe == "DAILY" else "週足"}BB+2σ超え',
+            'strength': 'strong',
+            'reason': f'{"日足" if timeframe == "DAILY" else "週足"}終値が{period}{"日" if timeframe == "DAILY" else "週"}ボリンジャー+2σを上抜け。強い上昇の可能性がある一方、過熱にも注意。'
+        }
+    if current < lower:
+        return {
+            'code': f'BB_{timeframe}_LOWER_BREAK', 'icon': '🔵',
+            'label': f'{"日足" if timeframe == "DAILY" else "週足"}BB-2σ割れ',
+            'strength': 'strong',
+            'reason': f'{"日足" if timeframe == "DAILY" else "週足"}終値が{period}{"日" if timeframe == "DAILY" else "週"}ボリンジャー-2σを下抜け。強い下落圧力の可能性がある一方、売られ過ぎにも注意。'
+        }
+    return None
+
 def calc(rows, breadth_info=None, supply_info=None):
     vals = []
     for x in rows:
@@ -804,6 +839,8 @@ def calc(rows, breadth_info=None, supply_info=None):
     ma20 = statistics.mean(vals[1:21]) if len(vals) >= 21 else None
     ma25 = statistics.mean(vals[1:26]) if len(vals) >= 26 else None
     ma75 = statistics.mean(vals[1:76]) if len(vals) >= 76 else None
+    ma200 = statistics.mean(vals[1:201]) if len(vals) >= 201 else None
+    bb_daily_mid, bb_daily_upper, bb_daily_lower = bollinger(vals, 25, 2)
     high20 = max(vals[1:21]) if len(vals) >= 21 else None
     low20 = min(vals[1:21]) if len(vals) >= 21 else None
     high60 = max(vals[1:61]) if len(vals) >= 61 else None
@@ -814,10 +851,14 @@ def calc(rows, breadth_info=None, supply_info=None):
     rsi = rsi14(vals)
     weekly_vals = weekly_closes(rows)
     rsi_weekly = rsi14(weekly_vals)
+    bb_weekly_mid, bb_weekly_upper, bb_weekly_lower = bollinger(weekly_vals, 13, 2)
+    bb_daily_signal = bollinger_signal(vals[0], bb_daily_mid, bb_daily_upper, bb_daily_lower, 'DAILY', 25)
+    bb_weekly_signal = bollinger_signal(weekly_vals[0] if weekly_vals else None, bb_weekly_mid, bb_weekly_upper, bb_weekly_lower, 'WEEKLY', 13)
     d5 = pct(vals[0], ma5)
     d20 = pct(vals[0], ma20)
     d25 = pct(vals[0], ma25)
     d75 = pct(vals[0], ma75)
+    d200 = pct(vals[0], ma200)
     drawdown60 = pct(vals[0], high60)
     range_position60 = ((vals[0]-low60)/(high60-low60)*100) if high60 is not None and low60 is not None and high60 != low60 else None
     volatility20 = (statistics.stdev(vals[:20]) / statistics.mean(vals[:20]) * 100) if len(vals) >= 20 and statistics.mean(vals[:20]) else None
@@ -864,7 +905,7 @@ def calc(rows, breadth_info=None, supply_info=None):
     momentum_text = '反発' if change is not None and change > 0 else '下落' if change is not None and change < 0 else '横ばい'
     candle_signal = candle_reversal_signals(rows)
     breakout = breakout_signal(rows)
-    icons = signal_icons(candle_signal, breakout, supply_info, vr, change, d20, r5, range_position60, rsi, rsi_weekly)
+    icons = signal_icons(candle_signal, breakout, supply_info, vr, change, d20, r5, range_position60, rsi, rsi_weekly, bb_daily_signal, bb_weekly_signal)
 
     # Keep a compact recent history for the UI chart.  The chart is intentionally
     # presentation data only; decisions continue to use the full calculation above.
@@ -877,13 +918,24 @@ def calc(rows, breadth_info=None, supply_info=None):
                   if (z.get('adj_close') if z.get('adj_close') is not None else z.get('close')) is not None]
         prev25 = [float((z.get('adj_close') if z.get('adj_close') is not None else z.get('close'))) for z in rows[idx+1:idx+26]
                   if (z.get('adj_close') if z.get('adj_close') is not None else z.get('close')) is not None]
+        prev5 = [float((z.get('adj_close') if z.get('adj_close') is not None else z.get('close'))) for z in rows[idx+1:idx+6]
+                  if (z.get('adj_close') if z.get('adj_close') is not None else z.get('close')) is not None]
         prev75 = [float((z.get('adj_close') if z.get('adj_close') is not None else z.get('close'))) for z in rows[idx+1:idx+76]
                   if (z.get('adj_close') if z.get('adj_close') is not None else z.get('close')) is not None]
+        prev200 = [float((z.get('adj_close') if z.get('adj_close') is not None else z.get('close'))) for z in rows[idx+1:idx+201]
+                  if (z.get('adj_close') if z.get('adj_close') is not None else z.get('close')) is not None]
+        bb_win = [float((z.get('adj_close') if z.get('adj_close') is not None else z.get('close'))) for z in rows[idx:idx+25]
+                  if (z.get('adj_close') if z.get('adj_close') is not None else z.get('close')) is not None]
+        bb_mid, bb_upper, bb_lower = bollinger(bb_win, 25, 2)
         chart_history.append({
             'date': r.get('date'), 'open': r.get('open'), 'high': r.get('high'), 'low': r.get('low'), 'close': round(close_i,2),
+            'ma5': round(statistics.mean(prev5),2) if len(prev5)>=5 else None,
             'ma20': round(statistics.mean(prev20),2) if len(prev20)>=20 else None,
-            'ma25': round(statistics.mean(prev25),2) if len(prev25)>=25 else None,
             'ma75': round(statistics.mean(prev75),2) if len(prev75)>=75 else None,
+            'ma200': round(statistics.mean(prev200),2) if len(prev200)>=200 else None,
+            'bb25_mid': round(bb_mid,2) if bb_mid is not None else None,
+            'bb25_upper': round(bb_upper,2) if bb_upper is not None else None,
+            'bb25_lower': round(bb_lower,2) if bb_lower is not None else None,
         })
     chart_history.reverse()
 
@@ -896,10 +948,14 @@ def calc(rows, breadth_info=None, supply_info=None):
         'ma20': round(ma20, 2) if ma20 is not None else None,
         'ma25': round(ma25, 2) if ma25 is not None else None,
         'ma75': round(ma75, 2) if ma75 is not None else None,
+        'ma200': round(ma200, 2) if ma200 is not None else None,
         'vs5': round(d5, 2) if d5 is not None else None,
         'vs20': round(d20, 2) if d20 is not None else None,
         'vs25': round(d25, 2) if d25 is not None else None,
         'vs75': round(d75, 2) if d75 is not None else None,
+        'vs200': round(d200, 2) if d200 is not None else None,
+        'bb_daily': {'period':25,'sigma':2,'middle':round(bb_daily_mid,2) if bb_daily_mid is not None else None,'upper':round(bb_daily_upper,2) if bb_daily_upper is not None else None,'lower':round(bb_daily_lower,2) if bb_daily_lower is not None else None,'status':bb_daily_signal['code'] if bb_daily_signal else 'なし'},
+        'bb_weekly': {'period':13,'sigma':2,'middle':round(bb_weekly_mid,2) if bb_weekly_mid is not None else None,'upper':round(bb_weekly_upper,2) if bb_weekly_upper is not None else None,'lower':round(bb_weekly_lower,2) if bb_weekly_lower is not None else None,'status':bb_weekly_signal['code'] if bb_weekly_signal else 'なし'},
         'high20': round(high20, 2) if high20 is not None else None,
         'low20': round(low20, 2) if low20 is not None else None,
         'high60': round(high60, 2) if high60 is not None else None,
@@ -919,7 +975,7 @@ def calc(rows, breadth_info=None, supply_info=None):
         'signal_icons': icons,
         'chart_history': chart_history,
         'interpretation': {
-            'vs5': deviation_text(d5, '5日MA'), 'vs20': deviation_text(d20, '20日MA'), 'vs25': deviation_text(d25, '25日MA'), 'vs75': deviation_text(d75, '75日MA'),
+            'vs5': deviation_text(d5, '5日MA'), 'vs20': deviation_text(d20, '20日MA'), 'vs25': deviation_text(d25, '25日MA'), 'vs75': deviation_text(d75, '75日MA'), 'vs200': deviation_text(d200, '200日MA'),
             'rsi': rsi_text, 'rsi_daily': rsi_text, 'rsi_weekly': (f'RSI {rsi_weekly:.1f}（売られ過ぎ）' if rsi_weekly is not None and rsi_weekly < 30 else f'RSI {rsi_weekly:.1f}（過熱警戒）' if rsi_weekly is not None and rsi_weekly > 70 else f'RSI {rsi_weekly:.1f}（中立）' if rsi_weekly is not None else '判定不可'), 'volume': volume_text, 'range60': range_text, 'momentum': momentum_text,
         },
         'diagnostic': {

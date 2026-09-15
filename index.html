@@ -10,7 +10,7 @@ const sg={BUY_CANDIDATE:'BUY候補',WATCH:'WATCH',AVOID:'AVOID',INSUFFICIENT:'�
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const pct=v=>v==null?'—':Number(v).toFixed(2)+'%';
 const cls=v=>v==null?'':Number(v)>0?'ok':Number(v)<0?'bad':'';
-function iconClass(code){return code==='SUPPLY_BUY'||code==='SUPPLY_IMPROVING'?'supply':code==='BOTTOM_VOLUME'||code==='BOTTOM_REVERSAL'?'bottom':code.startsWith('RANGE_')?'breakout':code.startsWith('RSI_')?'rsi':code==='EXTENDED'?'warn':''}
+function iconClass(code){return code==='SUPPLY_BUY'||code==='SUPPLY_IMPROVING'?'supply':code==='BOTTOM_VOLUME'||code==='BOTTOM_REVERSAL'?'bottom':code.startsWith('RANGE_')?'breakout':code.startsWith('RSI_')?'rsi':code.startsWith('BB_')?'bb':code==='EXTENDED'?'warn':''}
 function iconHtml(x){const arr=(x.signal_icons||[]).slice();if(x.signal==='BUY_CANDIDATE')arr.unshift({code:'AGG_BUY',icon:'🟢',label:'総合BUY'});return arr.length?`<div class="icons">${arr.map(i=>`<span class="icon ${iconClass(i.code)}">${esc(i.icon)} ${esc(i.label)}</span>`).join('')}</div>`:'<span class="muted">—</span>'}
 function render(d){const a=d.ranking||[],sum=d.summary||{};document.getElementById('date').textContent='最終更新: '+(d.updated_at||'—');document.getElementById('fresh').textContent=`データ状態: ${a.filter(x=>x.price!=null).length}/${a.length}銘柄の価格データあり。`;
 document.getElementById('summary').textContent=sum.today_message||'—';document.getElementById('summary').className='summary '+(sum.buy_candidates?'ok':'');document.getElementById('note').textContent=`総合BUY ${sum.buy_candidates||0} / WATCH ${sum.watch||0} / AVOID ${sum.avoid||0} / データ不足 ${sum.insufficient||0}`;
