@@ -8,7 +8,30 @@ if not TOKEN:
     raise SystemExit('IRBANK_API_KEY is not set')
 
 with open('watchlist.json', encoding='utf-8') as f:
-    codes = json.load(f).get('stocks', [])
+    watchlist = json.load(f)
+
+# watchlist.json may contain either plain codes (e.g. "5803") or
+# stock objects (e.g. {"code": "5803", "name": "フジクラ"}).
+# Normalize both forms here so an object is never accidentally interpolated
+# into an API URL or used as a dict key.
+codes = []
+watchlist_names = {}
+for item in watchlist.get('stocks', []):
+    if isinstance(item, dict):
+        raw_code = item.get('code') or item.get('security_code') or item.get('ticker') or item.get('symbol')
+        raw_name = item.get('name')
+    else:
+        raw_code = item
+        raw_name = None
+    if raw_code is None:
+        continue
+    code = str(raw_code).strip()
+    if not code:
+        continue
+    if code not in codes:
+        codes.append(code)
+    if raw_name:
+        watchlist_names[code] = str(raw_name).strip()
 
 def get(path, params=None):
     url = API + path
@@ -418,8 +441,12 @@ out={'updated_at':datetime.now(timezone(timedelta(hours=9))).isoformat(),
      'stocks':{},'diagnostics':[]}
 
 for code in codes:
+    # code is normalized to a string above. Keep the key/string invariant
+    # throughout this loop so failures cannot raise a secondary "unhashable"
+    # exception and hide the real API error.
+    code = str(code)
     try:
-        info=get(f'/securities/{code}')
+        info=get(f'/securities/{urllib.parse.quote(code, safe="")}')
         rows, attribution=get_all_prices(code)
         if not rows:
             raise ValueError('No price rows returned')
@@ -446,7 +473,7 @@ for code in codes:
                 'api_errors':[str(supply_error)]
             }
         s=calc(rows,breadth_info,supply_info)
-        s.update({'code':code,'name':info.get('name',code),'market':info.get('market'),
+        s.update({'code':code,'name':info.get('name') or watchlist_names.get(code) or code,'market':info.get('market'),
                   'industry':info.get('industry'),'attribution':attribution})
         out['stocks'][code]=s
         out['diagnostics'].append({
@@ -461,7 +488,7 @@ for code in codes:
           'score':s['score']
         })
     except Exception as e:
-        out['stocks'][code]={'code':code,'name':code,'error':str(e)}
+        out['stocks'][code]={'code':code,'name':watchlist_names.get(code) or code,'error':str(e)}
         out['diagnostics'].append({'code':code,'status':'error','error':str(e)})
 
 if not any(isinstance(s,dict) and s.get('price') is not None for s in out['stocks'].values()):
