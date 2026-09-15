@@ -802,7 +802,8 @@ def calc(rows, breadth_info=None, supply_info=None):
 
     ma5 = statistics.mean(vals[1:6]) if len(vals) >= 6 else None
     ma20 = statistics.mean(vals[1:21]) if len(vals) >= 21 else None
-    ma60 = statistics.mean(vals[1:61]) if len(vals) >= 61 else None
+    ma25 = statistics.mean(vals[1:26]) if len(vals) >= 26 else None
+    ma75 = statistics.mean(vals[1:76]) if len(vals) >= 76 else None
     high20 = max(vals[1:21]) if len(vals) >= 21 else None
     low20 = min(vals[1:21]) if len(vals) >= 21 else None
     high60 = max(vals[1:61]) if len(vals) >= 61 else None
@@ -815,7 +816,8 @@ def calc(rows, breadth_info=None, supply_info=None):
     rsi_weekly = rsi14(weekly_vals)
     d5 = pct(vals[0], ma5)
     d20 = pct(vals[0], ma20)
-    d60 = pct(vals[0], ma60)
+    d25 = pct(vals[0], ma25)
+    d75 = pct(vals[0], ma75)
     drawdown60 = pct(vals[0], high60)
     range_position60 = ((vals[0]-low60)/(high60-low60)*100) if high60 is not None and low60 is not None and high60 != low60 else None
     volatility20 = (statistics.stdev(vals[:20]) / statistics.mean(vals[:20]) * 100) if len(vals) >= 20 and statistics.mean(vals[:20]) else None
@@ -824,7 +826,7 @@ def calc(rows, breadth_info=None, supply_info=None):
     vol = 10 if vr is not None and vr >= 1.8 else 8 if vr is not None and vr >= 1.5 else 6 if vr is not None and vr >= 1.3 else 3 if vr is not None and vr >= 1.15 else 0
     weak = 10 if d20 is not None and d20 <= -12 else 8 if d20 is not None and d20 <= -8 else 6 if d20 is not None and d20 <= -5 else 3 if d20 is not None and d20 <= -3 else 0
     rp = 10 if rsi is not None and rsi <= 25 else 8 if rsi is not None and rsi <= 30 else 5 if rsi is not None and rsi <= 35 else 2 if rsi is not None and rsi <= 40 else 0
-    tp = 10 if d60 is not None and d60 <= -10 else 7 if d60 is not None and d60 <= -5 else 4 if d60 is not None and d60 <= 0 else 0
+    tp = 10 if d75 is not None and d75 <= -10 else 7 if d75 is not None and d75 <= -5 else 4 if d75 is not None and d75 <= 0 else 0
 
     bp, bdetail = breadth_points((breadth_info or {}).get('breadth'))
     nikkei_change = (breadth_info or {}).get('nikkei_change')
@@ -867,18 +869,21 @@ def calc(rows, breadth_info=None, supply_info=None):
     # Keep a compact recent history for the UI chart.  The chart is intentionally
     # presentation data only; decisions continue to use the full calculation above.
     chart_history = []
-    for idx, r in enumerate(rows[:61]):
+    for idx, r in enumerate(rows[:100]):
         raw_close = r.get('adj_close') if r.get('adj_close') is not None else r.get('close')
         if raw_close is None: continue
         close_i = float(raw_close)
         prev20 = [float((z.get('adj_close') if z.get('adj_close') is not None else z.get('close'))) for z in rows[idx+1:idx+21]
                   if (z.get('adj_close') if z.get('adj_close') is not None else z.get('close')) is not None]
-        prev60 = [float((z.get('adj_close') if z.get('adj_close') is not None else z.get('close'))) for z in rows[idx+1:idx+61]
+        prev25 = [float((z.get('adj_close') if z.get('adj_close') is not None else z.get('close'))) for z in rows[idx+1:idx+26]
+                  if (z.get('adj_close') if z.get('adj_close') is not None else z.get('close')) is not None]
+        prev75 = [float((z.get('adj_close') if z.get('adj_close') is not None else z.get('close'))) for z in rows[idx+1:idx+76]
                   if (z.get('adj_close') if z.get('adj_close') is not None else z.get('close')) is not None]
         chart_history.append({
-            'date': r.get('date'), 'close': round(close_i,2),
+            'date': r.get('date'), 'open': r.get('open'), 'high': r.get('high'), 'low': r.get('low'), 'close': round(close_i,2),
             'ma20': round(statistics.mean(prev20),2) if len(prev20)>=20 else None,
-            'ma60': round(statistics.mean(prev60),2) if len(prev60)>=60 else None,
+            'ma25': round(statistics.mean(prev25),2) if len(prev25)>=25 else None,
+            'ma75': round(statistics.mean(prev75),2) if len(prev75)>=75 else None,
         })
     chart_history.reverse()
 
@@ -889,10 +894,12 @@ def calc(rows, breadth_info=None, supply_info=None):
         'volume_ratio': round(vr, 2) if vr is not None else None,
         'ma5': round(ma5, 2) if ma5 is not None else None,
         'ma20': round(ma20, 2) if ma20 is not None else None,
-        'ma60': round(ma60, 2) if ma60 is not None else None,
+        'ma25': round(ma25, 2) if ma25 is not None else None,
+        'ma75': round(ma75, 2) if ma75 is not None else None,
         'vs5': round(d5, 2) if d5 is not None else None,
         'vs20': round(d20, 2) if d20 is not None else None,
-        'vs60': round(d60, 2) if d60 is not None else None,
+        'vs25': round(d25, 2) if d25 is not None else None,
+        'vs75': round(d75, 2) if d75 is not None else None,
         'high20': round(high20, 2) if high20 is not None else None,
         'low20': round(low20, 2) if low20 is not None else None,
         'high60': round(high60, 2) if high60 is not None else None,
@@ -912,12 +919,12 @@ def calc(rows, breadth_info=None, supply_info=None):
         'signal_icons': icons,
         'chart_history': chart_history,
         'interpretation': {
-            'vs5': deviation_text(d5, '5日MA'), 'vs20': deviation_text(d20, '20日MA'), 'vs60': deviation_text(d60, '60日MA'),
+            'vs5': deviation_text(d5, '5日MA'), 'vs20': deviation_text(d20, '20日MA'), 'vs25': deviation_text(d25, '25日MA'), 'vs75': deviation_text(d75, '75日MA'),
             'rsi': rsi_text, 'rsi_daily': rsi_text, 'rsi_weekly': (f'RSI {rsi_weekly:.1f}（売られ過ぎ）' if rsi_weekly is not None and rsi_weekly < 30 else f'RSI {rsi_weekly:.1f}（過熱警戒）' if rsi_weekly is not None and rsi_weekly > 70 else f'RSI {rsi_weekly:.1f}（中立）' if rsi_weekly is not None else '判定不可'), 'volume': volume_text, 'range60': range_text, 'momentum': momentum_text,
         },
         'diagnostic': {
             'usable_points': len(vals), 'rsi_ready': len(vals) >= 15, 'weekly_rsi_ready': len(weekly_vals) >= 15, 'weekly_points': len(weekly_vals),
-            'ma20_ready': len(vals) >= 21, 'ma60_ready': len(vals) >= 61,
+            'ma20_ready': len(vals) >= 21, 'ma25_ready': len(vals) >= 26, 'ma75_ready': len(vals) >= 76,
         },
         'breadth': (breadth_info or {}).get('breadth') or {'6d': None, '10d': None, '15d': None, '25d': None},
         'breadth_points': bp, 'breadth_breakdown': bdetail,
@@ -931,7 +938,7 @@ def calc(rows, breadth_info=None, supply_info=None):
         'relative_points': relp,
         'score_breakdown': {
             'daily_drop': daily, 'volume': vol, 'vs20': weak,
-            'rsi14': rp, 'vs60': tp, 'breadth': bp,
+            'rsi14': rp, 'vs75': tp, 'breadth': bp,
             'relative_strength': relp, 'supply': sp,
         },
         'breadth_source': (breadth_info or {}).get('source_url'),

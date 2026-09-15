@@ -131,7 +131,7 @@ def classify_regime(rows, candle_signal=None):
 
 
 def decide(stock, regime):
-    vs60 = _f(stock.get('vs60')); ret1 = _f(stock.get('change')); ret5 = _f(stock.get('ret5')); ret10 = _f(stock.get('ret10'))
+    vs75 = _f(stock.get('vs75')); ret1 = _f(stock.get('change')); ret5 = _f(stock.get('ret5')); ret10 = _f(stock.get('ret10'))
     missing = []
     checks = []
 
@@ -159,7 +159,7 @@ def decide(stock, regime):
     # 2) Bottom-reversal branch. Being positive on the day alone is NOT enough.
     if regime['regime'] in ('DOWNTREND_REVERSAL_WAIT','DOWNTREND_REVERSAL_CONFIRMED'):
         conds = [
-            ('60日MAより5%以上下', vs60 is not None and vs60 <= -5, vs60, 'vs60<=-5%'),
+            ('75日MAより5%以上下', vs75 is not None and vs75 <= -5, vs75, 'vs75<=-5%'),
             ('5日騰落率が-5%以上', ret5 is not None and ret5 >= -5, ret5, '5日騰落率>=-5%'),
             ('10日騰落率が-10%以上', ret10 is not None and ret10 >= -10, ret10, '10日騰落率>=-10%')
         ]
