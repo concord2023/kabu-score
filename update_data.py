@@ -71,28 +71,40 @@ def get(path, params=None, retries=4):
     raise RuntimeError(f'IRBANK request failed after retries: {url}: {last_error}')
 
 
-def get_all_prices(code, minimum=120):
-    # 500 rows is enough for the current 320-row target in one request.
-    data = get(f'/securities/{code}/prices', {'limit': 500})
-    rows = data.get('prices') or []
-    attribution = data.get('attribution') or {}
+def get_all_prices(code, minimum=260):
+    # 200MA needs at least 200 prior sessions. Fetch a little extra history so
+    # the 200MA can be calculated reliably while the UI still displays only the
+    # latest 100 sessions. IRBANK supports cursor pagination when a response is
+    # shorter than the requested limit.
+    rows = []
+    attribution = {}
+    cursor = None
+    seen = set()
+    while True:
+        params = {'limit': 500}
+        if cursor:
+            params['cursor'] = cursor
+        data = get(f'/securities/{code}/prices', params)
+        attribution = data.get('attribution') or attribution
+        page = data.get('prices') or []
+        for x in page:
+            d = x.get('date')
+            if not d or d in seen:
+                continue
+            if x.get('close') is None and x.get('adj_close') is None:
+                continue
+            seen.add(d)
+            rows.append(x)
+        cursor = data.get('next_cursor')
+        if len(rows) >= minimum or not cursor:
+            break
+
     if not rows:
         raise ValueError(f'No price rows returned for {code}')
-
-    seen = set()
-    clean = []
-    for x in rows:
-        d = x.get('date')
-        if not d or d in seen:
-            continue
-        if x.get('close') is None and x.get('adj_close') is None:
-            continue
-        seen.add(d)
-        clean.append(x)
-    clean.sort(key=lambda x: x['date'], reverse=True)
-    if len(clean) < minimum:
-        raise ValueError(f'Not enough price history for {code}: {len(clean)} rows')
-    return clean, attribution
+    rows.sort(key=lambda x: x['date'], reverse=True)
+    if len(rows) < minimum:
+        raise ValueError(f'Not enough price history for {code}: {len(rows)} rows (200MA requires 200+ prior sessions)')
+    return rows, attribution
 
 
 class TableParser(HTMLParser):
@@ -835,11 +847,13 @@ def calc(rows, breadth_info=None, supply_info=None):
     base = [float(v) for v in vols[1:21] if v is not None]
     vr = (float(vols[0]) / statistics.mean(base)) if vols and vols[0] is not None and base else None
 
-    ma5 = statistics.mean(vals[1:6]) if len(vals) >= 6 else None
-    ma20 = statistics.mean(vals[1:21]) if len(vals) >= 21 else None
-    ma25 = statistics.mean(vals[1:26]) if len(vals) >= 26 else None
-    ma75 = statistics.mean(vals[1:76]) if len(vals) >= 76 else None
-    ma200 = statistics.mean(vals[1:201]) if len(vals) >= 201 else None
+    # Standard moving averages include the current close.  The breakout/range
+    # windows below intentionally remain prior-session windows where applicable.
+    ma5 = statistics.mean(vals[:5]) if len(vals) >= 5 else None
+    ma20 = statistics.mean(vals[:20]) if len(vals) >= 20 else None
+    ma25 = statistics.mean(vals[:25]) if len(vals) >= 25 else None
+    ma75 = statistics.mean(vals[:75]) if len(vals) >= 75 else None
+    ma200 = statistics.mean(vals[:200]) if len(vals) >= 200 else None
     bb_daily_mid, bb_daily_upper, bb_daily_lower = bollinger(vals, 25, 2)
     high20 = max(vals[1:21]) if len(vals) >= 21 else None
     low20 = min(vals[1:21]) if len(vals) >= 21 else None
@@ -914,28 +928,54 @@ def calc(rows, breadth_info=None, supply_info=None):
         raw_close = r.get('adj_close') if r.get('adj_close') is not None else r.get('close')
         if raw_close is None: continue
         close_i = float(raw_close)
-        prev20 = [float((z.get('adj_close') if z.get('adj_close') is not None else z.get('close'))) for z in rows[idx+1:idx+21]
-                  if (z.get('adj_close') if z.get('adj_close') is not None else z.get('close')) is not None]
-        prev25 = [float((z.get('adj_close') if z.get('adj_close') is not None else z.get('close'))) for z in rows[idx+1:idx+26]
-                  if (z.get('adj_close') if z.get('adj_close') is not None else z.get('close')) is not None]
-        prev5 = [float((z.get('adj_close') if z.get('adj_close') is not None else z.get('close'))) for z in rows[idx+1:idx+6]
-                  if (z.get('adj_close') if z.get('adj_close') is not None else z.get('close')) is not None]
-        prev75 = [float((z.get('adj_close') if z.get('adj_close') is not None else z.get('close'))) for z in rows[idx+1:idx+76]
-                  if (z.get('adj_close') if z.get('adj_close') is not None else z.get('close')) is not None]
-        prev200 = [float((z.get('adj_close') if z.get('adj_close') is not None else z.get('close'))) for z in rows[idx+1:idx+201]
-                  if (z.get('adj_close') if z.get('adj_close') is not None else z.get('close')) is not None]
-        bb_win = [float((z.get('adj_close') if z.get('adj_close') is not None else z.get('close'))) for z in rows[idx:idx+25]
-                  if (z.get('adj_close') if z.get('adj_close') is not None else z.get('close')) is not None]
+        def adj_price(z, field):
+            raw = z.get(field)
+            if raw is None:
+                return None
+            try:
+                raw = float(raw)
+            except (TypeError, ValueError):
+                return None
+            # IRBANK supplies adjusted close but OHLC can remain unadjusted around
+            # stock splits.  Apply the same adjustment factor to OHLC so candles
+            # and moving averages stay on one price scale (important for 485A).
+            raw_close = z.get('close')
+            adj_close = z.get('adj_close')
+            try:
+                raw_close = float(raw_close) if raw_close is not None else None
+                adj_close = float(adj_close) if adj_close is not None else None
+            except (TypeError, ValueError):
+                raw_close = adj_close = None
+            if raw_close and adj_close is not None:
+                return raw * (adj_close / raw_close)
+            return raw
+
+        close_adj = adj_price(r, 'close')
+        # Chart moving averages include the candle's current session, matching the
+        # standard MA definition and the values shown in the detail metrics.
+        win5 = [adj_price(z, 'close') for z in rows[idx:idx+5]]
+        win25 = [adj_price(z, 'close') for z in rows[idx:idx+25]]
+        win75 = [adj_price(z, 'close') for z in rows[idx:idx+75]]
+        win200 = [adj_price(z, 'close') for z in rows[idx:idx+200]]
+        win5 = [v for v in win5 if v is not None]
+        win25 = [v for v in win25 if v is not None]
+        win75 = [v for v in win75 if v is not None]
+        win200 = [v for v in win200 if v is not None]
+        bb_win = win25
         bb_mid, bb_upper, bb_lower = bollinger(bb_win, 25, 2)
         chart_history.append({
-            'date': r.get('date'), 'open': r.get('open'), 'high': r.get('high'), 'low': r.get('low'), 'close': round(close_i,2),
-            'ma5': round(statistics.mean(prev5),2) if len(prev5)>=5 else None,
-            'ma20': round(statistics.mean(prev20),2) if len(prev20)>=20 else None,
-            'ma75': round(statistics.mean(prev75),2) if len(prev75)>=75 else None,
-            'ma200': round(statistics.mean(prev200),2) if len(prev200)>=200 else None,
-            'bb25_mid': round(bb_mid,2) if bb_mid is not None else None,
-            'bb25_upper': round(bb_upper,2) if bb_upper is not None else None,
-            'bb25_lower': round(bb_lower,2) if bb_lower is not None else None,
+            'date': r.get('date'),
+            'open': round(adj_price(r, 'open'), 2) if adj_price(r, 'open') is not None else None,
+            'high': round(adj_price(r, 'high'), 2) if adj_price(r, 'high') is not None else None,
+            'low': round(adj_price(r, 'low'), 2) if adj_price(r, 'low') is not None else None,
+            'close': round(close_adj, 2) if close_adj is not None else round(close_i, 2),
+            'ma5': round(statistics.mean(win5), 2) if len(win5) >= 5 else None,
+            'ma25': round(statistics.mean(win25), 2) if len(win25) >= 25 else None,
+            'ma75': round(statistics.mean(win75), 2) if len(win75) >= 75 else None,
+            'ma200': round(statistics.mean(win200), 2) if len(win200) >= 200 else None,
+            'bb25_mid': round(bb_mid, 2) if bb_mid is not None else None,
+            'bb25_upper': round(bb_upper, 2) if bb_upper is not None else None,
+            'bb25_lower': round(bb_lower, 2) if bb_lower is not None else None,
         })
     chart_history.reverse()
 
@@ -980,7 +1020,7 @@ def calc(rows, breadth_info=None, supply_info=None):
         },
         'diagnostic': {
             'usable_points': len(vals), 'rsi_ready': len(vals) >= 15, 'weekly_rsi_ready': len(weekly_vals) >= 15, 'weekly_points': len(weekly_vals),
-            'ma20_ready': len(vals) >= 21, 'ma25_ready': len(vals) >= 26, 'ma75_ready': len(vals) >= 76,
+            'ma20_ready': len(vals) >= 20, 'ma25_ready': len(vals) >= 25, 'ma75_ready': len(vals) >= 75, 'ma200_ready': len(vals) >= 200,
         },
         'breadth': (breadth_info or {}).get('breadth') or {'6d': None, '10d': None, '15d': None, '25d': None},
         'breadth_points': bp, 'breadth_breakdown': bdetail,
@@ -1012,7 +1052,7 @@ supply_batch_errors = []
 out = {
     'updated_at': now_jst().isoformat(),
     'source': 'IRBANK API + 豆腐ハードボイルド（騰落銘柄数）',
-    'api_strategy': 'price:1 call/stock + supply:5 metric calls/stock (rate-limited, exact-code matched) + breadth:1 call/run',
+    'api_strategy': 'price:up to 500 rows/stock with cursor pagination as needed + supply:5 metric calls/stock (rate-limited, exact-code matched) + breadth:1 call/run',
     'stocks': {},
     'diagnostics': [],
 }
