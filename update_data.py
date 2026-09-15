@@ -843,11 +843,11 @@ def calc(rows, breadth_info=None, supply_info=None):
         if v < 10: return f'{ma}を上回る'
         return f'{ma}から大きく上（高値警戒）'
     if rsi is None: rsi_text = '判定不可'
-    elif rsi <= 30: rsi_text = '売られ過ぎ寄り'
-    elif rsi <= 40: rsi_text = '弱め'
-    elif rsi < 60: rsi_text = '中立'
-    elif rsi < 70: rsi_text = '強め'
-    else: rsi_text = '過熱警戒'
+    elif rsi < 30: rsi_text = f'RSI {rsi:.1f}（売られ過ぎ）'
+    elif rsi <= 40: rsi_text = f'RSI {rsi:.1f}（弱め）'
+    elif rsi < 60: rsi_text = f'RSI {rsi:.1f}（中立）'
+    elif rsi < 70: rsi_text = f'RSI {rsi:.1f}（強め）'
+    else: rsi_text = f'RSI {rsi:.1f}（過熱警戒）'
     if vr is None: volume_text = '判定不可'
     elif vr >= 1.8: volume_text = '出来高急増'
     elif vr >= 1.3: volume_text = '出来高増'
@@ -913,7 +913,7 @@ def calc(rows, breadth_info=None, supply_info=None):
         'chart_history': chart_history,
         'interpretation': {
             'vs5': deviation_text(d5, '5日MA'), 'vs20': deviation_text(d20, '20日MA'), 'vs60': deviation_text(d60, '60日MA'),
-            'rsi': rsi_text, 'volume': volume_text, 'range60': range_text, 'momentum': momentum_text,
+            'rsi': rsi_text, 'rsi_daily': rsi_text, 'rsi_weekly': (f'RSI {rsi_weekly:.1f}（売られ過ぎ）' if rsi_weekly is not None and rsi_weekly < 30 else f'RSI {rsi_weekly:.1f}（過熱警戒）' if rsi_weekly is not None and rsi_weekly > 70 else f'RSI {rsi_weekly:.1f}（中立）' if rsi_weekly is not None else '判定不可'), 'volume': volume_text, 'range60': range_text, 'momentum': momentum_text,
         },
         'diagnostic': {
             'usable_points': len(vals), 'rsi_ready': len(vals) >= 15, 'weekly_rsi_ready': len(weekly_vals) >= 15, 'weekly_points': len(weekly_vals),

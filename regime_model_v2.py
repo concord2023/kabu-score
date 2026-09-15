@@ -172,12 +172,45 @@ def decide(stock, regime):
         else:
             signal='WATCH'
             reason='下降トレンドの反転待ち。BUYにはしません。未達/確認待ち: ' + (' / '.join(missing) if missing else '大底反転確認または20日MA回復')
-    elif regime['regime'] in ('UPTREND','UPTREND_PULLBACK','RANGE_TRANSITION'):
+    elif regime['regime'] == 'UPTREND_PULLBACK':
+        # Pullback is NOT a breakout setup.  In an established uptrend, the
+        # entry area is the rising 20-day MA/support zone.  We only promote
+        # it to BUY_CANDIDATE when price is near the MA and shows a rebound;
+        # otherwise it remains WATCH so we do not buy a falling knife.
+        vs20 = _f(regime.get('daily_vs20'))
+        rsi = _f(stock.get('rsi14'))
+        near_ma = vs20 is not None and -5.0 <= vs20 <= 2.0
+        bounce = ret1 is not None and ret1 > 0
+        rsi_ok = rsi is None or rsi < 70
+        checks = [
+            {'label':'週足上昇トレンド','ok':regime.get('weekly_direction')=='UP','value':regime.get('weekly_direction'),'rule':'週足方向=UP'},
+            {'label':'20日MA付近','ok':near_ma,'value':vs20,'rule':'20日MA乖離が-5%〜+2%'},
+            {'label':'下げ止まり/反発','ok':bounce,'value':ret1,'rule':'当日騰落率>0%'},
+            {'label':'RSI70未満','ok':rsi_ok,'value':rsi,'rule':'過熱状態を避ける'},
+        ]
+        if near_ma and bounce and rsi_ok:
+            signal='BUY_CANDIDATE'
+            reason='上昇トレンドの押し目。20日MA付近まで調整し、反発を確認した買い候補。20日MA/直近押し安値を明確に割る場合は損切り警戒。'
+        elif near_ma:
+            signal='WATCH'
+            reason='上昇トレンドの買い場接近。20日MA付近まで押しているが、反発確認前なので監視。下抜け時は損切り警戒。'
+        else:
+            signal='WATCH'
+            reason='上昇トレンドの押し目を監視。レンジ上抜けを待つのではなく、20日MAなど支持帯への調整を待つ。'
+    elif regime['regime'] == 'UPTREND':
         signal='WATCH'
-        reason='方向/押し目を監視。レンジ抜け条件が確認できればBUY候補へ。'
+        reason='上昇トレンド継続。新規買いは追いかけず、20日MAなどへの押し目を待つ。'
         checks=[
-            {'label':'週足方向','ok':regime.get('weekly_direction')=='UP','value':regime.get('weekly_direction'),'rule':'週足で方向判定'},
-            {'label':'日足20MA','ok':_f(regime.get('daily_vs20')) is not None,'value':regime.get('daily_vs20'),'rule':'20日MAからの乖離を確認'}]
+            {'label':'週足方向','ok':regime.get('weekly_direction')=='UP','value':regime.get('weekly_direction'),'rule':'週足方向=UP'},
+            {'label':'押し目待ち','ok':True,'value':regime.get('daily_vs20'),'rule':'20日MA付近への調整を待つ'},
+        ]
+    elif regime['regime'] == 'RANGE_TRANSITION':
+        signal='WATCH'
+        reason='レンジ転換監視。上限ブレイクと出来高増加などを確認するまではBUYにしない。'
+        checks=[
+            {'label':'週足方向','ok':regime.get('weekly_direction')=='RANGE','value':regime.get('weekly_direction'),'rule':'週足がRANGE'},
+            {'label':'ブレイク確認待ち','ok':False,'value':None,'rule':'レンジ上限の終値突破＋出来高などを待つ'},
+        ]
     elif regime['regime'] == 'DOWNTREND_CONTINUED':
         signal='AVOID'; reason='下降継続のため現時点では回避。'
     else:
