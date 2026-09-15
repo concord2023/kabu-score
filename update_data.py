@@ -71,11 +71,13 @@ def get(path, params=None, retries=4):
     raise RuntimeError(f'IRBANK request failed after retries: {url}: {last_error}')
 
 
-def get_all_prices(code, minimum=260):
-    # 200MA needs at least 200 prior sessions. Fetch a little extra history so
-    # the 200MA can be calculated reliably while the UI still displays only the
-    # latest 100 sessions. IRBANK supports cursor pagination when a response is
-    # shorter than the requested limit.
+def get_all_prices(code, minimum=75):
+    # Fetch at least enough history for the 75MA, and continue pagination up to
+    # 260 sessions when available so the 200MA can be calculated. Do NOT reject
+    # a newly listed stock merely because it has fewer than 200 sessions: in that
+    # case 25/75MA and the other available indicators should still work, while
+    # 200MA remains explicitly unavailable. This is important for newer names
+    # such as 485A (PowerX). IRBANK supports cursor pagination.
     rows = []
     attribution = {}
     cursor = None
@@ -103,7 +105,7 @@ def get_all_prices(code, minimum=260):
         raise ValueError(f'No price rows returned for {code}')
     rows.sort(key=lambda x: x['date'], reverse=True)
     if len(rows) < minimum:
-        raise ValueError(f'Not enough price history for {code}: {len(rows)} rows (200MA requires 200+ prior sessions)')
+        raise ValueError(f'Not enough price history for {code}: {len(rows)} rows (75MA requires 75+ sessions)')
     return rows, attribution
 
 
