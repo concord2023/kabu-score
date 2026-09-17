@@ -3,6 +3,11 @@ on:
   schedule:
     - cron: '10 22 * * 1-5'
   workflow_dispatch:
+    inputs:
+      add_stock:
+        description: 'Add stock (optional: company name or security code, e.g. ローツェ or 6323).'
+        required: false
+        type: string
 permissions:
   contents: write
 jobs:
@@ -18,11 +23,13 @@ jobs:
       - name: Run daily analysis
         env:
           IRBANK_API_KEY: ${{ secrets.IRBANK_API_KEY }}
+          ADD_STOCK_QUERY: ${{ inputs.add_stock }}
         run: python run_daily.py
       - name: Save generated data
+        if: always()
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/stocks.json data/decision_ranking.json
+          git add watchlist.json data/stocks.json data/decision_ranking.json
           git diff --cached --quiet || git commit -m 'Update daily stock decisions'
           git push
