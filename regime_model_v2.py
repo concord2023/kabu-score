@@ -64,8 +64,11 @@ def classify_regime(rows, candle_signal=None):
     vals = [_close(r) for r in rows]
     vals = [x for x in vals if x is not None]
     close = vals[0] if vals else None
-    daily_ma20 = mean(vals[1:21]) if len(vals) >= 21 else None
+    # 20日MAは当日を含む一般的な定義に統一。
+    daily_ma20 = mean(vals[:20]) if len(vals) >= 20 else None
+    daily_ma20_old = mean(vals[5:25]) if len(vals) >= 25 else None
     vs20 = _pct(close, daily_ma20)
+    ma20_slope5 = _pct(daily_ma20, daily_ma20_old)
     def ret(n): return _pct(vals[0], vals[n]) if len(vals) > n else None
     ret1, ret5, ret10, ret20 = ret(1), ret(5), ret(10), ret(20)
 
@@ -123,6 +126,7 @@ def classify_regime(rows, candle_signal=None):
         reason = '週足データが不足しており方向判定できない。'
 
     return {**wm, 'daily_vs20': round(vs20,2) if vs20 is not None else None,
+            'daily_ma20_slope5': round(ma20_slope5,2) if ma20_slope5 is not None else None,
             'daily_ret1': round(ret1,2) if ret1 is not None else None,
             'daily_ret5': round(ret5,2) if ret5 is not None else None,
             'daily_ret10': round(ret10,2) if ret10 is not None else None,
@@ -175,28 +179,33 @@ def decide(stock, regime):
     elif regime['regime'] == 'UPTREND_PULLBACK':
         # Pullback is NOT a breakout setup.  In an established uptrend, the
         # entry area is the rising 20-day MA/support zone.  We only promote
-        # it to BUY_CANDIDATE when price is near the MA and shows a rebound;
-        # otherwise it remains WATCH so we do not buy a falling knife.
+        # it to BUY_CANDIDATE when price is near the MA after a real pullback;
+        # the current day's move is deliberately not used as a condition.
         vs20 = _f(regime.get('daily_vs20'))
+        ma20_slope5 = _f(regime.get('daily_ma20_slope5'))
         rsi = _f(stock.get('rsi14'))
-        near_ma = vs20 is not None and -5.0 <= vs20 <= 2.0
-        bounce = ret1 is not None and ret1 > 0
-        rsi_ok = rsi is None or rsi < 70
+        # 「上昇押し目」は、単に20日MAの近くにいるだけではBUYにしない。
+        # 高値圏で少し下がっただけの銘柄を弾くため、かなり狭く設定する。
+        near_ma = vs20 is not None and -3.0 <= vs20 <= 0.5
+        actual_pullback = ret5 is not None and ret5 <= -1.0
+        ma_rising = ma20_slope5 is not None and ma20_slope5 > 0
+        rsi_ok = rsi is None or rsi < 65
         checks = [
             {'label':'週足上昇トレンド','ok':regime.get('weekly_direction')=='UP','value':regime.get('weekly_direction'),'rule':'週足方向=UP'},
-            {'label':'20日MA付近','ok':near_ma,'value':vs20,'rule':'20日MA乖離が-5%〜+2%'},
-            {'label':'下げ止まり/反発','ok':bounce,'value':ret1,'rule':'当日騰落率>0%'},
-            {'label':'RSI70未満','ok':rsi_ok,'value':rsi,'rule':'過熱状態を避ける'},
+            {'label':'20日MAに十分接近','ok':near_ma,'value':vs20,'rule':'20日MA乖離が-3%〜+0.5%'},
+            {'label':'実際に押している','ok':actual_pullback,'value':ret5,'rule':'5日騰落率<=-1%'},
+            {'label':'20日MAが上向き','ok':ma_rising,'value':ma20_slope5,'rule':'20日MAの5日傾き>0%'},
+            {'label':'RSI65未満','ok':rsi_ok,'value':rsi,'rule':'高値圏の過熱を避ける'},
         ]
-        if near_ma and bounce and rsi_ok:
+        if near_ma and actual_pullback and ma_rising and rsi_ok:
             signal='BUY_CANDIDATE'
-            reason='上昇トレンドの押し目。20日MA付近まで調整し、反発を確認した買い候補。20日MA/直近押し安値を明確に割る場合は損切り警戒。'
+            reason='厳しめの上昇トレンド押し目。20日MAの±3%以内、5日で1%以上調整、20日MA上向き、RSI65未満を確認。当日の値動きはBUY条件に使わない。MA/直近押し安値割れは損切り警戒。'
         elif near_ma:
             signal='WATCH'
-            reason='上昇トレンドの買い場接近。20日MA付近まで押しているが、反発確認前なので監視。下抜け時は損切り警戒。'
+            reason='上昇トレンドの押し目候補だが、BUY条件は未達。20日MA付近でも「5日で1%以上の調整」「20日MA上向き」「RSI65未満」を確認するまで監視。当日の値動きはBUY条件に使わない。'
         else:
             signal='WATCH'
-            reason='上昇トレンドの押し目を監視。レンジ上抜けを待つのではなく、20日MAなど支持帯への調整を待つ。'
+            reason='上昇トレンドだが現在は押し目BUY水準ではない。20日MAから離れた高値圏では追いかけず、20日MA付近までの調整を待つ。'
     elif regime['regime'] == 'UPTREND':
         signal='WATCH'
         reason='上昇トレンド継続。新規買いは追いかけず、20日MAなどへの押し目を待つ。'

@@ -17,10 +17,33 @@ if not TOKEN:
     raise SystemExit('IRBANK_API_KEY is not set')
 
 with open('watchlist.json', encoding='utf-8') as f:
-    watch = json.load(f).get('stocks', [])
+    watch_data = json.load(f)
+watch = watch_data.get('stocks', [])
+
+# Optional manual stock addition from GitHub Actions workflow_dispatch.
+# This keeps the static Pages site safe: the browser never receives a GitHub token.
+add_code = re.sub(r'[^0-9A-Z]', '', os.environ.get('ADD_STOCK_CODE', '').strip().upper())
+add_name = str(os.environ.get('ADD_STOCK_NAME', '')).strip()
+if add_code:
+    if not re.fullmatch(r'[0-9A-Z]{4,5}', add_code):
+        raise SystemExit('ADD_STOCK_CODE must be 4-5 alphanumeric characters')
+    if not add_name:
+        raise SystemExit('ADD_STOCK_NAME is required when adding a stock')
+    existing_codes = {
+        re.sub(r'[^0-9A-Z]', '', str(x.get('code') if isinstance(x, dict) else x).strip().upper())
+        for x in watch
+    }
+    if add_code not in existing_codes:
+        watch.append({'code': add_code, 'name': add_name})
+        watch_data['stocks'] = watch
+        with open('watchlist.json', 'w', encoding='utf-8') as f:
+            json.dump(watch_data, f, ensure_ascii=False, indent=2)
+        print(f'Added stock to watchlist: {add_code} {add_name}')
+    else:
+        print(f'Stock already exists in watchlist: {add_code}')
 
 # Keep API traffic comfortably below IRBANK's current 60 requests/minute limit.
-# One daily run uses about 55 authenticated requests for the watchlist plus one public
+# One daily run uses about 55 authenticated requests for 18 stocks plus one public
 # breadth request. The small delay also makes transient 429s much less likely.
 MIN_REQUEST_INTERVAL = 1.20
 _last_request_at = 0.0
