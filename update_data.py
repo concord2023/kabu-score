@@ -20,7 +20,7 @@ with open('watchlist.json', encoding='utf-8') as f:
     watch = json.load(f).get('stocks', [])
 
 # Keep API traffic comfortably below IRBANK's current 60 requests/minute limit.
-# One daily run uses about 55 authenticated requests for 18 stocks plus one public
+# One daily run uses about 55 authenticated requests for the watchlist plus one public
 # breadth request. The small delay also makes transient 429s much less likely.
 MIN_REQUEST_INTERVAL = 1.20
 _last_request_at = 0.0
