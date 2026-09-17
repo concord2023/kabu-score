@@ -20,28 +20,6 @@ with open('watchlist.json', encoding='utf-8') as f:
     watch_data = json.load(f)
 watch = watch_data.get('stocks', [])
 
-# Optional manual stock addition from GitHub Actions workflow_dispatch.
-# This keeps the static Pages site safe: the browser never receives a GitHub token.
-add_code = re.sub(r'[^0-9A-Z]', '', os.environ.get('ADD_STOCK_CODE', '').strip().upper())
-add_name = str(os.environ.get('ADD_STOCK_NAME', '')).strip()
-if add_code:
-    if not re.fullmatch(r'[0-9A-Z]{4,5}', add_code):
-        raise SystemExit('ADD_STOCK_CODE must be 4-5 alphanumeric characters')
-    if not add_name:
-        raise SystemExit('ADD_STOCK_NAME is required when adding a stock')
-    existing_codes = {
-        re.sub(r'[^0-9A-Z]', '', str(x.get('code') if isinstance(x, dict) else x).strip().upper())
-        for x in watch
-    }
-    if add_code not in existing_codes:
-        watch.append({'code': add_code, 'name': add_name})
-        watch_data['stocks'] = watch
-        with open('watchlist.json', 'w', encoding='utf-8') as f:
-            json.dump(watch_data, f, ensure_ascii=False, indent=2)
-        print(f'Added stock to watchlist: {add_code} {add_name}')
-    else:
-        print(f'Stock already exists in watchlist: {add_code}')
-
 # Keep API traffic comfortably below IRBANK's current 60 requests/minute limit.
 # One daily run uses about 55 authenticated requests for 18 stocks plus one public
 # breadth request. The small delay also makes transient 429s much less likely.
@@ -93,6 +71,63 @@ def get(path, params=None, retries=4):
             time.sleep(min(30, 2 ** attempt))
     raise RuntimeError(f'IRBANK request failed after retries: {url}: {last_error}')
 
+
+# Optional manual stock addition from GitHub Actions workflow_dispatch.
+# The input may be either a security code (e.g. 6323) or a company name
+# (e.g. ローツェ). IRBANK resolves the official code/name automatically.
+def resolve_security_query(query):
+    raw = str(query or '').strip()
+    if not raw:
+        return None
+
+    normalized_code = re.sub(r'[^0-9A-Z]', '', raw.upper())
+    if re.fullmatch(r'[0-9A-Z]{4,5}', normalized_code):
+        meta = get(f'/securities/{normalized_code}')
+        return meta
+
+    # IRBANK supports partial matching by company name or security code.
+    result = get('/securities', {'q': raw, 'limit': 20})
+    securities = result.get('securities') or []
+    if not securities:
+        raise SystemExit(f'銘柄が見つかりませんでした: {raw}')
+
+    # Prefer an exact company-name match. Otherwise use the first matching
+    # listed security returned by IRBANK's code/name search.
+    exact = next((x for x in securities if str(x.get('name') or '').strip() == raw), None)
+    meta = exact or securities[0]
+    code = str(meta.get('code') or '').strip().upper()
+    if not re.fullmatch(r'[0-9A-Z]{4,5}', code):
+        raise SystemExit(f'有効な証券コードを取得できませんでした: {raw}')
+    return get(f'/securities/{code}')
+
+add_query = os.environ.get('ADD_STOCK_QUERY', os.environ.get('ADD_STOCK_CODE', '')).strip()
+if add_query:
+    meta = resolve_security_query(add_query)
+    add_code = str(meta.get('code') or '').strip().upper()
+    resolved_name = str(meta.get('name') or '').strip()
+    resolved_industry = meta.get('industry')
+    listing_status = meta.get('listing_status')
+
+    if not resolved_name or not add_code:
+        raise SystemExit(f'銘柄情報を取得できませんでした: {add_query}')
+    if listing_status == 'delisted':
+        raise SystemExit(f'上場廃止銘柄のため追加できません: {add_code} {resolved_name}')
+
+    existing_codes = {
+        re.sub(r'[^0-9A-Z]', '', str(x.get('code') if isinstance(x, dict) else x).strip().upper())
+        for x in watch
+    }
+    if add_code not in existing_codes:
+        item = {'code': add_code, 'name': resolved_name}
+        if resolved_industry:
+            item['industry'] = resolved_industry
+        watch.append(item)
+        watch_data['stocks'] = watch
+        with open('watchlist.json', 'w', encoding='utf-8') as f:
+            json.dump(watch_data, f, ensure_ascii=False, indent=2)
+        print(f'Added stock to watchlist: {add_code} {resolved_name}')
+    else:
+        print(f'Stock already exists in watchlist: {add_code} {resolved_name}')
 
 def get_all_prices(code, minimum=75):
     # Fetch at least enough history for the 75MA, and continue pagination up to
