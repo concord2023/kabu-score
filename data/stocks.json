@@ -1,5 +1,8 @@
 {
+  "status": "initialization_required",
   "updated_at": null,
+  "source": "IRBANK API + 豆腐ハードボイルド（騰落銘柄数）",
   "stocks": {},
-  "diagnostics": []
+  "diagnostics": [],
+  "note": "GitHub Actions の Daily stock update を1回実行すると生成されます。"
 }

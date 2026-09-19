@@ -1,1 +1,12 @@
-{"updated_at":null,"source":"IRBANK API / JPX listed-company master","rule":"kabu-score の decide() が BUY_CANDIDATE と判定した銘柄のみ。","universe_count":0,"scanned_count":0,"insufficient_count":0,"error_count":0,"recommendation_count":0,"recommendations":[],"note":"最初の日次更新後に自動生成されます。"}
+{
+  "status": "initialization_required",
+  "updated_at": null,
+  "source": "IRBANK API / JPX listed-company master",
+  "universe_count": 0,
+  "scanned_count": 0,
+  "insufficient_count": 0,
+  "error_count": 0,
+  "recommendation_count": 0,
+  "recommendations": [],
+  "note": "Daily stock update の初回スキャン待ちです。"
+}
