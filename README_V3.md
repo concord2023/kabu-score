@@ -74,3 +74,7 @@ IRBANK APIの利用条件により、株価データの出典表示と利用条�
 
 ### データ消失防止
 ユーザーが追加した銘柄は `data/custom_watchlist.json` に保持し、日次更新時に自動統合します。Daily stock update が失敗した場合は、生成データをコミットしません。これにより、失敗した更新で全銘柄が「判定不能」になる事故を防ぎます。
+
+
+### Data preservation
+When replacing source files in an existing repository, do not delete or replace the generated data files. The release ZIP intentionally excludes `data/stocks.json`, `data/decision_ranking.json`, `data/recommendations.json`, `data/custom_watchlist.json`, and `data/company_master.json`.

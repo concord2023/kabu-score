@@ -16,3 +16,16 @@ Pagesの入口は `index.html`。旧 `dashboard.html` を入口にしない。
 - Daily stock update が失敗した場合、`data/stocks.json` / `data/decision_ranking.json` の古い正常データを空データで上書きしないよう、保存処理を停止します。
 - 上場銘柄BUYスキャンが失敗しても、通常の日次分析データは保存します。
 - ZIP差し替え直後に日次データが初期状態なら、GitHub Actions の `Daily stock update` を1回実行してください。成功後に「判定不能」ではなく実データが表示されます。
+
+
+## Important: generated data files are preserved
+The source package intentionally does not overwrite these generated/user-state files when updating an existing repository:
+- data/stocks.json
+- data/decision_ranking.json
+- data/recommendations.json
+- data/custom_watchlist.json
+- data/company_master.json
+
+They are generated or maintained by GitHub Actions. This prevents installing an updated source package from resetting existing analysis results or user-added stocks.
+
+The Daily stock update workflow now saves the normal daily analysis immediately after it succeeds, before the all-listed-stock BUY scan begins. Therefore a long or failed recommendation scan cannot hide or delay the normal daily results.
