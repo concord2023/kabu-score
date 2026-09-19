@@ -45,6 +45,8 @@ watch_data['stocks'] = watch
 # breadth request. The small delay also makes transient 429s much less likely.
 MIN_REQUEST_INTERVAL = 1.20
 _last_request_at = 0.0
+_request_count = 0
+_rate_wait_seconds = 0.0
 
 
 def now_jst():
@@ -52,20 +54,23 @@ def now_jst():
 
 
 def rate_limit_wait():
-    global _last_request_at
+    global _last_request_at, _rate_wait_seconds
     wait = MIN_REQUEST_INTERVAL - (time.monotonic() - _last_request_at)
     if wait > 0:
         time.sleep(wait)
+        _rate_wait_seconds += wait
     _last_request_at = time.monotonic()
 
 
 def get(path, params=None, retries=4):
+    global _request_count
     url = API + path
     if params:
         url += '?' + urllib.parse.urlencode(params)
     last_error = None
     for attempt in range(retries):
         rate_limit_wait()
+        _request_count += 1
         req = urllib.request.Request(
             url,
             headers={
@@ -353,88 +358,67 @@ def screening_metric(code, name, target_date, field):
 
 
 def fetch_supply_batch(target_date, watch_items):
-    """Fetch the five validated supply metrics for every watchlist stock.
+    """Fetch weekly margin data with one API call per stock.
 
-    This is deliberately per-stock rather than a market-wide top-100 query.
-    A market-wide sort can omit perfectly valid watchlist stocks that are not
-    in the first 100 rows.  The request pacing in get() keeps this below the
-    API's rate limit while making the result deterministic for all watchlist
-    names.
-
-    Missing weekly fields remain missing; they are never guessed or copied from
-    another security.
+    IRBANK added GET /securities/{code}/weekly-margin-balance on 2026-09-16.
+    It returns buy balance, sell balance, weekly changes and credit ratio in
+    one response, replacing the old 5 screening requests per stock.
     """
-    fields = [
-        'marginBuyBalance',
-        'marginSellBalance',
-        'marginBuyBalanceChangeWow',
-        'marginSellBalanceChangeWow',
-        'marginRatio',
-    ]
-
-    entries = []
-    for item in watch_items:
-        if isinstance(item, dict):
-            code = normalize_security_code(item.get('code'))
-            name = str(item.get('name') or code or '').strip()
-        else:
-            code = normalize_security_code(item)
-            name = code or ''
-        if not code:
-            continue
-        entries.append((code, name))
-
     result = {}
     errors = []
-
-    for code, name in entries:
+    for item in watch_items:
+        code = normalize_security_code(item.get('code') if isinstance(item, dict) else item)
+        if not code:
+            continue
         row = {
             'date': target_date,
             'status': 'unavailable',
-            'source_url': 'https://api.irbank.net/v1/screening',
-            'source_note': 'IRBANK API スクリーニング（信用買い残・信用売り残・前週比・信用倍率）',
-            'missing_fields': list(fields),
+            'source_url': f'https://api.irbank.net/v1/securities/{code}/weekly-margin-balance',
+            'source_note': 'IRBANK API 週次信用残高（信用買い残・信用売り残・前週比・信用倍率）',
+            'missing_fields': ['marginBuyBalance','marginSellBalance','marginBuyBalanceChangeWow','marginSellBalanceChangeWow','marginRatio'],
             'field_dates': {},
             'api_errors': [],
         }
-
-        for field in fields:
-            try:
-                value, as_of = screening_metric(code, name, target_date, field)
-                if value is None:
-                    continue
-                row[field] = value
-                row[field + '_as_of'] = as_of
-                row['field_dates'][field] = as_of
-                if field in row['missing_fields']:
-                    row['missing_fields'].remove(field)
-            except Exception as e:
-                message = f'{code}:{field}: {e}'
-                row['api_errors'].append(message)
-                errors.append(message)
-
-        row['buy_balance'] = row.get('marginBuyBalance')
-        row['sell_balance'] = row.get('marginSellBalance')
-        row['credit_ratio'] = row.get('marginRatio')
-        row['buy_change'] = row.get('marginBuyBalanceChangeWow')
-        row['sell_change'] = row.get('marginSellBalanceChangeWow')
-        # Net credit balance = buy balance - sell balance.
-        # Net weekly change = buy-balance change - sell-balance change.
-        row['net_balance'] = (row['buy_balance'] - row['sell_balance']) if row.get('buy_balance') is not None and row.get('sell_balance') is not None else None
-        row['net_change'] = (row['buy_change'] - row['sell_change']) if row.get('buy_change') is not None and row.get('sell_change') is not None else None
-
-        if not row['missing_fields']:
-            row['status'] = 'complete'
-        elif len(row['missing_fields']) < len(fields):
-            row['status'] = 'partial'
-
-        available_dates = list(row['field_dates'].values())
-        if available_dates:
-            row['date'] = max(available_dates)
-
+        try:
+            data = get(f'/securities/{code}/weekly-margin-balance', {'period': '26w'})
+            weeks = data.get('weeks') or []
+            usable = [w for w in weeks if w.get('report_date')]
+            if not usable:
+                raise ValueError('weekly margin data is empty')
+            w = usable[-1]
+            row['date'] = w.get('report_date') or target_date
+            row['marginBuyBalance'] = w.get('buy_balance_total')
+            row['marginSellBalance'] = w.get('sell_balance_total')
+            row['marginBuyBalanceChangeWow'] = w.get('buy_balance_change')
+            row['marginSellBalanceChangeWow'] = w.get('sell_balance_change')
+            row['marginRatio'] = w.get('margin_ratio')
+            mapping = {
+                'marginBuyBalance': row.get('marginBuyBalance'),
+                'marginSellBalance': row.get('marginSellBalance'),
+                'marginBuyBalanceChangeWow': row.get('marginBuyBalanceChangeWow'),
+                'marginSellBalanceChangeWow': row.get('marginSellBalanceChangeWow'),
+                'marginRatio': row.get('marginRatio'),
+            }
+            row['missing_fields'] = [k for k,v in mapping.items() if v is None]
+            row['field_dates'] = {k: row['date'] for k,v in mapping.items() if v is not None}
+            row['buy_balance'] = row.get('marginBuyBalance')
+            row['sell_balance'] = row.get('marginSellBalance')
+            row['credit_ratio'] = row.get('marginRatio')
+            row['buy_change'] = row.get('marginBuyBalanceChangeWow')
+            row['sell_change'] = row.get('marginSellBalanceChangeWow')
+            if row['buy_balance'] is not None and row['sell_balance'] is not None:
+                row['net_balance'] = row['buy_balance'] - row['sell_balance']
+            if row['buy_change'] is not None and row['sell_change'] is not None:
+                row['net_change'] = row['buy_change'] - row['sell_change']
+            if not row['missing_fields']:
+                row['status'] = 'complete'
+            elif len(row['missing_fields']) < 5:
+                row['status'] = 'partial'
+        except Exception as e:
+            row['api_errors'].append(f'{code}: {e}')
+            errors.append(row['api_errors'][-1])
         row['api_partial'] = row['status'] != 'complete'
         result[code] = row
-
     return result, errors
 
 def supply_points(s):
@@ -1290,19 +1274,27 @@ def main():
     breadth_error = None
     supply_batch_cache = {}
     supply_batch_errors = []
+    run_started = time.monotonic()
 
     out = {
         'updated_at': now_jst().isoformat(),
         'source': 'IRBANK API + 豆腐ハードボイルド（騰落銘柄数）',
-        'api_strategy': 'price:260 rows/stock for normal daily analysis; only weekly-RSI<=30 stocks are expanded to 1000 rows for monthly MACD + supply:5 metric calls/run + breadth:1 call/run',
+        'api_strategy': 'price:260 rows/stock; weekly margin:1 endpoint/stock only when cache is stale; breadth:1/run; monthly MACD:1000 rows only for weekly-RSI<=30',
         'stocks': {},
         'diagnostics': [],
     }
 
-    # Supply is weekly. Reuse the latest stored supply block whenever possible
-    # and only query IRBANK for stocks whose cached data is stale/missing. This
-    # removes the previous 5-screening-requests-per-stock bottleneck from every
-    # daily run.
+    # Probe one price series first. This gives us the actual latest trading date
+    # so cached weekly supply can be compared against the market date.
+    probe_code = normalize_security_code(watch[0].get('code') if isinstance(watch[0], dict) else watch[0]) if watch else None
+    probe_rows = []
+    probe_attribution = {}
+    if probe_code:
+        probe_rows, probe_attribution = get_all_prices(probe_code, minimum=260)
+        probe_date = probe_rows[0]['date']
+    else:
+        probe_date = now_jst().date().isoformat()
+
     cached_supply = {}
     stale_supply_items = []
     for item in watch:
@@ -1310,25 +1302,18 @@ def main():
         if not code0:
             continue
         cached = load_cached_supply(code0, max_age_days=10)
-        if cached is not None:
+        if cached is not None and str(cached.get('date',''))[:10] >= str(probe_date)[:10]:
             cached_supply[code0] = cached
         else:
             stale_supply_items.append(item)
 
     supply_batch_cache = dict(cached_supply)
-    supply_batch_errors = []
     if stale_supply_items:
-        try:
-            # Target date is based on the latest available price date from the first stock.
-            probe_code = normalize_security_code(stale_supply_items[0].get('code') if isinstance(stale_supply_items[0], dict) else stale_supply_items[0])
-            probe_rows, _ = get_all_prices(probe_code, minimum=75)
-            probe_date = probe_rows[0]['date']
-            fresh_supply, supply_batch_errors = fetch_supply_batch(probe_date, stale_supply_items)
-            supply_batch_cache.update(fresh_supply)
-        except Exception as e:
-            supply_batch_errors = [str(e)]
+        fresh_supply, supply_batch_errors = fetch_supply_batch(probe_date, stale_supply_items)
+        supply_batch_cache.update(fresh_supply)
+    print(f'Daily setup: watch={len(watch)} cache_supply={len(cached_supply)} refresh_supply={len(stale_supply_items)} requests={_request_count} elapsed={time.monotonic()-run_started:.1f}s')
 
-    for item in watch:
+    for idx, item in enumerate(watch, start=1):
         if isinstance(item, str):
             code = normalize_security_code(item)
             name, industry = code, None
@@ -1344,7 +1329,10 @@ def main():
             # Fast path: normal daily analysis only needs enough history for the
             # 200MA and the daily/weekly indicators.  The expensive long-history
             # fetch for monthly MACD is only done for strict bottom-signal candidates.
-            rows, attribution = get_all_prices(code, minimum=260)
+            if code == probe_code and probe_rows:
+                rows, attribution = probe_rows, probe_attribution
+            else:
+                rows, attribution = get_all_prices(code, minimum=260)
             target_date = rows[0]['date']
 
             if breadth_cache is None and breadth_error is None:
@@ -1391,6 +1379,7 @@ def main():
         except Exception as e:
             out['stocks'][code] = {'code': code, 'name': name, 'industry': industry, 'error': str(e)}
             out['diagnostics'].append({'code': code, 'status': 'error', 'error': str(e)})
+        print(f'Daily progress: {idx}/{len(watch)} {code} requests={_request_count} elapsed={time.monotonic()-run_started:.1f}s')
 
     out['breadth_status'] = 'ok' if breadth_cache else 'unavailable'
     out['breadth_error'] = breadth_error
@@ -1404,12 +1393,20 @@ def main():
     with open('data/stocks.json', 'w', encoding='utf-8') as f:
         json.dump(out, f, ensure_ascii=False, indent=2)
 
+    out['timing'] = {
+        'total_seconds': round(time.monotonic() - run_started, 1),
+        'api_requests': _request_count,
+        'rate_limit_wait_seconds': round(_rate_wait_seconds, 1),
+    }
+    with open('data/stocks.json', 'w', encoding='utf-8') as f:
+        json.dump(out, f, ensure_ascii=False, indent=2)
     print(json.dumps({
         'updated_at': out['updated_at'],
         'successful_stocks': out['successful_stocks'],
         'failed_stocks': out['failed_stocks'],
         'breadth_status': out['breadth_status'],
         'api_strategy': out['api_strategy'],
+        'timing': out['timing'],
     }, ensure_ascii=False, indent=2))
 
 
