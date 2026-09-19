@@ -1250,6 +1250,39 @@ def calc(rows, breadth_info=None, supply_info=None):
     }
 
 
+def load_cached_supply(code, max_age_days=10):
+    """Reuse the latest stored weekly supply data when it is still fresh.
+
+    Credit/supply fields are weekly, so fetching five screening metrics for every
+    watchlist stock on every daily run is unnecessary API traffic. The cache is
+    only accepted when its date is within max_age_days of the current target date.
+    """
+    try:
+        with open("data/stocks.json", encoding="utf-8") as f:
+            payload = json.load(f)
+        stock = (payload.get("stocks") or {}).get(str(code)) or {}
+        supply = stock.get("supply") or {}
+        supply_date = supply.get("date")
+        if not supply_date:
+            return None
+        # Accept ISO dates and ISO datetimes.
+        cached = str(supply_date)[:10]
+        cached_dt = datetime.fromisoformat(cached).date()
+        # The current price date is not known yet; compare against today with a
+        # conservative age limit. The caller additionally checks the target date.
+        today = now_jst().date()
+        if (today - cached_dt).days > max_age_days:
+            return None
+        if not any(supply.get(k) is not None for k in (
+            "marginBuyBalance", "marginSellBalance", "marginRatio",
+            "buy_balance", "sell_balance", "credit_ratio"
+        )):
+            return None
+        return supply
+    except (FileNotFoundError, json.JSONDecodeError, ValueError, TypeError):
+        return None
+
+
 def main():
     # Market breadth is fetched once. Failure is non-fatal because market context is
     # never used as a hard buy veto.
@@ -1266,17 +1299,34 @@ def main():
         'diagnostics': [],
     }
 
-    # Supply is fetched once per metric for the whole watchlist (5 calls total).
-    try:
-        # Target date is based on the latest available price date from the first stock.
-        probe_code = normalize_security_code(watch[0].get('code') if isinstance(watch[0], dict) else watch[0])
-        # The supply/breadth date only needs the latest price; do not fetch 800+ rows here.
-        probe_rows, _ = get_all_prices(probe_code, minimum=75)
-        probe_date = probe_rows[0]['date']
-        supply_batch_cache, supply_batch_errors = fetch_supply_batch(probe_date, watch)
-    except Exception as e:
-        supply_batch_cache = {}
-        supply_batch_errors = [str(e)]
+    # Supply is weekly. Reuse the latest stored supply block whenever possible
+    # and only query IRBANK for stocks whose cached data is stale/missing. This
+    # removes the previous 5-screening-requests-per-stock bottleneck from every
+    # daily run.
+    cached_supply = {}
+    stale_supply_items = []
+    for item in watch:
+        code0 = normalize_security_code(item.get('code') if isinstance(item, dict) else item)
+        if not code0:
+            continue
+        cached = load_cached_supply(code0, max_age_days=10)
+        if cached is not None:
+            cached_supply[code0] = cached
+        else:
+            stale_supply_items.append(item)
+
+    supply_batch_cache = dict(cached_supply)
+    supply_batch_errors = []
+    if stale_supply_items:
+        try:
+            # Target date is based on the latest available price date from the first stock.
+            probe_code = normalize_security_code(stale_supply_items[0].get('code') if isinstance(stale_supply_items[0], dict) else stale_supply_items[0])
+            probe_rows, _ = get_all_prices(probe_code, minimum=75)
+            probe_date = probe_rows[0]['date']
+            fresh_supply, supply_batch_errors = fetch_supply_batch(probe_date, stale_supply_items)
+            supply_batch_cache.update(fresh_supply)
+        except Exception as e:
+            supply_batch_errors = [str(e)]
 
     for item in watch:
         if isinstance(item, str):
