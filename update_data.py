@@ -1174,98 +1174,104 @@ def calc(rows, breadth_info=None, supply_info=None):
     }
 
 
-# Market breadth is fetched once. Failure is non-fatal because market context is
-# never used as a hard buy veto.
-breadth_cache = None
-breadth_error = None
-supply_batch_cache = {}
-supply_batch_errors = []
-
-out = {
-    'updated_at': now_jst().isoformat(),
-    'source': 'IRBANK API + 豆腐ハードボイルド（騰落銘柄数）',
-    'api_strategy': 'price:up to 500 rows/stock with cursor pagination as needed + supply:5 metric calls/stock (rate-limited, exact-code matched) + breadth:1 call/run',
-    'stocks': {},
-    'diagnostics': [],
-}
-
-# Supply is fetched once per metric for the whole watchlist (5 calls total).
-try:
-    # Target date is based on the latest available price date from the first stock.
-    probe_code = normalize_security_code(watch[0].get('code') if isinstance(watch[0], dict) else watch[0])
-    probe_rows, _ = get_all_prices(probe_code)
-    probe_date = probe_rows[0]['date']
-    supply_batch_cache, supply_batch_errors = fetch_supply_batch(probe_date, watch)
-except Exception as e:
+def main():
+    # Market breadth is fetched once. Failure is non-fatal because market context is
+    # never used as a hard buy veto.
+    breadth_cache = None
+    breadth_error = None
     supply_batch_cache = {}
-    supply_batch_errors = [str(e)]
+    supply_batch_errors = []
 
-for item in watch:
-    if isinstance(item, str):
-        code = normalize_security_code(item)
-        name, industry = code, None
-    else:
-        code = normalize_security_code(item.get('code'))
-        name = str(item.get('name') or code or '').strip()
-        industry = item.get('industry')
+    out = {
+        'updated_at': now_jst().isoformat(),
+        'source': 'IRBANK API + 豆腐ハードボイルド（騰落銘柄数）',
+        'api_strategy': 'price:up to 500 rows/stock with cursor pagination as needed + supply:5 metric calls/stock (rate-limited, exact-code matched) + breadth:1 call/run',
+        'stocks': {},
+        'diagnostics': [],
+    }
 
-    if not code:
-        continue
-
+    # Supply is fetched once per metric for the whole watchlist (5 calls total).
     try:
-        rows, attribution = get_all_prices(code)
-        target_date = rows[0]['date']
-
-        if breadth_cache is None and breadth_error is None:
-            try:
-                breadth_cache = fetch_breadth_and_nikkei(target_date)
-            except Exception as e:
-                breadth_error = str(e)
-                breadth_cache = None
-
-        supply_info = supply_batch_cache.get(code) or {
-            'date': target_date, 'status': 'unavailable',
-            'error': '; '.join(supply_batch_errors) if supply_batch_errors else 'supply batch unavailable',
-            'source_url': 'https://api.irbank.net/v1/screening'
-        }
-
-        s = calc(rows, breadth_cache, supply_info)
-        regime = classify_regime(rows, s.get('candle_signal'))
-        decision = decide(s, regime)
-        s.update(regime)
-        s.update(decision)
-        s.update({
-            'code': code, 'name': name, 'industry': industry,
-            'attribution': attribution,
-        })
-        out['stocks'][code] = s
-        out['diagnostics'].append({
-            'code': code, 'status': 'ok', 'rows_received': len(rows),
-            'data_points': s['data_points'], 'date': s['date'],
-            'regime': s.get('regime'), 'signal': s.get('signal'),
-            'relative_strength': s['relative_strength'],
-            'supply_status': s.get('supply', {}).get('status', 'ok'),
-        })
+        # Target date is based on the latest available price date from the first stock.
+        probe_code = normalize_security_code(watch[0].get('code') if isinstance(watch[0], dict) else watch[0])
+        probe_rows, _ = get_all_prices(probe_code)
+        probe_date = probe_rows[0]['date']
+        supply_batch_cache, supply_batch_errors = fetch_supply_batch(probe_date, watch)
     except Exception as e:
-        out['stocks'][code] = {'code': code, 'name': name, 'industry': industry, 'error': str(e)}
-        out['diagnostics'].append({'code': code, 'status': 'error', 'error': str(e)})
+        supply_batch_cache = {}
+        supply_batch_errors = [str(e)]
 
-out['breadth_status'] = 'ok' if breadth_cache else 'unavailable'
-out['breadth_error'] = breadth_error
-out['successful_stocks'] = sum(1 for s in out['stocks'].values() if s.get('price') is not None)
-out['failed_stocks'] = len(out['stocks']) - out['successful_stocks']
+    for item in watch:
+        if isinstance(item, str):
+            code = normalize_security_code(item)
+            name, industry = code, None
+        else:
+            code = normalize_security_code(item.get('code'))
+            name = str(item.get('name') or code or '').strip()
+            industry = item.get('industry')
 
-if out['successful_stocks'] == 0:
-    raise SystemExit('No stock data calculated: ' + json.dumps(out['diagnostics'], ensure_ascii=False))
+        if not code:
+            continue
 
-os.makedirs('data', exist_ok=True)
-with open('data/stocks.json', 'w', encoding='utf-8') as f:
-    json.dump(out, f, ensure_ascii=False, indent=2)
+        try:
+            rows, attribution = get_all_prices(code)
+            target_date = rows[0]['date']
 
-print(json.dumps({
-    'updated_at': out['updated_at'],
-    'successful_stocks': out['successful_stocks'],
-    'failed_stocks': out['failed_stocks'],
-    'breadth_status': out['breadth_status'],
-    'api_strategy': out['api_strategy'],
-}, ensure_ascii=False, indent=2))
+            if breadth_cache is None and breadth_error is None:
+                try:
+                    breadth_cache = fetch_breadth_and_nikkei(target_date)
+                except Exception as e:
+                    breadth_error = str(e)
+                    breadth_cache = None
+
+            supply_info = supply_batch_cache.get(code) or {
+                'date': target_date, 'status': 'unavailable',
+                'error': '; '.join(supply_batch_errors) if supply_batch_errors else 'supply batch unavailable',
+                'source_url': 'https://api.irbank.net/v1/screening'
+            }
+
+            s = calc(rows, breadth_cache, supply_info)
+            regime = classify_regime(rows, s.get('candle_signal'))
+            decision = decide(s, regime)
+            s.update(regime)
+            s.update(decision)
+            s.update({
+                'code': code, 'name': name, 'industry': industry,
+                'attribution': attribution,
+            })
+            out['stocks'][code] = s
+            out['diagnostics'].append({
+                'code': code, 'status': 'ok', 'rows_received': len(rows),
+                'data_points': s['data_points'], 'date': s['date'],
+                'regime': s.get('regime'), 'signal': s.get('signal'),
+                'relative_strength': s['relative_strength'],
+                'supply_status': s.get('supply', {}).get('status', 'ok'),
+            })
+        except Exception as e:
+            out['stocks'][code] = {'code': code, 'name': name, 'industry': industry, 'error': str(e)}
+            out['diagnostics'].append({'code': code, 'status': 'error', 'error': str(e)})
+
+    out['breadth_status'] = 'ok' if breadth_cache else 'unavailable'
+    out['breadth_error'] = breadth_error
+    out['successful_stocks'] = sum(1 for s in out['stocks'].values() if s.get('price') is not None)
+    out['failed_stocks'] = len(out['stocks']) - out['successful_stocks']
+
+    if out['successful_stocks'] == 0:
+        raise SystemExit('No stock data calculated: ' + json.dumps(out['diagnostics'], ensure_ascii=False))
+
+    os.makedirs('data', exist_ok=True)
+    with open('data/stocks.json', 'w', encoding='utf-8') as f:
+        json.dump(out, f, ensure_ascii=False, indent=2)
+
+    print(json.dumps({
+        'updated_at': out['updated_at'],
+        'successful_stocks': out['successful_stocks'],
+        'failed_stocks': out['failed_stocks'],
+        'breadth_status': out['breadth_status'],
+        'api_strategy': out['api_strategy'],
+    }, ensure_ascii=False, indent=2))
+
+
+
+if __name__ == '__main__':
+    main()
