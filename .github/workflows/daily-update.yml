@@ -43,6 +43,14 @@ jobs:
           IRBANK_API_KEY: ${{ secrets.IRBANK_API_KEY }}
           ADD_STOCK_QUERY: ${{ github.event_name == 'issues' && steps.issue_request.outputs.query || inputs.add_stock }}
         run: python run_daily.py
+      - name: Save daily analysis immediately
+        if: ${{ steps.daily_analysis.outcome == 'success' }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add watchlist.json data/custom_watchlist.json data/stocks.json data/decision_ranking.json data/company_master.json
+          git diff --cached --quiet || git commit -m 'Update daily stock decisions'
+          git push
       - name: Scan all listed stocks for BUY candidates
         id: recommendation_scan
         if: ${{ steps.daily_analysis.outcome == 'success' }}
@@ -50,16 +58,13 @@ jobs:
         env:
           IRBANK_API_KEY: ${{ secrets.IRBANK_API_KEY }}
         run: python scan_recommendations.py
-      - name: Save generated data
-        if: ${{ steps.daily_analysis.outcome == 'success' }}
+      - name: Save BUY candidate scan
+        if: ${{ steps.recommendation_scan.outcome == 'success' }}
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add watchlist.json data/custom_watchlist.json data/stocks.json data/decision_ranking.json data/company_master.json
-          if [ "${{ steps.recommendation_scan.outcome }}" = "success" ]; then
-            git add data/recommendations.json
-          fi
-          git diff --cached --quiet || git commit -m 'Update daily stock decisions'
+          git add data/recommendations.json
+          git diff --cached --quiet || git commit -m 'Update BUY candidate scan'
           git push
       - name: Close completed stock-add request
         if: ${{ steps.daily_analysis.outcome == 'success' && github.event_name == 'issues' }}
