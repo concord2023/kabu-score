@@ -1261,7 +1261,7 @@ def main():
     out = {
         'updated_at': now_jst().isoformat(),
         'source': 'IRBANK API + 豆腐ハードボイルド（騰落銘柄数）',
-        'api_strategy': 'price:up to 800 rows/stock with cursor pagination as needed for monthly MACD + supply:5 metric calls/stock (rate-limited, exact-code matched) + breadth:1 call/run',
+        'api_strategy': 'price:260 rows/stock for normal daily analysis; only weekly-RSI<=30 stocks are expanded to 1000 rows for monthly MACD + supply:5 metric calls/run + breadth:1 call/run',
         'stocks': {},
         'diagnostics': [],
     }
@@ -1270,7 +1270,8 @@ def main():
     try:
         # Target date is based on the latest available price date from the first stock.
         probe_code = normalize_security_code(watch[0].get('code') if isinstance(watch[0], dict) else watch[0])
-        probe_rows, _ = get_all_prices(probe_code)
+        # The supply/breadth date only needs the latest price; do not fetch 800+ rows here.
+        probe_rows, _ = get_all_prices(probe_code, minimum=75)
         probe_date = probe_rows[0]['date']
         supply_batch_cache, supply_batch_errors = fetch_supply_batch(probe_date, watch)
     except Exception as e:
@@ -1290,7 +1291,10 @@ def main():
             continue
 
         try:
-            rows, attribution = get_all_prices(code)
+            # Fast path: normal daily analysis only needs enough history for the
+            # 200MA and the daily/weekly indicators.  The expensive long-history
+            # fetch for monthly MACD is only done for strict bottom-signal candidates.
+            rows, attribution = get_all_prices(code, minimum=260)
             target_date = rows[0]['date']
 
             if breadth_cache is None and breadth_error is None:
@@ -1307,6 +1311,17 @@ def main():
             }
 
             s = calc(rows, breadth_cache, supply_info)
+
+            # Monthly MACD needs a much longer history.  Only stocks that pass the
+            # strict weekly-RSI<=30 gate are expanded, so the usual daily update
+            # stays fast while the bottom signal remains fully evaluated.
+            if s.get('rsi14_weekly') is not None and s.get('rsi14_weekly') <= 30:
+                long_rows, long_attribution = get_all_prices(code, minimum=1000)
+                rows = long_rows
+                attribution = long_attribution or attribution
+                s = calc(rows, breadth_cache, supply_info)
+                target_date = rows[0]['date']
+
             regime = classify_regime(rows, s.get('candle_signal'))
             decision = decide(s, regime)
             s.update(regime)

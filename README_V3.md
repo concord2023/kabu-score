@@ -78,3 +78,7 @@ IRBANK APIの利用条件により、株価データの出典表示と利用条�
 
 ### Data preservation
 When replacing source files in an existing repository, do not delete or replace the generated data files. The release ZIP intentionally excludes `data/stocks.json`, `data/decision_ranking.json`, `data/recommendations.json`, `data/custom_watchlist.json`, and `data/company_master.json`.
+
+
+### 全銘柄BUY候補スキャン
+`recommendation-scan.yml` は手動実行。負荷を抑えるため、全銘柄を800営業日取得せず、直近120営業日から週足RSI(14)<=30を一次選別し、通過銘柄のみ月足MACD・通常BUY判定を詳細計算する。
