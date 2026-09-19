@@ -40,13 +40,15 @@ for item in custom_items:
         existing_watch_codes.add(code)
 watch_data['stocks'] = watch
 
-# Keep API traffic comfortably below IRBANK's current 60 requests/minute limit.
-# One daily run uses about 55 authenticated requests for 18 stocks plus one public
-# breadth request. The small delay also makes transient 429s much less likely.
-MIN_REQUEST_INTERVAL = 1.20
+# Keep API traffic below IRBANK's current 60 requests/minute limit.
+# The daily run is intentionally paced at 1.05s between authenticated requests.
+# This is fast enough to avoid the old 1.20s over-wait while retaining margin below 60/min.
+MIN_REQUEST_INTERVAL = 1.05
 _last_request_at = 0.0
 _request_count = 0
 _rate_wait_seconds = 0.0
+_retry_count = 0
+_http_seconds = 0.0
 
 
 def now_jst():
@@ -63,7 +65,7 @@ def rate_limit_wait():
 
 
 def get(path, params=None, retries=4):
-    global _request_count
+    global _request_count, _retry_count, _http_seconds
     url = API + path
     if params:
         url += '?' + urllib.parse.urlencode(params)
@@ -79,9 +81,14 @@ def get(path, params=None, retries=4):
             },
         )
         try:
+            request_started = time.monotonic()
             with urllib.request.urlopen(req, timeout=30) as r:
-                return json.load(r)
+                payload = json.load(r)
+            _http_seconds += time.monotonic() - request_started
+            return payload
         except urllib.error.HTTPError as e:
+            _http_seconds += time.monotonic() - request_started
+            _retry_count += 1
             last_error = e
             if e.code not in (429, 500, 502, 503, 504):
                 raise
@@ -92,6 +99,8 @@ def get(path, params=None, retries=4):
                 delay = min(30, 2 ** attempt)
             time.sleep(max(delay, 2.0))
         except (urllib.error.URLError, TimeoutError) as e:
+            _http_seconds += time.monotonic() - request_started
+            _retry_count += 1
             last_error = e
             time.sleep(min(30, 2 ** attempt))
     raise RuntimeError(f'IRBANK request failed after retries: {url}: {last_error}')
@@ -1234,12 +1243,14 @@ def calc(rows, breadth_info=None, supply_info=None):
     }
 
 
-def load_cached_supply(code, max_age_days=10):
-    """Reuse the latest stored weekly supply data when it is still fresh.
+def load_cached_supply(code, max_age_days=10, reference_date=None):
+    """Reuse weekly supply data when it is fresh relative to the latest price date.
 
-    Credit/supply fields are weekly, so fetching five screening metrics for every
-    watchlist stock on every daily run is unnecessary API traffic. The cache is
-    only accepted when its date is within max_age_days of the current target date.
+    Supply is weekly, while the price target is a trading day.  The old caller
+    compared a weekly date directly with the daily target date using ``>=``; a
+    Friday supply row therefore became stale on the next trading day even though
+    it was still only a few days old.  Use an age window instead, and never accept
+    a future-dated cache.
     """
     try:
         with open("data/stocks.json", encoding="utf-8") as f:
@@ -1252,10 +1263,13 @@ def load_cached_supply(code, max_age_days=10):
         # Accept ISO dates and ISO datetimes.
         cached = str(supply_date)[:10]
         cached_dt = datetime.fromisoformat(cached).date()
-        # The current price date is not known yet; compare against today with a
-        # conservative age limit. The caller additionally checks the target date.
-        today = now_jst().date()
-        if (today - cached_dt).days > max_age_days:
+        ref_dt = reference_date
+        if ref_dt:
+            ref_dt = datetime.fromisoformat(str(ref_dt)[:10]).date()
+        else:
+            ref_dt = now_jst().date()
+        age_days = (ref_dt - cached_dt).days
+        if age_days < 0 or age_days > max_age_days:
             return None
         if not any(supply.get(k) is not None for k in (
             "marginBuyBalance", "marginSellBalance", "marginRatio",
@@ -1301,8 +1315,8 @@ def main():
         code0 = normalize_security_code(item.get('code') if isinstance(item, dict) else item)
         if not code0:
             continue
-        cached = load_cached_supply(code0, max_age_days=10)
-        if cached is not None and str(cached.get('date',''))[:10] >= str(probe_date)[:10]:
+        cached = load_cached_supply(code0, max_age_days=10, reference_date=probe_date)
+        if cached is not None:
             cached_supply[code0] = cached
         else:
             stale_supply_items.append(item)
@@ -1345,7 +1359,7 @@ def main():
             supply_info = supply_batch_cache.get(code) or {
                 'date': target_date, 'status': 'unavailable',
                 'error': '; '.join(supply_batch_errors) if supply_batch_errors else 'supply batch unavailable',
-                'source_url': 'https://api.irbank.net/v1/screening'
+                'source_url': 'https://api.irbank.net/v1/securities/{code}/weekly-margin-balance'
             }
 
             s = calc(rows, breadth_cache, supply_info)
@@ -1390,13 +1404,12 @@ def main():
         raise SystemExit('No stock data calculated: ' + json.dumps(out['diagnostics'], ensure_ascii=False))
 
     os.makedirs('data', exist_ok=True)
-    with open('data/stocks.json', 'w', encoding='utf-8') as f:
-        json.dump(out, f, ensure_ascii=False, indent=2)
-
     out['timing'] = {
         'total_seconds': round(time.monotonic() - run_started, 1),
         'api_requests': _request_count,
         'rate_limit_wait_seconds': round(_rate_wait_seconds, 1),
+        'retry_count': _retry_count,
+        'http_seconds': round(_http_seconds, 1),
     }
     with open('data/stocks.json', 'w', encoding='utf-8') as f:
         json.dump(out, f, ensure_ascii=False, indent=2)
