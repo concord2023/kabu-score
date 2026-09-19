@@ -13,10 +13,14 @@ on:
 permissions:
   contents: write
   issues: write
+concurrency:
+  group: kabu-score-daily
+  cancel-in-progress: false
 jobs:
   update:
     if: ${{ github.event_name != 'issues' || (github.event.issue.user.login == github.repository_owner && startsWith(github.event.issue.title, '[株スコア追加]')) }}
     runs-on: ubuntu-latest
+    timeout-minutes: 180
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -37,16 +41,20 @@ jobs:
           IRBANK_API_KEY: ${{ secrets.IRBANK_API_KEY }}
           ADD_STOCK_QUERY: ${{ github.event_name == 'issues' && steps.issue_request.outputs.query || inputs.add_stock }}
         run: python run_daily.py
+      - name: Scan all listed stocks for BUY candidates
+        env:
+          IRBANK_API_KEY: ${{ secrets.IRBANK_API_KEY }}
+        run: python scan_recommendations.py
       - name: Save generated data
         if: always()
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add watchlist.json data/stocks.json data/decision_ranking.json data/company_master.json
+          git add watchlist.json data/stocks.json data/decision_ranking.json data/company_master.json data/recommendations.json
           git diff --cached --quiet || git commit -m 'Update daily stock decisions'
           git push
       - name: Close completed stock-add request
         if: ${{ success() && github.event_name == 'issues' }}
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh issue close "${{ github.event.issue.number }}" --repo "${{ github.repository }}" --comment "銘柄追加処理が完了しました。次回の日次更新から分析対象になります。"
+        run: gh issue close "${{ github.event.issue.number }}" --repo "${{ github.repository }}" --comment "銘柄追加と初回分析が完了しました。この銘柄は今回の更新から分析対象です。"
