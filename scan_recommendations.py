@@ -15,7 +15,7 @@ from regime_model_v2 import classify_regime, decide
 
 MASTER = Path('data/company_master.json')
 OUT = Path('data/recommendations.json')
-HISTORY_MINIMUM = 140  # enough for ~26 weekly closes plus daily indicators
+HISTORY_MINIMUM = 800  # enough for roughly 30 monthly closes plus daily indicators
 REQUEST_GAP = 1.05
 
 
@@ -32,7 +32,7 @@ def load_master():
 def compact(stock, regime, decision, company):
     keys = (
         'price', 'change', 'vs20', 'vs25', 'vs75', 'vs200', 'ret5', 'ret10', 'ret20',
-        'rsi14', 'rsi14_weekly', 'volume_ratio', 'ma20', 'ma25', 'ma75', 'ma200',
+        'rsi14', 'rsi14_weekly', 'monthly_macd', 'monthly_macd_signal', 'monthly_macd_hist', 'monthly_macd_state', 'monthly_points', 'monthly_rsi_bottom_signal', 'volume_ratio', 'ma20', 'ma25', 'ma75', 'ma200',
         'daily_vs20', 'daily_ma20_slope5', 'weekly_direction', 'weekly_points',
         'candle_signal', 'breakout_signal', 'signal_icons', 'score', 'score_max',
         'condition_checks', 'interpretation'

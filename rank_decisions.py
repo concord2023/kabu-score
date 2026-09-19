@@ -13,7 +13,7 @@ items = []
 def pick_metrics(s):
     keys = [
         'price','change','volume','ma5','ma20','ma25','ma75','ma200','ma60','vs5','vs20','vs25','vs75','vs200','vs60','ret5','ret10','ret20','rsi14','rsi14_weekly',
-        'volume_ratio','macd','macd_signal','macd_hist','drawdown60','range_position60','volatility20','bb_daily','bb_weekly','weekly_ma13',
+        'volume_ratio','macd','macd_signal','macd_hist','monthly_macd','monthly_macd_signal','monthly_macd_hist','monthly_macd_state','monthly_points','monthly_rsi_bottom_signal','drawdown60','range_position60','volatility20','bb_daily','bb_weekly','weekly_ma13',
         'weekly_ma26','weekly_ma52','weekly_vs13','weekly_vs26','weekly_vs52',
         'weekly_ma13_slope4w','weekly_ma26_slope4w','daily_vs20','daily_ma20_slope5','supply','supply_status',
         'supply_reason','nikkei_change','relative_strength','breadth','daily_vs25','daily_vs75','daily_ma25_slope5','daily_ma75_slope20','score','score_breakdown',

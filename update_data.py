@@ -161,9 +161,10 @@ if add_query:
     else:
         print(f'Stock already exists in watchlist: {add_code} {resolved_name}')
 
-def get_all_prices(code, minimum=75):
-    # Fetch at least enough history for the 75MA, and continue pagination up to
-    # 260 sessions when available so the 200MA can be calculated. Do NOT reject
+def get_all_prices(code, minimum=800):
+    # Fetch enough history for the 75/200MA plus the strict monthly-MACD bottom
+    # signal. 800 sessions gives roughly 30+ monthly closes for established names.
+    # Do NOT reject
     # a newly listed stock merely because it has fewer than 200 sessions: in that
     # case 25/75MA and the other available indicators should still work, while
     # 200MA remains explicitly unavailable. This is important for newer names
@@ -195,7 +196,7 @@ def get_all_prices(code, minimum=75):
         raise ValueError(f'No price rows returned for {code}')
     rows.sort(key=lambda x: x['date'], reverse=True)
     if len(rows) < minimum:
-        raise ValueError(f'Not enough price history for {code}: {len(rows)} rows (75MA requires 75+ sessions)')
+        raise ValueError(f'Not enough price history for {code}: {len(rows)} rows (minimum {minimum} sessions requested)')
     return rows, attribution
 
 
@@ -495,7 +496,7 @@ def pct(a, b):
     return ((a / b) - 1) * 100 if a is not None and b not in (None, 0) else None
 
 
-def signal_icons(candle_signal, breakout, supply_info, volume_ratio, price_change, vs20, ret5, range_position60, rsi_daily=None, rsi_weekly=None, bb_daily=None, bb_weekly=None):
+def signal_icons(candle_signal, breakout, supply_info, volume_ratio, price_change, vs20, ret5, range_position60, rsi_daily=None, rsi_weekly=None, bb_daily=None, bb_weekly=None, monthly_bottom=None):
     """Expose independent technical/supply clues as icons.
 
     These are clues, not recommendations. Each icon can light independently;
@@ -578,6 +579,14 @@ def signal_icons(candle_signal, breakout, supply_info, volume_ratio, price_chang
             'strength': 'strong', 'reason': f'週足RSI(14)={rsi_weekly:.1f}。70超の買われ過ぎ水準。'
         })
 
+    # Very strict multi-timeframe bottom clue.
+    mb = monthly_bottom or {}
+    if mb.get('active'):
+        icons.append({
+            'code': 'MONTHLY_MACD_BOTTOM', 'icon': '🟣', 'label': '大底候補（月足MACD）',
+            'strength': 'strong', 'reason': mb.get('reason', '')
+        })
+
     # Bollinger-band breakout clues. These are independent signals and do not
     # automatically change the aggregate BUY decision. We use closing-price
     # breaks outside +/-2 sigma, not intraday touches.
@@ -657,6 +666,64 @@ def weekly_closes(rows):
         closes.append(float(raw))
     return closes
 
+
+def monthly_closes(rows):
+    """Return one adjusted closing price per ISO calendar month, newest first."""
+    seen = set()
+    closes = []
+    for row in rows:
+        date = row.get('date')
+        if not date:
+            continue
+        try:
+            key = date[:7]
+            __import__('datetime').date.fromisoformat(date)
+        except Exception:
+            continue
+        if key in seen:
+            continue
+        raw = row.get('adj_close') if row.get('adj_close') is not None else row.get('close')
+        if raw is None:
+            continue
+        seen.add(key)
+        closes.append(float(raw))
+    return closes
+
+def monthly_macd_bottom_signal(monthly_vals, weekly_rsi):
+    """Strict multi-timeframe bottom clue: weekly RSI<=30 plus monthly MACD turn."""
+    result = {
+        'active': False, 'state': 'データ不足', 'weekly_rsi_ok': False,
+        'monthly_points': len(monthly_vals), 'macd': None, 'signal': None,
+        'hist': None, 'prev_hist': None, 'prev2_hist': None,
+        'reason': '週足RSIまたは月足MACDに必要な履歴が不足しています。'
+    }
+    if weekly_rsi is None:
+        return result
+    result['weekly_rsi_ok'] = weekly_rsi <= 30
+    if len(monthly_vals) < 30:
+        result['reason'] = f'月足データが不足（{len(monthly_vals)}か月）。30か月以上を必要とします。'
+        return result
+    m, sig, hist = macd_series(monthly_vals)
+    if len(hist) < 3:
+        return result
+    h0, h1, h2 = hist[0], hist[1], hist[2]
+    result.update({'macd': m[0], 'signal': sig[0], 'hist': h0, 'prev_hist': h1, 'prev2_hist': h2})
+    if not result['weekly_rsi_ok']:
+        result['reason'] = f'週足RSIが30以下ではありません（{weekly_rsi:.1f}）。'
+        return result
+    golden_cross = h0 >= 0 and h1 < 0
+    pre_golden = h0 < 0 and h0 > h1 > h2
+    if golden_cross:
+        result['active'] = True
+        result['state'] = '月足MACDゴールデンクロス'
+        result['reason'] = f'週足RSI {weekly_rsi:.1f}（30以下）＋月足MACDがゴールデンクロス。ヒストグラムは{h0:.3f}。'
+    elif pre_golden:
+        result['active'] = True
+        result['state'] = '月足MACD GC手前・差分縮小'
+        result['reason'] = f'週足RSI {weekly_rsi:.1f}（30以下）＋月足MACDはGC前だが、ヒストグラムが{h2:.3f}→{h1:.3f}→{h0:.3f}と2か月連続で縮小。'
+    else:
+        result['reason'] = f'週足RSIは30以下だが、月足MACDのGCまたは差分縮小を確認できません。ヒストグラム={h0:.3f}。'
+    return result
 
 def breadth_points(b):
     if not b:
@@ -988,6 +1055,8 @@ def calc(rows, breadth_info=None, supply_info=None):
     macd_hist_now = macd_hist_values[0] if macd_hist_values else None
     weekly_vals = weekly_closes(rows)
     rsi_weekly = rsi14(weekly_vals)
+    monthly_vals = monthly_closes(rows)
+    monthly_bottom = monthly_macd_bottom_signal(monthly_vals, rsi_weekly)
     bb_weekly_mid, bb_weekly_upper, bb_weekly_lower = bollinger(weekly_vals, 13, 2)
     bb_daily_signal = bollinger_signal(vals[0], bb_daily_mid, bb_daily_upper, bb_daily_lower, 'DAILY', 25)
     bb_weekly_signal = bollinger_signal(weekly_vals[0] if weekly_vals else None, bb_weekly_mid, bb_weekly_upper, bb_weekly_lower, 'WEEKLY', 13)
@@ -1042,7 +1111,7 @@ def calc(rows, breadth_info=None, supply_info=None):
     momentum_text = '反発' if change is not None and change > 0 else '下落' if change is not None and change < 0 else '横ばい'
     candle_signal = candle_reversal_signals(rows)
     breakout = breakout_signal(rows)
-    icons = signal_icons(candle_signal, breakout, supply_info, vr, change, d20, r5, range_position60, rsi, rsi_weekly, bb_daily_signal, bb_weekly_signal)
+    icons = signal_icons(candle_signal, breakout, supply_info, vr, change, d20, r5, range_position60, rsi, rsi_weekly, bb_daily_signal, bb_weekly_signal, monthly_bottom)
 
     # Keep a compact recent history for the UI chart.  The chart is intentionally
     # presentation data only; decisions continue to use the full calculation above.
@@ -1140,6 +1209,12 @@ def calc(rows, breadth_info=None, supply_info=None):
         'macd': round(macd_now, 3) if macd_now is not None else None,
         'macd_signal': round(macd_signal_now, 3) if macd_signal_now is not None else None,
         'macd_hist': round(macd_hist_now, 3) if macd_hist_now is not None else None,
+        'monthly_rsi_bottom_signal': monthly_bottom,
+        'monthly_macd': round(monthly_bottom['macd'], 3) if monthly_bottom.get('macd') is not None else None,
+        'monthly_macd_signal': round(monthly_bottom['signal'], 3) if monthly_bottom.get('signal') is not None else None,
+        'monthly_macd_hist': round(monthly_bottom['hist'], 3) if monthly_bottom.get('hist') is not None else None,
+        'monthly_macd_state': monthly_bottom.get('state'),
+        'monthly_points': monthly_bottom.get('monthly_points', len(monthly_vals)),
         'score': total, 'score_max': 100,
         'data_points': len(vals), 'rows_received': len(rows),
         'candle_signal': candle_signal,
@@ -1153,6 +1228,7 @@ def calc(rows, breadth_info=None, supply_info=None):
         'diagnostic': {
             'usable_points': len(vals), 'rsi_ready': len(vals) >= 15, 'weekly_rsi_ready': len(weekly_vals) >= 15, 'weekly_points': len(weekly_vals),
             'ma20_ready': len(vals) >= 20, 'ma25_ready': len(vals) >= 25, 'ma75_ready': len(vals) >= 75, 'ma200_ready': len(vals) >= 200,
+            'monthly_macd_ready': len(monthly_vals) >= 30, 'monthly_points': len(monthly_vals),
         },
         'breadth': (breadth_info or {}).get('breadth') or {'6d': None, '10d': None, '15d': None, '25d': None},
         'breadth_points': bp, 'breadth_breakdown': bdetail,
@@ -1185,7 +1261,7 @@ def main():
     out = {
         'updated_at': now_jst().isoformat(),
         'source': 'IRBANK API + 豆腐ハードボイルド（騰落銘柄数）',
-        'api_strategy': 'price:up to 500 rows/stock with cursor pagination as needed + supply:5 metric calls/stock (rate-limited, exact-code matched) + breadth:1 call/run',
+        'api_strategy': 'price:up to 800 rows/stock with cursor pagination as needed for monthly MACD + supply:5 metric calls/stock (rate-limited, exact-code matched) + breadth:1 call/run',
         'stocks': {},
         'diagnostics': [],
     }
