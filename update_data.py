@@ -609,6 +609,33 @@ def rsi14(vals):
     return 100 - (100 / (1 + ag / al))
 
 
+def ema_series(values, period):
+    """Return standard EMA values in chronological order."""
+    if not values or period <= 0:
+        return []
+    alpha = 2 / (period + 1)
+    out = []
+    ema = float(values[0])
+    out.append(ema)
+    for value in values[1:]:
+        ema = (float(value) - ema) * alpha + ema
+        out.append(ema)
+    return out
+
+
+def macd_series(vals, fast=12, slow=26, signal=9):
+    """Return MACD/Signal/Histogram in newest-first order."""
+    if len(vals) < slow:
+        return [], [], []
+    chronological = list(reversed([float(v) for v in vals]))
+    fast_ema = ema_series(chronological, fast)
+    slow_ema = ema_series(chronological, slow)
+    macd = [f - sl for f, sl in zip(fast_ema, slow_ema)]
+    sig = ema_series(macd, signal)
+    hist = [m - sg for m, sg in zip(macd, sig)]
+    return list(reversed(macd)), list(reversed(sig)), list(reversed(hist))
+
+
 def weekly_closes(rows):
     """Return one closing price per ISO calendar week, newest first."""
     seen = set()
@@ -955,6 +982,10 @@ def calc(rows, breadth_info=None, supply_info=None):
     r10 = pct(vals[0], vals[10]) if len(vals) > 10 else None
     r20 = pct(vals[0], vals[20]) if len(vals) > 20 else None
     rsi = rsi14(vals)
+    macd_values, macd_signal_values, macd_hist_values = macd_series(vals)
+    macd_now = macd_values[0] if macd_values else None
+    macd_signal_now = macd_signal_values[0] if macd_signal_values else None
+    macd_hist_now = macd_hist_values[0] if macd_hist_values else None
     weekly_vals = weekly_closes(rows)
     rsi_weekly = rsi14(weekly_vals)
     bb_weekly_mid, bb_weekly_upper, bb_weekly_lower = bollinger(weekly_vals, 13, 2)
@@ -1068,6 +1099,12 @@ def calc(rows, breadth_info=None, supply_info=None):
             'bb25_mid': round(bb_mid, 2) if bb_mid is not None else None,
             'bb25_upper': round(bb_upper, 2) if bb_upper is not None else None,
             'bb25_lower': round(bb_lower, 2) if bb_lower is not None else None,
+            'volume': float(r.get('volume')) if r.get('volume') is not None else None,
+            'volume_ma20': round(statistics.mean([float(z.get('volume')) for z in rows[idx+1:idx+21] if z.get('volume') is not None]), 0) if [z.get('volume') for z in rows[idx+1:idx+21] if z.get('volume') is not None] else None,
+            'rsi14': round(rsi14(vals[idx:]), 1) if len(vals) - idx >= 15 else None,
+            'macd': round(macd_values[idx], 3) if idx < len(macd_values) else None,
+            'macd_signal': round(macd_signal_values[idx], 3) if idx < len(macd_signal_values) else None,
+            'macd_hist': round(macd_hist_values[idx], 3) if idx < len(macd_hist_values) else None,
         })
     chart_history.reverse()
 
@@ -1100,6 +1137,9 @@ def calc(rows, breadth_info=None, supply_info=None):
         'ret20': round(r20, 2) if r20 is not None else None,
         'rsi14': round(rsi, 1) if rsi is not None else None,
         'rsi14_weekly': round(rsi_weekly, 1) if rsi_weekly is not None else None,
+        'macd': round(macd_now, 3) if macd_now is not None else None,
+        'macd_signal': round(macd_signal_now, 3) if macd_signal_now is not None else None,
+        'macd_hist': round(macd_hist_now, 3) if macd_hist_now is not None else None,
         'score': total, 'score_max': 100,
         'data_points': len(vals), 'rows_received': len(rows),
         'candle_signal': candle_signal,

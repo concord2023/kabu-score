@@ -64,11 +64,21 @@ def classify_regime(rows, candle_signal=None):
     vals = [_close(r) for r in rows]
     vals = [x for x in vals if x is not None]
     close = vals[0] if vals else None
-    # 20日MAは当日を含む一般的な定義に統一。
+    # Moving averages include the current close. 20MA remains useful for
+    # regime detection, while 25MA/75MA are used for the actual pullback
+    # depth because those are common Japanese-market support references.
     daily_ma20 = mean(vals[:20]) if len(vals) >= 20 else None
     daily_ma20_old = mean(vals[5:25]) if len(vals) >= 25 else None
+    daily_ma25 = mean(vals[:25]) if len(vals) >= 25 else None
+    daily_ma25_old = mean(vals[5:30]) if len(vals) >= 30 else None
+    daily_ma75 = mean(vals[:75]) if len(vals) >= 75 else None
+    daily_ma75_old = mean(vals[20:95]) if len(vals) >= 95 else None
     vs20 = _pct(close, daily_ma20)
+    vs25 = _pct(close, daily_ma25)
+    vs75 = _pct(close, daily_ma75)
     ma20_slope5 = _pct(daily_ma20, daily_ma20_old)
+    ma25_slope5 = _pct(daily_ma25, daily_ma25_old)
+    ma75_slope20 = _pct(daily_ma75, daily_ma75_old)
     def ret(n): return _pct(vals[0], vals[n]) if len(vals) > n else None
     ret1, ret5, ret10, ret20 = ret(1), ret(5), ret(10), ret(20)
 
@@ -126,7 +136,11 @@ def classify_regime(rows, candle_signal=None):
         reason = '週足データが不足しており方向判定できない。'
 
     return {**wm, 'daily_vs20': round(vs20,2) if vs20 is not None else None,
+            'daily_vs25': round(vs25,2) if vs25 is not None else None,
+            'daily_vs75': round(vs75,2) if vs75 is not None else None,
             'daily_ma20_slope5': round(ma20_slope5,2) if ma20_slope5 is not None else None,
+            'daily_ma25_slope5': round(ma25_slope5,2) if ma25_slope5 is not None else None,
+            'daily_ma75_slope20': round(ma75_slope20,2) if ma75_slope20 is not None else None,
             'daily_ret1': round(ret1,2) if ret1 is not None else None,
             'daily_ret5': round(ret5,2) if ret5 is not None else None,
             'daily_ret10': round(ret10,2) if ret10 is not None else None,
@@ -177,35 +191,47 @@ def decide(stock, regime):
             signal='WATCH'
             reason='下降トレンドの反転待ち。BUYにはしません。未達/確認待ち: ' + (' / '.join(missing) if missing else '大底反転確認または20日MA回復')
     elif regime['regime'] == 'UPTREND_PULLBACK':
-        # Pullback is NOT a breakout setup.  In an established uptrend, the
-        # entry area is the rising 20-day MA/support zone.  We only promote
-        # it to BUY_CANDIDATE when price is near the MA after a real pullback;
-        # the current day's move is deliberately not used as a condition.
-        vs20 = _f(regime.get('daily_vs20'))
-        ma20_slope5 = _f(regime.get('daily_ma20_slope5'))
+        # Pullback is NOT a breakout setup.  We deliberately moved the
+        # primary entry reference from 20MA to the more commonly watched
+        # Japanese 25MA.  A much deeper 75MA pullback is a second-stage setup
+        # and needs a little more evidence because it can also mean trend damage.
+        vs25 = _f(stock.get('vs25'))
+        vs75 = _f(stock.get('vs75'))
+        ret20 = _f(stock.get('ret20'))
+        ma25_slope5 = _f(regime.get('daily_ma25_slope5'))
+        ma75_slope20 = _f(regime.get('daily_ma75_slope20'))
         rsi = _f(stock.get('rsi14'))
-        # 「上昇押し目」は、単に20日MAの近くにいるだけではBUYにしない。
-        # 高値圏で少し下がっただけの銘柄を弾くため、かなり狭く設定する。
-        near_ma = vs20 is not None and -3.0 <= vs20 <= 0.5
-        actual_pullback = ret5 is not None and ret5 <= -1.0
-        ma_rising = ma20_slope5 is not None and ma20_slope5 > 0
-        rsi_ok = rsi is None or rsi < 65
+
+        near_25ma = vs25 is not None and -4.0 <= vs25 <= 0.5
+        actual_pullback = ret5 is not None and ret5 <= -3.0
+        ma25_rising = ma25_slope5 is not None and ma25_slope5 > 0
+        deep_75ma = (vs75 is not None and -3.0 <= vs75 <= 3.0 and
+                     ret20 is not None and ret20 <= -5.0 and
+                     ma75_slope20 is not None and ma75_slope20 > 0)
+        rsi_primary_ok = rsi is None or rsi < 65
+        rsi_deep_ok = rsi is None or rsi < 55
+        primary_ok = near_25ma and actual_pullback and ma25_rising and rsi_primary_ok
+        deep_ok = deep_75ma and rsi_deep_ok
         checks = [
             {'label':'週足上昇トレンド','ok':regime.get('weekly_direction')=='UP','value':regime.get('weekly_direction'),'rule':'週足方向=UP'},
-            {'label':'20日MAに十分接近','ok':near_ma,'value':vs20,'rule':'20日MA乖離が-3%〜+0.5%'},
-            {'label':'実際に押している','ok':actual_pullback,'value':ret5,'rule':'5日騰落率<=-1%'},
-            {'label':'20日MAが上向き','ok':ma_rising,'value':ma20_slope5,'rule':'20日MAの5日傾き>0%'},
-            {'label':'RSI65未満','ok':rsi_ok,'value':rsi,'rule':'高値圏の過熱を避ける'},
+            {'label':'25日MAまで調整','ok':near_25ma,'value':vs25,'rule':'25日MA乖離が-4%〜+0.5%'},
+            {'label':'5日でしっかり押す','ok':actual_pullback,'value':ret5,'rule':'5日騰落率<=-3%'},
+            {'label':'25日MAが上向き','ok':ma25_rising,'value':ma25_slope5,'rule':'25日MAの5日傾き>0%'},
+            {'label':'RSI65未満','ok':rsi_primary_ok,'value':rsi,'rule':'通常押し目はRSI<65'},
+            {'label':'75日MAまでの深押し','ok':deep_75ma,'value':vs75,'rule':'75日MA±3%、20日騰落<=-5%、75日MA上向き'},
         ]
-        if near_ma and actual_pullback and ma_rising and rsi_ok:
+        if primary_ok:
             signal='BUY_CANDIDATE'
-            reason='厳しめの上昇トレンド押し目。20日MAの±3%以内、5日で1%以上調整、20日MA上向き、RSI65未満を確認。当日の値動きはBUY条件に使わない。MA/直近押し安値割れは損切り警戒。'
-        elif near_ma:
+            reason='上昇トレンドの押し目。20日MAではなく25日MAを主な押し目基準に変更し、25日MAの-4〜+0.5%以内、5日で3%以上調整、25日MA上向き、RSI65未満を確認。当日の値動きはBUY条件に使わない。'
+        elif deep_ok:
+            signal='BUY_CANDIDATE'
+            reason='上昇トレンドの深い押し目。75日MA±3%まで調整し、20日で5%以上下落した一方、75日MAは上向きを維持。RSI55未満を確認。75日MA割れ・直近安値割れは損切り警戒。'
+        elif near_25ma or deep_75ma:
             signal='WATCH'
-            reason='上昇トレンドの押し目候補だが、BUY条件は未達。20日MA付近でも「5日で1%以上の調整」「20日MA上向き」「RSI65未満」を確認するまで監視。当日の値動きはBUY条件に使わない。'
+            reason='押し目ゾーンには入っているがBUY条件未達。25日MA付近では5日3%以上の調整・25日MA上向き・RSIを確認。75日MA付近まで深く押した場合は、75日MA上向きと反転確認を重視する。当日の値動きはBUY条件に使わない。'
         else:
             signal='WATCH'
-            reason='上昇トレンドだが現在は押し目BUY水準ではない。20日MAから離れた高値圏では追いかけず、20日MA付近までの調整を待つ。'
+            reason='上昇トレンドだが現在は押し目BUY水準ではない。20日MAだけでBUYにせず、まず25日MAを第1の押し目目安、75日MAを第2の深い押し目目安として待つ。'
     elif regime['regime'] == 'UPTREND':
         signal='WATCH'
         reason='上昇トレンド継続。新規買いは追いかけず、20日MAなどへの押し目を待つ。'
