@@ -20,6 +20,25 @@ with open('watchlist.json', encoding='utf-8') as f:
     watch_data = json.load(f)
 watch = watch_data.get('stocks', [])
 
+# User-added stocks are kept separately so replacing the source ZIP does not
+# silently erase additions that were made through the app/GitHub workflow.
+CUSTOM_WATCHLIST = 'data/custom_watchlist.json'
+try:
+    with open(CUSTOM_WATCHLIST, encoding='utf-8') as f:
+        custom_items = json.load(f).get('stocks', [])
+except (FileNotFoundError, json.JSONDecodeError):
+    custom_items = []
+existing_watch_codes = {
+    re.sub(r'[^0-9A-Z]', '', str(x.get('code') if isinstance(x, dict) else x).strip().upper())
+    for x in watch
+}
+for item in custom_items:
+    code = re.sub(r'[^0-9A-Z]', '', str(item.get('code') if isinstance(item, dict) else item).strip().upper())
+    if code and code not in existing_watch_codes:
+        watch.append(item)
+        existing_watch_codes.add(code)
+watch_data['stocks'] = watch
+
 # Keep API traffic comfortably below IRBANK's current 60 requests/minute limit.
 # One daily run uses about 55 authenticated requests for 18 stocks plus one public
 # breadth request. The small delay also makes transient 429s much less likely.
@@ -123,6 +142,18 @@ if add_query:
             item['industry'] = resolved_industry
         watch.append(item)
         watch_data['stocks'] = watch
+        Path(CUSTOM_WATCHLIST).parent.mkdir(parents=True, exist_ok=True)
+        try:
+            with open(CUSTOM_WATCHLIST, encoding='utf-8') as f:
+                custom_data = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError):
+            custom_data = {'stocks': []}
+        custom_stocks = custom_data.setdefault('stocks', [])
+        custom_codes = {re.sub(r'[^0-9A-Z]', '', str(x.get('code') if isinstance(x, dict) else x).strip().upper()) for x in custom_stocks}
+        if add_code not in custom_codes:
+            custom_stocks.append(item)
+        with open(CUSTOM_WATCHLIST, 'w', encoding='utf-8') as f:
+            json.dump(custom_data, f, ensure_ascii=False, indent=2)
         with open('watchlist.json', 'w', encoding='utf-8') as f:
             json.dump(watch_data, f, ensure_ascii=False, indent=2)
         print(f'Added stock to watchlist: {add_code} {resolved_name}')

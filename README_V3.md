@@ -70,3 +70,7 @@ RSIは一般的な30/70水準を独立サインとして表示します。日足
 `recommendations.html` では、JPXの上場会社マスターに含まれる普通株式を対象に、`calc()` → `classify_regime()` → `decide()` の同じ判定経路を使ってBUY_CANDIDATEを抽出します。日次更新のGitHub Actionsで `scan_recommendations.py` が実行され、`data/recommendations.json` を更新します。新規上場など必要な履歴が不足する銘柄は無理に判定しません。
 
 IRBANK APIの利用条件により、株価データの出典表示と利用条件を守ってください。
+
+
+### データ消失防止
+ユーザーが追加した銘柄は `data/custom_watchlist.json` に保持し、日次更新時に自動統合します。Daily stock update が失敗した場合は、生成データをコミットしません。これにより、失敗した更新で全銘柄が「判定不能」になる事故を防ぎます。

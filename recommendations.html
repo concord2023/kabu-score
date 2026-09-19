@@ -10,7 +10,7 @@ const pct=v=>v==null?'—':Number(v).toFixed(2)+'%';
 const num=v=>v==null?'—':Number(v).toFixed(1);
 const jp={UPTREND_PULLBACK:'🟡 上昇・押し目',DOWNTREND_REVERSAL_CONFIRMED:'🟢 下降・反転確認',DOWNTREND_REVERSAL_WAIT:'🟠 下降・反転待ち'};
 function chip(label,value,cls=''){return `<span class="chip ${cls}">${esc(label)} ${esc(value==null?'—':value)}</span>`}
-function render(d){
+function render(d){if(d.status==='initialization_required'){document.getElementById('date').textContent='初回更新待ち';document.getElementById('summary').textContent='Daily stock update の実行待ちです。';document.getElementById('rows').innerHTML='';return;}
  const a=d.recommendations||[];document.getElementById('date').textContent='最終更新: '+(d.updated_at||'—');
  document.getElementById('fresh').textContent=`上場銘柄 ${Number(d.universe_count||0).toLocaleString()}件を対象／実スキャン ${Number(d.scanned_count||0).toLocaleString()}件／BUY条件一致 ${a.length}件`;
  document.getElementById('summary').textContent=a.length?`BUY候補 ${a.length}銘柄`:'今回はBUY条件一致銘柄なし';
