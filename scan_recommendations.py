@@ -5,7 +5,7 @@ stocks at or below the strict weekly-RSI<=30 threshold proceed to stage 2,
 where the full history needed for monthly MACD and the normal kabu-score
 BUY decision is fetched.
 
-This keeps the manual all-listed scan useful without downloading 800+ trading
+This keeps the manual all-listed scan useful without downloading 1000 trading
 days for every listed company.
 """
 import json
@@ -60,7 +60,7 @@ def compact(stock, regime, decision, company):
         'monthly_macd_state', 'monthly_points', 'monthly_rsi_bottom_signal', 'volume_ratio',
         'ma20', 'ma25', 'ma75', 'ma200', 'daily_vs20', 'daily_ma20_slope5', 'weekly_direction',
         'weekly_points', 'candle_signal', 'breakout_signal', 'signal_icons', 'score', 'score_max',
-        'condition_checks', 'interpretation'
+        'condition_checks', 'interpretation', 'attribution'
     )
     details = {k: stock.get(k) for k in keys if k in stock}
     details.update({
