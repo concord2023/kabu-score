@@ -38,6 +38,17 @@ for item in custom_items:
     if code and code not in existing_watch_codes:
         watch.append(item)
         existing_watch_codes.add(code)
+
+# Base-watchlist deletions are kept separately from the source ZIP so a source
+# replacement does not silently re-add a stock the user intentionally removed.
+EXCLUDED_WATCHLIST = 'data/watchlist_exclusions.json'
+try:
+    with open(EXCLUDED_WATCHLIST, encoding='utf-8') as f:
+        excluded_codes = {re.sub(r'[^0-9A-Z]', '', str(x).strip().upper()) for x in json.load(f).get('codes', [])}
+except (FileNotFoundError, json.JSONDecodeError):
+    excluded_codes = set()
+if excluded_codes:
+    watch = [x for x in watch if re.sub(r'[^0-9A-Z]', '', str(x.get('code') if isinstance(x, dict) else x).strip().upper()) not in excluded_codes]
 watch_data['stocks'] = watch
 
 # Keep API traffic below IRBANK's current 60 requests/minute limit.
@@ -193,6 +204,40 @@ def resolve_security_query(query):
         raise SystemExit(f'有効な証券コードを取得できませんでした: {raw}')
     return get(f'/securities/{code}')
 
+delete_query = os.environ.get('DELETE_STOCK_QUERY', os.environ.get('DELETE_STOCK_CODE', '')).strip()
+if delete_query:
+    delete_code = re.sub(r'[^0-9A-Z]', '', delete_query.upper())
+    if not re.fullmatch(r'[0-9A-Z]{4,5}', delete_code):
+        raise SystemExit(f'削除対象の証券コードが不正です: {delete_query}')
+    before = len(watch)
+    watch = [x for x in watch if re.sub(r'[^0-9A-Z]', '', str(x.get('code') if isinstance(x, dict) else x).strip().upper()) != delete_code]
+    removed = before != len(watch)
+    watch_data['stocks'] = watch
+    Path(EXCLUDED_WATCHLIST).parent.mkdir(parents=True, exist_ok=True)
+    try:
+        with open(EXCLUDED_WATCHLIST, encoding='utf-8') as f:
+            excluded_data = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        excluded_data = {'codes': []}
+    excluded = {re.sub(r'[^0-9A-Z]', '', str(x).strip().upper()) for x in excluded_data.get('codes', [])}
+    excluded.add(delete_code)
+    excluded_data['codes'] = sorted(excluded)
+    with open(EXCLUDED_WATCHLIST, 'w', encoding='utf-8') as f:
+        json.dump(excluded_data, f, ensure_ascii=False, indent=2)
+    # If it was an app-added stock, remove it from the persistent custom list too.
+    try:
+        with open(CUSTOM_WATCHLIST, encoding='utf-8') as f:
+            custom_data = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        custom_data = {'stocks': []}
+    custom_data['stocks'] = [x for x in custom_data.get('stocks', []) if re.sub(r'[^0-9A-Z]', '', str(x.get('code') if isinstance(x, dict) else x).strip().upper()) != delete_code]
+    Path(CUSTOM_WATCHLIST).parent.mkdir(parents=True, exist_ok=True)
+    with open(CUSTOM_WATCHLIST, 'w', encoding='utf-8') as f:
+        json.dump(custom_data, f, ensure_ascii=False, indent=2)
+    with open('watchlist.json', 'w', encoding='utf-8') as f:
+        json.dump(watch_data, f, ensure_ascii=False, indent=2)
+    print(f'Deleted stock from watchlist: {delete_code} (found={removed})')
+
 add_query = os.environ.get('ADD_STOCK_QUERY', os.environ.get('ADD_STOCK_CODE', '')).strip()
 if add_query:
     meta = resolve_security_query(add_query)
@@ -210,6 +255,11 @@ if add_query:
         re.sub(r'[^0-9A-Z]', '', str(x.get('code') if isinstance(x, dict) else x).strip().upper())
         for x in watch
     }
+    if add_code in excluded_codes:
+        excluded_codes.discard(add_code)
+        Path(EXCLUDED_WATCHLIST).parent.mkdir(parents=True, exist_ok=True)
+        with open(EXCLUDED_WATCHLIST, 'w', encoding='utf-8') as f:
+            json.dump({'codes': sorted(excluded_codes)}, f, ensure_ascii=False, indent=2)
     if add_code not in existing_codes:
         item = {'code': add_code, 'name': resolved_name}
         if resolved_industry:
@@ -1325,7 +1375,7 @@ def calc(rows, breadth_info=None, supply_info=None):
         })
     chart_history.reverse()
     chart_history_weekly = build_period_chart_history(rows, 'weekly', 60)
-    chart_history_monthly = build_period_chart_history(rows, 'monthly', 36)
+    chart_history_monthly = build_period_chart_history(rows, 'monthly', 18)
 
     return {
         'date': rows[0].get('date'), 'price': close,
@@ -1452,7 +1502,7 @@ def main():
     out = {
         'updated_at': now_jst().isoformat(),
         'source': 'IRBANK API + 豆腐ハードボイルド（騰落銘柄数）',
-        'api_strategy': 'price:260-row target/stock; weekly margin:1 endpoint/stock only when cache is stale; breadth:1/run; monthly MACD:1000-row target only for weekly-RSI<=30; quota preflight via /usage',
+        'api_strategy': 'price:800-row target/stock; weekly margin:1 endpoint/stock only when cache is stale; breadth:1/run; monthly MACD:1000-row target only for weekly-RSI<=30; quota preflight via /usage',
         'stocks': {},
         'diagnostics': [],
     }
@@ -1507,7 +1557,7 @@ def main():
             if code == probe_code and probe_rows:
                 rows, attribution = probe_rows, probe_attribution
             else:
-                rows, attribution = get_all_prices(code, minimum=260)
+                rows, attribution = get_all_prices(code, minimum=800)
             target_date = rows[0]['date']
 
             if breadth_cache is None and breadth_error is None:

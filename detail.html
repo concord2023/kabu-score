@@ -20,9 +20,9 @@ function chart(x,timeframe='daily'){
   const datasets={daily:x.details?.chart_history||[],weekly:x.details?.chart_history_weekly||[],monthly:x.details?.chart_history_monthly||[]};
   const h=datasets[timeframe]||[];
   const labels={daily:'日足',weekly:'週足',monthly:'月足'};
-  const titleRanges={daily:'直近100営業日',weekly:'直近60週',monthly:'直近36か月'};
+  const titleRanges={daily:'直近100営業日',weekly:'直近60週',monthly:'直近18か月'};
   const tabs=Object.keys(labels).map(k=>`<button type="button" class="charttab ${k===timeframe?'active':''}" onclick="setChartTimeframe('${k}')">${labels[k]}</button>`).join('');
-  if(h.length<10)return `<div class="chartbox"><div class="charttabs">${tabs}</div><div class="charttitle">📊 ${labels[timeframe]}テクニカルチャート</div><div class="mini">${labels[timeframe]}チャート用の履歴データが不足しています。</div></div>`;
+  if(h.length<10)return `<div class="chartbox"><div class="charttabs">${tabs}</div><div class="charttitle">📊 ${labels[timeframe]}テクニカルチャート</div><div class="mini">${labels[timeframe]}の表示可能な履歴が10本未満です。データ取得後に再表示してください。</div></div>`;
   const w=820,left=58,right=16,top=12,mainH=300,gap=18,volH=78,rsiH=105,macdH=110;
   const volTop=top+mainH+gap, rsiTop=volTop+volH+gap, macdTop=rsiTop+rsiH+gap, H=macdTop+macdH+32;
   const points=h.map((r,i)=>({...r,x:left+i/(h.length-1)*(w-left-right)}));
