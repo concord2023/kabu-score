@@ -1076,6 +1076,96 @@ def bollinger_signal(current, mid, upper, lower, timeframe, period):
         }
     return None
 
+
+def build_period_chart_history(rows, timeframe, limit):
+    """Build aggregated OHLCV chart data for weekly/monthly tabs.
+
+    Input rows are newest-first daily rows.  The returned series is chronological
+    so the browser can draw left-to-right.  This is presentation data only; all
+    trading decisions continue to use the daily calculation pipeline.
+    """
+    if timeframe not in ('weekly', 'monthly'):
+        return []
+    groups = {}
+    for row in rows:
+        date = row.get('date')
+        if not date:
+            continue
+        try:
+            d = __import__('datetime').date.fromisoformat(date)
+        except Exception:
+            continue
+        key = d.isocalendar()[:2] if timeframe == 'weekly' else (d.year, d.month)
+        groups.setdefault(key, []).append(row)
+
+    periods = []
+    for key, items in groups.items():
+        items = sorted(items, key=lambda z: str(z.get('date') or ''))
+        if not items:
+            continue
+        def adj_price(z, field):
+            raw = z.get(field)
+            if raw is None:
+                return None
+            try:
+                raw = float(raw)
+            except (TypeError, ValueError):
+                return None
+            try:
+                raw_close = float(z.get('close')) if z.get('close') is not None else None
+                adj_close = float(z.get('adj_close')) if z.get('adj_close') is not None else None
+            except (TypeError, ValueError):
+                raw_close = adj_close = None
+            if raw_close and adj_close is not None:
+                return raw * (adj_close / raw_close)
+            return raw
+        opens = [adj_price(z, 'open') for z in items]
+        highs = [adj_price(z, 'high') for z in items]
+        lows = [adj_price(z, 'low') for z in items]
+        closes = [adj_price(z, 'close') for z in items]
+        volumes = [float(z.get('volume')) for z in items if z.get('volume') is not None]
+        if not any(v is not None for v in closes):
+            continue
+        periods.append({
+            'date': items[-1].get('date'),
+            'open': round(opens[0], 2) if opens[0] is not None else None,
+            'high': round(max(v for v in highs if v is not None), 2) if any(v is not None for v in highs) else None,
+            'low': round(min(v for v in lows if v is not None), 2) if any(v is not None for v in lows) else None,
+            'close': round(closes[-1], 2) if closes[-1] is not None else None,
+            'volume': sum(volumes) if volumes else None,
+        })
+
+    periods.sort(key=lambda z: str(z.get('date') or ''))
+    periods = periods[-limit:]
+    newest = list(reversed(periods))
+    vals = [r['close'] for r in newest if r.get('close') is not None]
+    macd_values, macd_signal_values, macd_hist_values = macd_series(vals)
+    out = []
+    for idx, r in enumerate(newest):
+        def ma(window):
+            v = vals[idx:idx + window]
+            return round(statistics.mean(v), 2) if len(v) >= window else None
+        win25 = vals[idx:idx + 25]
+        bb_mid, bb_upper, bb_lower = bollinger(win25, 25, 2)
+        vol_window = [float(z['volume']) for z in newest[idx+1:idx+21] if z.get('volume') is not None]
+        out.append({
+            **r,
+            'ma5': ma(5),
+            'ma25': ma(25),
+            'ma75': ma(75),
+            'ma200': ma(200),
+            'bb25_mid': round(bb_mid, 2) if bb_mid is not None else None,
+            'bb25_upper': round(bb_upper, 2) if bb_upper is not None else None,
+            'bb25_lower': round(bb_lower, 2) if bb_lower is not None else None,
+            'volume_ma20': round(statistics.mean(vol_window), 0) if vol_window else None,
+            'rsi14': round(rsi14(vals[idx:]), 1) if len(vals) - idx >= 15 else None,
+            'macd': round(macd_values[idx], 3) if idx < len(macd_values) else None,
+            'macd_signal': round(macd_signal_values[idx], 3) if idx < len(macd_signal_values) else None,
+            'macd_hist': round(macd_hist_values[idx], 3) if idx < len(macd_hist_values) else None,
+        })
+    return list(reversed(out))
+
+
 def calc(rows, breadth_info=None, supply_info=None):
     vals = []
     for x in rows:
@@ -1234,6 +1324,8 @@ def calc(rows, breadth_info=None, supply_info=None):
             'macd_hist': round(macd_hist_values[idx], 3) if idx < len(macd_hist_values) else None,
         })
     chart_history.reverse()
+    chart_history_weekly = build_period_chart_history(rows, 'weekly', 60)
+    chart_history_monthly = build_period_chart_history(rows, 'monthly', 36)
 
     return {
         'date': rows[0].get('date'), 'price': close,
@@ -1279,6 +1371,8 @@ def calc(rows, breadth_info=None, supply_info=None):
         'breakout_signal': breakout,
         'signal_icons': icons,
         'chart_history': chart_history,
+        'chart_history_weekly': chart_history_weekly,
+        'chart_history_monthly': chart_history_monthly,
         'interpretation': {
             'vs5': deviation_text(d5, '5日MA'), 'vs20': deviation_text(d20, '20日MA'), 'vs25': deviation_text(d25, '25日MA'), 'vs75': deviation_text(d75, '75日MA'), 'vs200': deviation_text(d200, '200日MA'),
             'rsi': rsi_text, 'rsi_daily': rsi_text, 'rsi_weekly': (f'RSI {rsi_weekly:.1f}（売られ過ぎ）' if rsi_weekly is not None and rsi_weekly < 30 else f'RSI {rsi_weekly:.1f}（過熱警戒）' if rsi_weekly is not None and rsi_weekly > 70 else f'RSI {rsi_weekly:.1f}（中立）' if rsi_weekly is not None else '判定不可'), 'volume': volume_text, 'range60': range_text, 'momentum': momentum_text,
