@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-09-20T02:11:04.037048+09:00",
+  "updated_at": "2026-09-21T00:20:56.437932+09:00",
   "source": "IRBANK API + 豆腐ハードボイルド（騰落銘柄数）",
-  "api_strategy": "price:up to 500 rows/stock with cursor pagination as needed + supply:5 metric calls/stock (rate-limited, exact-code matched) + breadth:1 call/run",
+  "api_strategy": "price:260-row target/stock; weekly margin:1 endpoint/stock only when cache is stale; breadth:1/run; monthly MACD:1000-row target only for weekly-RSI<=30; quota preflight via /usage",
   "stocks": {
     "5803": {
       "date": "2026-09-18",
@@ -50,6 +50,23 @@
       "macd": -77.157,
       "macd_signal": -29.223,
       "macd_hist": -47.934,
+      "monthly_rsi_bottom_signal": {
+        "active": false,
+        "state": "データ不足",
+        "weekly_rsi_ok": false,
+        "monthly_points": 25,
+        "macd": null,
+        "signal": null,
+        "hist": null,
+        "prev_hist": null,
+        "prev2_hist": null,
+        "reason": "月足データが不足（25か月）。30か月以上を必要とします。"
+      },
+      "monthly_macd": null,
+      "monthly_macd_signal": null,
+      "monthly_macd_hist": null,
+      "monthly_macd_state": "データ不足",
+      "monthly_points": 25,
       "score": 22,
       "score_max": 100,
       "data_points": 500,
@@ -2112,7 +2129,9 @@
         "ma20_ready": true,
         "ma25_ready": true,
         "ma75_ready": true,
-        "ma200_ready": true
+        "ma200_ready": true,
+        "monthly_macd_ready": false,
+        "monthly_points": 25
       },
       "breadth": {
         "6d": 146.54,
@@ -2284,6 +2303,23 @@
       "macd": -3.987,
       "macd_signal": 16.591,
       "macd_hist": -20.578,
+      "monthly_rsi_bottom_signal": {
+        "active": false,
+        "state": "データ不足",
+        "weekly_rsi_ok": false,
+        "monthly_points": 25,
+        "macd": null,
+        "signal": null,
+        "hist": null,
+        "prev_hist": null,
+        "prev2_hist": null,
+        "reason": "月足データが不足（25か月）。30か月以上を必要とします。"
+      },
+      "monthly_macd": null,
+      "monthly_macd_signal": null,
+      "monthly_macd_hist": null,
+      "monthly_macd_state": "データ不足",
+      "monthly_points": 25,
       "score": 22,
       "score_max": 100,
       "data_points": 500,
@@ -4356,7 +4392,9 @@
         "ma20_ready": true,
         "ma25_ready": true,
         "ma75_ready": true,
-        "ma200_ready": true
+        "ma200_ready": true,
+        "monthly_macd_ready": false,
+        "monthly_points": 25
       },
       "breadth": {
         "6d": 146.54,
@@ -4552,6 +4590,23 @@
       "macd": 35.624,
       "macd_signal": 28.167,
       "macd_hist": 7.457,
+      "monthly_rsi_bottom_signal": {
+        "active": false,
+        "state": "データ不足",
+        "weekly_rsi_ok": false,
+        "monthly_points": 25,
+        "macd": null,
+        "signal": null,
+        "hist": null,
+        "prev_hist": null,
+        "prev2_hist": null,
+        "reason": "月足データが不足（25か月）。30か月以上を必要とします。"
+      },
+      "monthly_macd": null,
+      "monthly_macd_signal": null,
+      "monthly_macd_hist": null,
+      "monthly_macd_state": "データ不足",
+      "monthly_points": 25,
       "score": 17,
       "score_max": 100,
       "data_points": 500,
@@ -6616,7 +6671,9 @@
         "ma20_ready": true,
         "ma25_ready": true,
         "ma75_ready": true,
-        "ma200_ready": true
+        "ma200_ready": true,
+        "monthly_macd_ready": false,
+        "monthly_points": 25
       },
       "breadth": {
         "6d": 146.54,
@@ -6635,37 +6692,43 @@
       "nikkei_value": 65018.95,
       "relative_strength": -3.1,
       "supply": {
-        "date": "2026-09-18",
-        "status": "データ不足",
-        "source_url": "https://api.irbank.net/v1/screening",
-        "source_note": "IRBANK API スクリーニング（信用買い残・信用売り残・前週比・信用倍率）",
-        "missing_fields": [
-          "marginBuyBalance",
-          "marginSellBalance",
-          "marginBuyBalanceChangeWow",
-          "marginSellBalanceChangeWow",
-          "marginRatio"
-        ],
-        "field_dates": {},
+        "date": "2026-09-11",
+        "status": "重い",
+        "source_url": "https://api.irbank.net/v1/securities/6701/weekly-margin-balance",
+        "source_note": "IRBANK API 週次信用残高（信用買い残・信用売り残・前週比・信用倍率）",
+        "missing_fields": [],
+        "field_dates": {
+          "marginBuyBalance": "2026-09-11",
+          "marginSellBalance": "2026-09-11",
+          "marginBuyBalanceChangeWow": "2026-09-11",
+          "marginSellBalanceChangeWow": "2026-09-11",
+          "marginRatio": "2026-09-11"
+        },
         "api_errors": [],
-        "buy_balance": null,
-        "sell_balance": null,
-        "credit_ratio": null,
-        "buy_change": null,
-        "sell_change": null,
-        "net_balance": null,
-        "net_change": null,
-        "api_partial": true,
-        "reason": "信用倍率データが取得できないため需給判定は保留。"
+        "marginBuyBalance": 5947900,
+        "marginSellBalance": 203200,
+        "marginBuyBalanceChangeWow": 663000,
+        "marginSellBalanceChangeWow": -29900,
+        "marginRatio": 29.271161417322833,
+        "buy_balance": 5947900,
+        "sell_balance": 203200,
+        "credit_ratio": 29.271161417322833,
+        "buy_change": 663000,
+        "sell_change": -29900,
+        "net_balance": 5744700,
+        "net_change": 692900,
+        "api_partial": false,
+        "reason": "信用倍率29.27倍と高水準。買い残−売り残のネット需給も軽くなく、上値の重さに注意。"
       },
-      "supply_status": "データ不足",
-      "supply_reason": "信用倍率データが取得できないため需給判定は保留。",
+      "supply_status": "重い",
+      "supply_reason": "信用倍率29.27倍と高水準。買い残−売り残のネット需給も軽くなく、上値の重さに注意。",
       "supply_points": 0,
       "supply_breakdown": {
-        "buy_balance_change": "横ばい/不明",
-        "sell_balance_change": "横ばい/不明",
-        "net_change": null,
-        "credit_ratio_level": null
+        "buy_balance_change": "増加（重い方向）",
+        "sell_balance_change": "減少（支え弱化）",
+        "net_change": 692900,
+        "net_change_direction": "悪化",
+        "credit_ratio_level": 29.271161417322833
       },
       "relative_points": 6,
       "score_breakdown": {
@@ -6777,6 +6840,23 @@
       "macd": -73.334,
       "macd_signal": -73.825,
       "macd_hist": 0.492,
+      "monthly_rsi_bottom_signal": {
+        "active": false,
+        "state": "データ不足",
+        "weekly_rsi_ok": false,
+        "monthly_points": 25,
+        "macd": null,
+        "signal": null,
+        "hist": null,
+        "prev_hist": null,
+        "prev2_hist": null,
+        "reason": "月足データが不足（25か月）。30か月以上を必要とします。"
+      },
+      "monthly_macd": null,
+      "monthly_macd_signal": null,
+      "monthly_macd_hist": null,
+      "monthly_macd_state": "データ不足",
+      "monthly_points": 25,
       "score": 26,
       "score_max": 100,
       "data_points": 500,
@@ -8831,7 +8911,9 @@
         "ma20_ready": true,
         "ma25_ready": true,
         "ma75_ready": true,
-        "ma200_ready": true
+        "ma200_ready": true,
+        "monthly_macd_ready": false,
+        "monthly_points": 25
       },
       "breadth": {
         "6d": 146.54,
@@ -8850,37 +8932,43 @@
       "nikkei_value": 65018.95,
       "relative_strength": 0.01,
       "supply": {
-        "date": "2026-09-18",
-        "status": "データ不足",
-        "source_url": "https://api.irbank.net/v1/screening",
-        "source_note": "IRBANK API スクリーニング（信用買い残・信用売り残・前週比・信用倍率）",
-        "missing_fields": [
-          "marginBuyBalance",
-          "marginSellBalance",
-          "marginBuyBalanceChangeWow",
-          "marginSellBalanceChangeWow",
-          "marginRatio"
-        ],
-        "field_dates": {},
+        "date": "2026-09-11",
+        "status": "重い",
+        "source_url": "https://api.irbank.net/v1/securities/6762/weekly-margin-balance",
+        "source_note": "IRBANK API 週次信用残高（信用買い残・信用売り残・前週比・信用倍率）",
+        "missing_fields": [],
+        "field_dates": {
+          "marginBuyBalance": "2026-09-11",
+          "marginSellBalance": "2026-09-11",
+          "marginBuyBalanceChangeWow": "2026-09-11",
+          "marginSellBalanceChangeWow": "2026-09-11",
+          "marginRatio": "2026-09-11"
+        },
         "api_errors": [],
-        "buy_balance": null,
-        "sell_balance": null,
-        "credit_ratio": null,
-        "buy_change": null,
-        "sell_change": null,
-        "net_balance": null,
-        "net_change": null,
-        "api_partial": true,
-        "reason": "信用倍率データが取得できないため需給判定は保留。"
+        "marginBuyBalance": 5634700,
+        "marginSellBalance": 246800,
+        "marginBuyBalanceChangeWow": 466800,
+        "marginSellBalanceChangeWow": -15600,
+        "marginRatio": 22.831037277147487,
+        "buy_balance": 5634700,
+        "sell_balance": 246800,
+        "credit_ratio": 22.831037277147487,
+        "buy_change": 466800,
+        "sell_change": -15600,
+        "net_balance": 5387900,
+        "net_change": 482400,
+        "api_partial": false,
+        "reason": "信用倍率22.83倍と高水準。買い残−売り残のネット需給も軽くなく、上値の重さに注意。"
       },
-      "supply_status": "データ不足",
-      "supply_reason": "信用倍率データが取得できないため需給判定は保留。",
+      "supply_status": "重い",
+      "supply_reason": "信用倍率22.83倍と高水準。買い残−売り残のネット需給も軽くなく、上値の重さに注意。",
       "supply_points": 0,
       "supply_breakdown": {
-        "buy_balance_change": "横ばい/不明",
-        "sell_balance_change": "横ばい/不明",
-        "net_change": null,
-        "credit_ratio_level": null
+        "buy_balance_change": "増加（重い方向）",
+        "sell_balance_change": "減少（支え弱化）",
+        "net_change": 482400,
+        "net_change_direction": "悪化",
+        "credit_ratio_level": 22.831037277147487
       },
       "relative_points": 0,
       "score_breakdown": {
@@ -8992,6 +9080,23 @@
       "macd": -236.956,
       "macd_signal": -247.848,
       "macd_hist": 10.892,
+      "monthly_rsi_bottom_signal": {
+        "active": false,
+        "state": "データ不足",
+        "weekly_rsi_ok": false,
+        "monthly_points": 25,
+        "macd": null,
+        "signal": null,
+        "hist": null,
+        "prev_hist": null,
+        "prev2_hist": null,
+        "reason": "月足データが不足（25か月）。30か月以上を必要とします。"
+      },
+      "monthly_macd": null,
+      "monthly_macd_signal": null,
+      "monthly_macd_hist": null,
+      "monthly_macd_state": "データ不足",
+      "monthly_points": 25,
       "score": 26,
       "score_max": 100,
       "data_points": 500,
@@ -11064,7 +11169,9 @@
         "ma20_ready": true,
         "ma25_ready": true,
         "ma75_ready": true,
-        "ma200_ready": true
+        "ma200_ready": true,
+        "monthly_macd_ready": false,
+        "monthly_points": 25
       },
       "breadth": {
         "6d": 146.54,
@@ -11242,6 +11349,23 @@
       "macd": 27.713,
       "macd_signal": 18.266,
       "macd_hist": 9.446,
+      "monthly_rsi_bottom_signal": {
+        "active": false,
+        "state": "データ不足",
+        "weekly_rsi_ok": false,
+        "monthly_points": 25,
+        "macd": null,
+        "signal": null,
+        "hist": null,
+        "prev_hist": null,
+        "prev2_hist": null,
+        "reason": "月足データが不足（25か月）。30か月以上を必要とします。"
+      },
+      "monthly_macd": null,
+      "monthly_macd_signal": null,
+      "monthly_macd_hist": null,
+      "monthly_macd_state": "データ不足",
+      "monthly_points": 25,
       "score": 16,
       "score_max": 100,
       "data_points": 500,
@@ -13306,7 +13430,9 @@
         "ma20_ready": true,
         "ma25_ready": true,
         "ma75_ready": true,
-        "ma200_ready": true
+        "ma200_ready": true,
+        "monthly_macd_ready": false,
+        "monthly_points": 25
       },
       "breadth": {
         "6d": 146.54,
@@ -13478,6 +13604,23 @@
       "macd": 20.325,
       "macd_signal": 30.321,
       "macd_hist": -9.997,
+      "monthly_rsi_bottom_signal": {
+        "active": false,
+        "state": "データ不足",
+        "weekly_rsi_ok": false,
+        "monthly_points": 25,
+        "macd": null,
+        "signal": null,
+        "hist": null,
+        "prev_hist": null,
+        "prev2_hist": null,
+        "reason": "月足データが不足（25か月）。30か月以上を必要とします。"
+      },
+      "monthly_macd": null,
+      "monthly_macd_signal": null,
+      "monthly_macd_hist": null,
+      "monthly_macd_state": "データ不足",
+      "monthly_points": 25,
       "score": 17,
       "score_max": 100,
       "data_points": 500,
@@ -15532,7 +15675,9 @@
         "ma20_ready": true,
         "ma25_ready": true,
         "ma75_ready": true,
-        "ma200_ready": true
+        "ma200_ready": true,
+        "monthly_macd_ready": false,
+        "monthly_points": 25
       },
       "breadth": {
         "6d": 146.54,
@@ -15551,37 +15696,43 @@
       "nikkei_value": 65018.95,
       "relative_strength": -2.26,
       "supply": {
-        "date": "2026-09-18",
-        "status": "データ不足",
-        "source_url": "https://api.irbank.net/v1/screening",
-        "source_note": "IRBANK API スクリーニング（信用買い残・信用売り残・前週比・信用倍率）",
-        "missing_fields": [
-          "marginBuyBalance",
-          "marginSellBalance",
-          "marginBuyBalanceChangeWow",
-          "marginSellBalanceChangeWow",
-          "marginRatio"
-        ],
-        "field_dates": {},
+        "date": "2026-09-11",
+        "status": "重い",
+        "source_url": "https://api.irbank.net/v1/securities/8306/weekly-margin-balance",
+        "source_note": "IRBANK API 週次信用残高（信用買い残・信用売り残・前週比・信用倍率）",
+        "missing_fields": [],
+        "field_dates": {
+          "marginBuyBalance": "2026-09-11",
+          "marginSellBalance": "2026-09-11",
+          "marginBuyBalanceChangeWow": "2026-09-11",
+          "marginSellBalanceChangeWow": "2026-09-11",
+          "marginRatio": "2026-09-11"
+        },
         "api_errors": [],
-        "buy_balance": null,
-        "sell_balance": null,
-        "credit_ratio": null,
-        "buy_change": null,
-        "sell_change": null,
-        "net_balance": null,
-        "net_change": null,
-        "api_partial": true,
-        "reason": "信用倍率データが取得できないため需給判定は保留。"
+        "marginBuyBalance": 36175700,
+        "marginSellBalance": 1715100,
+        "marginBuyBalanceChangeWow": 4784700,
+        "marginSellBalanceChangeWow": -886600,
+        "marginRatio": 21.09247274211416,
+        "buy_balance": 36175700,
+        "sell_balance": 1715100,
+        "credit_ratio": 21.09247274211416,
+        "buy_change": 4784700,
+        "sell_change": -886600,
+        "net_balance": 34460600,
+        "net_change": 5671300,
+        "api_partial": false,
+        "reason": "信用倍率21.09倍と高水準。買い残−売り残のネット需給も軽くなく、上値の重さに注意。"
       },
-      "supply_status": "データ不足",
-      "supply_reason": "信用倍率データが取得できないため需給判定は保留。",
+      "supply_status": "重い",
+      "supply_reason": "信用倍率21.09倍と高水準。買い残−売り残のネット需給も軽くなく、上値の重さに注意。",
       "supply_points": 0,
       "supply_breakdown": {
-        "buy_balance_change": "横ばい/不明",
-        "sell_balance_change": "横ばい/不明",
-        "net_change": null,
-        "credit_ratio_level": null
+        "buy_balance_change": "増加（重い方向）",
+        "sell_balance_change": "減少（支え弱化）",
+        "net_change": 5671300,
+        "net_change_direction": "悪化",
+        "credit_ratio_level": 21.09247274211416
       },
       "relative_points": 3,
       "score_breakdown": {
@@ -15717,6 +15868,23 @@
       "macd": -1.075,
       "macd_signal": 9.396,
       "macd_hist": -10.472,
+      "monthly_rsi_bottom_signal": {
+        "active": false,
+        "state": "データ不足",
+        "weekly_rsi_ok": false,
+        "monthly_points": 25,
+        "macd": null,
+        "signal": null,
+        "hist": null,
+        "prev_hist": null,
+        "prev2_hist": null,
+        "reason": "月足データが不足（25か月）。30か月以上を必要とします。"
+      },
+      "monthly_macd": null,
+      "monthly_macd_signal": null,
+      "monthly_macd_hist": null,
+      "monthly_macd_state": "データ不足",
+      "monthly_points": 25,
       "score": 21,
       "score_max": 100,
       "data_points": 500,
@@ -17789,7 +17957,9 @@
         "ma20_ready": true,
         "ma25_ready": true,
         "ma75_ready": true,
-        "ma200_ready": true
+        "ma200_ready": true,
+        "monthly_macd_ready": false,
+        "monthly_points": 25
       },
       "breadth": {
         "6d": 146.54,
@@ -17961,6 +18131,23 @@
       "macd": 0.094,
       "macd_signal": -14.299,
       "macd_hist": 14.393,
+      "monthly_rsi_bottom_signal": {
+        "active": false,
+        "state": "データ不足",
+        "weekly_rsi_ok": false,
+        "monthly_points": 25,
+        "macd": null,
+        "signal": null,
+        "hist": null,
+        "prev_hist": null,
+        "prev2_hist": null,
+        "reason": "月足データが不足（25か月）。30か月以上を必要とします。"
+      },
+      "monthly_macd": null,
+      "monthly_macd_signal": null,
+      "monthly_macd_hist": null,
+      "monthly_macd_state": "データ不足",
+      "monthly_points": 25,
       "score": 31,
       "score_max": 100,
       "data_points": 500,
@@ -20023,7 +20210,9 @@
         "ma20_ready": true,
         "ma25_ready": true,
         "ma75_ready": true,
-        "ma200_ready": true
+        "ma200_ready": true,
+        "monthly_macd_ready": false,
+        "monthly_points": 25
       },
       "breadth": {
         "6d": 146.54,
@@ -20182,6 +20371,23 @@
       "macd": -123.219,
       "macd_signal": -153.635,
       "macd_hist": 30.416,
+      "monthly_rsi_bottom_signal": {
+        "active": false,
+        "state": "データ不足",
+        "weekly_rsi_ok": false,
+        "monthly_points": 25,
+        "macd": null,
+        "signal": null,
+        "hist": null,
+        "prev_hist": null,
+        "prev2_hist": null,
+        "reason": "月足データが不足（25か月）。30か月以上を必要とします。"
+      },
+      "monthly_macd": null,
+      "monthly_macd_signal": null,
+      "monthly_macd_hist": null,
+      "monthly_macd_state": "データ不足",
+      "monthly_points": 25,
       "score": 30,
       "score_max": 100,
       "data_points": 500,
@@ -22236,7 +22442,9 @@
         "ma20_ready": true,
         "ma25_ready": true,
         "ma75_ready": true,
-        "ma200_ready": true
+        "ma200_ready": true,
+        "monthly_macd_ready": false,
+        "monthly_points": 25
       },
       "breadth": {
         "6d": 146.54,
@@ -22395,6 +22603,23 @@
       "macd": -1.532,
       "macd_signal": 1.305,
       "macd_hist": -2.838,
+      "monthly_rsi_bottom_signal": {
+        "active": false,
+        "state": "データ不足",
+        "weekly_rsi_ok": false,
+        "monthly_points": 25,
+        "macd": null,
+        "signal": null,
+        "hist": null,
+        "prev_hist": null,
+        "prev2_hist": null,
+        "reason": "月足データが不足（25か月）。30か月以上を必要とします。"
+      },
+      "monthly_macd": null,
+      "monthly_macd_signal": null,
+      "monthly_macd_hist": null,
+      "monthly_macd_state": "データ不足",
+      "monthly_points": 25,
       "score": 12,
       "score_max": 100,
       "data_points": 500,
@@ -24449,7 +24674,9 @@
         "ma20_ready": true,
         "ma25_ready": true,
         "ma75_ready": true,
-        "ma200_ready": true
+        "ma200_ready": true,
+        "monthly_macd_ready": false,
+        "monthly_points": 25
       },
       "breadth": {
         "6d": 146.54,
@@ -24645,6 +24872,23 @@
       "macd": -447.192,
       "macd_signal": -1133.292,
       "macd_hist": 686.099,
+      "monthly_rsi_bottom_signal": {
+        "active": false,
+        "state": "データ不足",
+        "weekly_rsi_ok": false,
+        "monthly_points": 25,
+        "macd": null,
+        "signal": null,
+        "hist": null,
+        "prev_hist": null,
+        "prev2_hist": null,
+        "reason": "月足データが不足（25か月）。30か月以上を必要とします。"
+      },
+      "monthly_macd": null,
+      "monthly_macd_signal": null,
+      "monthly_macd_hist": null,
+      "monthly_macd_state": "データ不足",
+      "monthly_points": 25,
       "score": 29,
       "score_max": 100,
       "data_points": 500,
@@ -26738,7 +26982,9 @@
         "ma20_ready": true,
         "ma25_ready": true,
         "ma75_ready": true,
-        "ma200_ready": true
+        "ma200_ready": true,
+        "monthly_macd_ready": false,
+        "monthly_points": 25
       },
       "breadth": {
         "6d": 146.54,
@@ -26928,6 +27174,23 @@
       "macd": 112.094,
       "macd_signal": 64.625,
       "macd_hist": 47.469,
+      "monthly_rsi_bottom_signal": {
+        "active": false,
+        "state": "データ不足",
+        "weekly_rsi_ok": false,
+        "monthly_points": 10,
+        "macd": null,
+        "signal": null,
+        "hist": null,
+        "prev_hist": null,
+        "prev2_hist": null,
+        "reason": "月足データが不足（10か月）。30か月以上を必要とします。"
+      },
+      "monthly_macd": null,
+      "monthly_macd_signal": null,
+      "monthly_macd_hist": null,
+      "monthly_macd_state": "データ不足",
+      "monthly_points": 10,
       "score": 23,
       "score_max": 100,
       "data_points": 183,
@@ -29035,7 +29298,9 @@
         "ma20_ready": true,
         "ma25_ready": true,
         "ma75_ready": true,
-        "ma200_ready": false
+        "ma200_ready": false,
+        "monthly_macd_ready": false,
+        "monthly_points": 10
       },
       "breadth": {
         "6d": 146.54,
@@ -29225,6 +29490,23 @@
       "macd": -43.866,
       "macd_signal": -47.748,
       "macd_hist": 3.883,
+      "monthly_rsi_bottom_signal": {
+        "active": false,
+        "state": "データ不足",
+        "weekly_rsi_ok": false,
+        "monthly_points": 25,
+        "macd": null,
+        "signal": null,
+        "hist": null,
+        "prev_hist": null,
+        "prev2_hist": null,
+        "reason": "月足データが不足（25か月）。30か月以上を必要とします。"
+      },
+      "monthly_macd": null,
+      "monthly_macd_signal": null,
+      "monthly_macd_hist": null,
+      "monthly_macd_state": "データ不足",
+      "monthly_points": 25,
       "score": 26,
       "score_max": 100,
       "data_points": 500,
@@ -31279,7 +31561,9 @@
         "ma20_ready": true,
         "ma25_ready": true,
         "ma75_ready": true,
-        "ma200_ready": true
+        "ma200_ready": true,
+        "monthly_macd_ready": false,
+        "monthly_points": 25
       },
       "breadth": {
         "6d": 146.54,
@@ -31475,6 +31759,23 @@
       "macd": 77.474,
       "macd_signal": 72.742,
       "macd_hist": 4.733,
+      "monthly_rsi_bottom_signal": {
+        "active": false,
+        "state": "データ不足",
+        "weekly_rsi_ok": false,
+        "monthly_points": 25,
+        "macd": null,
+        "signal": null,
+        "hist": null,
+        "prev_hist": null,
+        "prev2_hist": null,
+        "reason": "月足データが不足（25か月）。30か月以上を必要とします。"
+      },
+      "monthly_macd": null,
+      "monthly_macd_signal": null,
+      "monthly_macd_hist": null,
+      "monthly_macd_state": "データ不足",
+      "monthly_points": 25,
       "score": 38,
       "score_max": 100,
       "data_points": 500,
@@ -33565,7 +33866,9 @@
         "ma20_ready": true,
         "ma25_ready": true,
         "ma75_ready": true,
-        "ma200_ready": true
+        "ma200_ready": true,
+        "monthly_macd_ready": false,
+        "monthly_points": 25
       },
       "breadth": {
         "6d": 146.54,
@@ -33737,6 +34040,23 @@
       "macd": 53.517,
       "macd_signal": 57.784,
       "macd_hist": -4.267,
+      "monthly_rsi_bottom_signal": {
+        "active": false,
+        "state": "データ不足",
+        "weekly_rsi_ok": false,
+        "monthly_points": 25,
+        "macd": null,
+        "signal": null,
+        "hist": null,
+        "prev_hist": null,
+        "prev2_hist": null,
+        "reason": "月足データが不足（25か月）。30か月以上を必要とします。"
+      },
+      "monthly_macd": null,
+      "monthly_macd_signal": null,
+      "monthly_macd_hist": null,
+      "monthly_macd_state": "データ不足",
+      "monthly_points": 25,
       "score": 25,
       "score_max": 100,
       "data_points": 500,
@@ -35809,7 +36129,9 @@
         "ma20_ready": true,
         "ma25_ready": true,
         "ma75_ready": true,
-        "ma200_ready": true
+        "ma200_ready": true,
+        "monthly_macd_ready": false,
+        "monthly_points": 25
       },
       "breadth": {
         "6d": 146.54,
@@ -35981,7 +36303,24 @@
       "macd": -15.743,
       "macd_signal": -12.224,
       "macd_hist": -3.519,
-      "score": 16,
+      "monthly_rsi_bottom_signal": {
+        "active": false,
+        "state": "データ不足",
+        "weekly_rsi_ok": false,
+        "monthly_points": 25,
+        "macd": null,
+        "signal": null,
+        "hist": null,
+        "prev_hist": null,
+        "prev2_hist": null,
+        "reason": "月足データが不足（25か月）。30か月以上を必要とします。"
+      },
+      "monthly_macd": null,
+      "monthly_macd_signal": null,
+      "monthly_macd_hist": null,
+      "monthly_macd_state": "データ不足",
+      "monthly_points": 25,
+      "score": 24,
       "score_max": 100,
       "data_points": 500,
       "rows_received": 500,
@@ -36011,7 +36350,15 @@
         "distance_from_breakout": -5.36,
         "reason": "直近6営業日に20日レンジ高値を明確に終値突破した形跡なし"
       },
-      "signal_icons": [],
+      "signal_icons": [
+        {
+          "code": "SUPPLY_BUY",
+          "icon": "📦",
+          "label": "需給買いサイン",
+          "strength": "medium",
+          "reason": "ネット需給改善（買い残前週比−売り残前週比=-213,800）＋信用倍率5.58倍。買い残増加より売り残増加／買い残減少が優勢。"
+        }
+      ],
       "chart_history": [
         {
           "date": "2026-04-24",
@@ -38035,7 +38382,9 @@
         "ma20_ready": true,
         "ma25_ready": true,
         "ma75_ready": true,
-        "ma200_ready": true
+        "ma200_ready": true,
+        "monthly_macd_ready": false,
+        "monthly_points": 25
       },
       "breadth": {
         "6d": 146.54,
@@ -38054,37 +38403,43 @@
       "nikkei_value": 65018.95,
       "relative_strength": -0.79,
       "supply": {
-        "date": "2026-09-18",
-        "status": "データ不足",
-        "source_url": "https://api.irbank.net/v1/screening",
-        "source_note": "IRBANK API スクリーニング（信用買い残・信用売り残・前週比・信用倍率）",
-        "missing_fields": [
-          "marginBuyBalance",
-          "marginSellBalance",
-          "marginBuyBalanceChangeWow",
-          "marginSellBalanceChangeWow",
-          "marginRatio"
-        ],
-        "field_dates": {},
+        "date": "2026-09-11",
+        "status": "改善方向",
+        "source_url": "https://api.irbank.net/v1/securities/6752/weekly-margin-balance",
+        "source_note": "IRBANK API 週次信用残高（信用買い残・信用売り残・前週比・信用倍率）",
+        "missing_fields": [],
+        "field_dates": {
+          "marginBuyBalance": "2026-09-11",
+          "marginSellBalance": "2026-09-11",
+          "marginBuyBalanceChangeWow": "2026-09-11",
+          "marginSellBalanceChangeWow": "2026-09-11",
+          "marginRatio": "2026-09-11"
+        },
         "api_errors": [],
-        "buy_balance": null,
-        "sell_balance": null,
-        "credit_ratio": null,
-        "buy_change": null,
-        "sell_change": null,
-        "net_balance": null,
-        "net_change": null,
-        "api_partial": true,
-        "reason": "信用倍率データが取得できないため需給判定は保留。"
+        "marginBuyBalance": 2005100,
+        "marginSellBalance": 359400,
+        "marginBuyBalanceChangeWow": -195000,
+        "marginSellBalanceChangeWow": 18800,
+        "marginRatio": 5.579020589872009,
+        "buy_balance": 2005100,
+        "sell_balance": 359400,
+        "credit_ratio": 5.579020589872009,
+        "buy_change": -195000,
+        "sell_change": 18800,
+        "net_balance": 1645700,
+        "net_change": -213800,
+        "api_partial": false,
+        "reason": "信用倍率5.58倍。ネット需給が改善（買い残前週比−売り残前週比=-213,800）。"
       },
-      "supply_status": "データ不足",
-      "supply_reason": "信用倍率データが取得できないため需給判定は保留。",
-      "supply_points": 0,
+      "supply_status": "改善方向",
+      "supply_reason": "信用倍率5.58倍。ネット需給が改善（買い残前週比−売り残前週比=-213,800）。",
+      "supply_points": 8,
       "supply_breakdown": {
-        "buy_balance_change": "横ばい/不明",
-        "sell_balance_change": "横ばい/不明",
-        "net_change": null,
-        "credit_ratio_level": null
+        "buy_balance_change": "減少（改善方向）",
+        "sell_balance_change": "増加（改善方向）",
+        "net_change": -213800,
+        "net_change_direction": "改善",
+        "credit_ratio_level": 5.579020589872009
       },
       "relative_points": 0,
       "score_breakdown": {
@@ -38095,7 +38450,7 @@
         "vs75": 0,
         "breadth": 8,
         "relative_strength": 0,
-        "supply": 0
+        "supply": 8
       },
       "breadth_source": "https://tofuhardboiled.com/updownratio/",
       "breadth_error": null,
@@ -38220,6 +38575,23 @@
       "macd": -673.091,
       "macd_signal": -756.99,
       "macd_hist": 83.899,
+      "monthly_rsi_bottom_signal": {
+        "active": false,
+        "state": "データ不足",
+        "weekly_rsi_ok": false,
+        "monthly_points": 22,
+        "macd": null,
+        "signal": null,
+        "hist": null,
+        "prev_hist": null,
+        "prev2_hist": null,
+        "reason": "月足データが不足（22か月）。30か月以上を必要とします。"
+      },
+      "monthly_macd": null,
+      "monthly_macd_signal": null,
+      "monthly_macd_hist": null,
+      "monthly_macd_state": "データ不足",
+      "monthly_points": 22,
       "score": 18,
       "score_max": 100,
       "data_points": 427,
@@ -40284,7 +40656,9 @@
         "ma20_ready": true,
         "ma25_ready": true,
         "ma75_ready": true,
-        "ma200_ready": true
+        "ma200_ready": true,
+        "monthly_macd_ready": false,
+        "monthly_points": 22
       },
       "breadth": {
         "6d": 146.54,
@@ -40456,7 +40830,24 @@
       "macd": -20.587,
       "macd_signal": 49.971,
       "macd_hist": -70.558,
-      "score": 29,
+      "monthly_rsi_bottom_signal": {
+        "active": false,
+        "state": "データ不足",
+        "weekly_rsi_ok": false,
+        "monthly_points": 25,
+        "macd": null,
+        "signal": null,
+        "hist": null,
+        "prev_hist": null,
+        "prev2_hist": null,
+        "reason": "月足データが不足（25か月）。30か月以上を必要とします。"
+      },
+      "monthly_macd": null,
+      "monthly_macd_signal": null,
+      "monthly_macd_hist": null,
+      "monthly_macd_state": "データ不足",
+      "monthly_points": 25,
+      "score": 37,
       "score_max": 100,
       "data_points": 500,
       "rows_received": 500,
@@ -40486,7 +40877,15 @@
         "distance_from_breakout": -8.64,
         "reason": "直近6営業日に20日レンジ高値を明確に終値突破した形跡なし"
       },
-      "signal_icons": [],
+      "signal_icons": [
+        {
+          "code": "SUPPLY_BUY",
+          "icon": "📦",
+          "label": "需給買いサイン",
+          "strength": "medium",
+          "reason": "ネット需給改善（買い残前週比−売り残前週比=-17,400）＋信用倍率4.56倍。買い残増加より売り残増加／買い残減少が優勢。"
+        }
+      ],
       "chart_history": [
         {
           "date": "2026-04-24",
@@ -42510,7 +42909,9 @@
         "ma20_ready": true,
         "ma25_ready": true,
         "ma75_ready": true,
-        "ma200_ready": true
+        "ma200_ready": true,
+        "monthly_macd_ready": false,
+        "monthly_points": 25
       },
       "breadth": {
         "6d": 146.54,
@@ -42529,37 +42930,43 @@
       "nikkei_value": 65018.95,
       "relative_strength": -2.05,
       "supply": {
-        "date": "2026-09-18",
-        "status": "データ不足",
-        "source_url": "https://api.irbank.net/v1/screening",
-        "source_note": "IRBANK API スクリーニング（信用買い残・信用売り残・前週比・信用倍率）",
-        "missing_fields": [
-          "marginBuyBalance",
-          "marginSellBalance",
-          "marginBuyBalanceChangeWow",
-          "marginSellBalanceChangeWow",
-          "marginRatio"
-        ],
-        "field_dates": {},
+        "date": "2026-09-11",
+        "status": "改善方向",
+        "source_url": "https://api.irbank.net/v1/securities/6301/weekly-margin-balance",
+        "source_note": "IRBANK API 週次信用残高（信用買い残・信用売り残・前週比・信用倍率）",
+        "missing_fields": [],
+        "field_dates": {
+          "marginBuyBalance": "2026-09-11",
+          "marginSellBalance": "2026-09-11",
+          "marginBuyBalanceChangeWow": "2026-09-11",
+          "marginSellBalanceChangeWow": "2026-09-11",
+          "marginRatio": "2026-09-11"
+        },
         "api_errors": [],
-        "buy_balance": null,
-        "sell_balance": null,
-        "credit_ratio": null,
-        "buy_change": null,
-        "sell_change": null,
-        "net_balance": null,
-        "net_change": null,
-        "api_partial": true,
-        "reason": "信用倍率データが取得できないため需給判定は保留。"
+        "marginBuyBalance": 841500,
+        "marginSellBalance": 184700,
+        "marginBuyBalanceChangeWow": -34100,
+        "marginSellBalanceChangeWow": -16700,
+        "marginRatio": 4.556036816459123,
+        "buy_balance": 841500,
+        "sell_balance": 184700,
+        "credit_ratio": 4.556036816459123,
+        "buy_change": -34100,
+        "sell_change": -16700,
+        "net_balance": 656800,
+        "net_change": -17400,
+        "api_partial": false,
+        "reason": "信用倍率4.56倍。ネット需給が改善（買い残前週比−売り残前週比=-17,400）。"
       },
-      "supply_status": "データ不足",
-      "supply_reason": "信用倍率データが取得できないため需給判定は保留。",
-      "supply_points": 0,
+      "supply_status": "改善方向",
+      "supply_reason": "信用倍率4.56倍。ネット需給が改善（買い残前週比−売り残前週比=-17,400）。",
+      "supply_points": 8,
       "supply_breakdown": {
-        "buy_balance_change": "横ばい/不明",
-        "sell_balance_change": "横ばい/不明",
-        "net_change": null,
-        "credit_ratio_level": null
+        "buy_balance_change": "減少（改善方向）",
+        "sell_balance_change": "減少（支え弱化）",
+        "net_change": -17400,
+        "net_change_direction": "改善",
+        "credit_ratio_level": 4.556036816459123
       },
       "relative_points": 3,
       "score_breakdown": {
@@ -42570,7 +42977,7 @@
         "vs75": 0,
         "breadth": 8,
         "relative_strength": 3,
-        "supply": 0
+        "supply": 8
       },
       "breadth_source": "https://tofuhardboiled.com/updownratio/",
       "breadth_error": null,
@@ -42695,6 +43102,23 @@
       "macd": -375.075,
       "macd_signal": -473.444,
       "macd_hist": 98.368,
+      "monthly_rsi_bottom_signal": {
+        "active": false,
+        "state": "データ不足",
+        "weekly_rsi_ok": false,
+        "monthly_points": 25,
+        "macd": null,
+        "signal": null,
+        "hist": null,
+        "prev_hist": null,
+        "prev2_hist": null,
+        "reason": "月足データが不足（25か月）。30か月以上を必要とします。"
+      },
+      "monthly_macd": null,
+      "monthly_macd_signal": null,
+      "monthly_macd_hist": null,
+      "monthly_macd_state": "データ不足",
+      "monthly_points": 25,
       "score": 30,
       "score_max": 100,
       "data_points": 500,
@@ -44764,7 +45188,9 @@
         "ma20_ready": true,
         "ma25_ready": true,
         "ma75_ready": true,
-        "ma200_ready": true
+        "ma200_ready": true,
+        "monthly_macd_ready": false,
+        "monthly_points": 25
       },
       "breadth": {
         "6d": 146.54,
@@ -44922,7 +45348,7 @@
       "regime": "UPTREND",
       "signal": "WATCH",
       "relative_strength": -3.1,
-      "supply_status": "データ不足"
+      "supply_status": "重い"
     },
     {
       "code": "6762",
@@ -44933,7 +45359,7 @@
       "regime": "RANGE_TRANSITION",
       "signal": "WATCH",
       "relative_strength": 0.01,
-      "supply_status": "データ不足"
+      "supply_status": "重い"
     },
     {
       "code": "6506",
@@ -44966,7 +45392,7 @@
       "regime": "UPTREND_PULLBACK",
       "signal": "WATCH",
       "relative_strength": -2.26,
-      "supply_status": "データ不足"
+      "supply_status": "重い"
     },
     {
       "code": "7203",
@@ -45076,7 +45502,7 @@
       "regime": "UPTREND_PULLBACK",
       "signal": "WATCH",
       "relative_strength": -0.79,
-      "supply_status": "データ不足"
+      "supply_status": "改善方向"
     },
     {
       "code": "285A",
@@ -45098,7 +45524,7 @@
       "regime": "UPTREND_PULLBACK",
       "signal": "WATCH",
       "relative_strength": -2.05,
-      "supply_status": "データ不足"
+      "supply_status": "改善方向"
     },
     {
       "code": "6367",
@@ -45115,5 +45541,18 @@
   "breadth_status": "ok",
   "breadth_error": null,
   "successful_stocks": 20,
-  "failed_stocks": 0
+  "failed_stocks": 0,
+  "timing": {
+    "total_seconds": 27.8,
+    "api_requests": 26,
+    "rate_limit_wait_seconds": 8.0,
+    "retry_count": 0,
+    "http_seconds": 17.8
+  },
+  "irbank_usage_at_start": {
+    "limit": 4000,
+    "used": 0,
+    "remaining": 4000,
+    "resets_at": "2026-09-22T00:00:00+09:00"
+  }
 }

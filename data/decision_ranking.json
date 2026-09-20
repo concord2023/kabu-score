@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-20T02:14:07.709411+09:00",
+  "updated_at": "2026-09-21T00:21:24.347977+09:00",
   "summary": {
     "buy_candidates": 2,
     "watch": 16,
@@ -82,6 +82,23 @@
         "macd": 112.094,
         "macd_signal": 64.625,
         "macd_hist": 47.469,
+        "monthly_macd": null,
+        "monthly_macd_signal": null,
+        "monthly_macd_hist": null,
+        "monthly_macd_state": "データ不足",
+        "monthly_points": 10,
+        "monthly_rsi_bottom_signal": {
+          "active": false,
+          "state": "データ不足",
+          "weekly_rsi_ok": false,
+          "monthly_points": 10,
+          "macd": null,
+          "signal": null,
+          "hist": null,
+          "prev_hist": null,
+          "prev2_hist": null,
+          "reason": "月足データが不足（10か月）。30か月以上を必要とします。"
+        },
         "drawdown60": 0.17,
         "range_position60": 100.4,
         "volatility20": 11.23,
@@ -2297,6 +2314,11 @@
           "range60": "60日レンジ上側（高値圏）",
           "momentum": "反発"
         },
+        "attribution": {
+          "source_label": "JPX 東京証券取引所",
+          "license_note": "株価・信用取引残高データは JPX 東京証券取引所 (東証マーケットインフォメーション) の情報を出典とし、加工は IRBANK が実施。本データは IRBANK 登録ユーザー向けの提供であり、第三者への再配信・転載は許諾されていない。",
+          "processed_by": "IRBANK"
+        },
         "high20": 2400.0,
         "low20": 1674.0,
         "high60": 2400.0,
@@ -2369,6 +2391,23 @@
         "macd": -447.192,
         "macd_signal": -1133.292,
         "macd_hist": 686.099,
+        "monthly_macd": null,
+        "monthly_macd_signal": null,
+        "monthly_macd_hist": null,
+        "monthly_macd_state": "データ不足",
+        "monthly_points": 25,
+        "monthly_rsi_bottom_signal": {
+          "active": false,
+          "state": "データ不足",
+          "weekly_rsi_ok": false,
+          "monthly_points": 25,
+          "macd": null,
+          "signal": null,
+          "hist": null,
+          "prev_hist": null,
+          "prev2_hist": null,
+          "reason": "月足データが不足（25か月）。30か月以上を必要とします。"
+        },
         "drawdown60": -26.49,
         "range_position60": 32.4,
         "volatility20": 4.1,
@@ -4570,6 +4609,11 @@
           "range60": "60日レンジやや下",
           "momentum": "反発"
         },
+        "attribution": {
+          "source_label": "JPX 東京証券取引所",
+          "license_note": "株価・信用取引残高データは JPX 東京証券取引所 (東証マーケットインフォメーション) の情報を出典とし、加工は IRBANK が実施。本データは IRBANK 登録ユーザー向けの提供であり、第三者への再配信・転載は許諾されていない。",
+          "processed_by": "IRBANK"
+        },
         "high20": 36320.0,
         "low20": 32350.0,
         "high60": 53180.0,
@@ -4595,8 +4639,16 @@
       "one_condition_away": false,
       "missing_conditions": [],
       "relative_strength": -0.79,
-      "score": 16,
-      "signal_icons": [],
+      "score": 24,
+      "signal_icons": [
+        {
+          "code": "SUPPLY_BUY",
+          "icon": "📦",
+          "label": "需給買いサイン",
+          "strength": "medium",
+          "reason": "ネット需給改善（買い残前週比−売り残前週比=-213,800）＋信用倍率5.58倍。買い残増加より売り残増加／買い残減少が優勢。"
+        }
+      ],
       "details": {
         "price": 4287.0,
         "change": 0.59,
@@ -4620,6 +4672,23 @@
         "macd": -15.743,
         "macd_signal": -12.224,
         "macd_hist": -3.519,
+        "monthly_macd": null,
+        "monthly_macd_signal": null,
+        "monthly_macd_hist": null,
+        "monthly_macd_state": "データ不足",
+        "monthly_points": 25,
+        "monthly_rsi_bottom_signal": {
+          "active": false,
+          "state": "データ不足",
+          "weekly_rsi_ok": false,
+          "monthly_points": 25,
+          "macd": null,
+          "signal": null,
+          "hist": null,
+          "prev_hist": null,
+          "prev2_hist": null,
+          "reason": "月足データが不足（25か月）。30か月以上を必要とします。"
+        },
         "drawdown60": -10.46,
         "range_position60": 60.9,
         "volatility20": 2.45,
@@ -4650,31 +4719,36 @@
         "daily_vs20": -0.26,
         "daily_ma20_slope5": -1.14,
         "supply": {
-          "date": "2026-09-18",
-          "status": "データ不足",
-          "source_url": "https://api.irbank.net/v1/screening",
-          "source_note": "IRBANK API スクリーニング（信用買い残・信用売り残・前週比・信用倍率）",
-          "missing_fields": [
-            "marginBuyBalance",
-            "marginSellBalance",
-            "marginBuyBalanceChangeWow",
-            "marginSellBalanceChangeWow",
-            "marginRatio"
-          ],
-          "field_dates": {},
+          "date": "2026-09-11",
+          "status": "改善方向",
+          "source_url": "https://api.irbank.net/v1/securities/6752/weekly-margin-balance",
+          "source_note": "IRBANK API 週次信用残高（信用買い残・信用売り残・前週比・信用倍率）",
+          "missing_fields": [],
+          "field_dates": {
+            "marginBuyBalance": "2026-09-11",
+            "marginSellBalance": "2026-09-11",
+            "marginBuyBalanceChangeWow": "2026-09-11",
+            "marginSellBalanceChangeWow": "2026-09-11",
+            "marginRatio": "2026-09-11"
+          },
           "api_errors": [],
-          "buy_balance": null,
-          "sell_balance": null,
-          "credit_ratio": null,
-          "buy_change": null,
-          "sell_change": null,
-          "net_balance": null,
-          "net_change": null,
-          "api_partial": true,
-          "reason": "信用倍率データが取得できないため需給判定は保留。"
+          "marginBuyBalance": 2005100,
+          "marginSellBalance": 359400,
+          "marginBuyBalanceChangeWow": -195000,
+          "marginSellBalanceChangeWow": 18800,
+          "marginRatio": 5.579020589872009,
+          "buy_balance": 2005100,
+          "sell_balance": 359400,
+          "credit_ratio": 5.579020589872009,
+          "buy_change": -195000,
+          "sell_change": 18800,
+          "net_balance": 1645700,
+          "net_change": -213800,
+          "api_partial": false,
+          "reason": "信用倍率5.58倍。ネット需給が改善（買い残前週比−売り残前週比=-213,800）。"
         },
-        "supply_status": "データ不足",
-        "supply_reason": "信用倍率データが取得できないため需給判定は保留。",
+        "supply_status": "改善方向",
+        "supply_reason": "信用倍率5.58倍。ネット需給が改善（買い残前週比−売り残前週比=-213,800）。",
         "nikkei_change": 1.38,
         "relative_strength": -0.79,
         "breadth": {
@@ -4687,7 +4761,7 @@
         "daily_vs75": 0.78,
         "daily_ma25_slope5": -1.3,
         "daily_ma75_slope20": 5.52,
-        "score": 16,
+        "score": 24,
         "score_breakdown": {
           "daily_drop": 0,
           "volume": 8,
@@ -4696,7 +4770,7 @@
           "vs75": 0,
           "breadth": 8,
           "relative_strength": 0,
-          "supply": 0
+          "supply": 8
         },
         "condition_checks": [
           {
@@ -4762,7 +4836,15 @@
           "distance_from_breakout": -5.36,
           "reason": "直近6営業日に20日レンジ高値を明確に終値突破した形跡なし"
         },
-        "signal_icons": [],
+        "signal_icons": [
+          {
+            "code": "SUPPLY_BUY",
+            "icon": "📦",
+            "label": "需給買いサイン",
+            "strength": "medium",
+            "reason": "ネット需給改善（買い残前週比−売り残前週比=-213,800）＋信用倍率5.58倍。買い残増加より売り残増加／買い残減少が優勢。"
+          }
+        ],
         "chart_history": [
           {
             "date": "2026-04-24",
@@ -6778,6 +6860,11 @@
           "range60": "60日レンジやや上",
           "momentum": "反発"
         },
+        "attribution": {
+          "source_label": "JPX 東京証券取引所",
+          "license_note": "株価・信用取引残高データは JPX 東京証券取引所 (東証マーケットインフォメーション) の情報を出典とし、加工は IRBANK が実施。本データは IRBANK 登録ユーザー向けの提供であり、第三者への再配信・転載は許諾されていない。",
+          "processed_by": "IRBANK"
+        },
         "high20": 4498.0,
         "low20": 4163.0,
         "high60": 4788.0,
@@ -6828,6 +6915,23 @@
         "macd": -1.532,
         "macd_signal": 1.305,
         "macd_hist": -2.838,
+        "monthly_macd": null,
+        "monthly_macd_signal": null,
+        "monthly_macd_hist": null,
+        "monthly_macd_state": "データ不足",
+        "monthly_points": 25,
+        "monthly_rsi_bottom_signal": {
+          "active": false,
+          "state": "データ不足",
+          "weekly_rsi_ok": false,
+          "monthly_points": 25,
+          "macd": null,
+          "signal": null,
+          "hist": null,
+          "prev_hist": null,
+          "prev2_hist": null,
+          "reason": "月足データが不足（25か月）。30か月以上を必要とします。"
+        },
         "drawdown60": -8.03,
         "range_position60": 67.6,
         "volatility20": 4.12,
@@ -8996,6 +9100,11 @@
           "range60": "60日レンジやや上",
           "momentum": "下落"
         },
+        "attribution": {
+          "source_label": "JPX 東京証券取引所",
+          "license_note": "株価・信用取引残高データは JPX 東京証券取引所 (東証マーケットインフォメーション) の情報を出典とし、加工は IRBANK が実施。本データは IRBANK 登録ユーザー向けの提供であり、第三者への再配信・転載は許諾されていない。",
+          "processed_by": "IRBANK"
+        },
         "high20": 1176.5,
         "low20": 1020.5,
         "high60": 1176.5,
@@ -9021,8 +9130,16 @@
       "one_condition_away": false,
       "missing_conditions": [],
       "relative_strength": -2.05,
-      "score": 29,
-      "signal_icons": [],
+      "score": 37,
+      "signal_icons": [
+        {
+          "code": "SUPPLY_BUY",
+          "icon": "📦",
+          "label": "需給買いサイン",
+          "strength": "medium",
+          "reason": "ネット需給改善（買い残前週比−売り残前週比=-17,400）＋信用倍率4.56倍。買い残増加より売り残増加／買い残減少が優勢。"
+        }
+      ],
       "details": {
         "price": 7012.0,
         "change": -0.67,
@@ -9046,6 +9163,23 @@
         "macd": -20.587,
         "macd_signal": 49.971,
         "macd_hist": -70.558,
+        "monthly_macd": null,
+        "monthly_macd_signal": null,
+        "monthly_macd_hist": null,
+        "monthly_macd_state": "データ不足",
+        "monthly_points": 25,
+        "monthly_rsi_bottom_signal": {
+          "active": false,
+          "state": "データ不足",
+          "weekly_rsi_ok": false,
+          "monthly_points": 25,
+          "macd": null,
+          "signal": null,
+          "hist": null,
+          "prev_hist": null,
+          "prev2_hist": null,
+          "reason": "月足データが不足（25か月）。30か月以上を必要とします。"
+        },
         "drawdown60": -7.44,
         "range_position60": 57.5,
         "volatility20": 2.64,
@@ -9076,31 +9210,36 @@
         "daily_vs20": -4.56,
         "daily_ma20_slope5": 0.01,
         "supply": {
-          "date": "2026-09-18",
-          "status": "データ不足",
-          "source_url": "https://api.irbank.net/v1/screening",
-          "source_note": "IRBANK API スクリーニング（信用買い残・信用売り残・前週比・信用倍率）",
-          "missing_fields": [
-            "marginBuyBalance",
-            "marginSellBalance",
-            "marginBuyBalanceChangeWow",
-            "marginSellBalanceChangeWow",
-            "marginRatio"
-          ],
-          "field_dates": {},
+          "date": "2026-09-11",
+          "status": "改善方向",
+          "source_url": "https://api.irbank.net/v1/securities/6301/weekly-margin-balance",
+          "source_note": "IRBANK API 週次信用残高（信用買い残・信用売り残・前週比・信用倍率）",
+          "missing_fields": [],
+          "field_dates": {
+            "marginBuyBalance": "2026-09-11",
+            "marginSellBalance": "2026-09-11",
+            "marginBuyBalanceChangeWow": "2026-09-11",
+            "marginSellBalanceChangeWow": "2026-09-11",
+            "marginRatio": "2026-09-11"
+          },
           "api_errors": [],
-          "buy_balance": null,
-          "sell_balance": null,
-          "credit_ratio": null,
-          "buy_change": null,
-          "sell_change": null,
-          "net_balance": null,
-          "net_change": null,
-          "api_partial": true,
-          "reason": "信用倍率データが取得できないため需給判定は保留。"
+          "marginBuyBalance": 841500,
+          "marginSellBalance": 184700,
+          "marginBuyBalanceChangeWow": -34100,
+          "marginSellBalanceChangeWow": -16700,
+          "marginRatio": 4.556036816459123,
+          "buy_balance": 841500,
+          "sell_balance": 184700,
+          "credit_ratio": 4.556036816459123,
+          "buy_change": -34100,
+          "sell_change": -16700,
+          "net_balance": 656800,
+          "net_change": -17400,
+          "api_partial": false,
+          "reason": "信用倍率4.56倍。ネット需給が改善（買い残前週比−売り残前週比=-17,400）。"
         },
-        "supply_status": "データ不足",
-        "supply_reason": "信用倍率データが取得できないため需給判定は保留。",
+        "supply_status": "改善方向",
+        "supply_reason": "信用倍率4.56倍。ネット需給が改善（買い残前週比−売り残前週比=-17,400）。",
         "nikkei_change": 1.38,
         "relative_strength": -2.05,
         "breadth": {
@@ -9113,7 +9252,7 @@
         "daily_vs75": 1.77,
         "daily_ma25_slope5": -0.81,
         "daily_ma75_slope20": 3.42,
-        "score": 29,
+        "score": 37,
         "score_breakdown": {
           "daily_drop": 0,
           "volume": 10,
@@ -9122,7 +9261,7 @@
           "vs75": 0,
           "breadth": 8,
           "relative_strength": 3,
-          "supply": 0
+          "supply": 8
         },
         "condition_checks": [
           {
@@ -9188,7 +9327,15 @@
           "distance_from_breakout": -8.64,
           "reason": "直近6営業日に20日レンジ高値を明確に終値突破した形跡なし"
         },
-        "signal_icons": [],
+        "signal_icons": [
+          {
+            "code": "SUPPLY_BUY",
+            "icon": "📦",
+            "label": "需給買いサイン",
+            "strength": "medium",
+            "reason": "ネット需給改善（買い残前週比−売り残前週比=-17,400）＋信用倍率4.56倍。買い残増加より売り残増加／買い残減少が優勢。"
+          }
+        ],
         "chart_history": [
           {
             "date": "2026-04-24",
@@ -11204,6 +11351,11 @@
           "range60": "60日レンジ中間",
           "momentum": "下落"
         },
+        "attribution": {
+          "source_label": "JPX 東京証券取引所",
+          "license_note": "株価・信用取引残高データは JPX 東京証券取引所 (東証マーケットインフォメーション) の情報を出典とし、加工は IRBANK が実施。本データは IRBANK 登録ユーザー向けの提供であり、第三者への再配信・転載は許諾されていない。",
+          "processed_by": "IRBANK"
+        },
         "high20": 7576.0,
         "low20": 7045.0,
         "high60": 7576.0,
@@ -11254,6 +11406,23 @@
         "macd": 20.325,
         "macd_signal": 30.321,
         "macd_hist": -9.997,
+        "monthly_macd": null,
+        "monthly_macd_signal": null,
+        "monthly_macd_hist": null,
+        "monthly_macd_state": "データ不足",
+        "monthly_points": 25,
+        "monthly_rsi_bottom_signal": {
+          "active": false,
+          "state": "データ不足",
+          "weekly_rsi_ok": false,
+          "monthly_points": 25,
+          "macd": null,
+          "signal": null,
+          "hist": null,
+          "prev_hist": null,
+          "prev2_hist": null,
+          "reason": "月足データが不足（25か月）。30か月以上を必要とします。"
+        },
         "drawdown60": -4.71,
         "range_position60": 69.9,
         "volatility20": 1.95,
@@ -11284,31 +11453,36 @@
         "daily_vs20": -0.91,
         "daily_ma20_slope5": 0.75,
         "supply": {
-          "date": "2026-09-18",
-          "status": "データ不足",
-          "source_url": "https://api.irbank.net/v1/screening",
-          "source_note": "IRBANK API スクリーニング（信用買い残・信用売り残・前週比・信用倍率）",
-          "missing_fields": [
-            "marginBuyBalance",
-            "marginSellBalance",
-            "marginBuyBalanceChangeWow",
-            "marginSellBalanceChangeWow",
-            "marginRatio"
-          ],
-          "field_dates": {},
+          "date": "2026-09-11",
+          "status": "重い",
+          "source_url": "https://api.irbank.net/v1/securities/8306/weekly-margin-balance",
+          "source_note": "IRBANK API 週次信用残高（信用買い残・信用売り残・前週比・信用倍率）",
+          "missing_fields": [],
+          "field_dates": {
+            "marginBuyBalance": "2026-09-11",
+            "marginSellBalance": "2026-09-11",
+            "marginBuyBalanceChangeWow": "2026-09-11",
+            "marginSellBalanceChangeWow": "2026-09-11",
+            "marginRatio": "2026-09-11"
+          },
           "api_errors": [],
-          "buy_balance": null,
-          "sell_balance": null,
-          "credit_ratio": null,
-          "buy_change": null,
-          "sell_change": null,
-          "net_balance": null,
-          "net_change": null,
-          "api_partial": true,
-          "reason": "信用倍率データが取得できないため需給判定は保留。"
+          "marginBuyBalance": 36175700,
+          "marginSellBalance": 1715100,
+          "marginBuyBalanceChangeWow": 4784700,
+          "marginSellBalanceChangeWow": -886600,
+          "marginRatio": 21.09247274211416,
+          "buy_balance": 36175700,
+          "sell_balance": 1715100,
+          "credit_ratio": 21.09247274211416,
+          "buy_change": 4784700,
+          "sell_change": -886600,
+          "net_balance": 34460600,
+          "net_change": 5671300,
+          "api_partial": false,
+          "reason": "信用倍率21.09倍と高水準。買い残−売り残のネット需給も軽くなく、上値の重さに注意。"
         },
-        "supply_status": "データ不足",
-        "supply_reason": "信用倍率データが取得できないため需給判定は保留。",
+        "supply_status": "重い",
+        "supply_reason": "信用倍率21.09倍と高水準。買い残−売り残のネット需給も軽くなく、上値の重さに注意。",
         "nikkei_change": 1.38,
         "relative_strength": -2.26,
         "breadth": {
@@ -13412,6 +13586,11 @@
           "range60": "60日レンジやや上",
           "momentum": "下落"
         },
+        "attribution": {
+          "source_label": "JPX 東京証券取引所",
+          "license_note": "株価・信用取引残高データは JPX 東京証券取引所 (東証マーケットインフォメーション) の情報を出典とし、加工は IRBANK が実施。本データは IRBANK 登録ユーザー向けの提供であり、第三者への再配信・転載は許諾されていない。",
+          "processed_by": "IRBANK"
+        },
         "high20": 3785.0,
         "low20": 3481.0,
         "high60": 3799.0,
@@ -13462,6 +13641,23 @@
         "macd": -43.866,
         "macd_signal": -47.748,
         "macd_hist": 3.883,
+        "monthly_macd": null,
+        "monthly_macd_signal": null,
+        "monthly_macd_hist": null,
+        "monthly_macd_state": "データ不足",
+        "monthly_points": 25,
+        "monthly_rsi_bottom_signal": {
+          "active": false,
+          "state": "データ不足",
+          "weekly_rsi_ok": false,
+          "monthly_points": 25,
+          "macd": null,
+          "signal": null,
+          "hist": null,
+          "prev_hist": null,
+          "prev2_hist": null,
+          "reason": "月足データが不足（25か月）。30か月以上を必要とします。"
+        },
         "drawdown60": -7.9,
         "range_position60": 19.2,
         "volatility20": 1.69,
@@ -15630,6 +15826,11 @@
           "range60": "60日レンジ下側（底値圏）",
           "momentum": "下落"
         },
+        "attribution": {
+          "source_label": "JPX 東京証券取引所",
+          "license_note": "株価・信用取引残高データは JPX 東京証券取引所 (東証マーケットインフォメーション) の情報を出典とし、加工は IRBANK が実施。本データは IRBANK 登録ユーザー向けの提供であり、第三者への再配信・転載は許諾されていない。",
+          "processed_by": "IRBANK"
+        },
         "high20": 6361.0,
         "low20": 6021.0,
         "high60": 6673.0,
@@ -15688,6 +15889,23 @@
         "macd": -3.987,
         "macd_signal": 16.591,
         "macd_hist": -20.578,
+        "monthly_macd": null,
+        "monthly_macd_signal": null,
+        "monthly_macd_hist": null,
+        "monthly_macd_state": "データ不足",
+        "monthly_points": 25,
+        "monthly_rsi_bottom_signal": {
+          "active": false,
+          "state": "データ不足",
+          "weekly_rsi_ok": false,
+          "monthly_points": 25,
+          "macd": null,
+          "signal": null,
+          "hist": null,
+          "prev_hist": null,
+          "prev2_hist": null,
+          "reason": "月足データが不足（25か月）。30か月以上を必要とします。"
+        },
         "drawdown60": -8.63,
         "range_position60": 58.9,
         "volatility20": 3.3,
@@ -17874,6 +18092,11 @@
           "range60": "60日レンジ中間",
           "momentum": "下落"
         },
+        "attribution": {
+          "source_label": "JPX 東京証券取引所",
+          "license_note": "株価・信用取引残高データは JPX 東京証券取引所 (東証マーケットインフォメーション) の情報を出典とし、加工は IRBANK が実施。本データは IRBANK 登録ユーザー向けの提供であり、第三者への再配信・転載は許諾されていない。",
+          "processed_by": "IRBANK"
+        },
         "high20": 4046.0,
         "low20": 3625.0,
         "high60": 4046.0,
@@ -17932,6 +18155,23 @@
         "macd": -236.956,
         "macd_signal": -247.848,
         "macd_hist": 10.892,
+        "monthly_macd": null,
+        "monthly_macd_signal": null,
+        "monthly_macd_hist": null,
+        "monthly_macd_state": "データ不足",
+        "monthly_points": 25,
+        "monthly_rsi_bottom_signal": {
+          "active": false,
+          "state": "データ不足",
+          "weekly_rsi_ok": false,
+          "monthly_points": 25,
+          "macd": null,
+          "signal": null,
+          "hist": null,
+          "prev_hist": null,
+          "prev2_hist": null,
+          "reason": "月足データが不足（25か月）。30か月以上を必要とします。"
+        },
         "drawdown60": -41.4,
         "range_position60": 2.7,
         "volatility20": 5.24,
@@ -20100,6 +20340,11 @@
           "range60": "60日レンジ下側（底値圏）",
           "momentum": "反発"
         },
+        "attribution": {
+          "source_label": "JPX 東京証券取引所",
+          "license_note": "株価・信用取引残高データは JPX 東京証券取引所 (東証マーケットインフォメーション) の情報を出典とし、加工は IRBANK が実施。本データは IRBANK 登録ユーザー向けの提供であり、第三者への再配信・転載は許諾されていない。",
+          "processed_by": "IRBANK"
+        },
         "high20": 4979.0,
         "low20": 4296.0,
         "high60": 7479.0,
@@ -20150,6 +20395,23 @@
         "macd": 27.713,
         "macd_signal": 18.266,
         "macd_hist": 9.446,
+        "monthly_macd": null,
+        "monthly_macd_signal": null,
+        "monthly_macd_hist": null,
+        "monthly_macd_state": "データ不足",
+        "monthly_points": 25,
+        "monthly_rsi_bottom_signal": {
+          "active": false,
+          "state": "データ不足",
+          "weekly_rsi_ok": false,
+          "monthly_points": 25,
+          "macd": null,
+          "signal": null,
+          "hist": null,
+          "prev_hist": null,
+          "prev2_hist": null,
+          "reason": "月足データが不足（25か月）。30か月以上を必要とします。"
+        },
         "drawdown60": -4.21,
         "range_position60": 81.2,
         "volatility20": 2.25,
@@ -22304,6 +22566,11 @@
           "range60": "60日レンジ上側（高値圏）",
           "momentum": "反発"
         },
+        "attribution": {
+          "source_label": "JPX 東京証券取引所",
+          "license_note": "株価・信用取引残高データは JPX 東京証券取引所 (東証マーケットインフォメーション) の情報を出典とし、加工は IRBANK が実施。本データは IRBANK 登録ユーザー向けの提供であり、第三者への再配信・転載は許諾されていない。",
+          "processed_by": "IRBANK"
+        },
         "high20": 5550.0,
         "low20": 5173.0,
         "high60": 5767.0,
@@ -22354,6 +22621,23 @@
         "macd": 35.624,
         "macd_signal": 28.167,
         "macd_hist": 7.457,
+        "monthly_macd": null,
+        "monthly_macd_signal": null,
+        "monthly_macd_hist": null,
+        "monthly_macd_state": "データ不足",
+        "monthly_points": 25,
+        "monthly_rsi_bottom_signal": {
+          "active": false,
+          "state": "データ不足",
+          "weekly_rsi_ok": false,
+          "monthly_points": 25,
+          "macd": null,
+          "signal": null,
+          "hist": null,
+          "prev_hist": null,
+          "prev2_hist": null,
+          "reason": "月足データが不足（25か月）。30か月以上を必要とします。"
+        },
         "drawdown60": -6.89,
         "range_position60": 74.8,
         "volatility20": 2.93,
@@ -22384,31 +22668,36 @@
         "daily_vs20": 1.39,
         "daily_ma20_slope5": 0.66,
         "supply": {
-          "date": "2026-09-18",
-          "status": "データ不足",
-          "source_url": "https://api.irbank.net/v1/screening",
-          "source_note": "IRBANK API スクリーニング（信用買い残・信用売り残・前週比・信用倍率）",
-          "missing_fields": [
-            "marginBuyBalance",
-            "marginSellBalance",
-            "marginBuyBalanceChangeWow",
-            "marginSellBalanceChangeWow",
-            "marginRatio"
-          ],
-          "field_dates": {},
+          "date": "2026-09-11",
+          "status": "重い",
+          "source_url": "https://api.irbank.net/v1/securities/6701/weekly-margin-balance",
+          "source_note": "IRBANK API 週次信用残高（信用買い残・信用売り残・前週比・信用倍率）",
+          "missing_fields": [],
+          "field_dates": {
+            "marginBuyBalance": "2026-09-11",
+            "marginSellBalance": "2026-09-11",
+            "marginBuyBalanceChangeWow": "2026-09-11",
+            "marginSellBalanceChangeWow": "2026-09-11",
+            "marginRatio": "2026-09-11"
+          },
           "api_errors": [],
-          "buy_balance": null,
-          "sell_balance": null,
-          "credit_ratio": null,
-          "buy_change": null,
-          "sell_change": null,
-          "net_balance": null,
-          "net_change": null,
-          "api_partial": true,
-          "reason": "信用倍率データが取得できないため需給判定は保留。"
+          "marginBuyBalance": 5947900,
+          "marginSellBalance": 203200,
+          "marginBuyBalanceChangeWow": 663000,
+          "marginSellBalanceChangeWow": -29900,
+          "marginRatio": 29.271161417322833,
+          "buy_balance": 5947900,
+          "sell_balance": 203200,
+          "credit_ratio": 29.271161417322833,
+          "buy_change": 663000,
+          "sell_change": -29900,
+          "net_balance": 5744700,
+          "net_change": 692900,
+          "api_partial": false,
+          "reason": "信用倍率29.27倍と高水準。買い残−売り残のネット需給も軽くなく、上値の重さに注意。"
         },
-        "supply_status": "データ不足",
-        "supply_reason": "信用倍率データが取得できないため需給判定は保留。",
+        "supply_status": "重い",
+        "supply_reason": "信用倍率29.27倍と高水準。買い残−売り残のネット需給も軽くなく、上値の重さに注意。",
         "nikkei_change": 1.38,
         "relative_strength": -3.1,
         "breadth": {
@@ -24498,6 +24787,11 @@
           "range60": "60日レンジやや上",
           "momentum": "下落"
         },
+        "attribution": {
+          "source_label": "JPX 東京証券取引所",
+          "license_note": "株価・信用取引残高データは JPX 東京証券取引所 (東証マーケットインフォメーション) の情報を出典とし、加工は IRBANK が実施。本データは IRBANK 登録ユーザー向けの提供であり、第三者への再配信・転載は許諾されていない。",
+          "processed_by": "IRBANK"
+        },
         "high20": 5005.0,
         "low20": 4503.0,
         "high60": 5168.0,
@@ -24577,6 +24871,23 @@
         "macd": 77.474,
         "macd_signal": 72.742,
         "macd_hist": 4.733,
+        "monthly_macd": null,
+        "monthly_macd_signal": null,
+        "monthly_macd_hist": null,
+        "monthly_macd_state": "データ不足",
+        "monthly_points": 25,
+        "monthly_rsi_bottom_signal": {
+          "active": false,
+          "state": "データ不足",
+          "weekly_rsi_ok": false,
+          "monthly_points": 25,
+          "macd": null,
+          "signal": null,
+          "hist": null,
+          "prev_hist": null,
+          "prev2_hist": null,
+          "reason": "月足データが不足（25か月）。30か月以上を必要とします。"
+        },
         "drawdown60": -2.68,
         "range_position60": 88.6,
         "volatility20": 4.11,
@@ -26757,6 +27068,11 @@
           "range60": "60日レンジ上側（高値圏）",
           "momentum": "下落"
         },
+        "attribution": {
+          "source_label": "JPX 東京証券取引所",
+          "license_note": "株価・信用取引残高データは JPX 東京証券取引所 (東証マーケットインフォメーション) の情報を出典とし、加工は IRBANK が実施。本データは IRBANK 登録ユーザー向けの提供であり、第三者への再配信・転載は許諾されていない。",
+          "processed_by": "IRBANK"
+        },
         "high20": 2370.0,
         "low20": 2080.0,
         "high60": 2370.0,
@@ -26807,6 +27123,23 @@
         "macd": -673.091,
         "macd_signal": -756.99,
         "macd_hist": 83.899,
+        "monthly_macd": null,
+        "monthly_macd_signal": null,
+        "monthly_macd_hist": null,
+        "monthly_macd_state": "データ不足",
+        "monthly_points": 22,
+        "monthly_rsi_bottom_signal": {
+          "active": false,
+          "state": "データ不足",
+          "weekly_rsi_ok": false,
+          "monthly_points": 22,
+          "macd": null,
+          "signal": null,
+          "hist": null,
+          "prev_hist": null,
+          "prev2_hist": null,
+          "reason": "月足データが不足（22か月）。30か月以上を必要とします。"
+        },
         "drawdown60": -47.45,
         "range_position60": 24.7,
         "volatility20": 6.02,
@@ -28961,6 +29294,11 @@
           "range60": "60日レンジやや下",
           "momentum": "反発"
         },
+        "attribution": {
+          "source_label": "JPX 東京証券取引所",
+          "license_note": "株価・信用取引残高データは JPX 東京証券取引所 (東証マーケットインフォメーション) の情報を出典とし、加工は IRBANK が実施。本データは IRBANK 登録ユーザー向けの提供であり、第三者への再配信・転載は許諾されていない。",
+          "processed_by": "IRBANK"
+        },
         "high20": 59530.0,
         "low20": 47900.0,
         "high60": 103850.0,
@@ -29019,6 +29357,23 @@
         "macd": -77.157,
         "macd_signal": -29.223,
         "macd_hist": -47.934,
+        "monthly_macd": null,
+        "monthly_macd_signal": null,
+        "monthly_macd_hist": null,
+        "monthly_macd_state": "データ不足",
+        "monthly_points": 25,
+        "monthly_rsi_bottom_signal": {
+          "active": false,
+          "state": "データ不足",
+          "weekly_rsi_ok": false,
+          "monthly_points": 25,
+          "macd": null,
+          "signal": null,
+          "hist": null,
+          "prev_hist": null,
+          "prev2_hist": null,
+          "reason": "月足データが不足（25か月）。30か月以上を必要とします。"
+        },
         "drawdown60": -23.06,
         "range_position60": 45.4,
         "volatility20": 4.59,
@@ -31171,6 +31526,11 @@
           "range60": "60日レンジ中間",
           "momentum": "反発"
         },
+        "attribution": {
+          "source_label": "JPX 東京証券取引所",
+          "license_note": "株価・信用取引残高データは JPX 東京証券取引所 (東証マーケットインフォメーション) の情報を出典とし、加工は IRBANK が実施。本データは IRBANK 登録ユーザー向けの提供であり、第三者への再配信・転載は許諾されていない。",
+          "processed_by": "IRBANK"
+        },
         "high20": 5504.0,
         "low20": 4744.0,
         "high60": 6436.0,
@@ -31221,6 +31581,23 @@
         "macd": -73.334,
         "macd_signal": -73.825,
         "macd_hist": 0.492,
+        "monthly_macd": null,
+        "monthly_macd_signal": null,
+        "monthly_macd_hist": null,
+        "monthly_macd_state": "データ不足",
+        "monthly_points": 25,
+        "monthly_rsi_bottom_signal": {
+          "active": false,
+          "state": "データ不足",
+          "weekly_rsi_ok": false,
+          "monthly_points": 25,
+          "macd": null,
+          "signal": null,
+          "hist": null,
+          "prev_hist": null,
+          "prev2_hist": null,
+          "reason": "月足データが不足（25か月）。30か月以上を必要とします。"
+        },
         "drawdown60": -27.2,
         "range_position60": 8.5,
         "volatility20": 3.98,
@@ -31251,31 +31628,36 @@
         "daily_vs20": -2.72,
         "daily_ma20_slope5": -2.12,
         "supply": {
-          "date": "2026-09-18",
-          "status": "データ不足",
-          "source_url": "https://api.irbank.net/v1/screening",
-          "source_note": "IRBANK API スクリーニング（信用買い残・信用売り残・前週比・信用倍率）",
-          "missing_fields": [
-            "marginBuyBalance",
-            "marginSellBalance",
-            "marginBuyBalanceChangeWow",
-            "marginSellBalanceChangeWow",
-            "marginRatio"
-          ],
-          "field_dates": {},
+          "date": "2026-09-11",
+          "status": "重い",
+          "source_url": "https://api.irbank.net/v1/securities/6762/weekly-margin-balance",
+          "source_note": "IRBANK API 週次信用残高（信用買い残・信用売り残・前週比・信用倍率）",
+          "missing_fields": [],
+          "field_dates": {
+            "marginBuyBalance": "2026-09-11",
+            "marginSellBalance": "2026-09-11",
+            "marginBuyBalanceChangeWow": "2026-09-11",
+            "marginSellBalanceChangeWow": "2026-09-11",
+            "marginRatio": "2026-09-11"
+          },
           "api_errors": [],
-          "buy_balance": null,
-          "sell_balance": null,
-          "credit_ratio": null,
-          "buy_change": null,
-          "sell_change": null,
-          "net_balance": null,
-          "net_change": null,
-          "api_partial": true,
-          "reason": "信用倍率データが取得できないため需給判定は保留。"
+          "marginBuyBalance": 5634700,
+          "marginSellBalance": 246800,
+          "marginBuyBalanceChangeWow": 466800,
+          "marginSellBalanceChangeWow": -15600,
+          "marginRatio": 22.831037277147487,
+          "buy_balance": 5634700,
+          "sell_balance": 246800,
+          "credit_ratio": 22.831037277147487,
+          "buy_change": 466800,
+          "sell_change": -15600,
+          "net_balance": 5387900,
+          "net_change": 482400,
+          "api_partial": false,
+          "reason": "信用倍率22.83倍と高水準。買い残−売り残のネット需給も軽くなく、上値の重さに注意。"
         },
-        "supply_status": "データ不足",
-        "supply_reason": "信用倍率データが取得できないため需給判定は保留。",
+        "supply_status": "重い",
+        "supply_reason": "信用倍率22.83倍と高水準。買い残−売り残のネット需給も軽くなく、上値の重さに注意。",
         "nikkei_change": 1.38,
         "relative_strength": 0.01,
         "breadth": {
@@ -33355,6 +33737,11 @@
           "range60": "60日レンジ下側（底値圏）",
           "momentum": "反発"
         },
+        "attribution": {
+          "source_label": "JPX 東京証券取引所",
+          "license_note": "株価・信用取引残高データは JPX 東京証券取引所 (東証マーケットインフォメーション) の情報を出典とし、加工は IRBANK が実施。本データは IRBANK 登録ユーザー向けの提供であり、第三者への再配信・転載は許諾されていない。",
+          "processed_by": "IRBANK"
+        },
         "high20": 3112.0,
         "low20": 2775.0,
         "high60": 3908.0,
@@ -33420,6 +33807,23 @@
         "macd": -375.075,
         "macd_signal": -473.444,
         "macd_hist": 98.368,
+        "monthly_macd": null,
+        "monthly_macd_signal": null,
+        "monthly_macd_hist": null,
+        "monthly_macd_state": "データ不足",
+        "monthly_points": 25,
+        "monthly_rsi_bottom_signal": {
+          "active": false,
+          "state": "データ不足",
+          "weekly_rsi_ok": false,
+          "monthly_points": 25,
+          "macd": null,
+          "signal": null,
+          "hist": null,
+          "prev_hist": null,
+          "prev2_hist": null,
+          "reason": "月足データが不足（25か月）。30か月以上を必要とします。"
+        },
         "drawdown60": -20.69,
         "range_position60": 5.7,
         "volatility20": 0.89,
@@ -35579,6 +35983,11 @@
           "range60": "60日レンジ下側（底値圏）",
           "momentum": "反発"
         },
+        "attribution": {
+          "source_label": "JPX 東京証券取引所",
+          "license_note": "株価・信用取引残高データは JPX 東京証券取引所 (東証マーケットインフォメーション) の情報を出典とし、加工は IRBANK が実施。本データは IRBANK 登録ユーザー向けの提供であり、第三者への再配信・転載は許諾されていない。",
+          "processed_by": "IRBANK"
+        },
         "high20": 21155.0,
         "low20": 20415.0,
         "high60": 26150.0,
@@ -35629,6 +36038,23 @@
         "macd": -1.075,
         "macd_signal": 9.396,
         "macd_hist": -10.472,
+        "monthly_macd": null,
+        "monthly_macd_signal": null,
+        "monthly_macd_hist": null,
+        "monthly_macd_state": "データ不足",
+        "monthly_points": 25,
+        "monthly_rsi_bottom_signal": {
+          "active": false,
+          "state": "データ不足",
+          "weekly_rsi_ok": false,
+          "monthly_points": 25,
+          "macd": null,
+          "signal": null,
+          "hist": null,
+          "prev_hist": null,
+          "prev2_hist": null,
+          "reason": "月足データが不足（25か月）。30か月以上を必要とします。"
+        },
         "drawdown60": -6.72,
         "range_position60": 60.9,
         "volatility20": 2.21,
@@ -37791,6 +38217,11 @@
           "range60": "60日レンジやや上",
           "momentum": "下落"
         },
+        "attribution": {
+          "source_label": "JPX 東京証券取引所",
+          "license_note": "株価・信用取引残高データは JPX 東京証券取引所 (東証マーケットインフォメーション) の情報を出典とし、加工は IRBANK が実施。本データは IRBANK 登録ユーザー向けの提供であり、第三者への再配信・転載は許諾されていない。",
+          "processed_by": "IRBANK"
+        },
         "high20": 3243.0,
         "low20": 2968.5,
         "high60": 3243.0,
@@ -37849,6 +38280,23 @@
         "macd": 53.517,
         "macd_signal": 57.784,
         "macd_hist": -4.267,
+        "monthly_macd": null,
+        "monthly_macd_signal": null,
+        "monthly_macd_hist": null,
+        "monthly_macd_state": "データ不足",
+        "monthly_points": 25,
+        "monthly_rsi_bottom_signal": {
+          "active": false,
+          "state": "データ不足",
+          "weekly_rsi_ok": false,
+          "monthly_points": 25,
+          "macd": null,
+          "signal": null,
+          "hist": null,
+          "prev_hist": null,
+          "prev2_hist": null,
+          "reason": "月足データが不足（25か月）。30か月以上を必要とします。"
+        },
         "drawdown60": -2.21,
         "range_position60": 84.3,
         "volatility20": 2.12,
@@ -40011,6 +40459,11 @@
           "range60": "60日レンジ上側（高値圏）",
           "momentum": "下落"
         },
+        "attribution": {
+          "source_label": "JPX 東京証券取引所",
+          "license_note": "株価・信用取引残高データは JPX 東京証券取引所 (東証マーケットインフォメーション) の情報を出典とし、加工は IRBANK が実施。本データは IRBANK 登録ユーザー向けの提供であり、第三者への再配信・転載は許諾されていない。",
+          "processed_by": "IRBANK"
+        },
         "high20": 5059.0,
         "low20": 4718.0,
         "high60": 5059.0,
@@ -40069,6 +40522,23 @@
         "macd": 0.094,
         "macd_signal": -14.299,
         "macd_hist": 14.393,
+        "monthly_macd": null,
+        "monthly_macd_signal": null,
+        "monthly_macd_hist": null,
+        "monthly_macd_state": "データ不足",
+        "monthly_points": 25,
+        "monthly_rsi_bottom_signal": {
+          "active": false,
+          "state": "データ不足",
+          "weekly_rsi_ok": false,
+          "monthly_points": 25,
+          "macd": null,
+          "signal": null,
+          "hist": null,
+          "prev_hist": null,
+          "prev2_hist": null,
+          "reason": "月足データが不足（25か月）。30か月以上を必要とします。"
+        },
         "drawdown60": -9.46,
         "range_position60": 36.0,
         "volatility20": 1.4,
@@ -42208,6 +42678,11 @@
           "range60": "60日レンジやや下",
           "momentum": "下落"
         },
+        "attribution": {
+          "source_label": "JPX 東京証券取引所",
+          "license_note": "株価・信用取引残高データは JPX 東京証券取引所 (東証マーケットインフォメーション) の情報を出典とし、加工は IRBANK が実施。本データは IRBANK 登録ユーザー向けの提供であり、第三者への再配信・転載は許諾されていない。",
+          "processed_by": "IRBANK"
+        },
         "high20": 3129.0,
         "low20": 2941.5,
         "high60": 3405.0,
@@ -42258,6 +42733,23 @@
         "macd": -123.219,
         "macd_signal": -153.635,
         "macd_hist": 30.416,
+        "monthly_macd": null,
+        "monthly_macd_signal": null,
+        "monthly_macd_hist": null,
+        "monthly_macd_state": "データ不足",
+        "monthly_points": 25,
+        "monthly_rsi_bottom_signal": {
+          "active": false,
+          "state": "データ不足",
+          "weekly_rsi_ok": false,
+          "monthly_points": 25,
+          "macd": null,
+          "signal": null,
+          "hist": null,
+          "prev_hist": null,
+          "prev2_hist": null,
+          "reason": "月足データが不足（25か月）。30か月以上を必要とします。"
+        },
         "drawdown60": -14.16,
         "range_position60": 13.9,
         "volatility20": 2.01,
@@ -44388,6 +44880,11 @@
           "volume": "平常圏",
           "range60": "60日レンジ下側（底値圏）",
           "momentum": "下落"
+        },
+        "attribution": {
+          "source_label": "JPX 東京証券取引所",
+          "license_note": "株価・信用取引残高データは JPX 東京証券取引所 (東証マーケットインフォメーション) の情報を出典とし、加工は IRBANK が実施。本データは IRBANK 登録ユーザー向けの提供であり、第三者への再配信・転載は許諾されていない。",
+          "processed_by": "IRBANK"
         },
         "high20": 8425.0,
         "low20": 7914.0,
