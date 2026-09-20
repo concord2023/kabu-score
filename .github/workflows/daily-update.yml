@@ -57,7 +57,11 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add watchlist.json data/custom_watchlist.json data/watchlist_exclusions.json data/stocks.json data/decision_ranking.json data/company_master.json
+          # data/ may not contain watchlist_exclusions.json on an ordinary
+          # daily run. Stage the existing generated data without naming an
+          # optional file explicitly, so a normal run cannot fail with
+          # 'pathspec ... did not match any files'.
+          git add watchlist.json data/
           git diff --cached --quiet || git commit -m 'Update daily stock decisions'
           git push
       - name: Close completed stock change request
