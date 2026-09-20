@@ -174,20 +174,6 @@ def decide(stock, regime):
         return {'signal':signal,'signal_reason':reason,'missing_conditions':[],
                 'condition_checks':checks,'one_condition_away':False}
 
-    # 2) Very strict multi-timeframe bottom branch.
-    # Weekly RSI<=30 is combined with either a monthly MACD golden cross or a
-    # two-month improvement in the negative histogram toward zero.
-    monthly_bottom = stock.get('monthly_rsi_bottom_signal') or {}
-    if monthly_bottom.get('active'):
-        checks = [
-            {'label':'週足RSI30以下','ok':bool(monthly_bottom.get('weekly_rsi_ok')),'value':stock.get('rsi14_weekly'),'rule':'週足RSI(14)<=30'},
-            {'label':'月足MACD転換','ok':True,'value':monthly_bottom.get('state'),'rule':'月足MACDがGC、またはGC手前でヒストグラムが2か月連続縮小'},
-        ]
-        signal='BUY_CANDIDATE'
-        reason='厳格な大底候補サイン。週足RSI30以下に加え、月足MACDがゴールデンクロス、またはGC手前でMACDとシグナルの差（ヒストグラム）が2か月連続で縮小。通常の押し目BUYとは別系統の長期底打ち候補として扱う。'
-        return {'signal':signal,'signal_reason':reason,'missing_conditions':[],
-                'condition_checks':checks,'one_condition_away':False}
-
     # 2) Bottom-reversal branch. Being positive on the day alone is NOT enough.
     if regime['regime'] in ('DOWNTREND_REVERSAL_WAIT','DOWNTREND_REVERSAL_CONFIRMED'):
         conds = [

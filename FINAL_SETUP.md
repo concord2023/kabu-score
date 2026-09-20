@@ -29,11 +29,3 @@ The source package intentionally does not overwrite these generated/user-state f
 They are generated or maintained by GitHub Actions. This prevents installing an updated source package from resetting existing analysis results or user-added stocks.
 
 The Daily stock update workflow now saves the normal daily analysis immediately after it succeeds, before the all-listed-stock BUY scan begins. Therefore a long or failed recommendation scan cannot hide or delay the normal daily results.
-
-
-## 全銘柄BUY候補スキャンの負荷対策
-
-全上場銘柄を一度に800営業日以上取得する方式はAPIリクエスト数が多いため、手動の `recommendation-scan.yml` は2段階方式とする。
-1. 各銘柄から直近約120営業日だけを1回取得し、週足RSI(14)<=30を一次選別。
-2. 一次選別を通過した銘柄だけ800営業日以上を取得し、月足MACDを含む通常の `decide()` で詳細判定。
-通常の `daily-update.yml` は変更しない。

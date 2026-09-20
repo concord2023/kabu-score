@@ -40,15 +40,11 @@ for item in custom_items:
         existing_watch_codes.add(code)
 watch_data['stocks'] = watch
 
-# Keep API traffic below IRBANK's current 60 requests/minute limit.
-# The daily run is intentionally paced at 1.05s between authenticated requests.
-# This is fast enough to avoid the old 1.20s over-wait while retaining margin below 60/min.
-MIN_REQUEST_INTERVAL = 1.05
+# Keep API traffic comfortably below IRBANK's current 60 requests/minute limit.
+# One daily run uses about 55 authenticated requests for 18 stocks plus one public
+# breadth request. The small delay also makes transient 429s much less likely.
+MIN_REQUEST_INTERVAL = 1.20
 _last_request_at = 0.0
-_request_count = 0
-_rate_wait_seconds = 0.0
-_retry_count = 0
-_http_seconds = 0.0
 
 
 def now_jst():
@@ -56,23 +52,20 @@ def now_jst():
 
 
 def rate_limit_wait():
-    global _last_request_at, _rate_wait_seconds
+    global _last_request_at
     wait = MIN_REQUEST_INTERVAL - (time.monotonic() - _last_request_at)
     if wait > 0:
         time.sleep(wait)
-        _rate_wait_seconds += wait
     _last_request_at = time.monotonic()
 
 
 def get(path, params=None, retries=4):
-    global _request_count, _retry_count, _http_seconds
     url = API + path
     if params:
         url += '?' + urllib.parse.urlencode(params)
     last_error = None
     for attempt in range(retries):
         rate_limit_wait()
-        _request_count += 1
         req = urllib.request.Request(
             url,
             headers={
@@ -81,14 +74,9 @@ def get(path, params=None, retries=4):
             },
         )
         try:
-            request_started = time.monotonic()
             with urllib.request.urlopen(req, timeout=30) as r:
-                payload = json.load(r)
-            _http_seconds += time.monotonic() - request_started
-            return payload
+                return json.load(r)
         except urllib.error.HTTPError as e:
-            _http_seconds += time.monotonic() - request_started
-            _retry_count += 1
             last_error = e
             if e.code not in (429, 500, 502, 503, 504):
                 raise
@@ -99,8 +87,6 @@ def get(path, params=None, retries=4):
                 delay = min(30, 2 ** attempt)
             time.sleep(max(delay, 2.0))
         except (urllib.error.URLError, TimeoutError) as e:
-            _http_seconds += time.monotonic() - request_started
-            _retry_count += 1
             last_error = e
             time.sleep(min(30, 2 ** attempt))
     raise RuntimeError(f'IRBANK request failed after retries: {url}: {last_error}')
@@ -175,10 +161,9 @@ if add_query:
     else:
         print(f'Stock already exists in watchlist: {add_code} {resolved_name}')
 
-def get_all_prices(code, minimum=800):
-    # Fetch enough history for the 75/200MA plus the strict monthly-MACD bottom
-    # signal. 800 sessions gives roughly 30+ monthly closes for established names.
-    # Do NOT reject
+def get_all_prices(code, minimum=75):
+    # Fetch at least enough history for the 75MA, and continue pagination up to
+    # 260 sessions when available so the 200MA can be calculated. Do NOT reject
     # a newly listed stock merely because it has fewer than 200 sessions: in that
     # case 25/75MA and the other available indicators should still work, while
     # 200MA remains explicitly unavailable. This is important for newer names
@@ -210,7 +195,7 @@ def get_all_prices(code, minimum=800):
         raise ValueError(f'No price rows returned for {code}')
     rows.sort(key=lambda x: x['date'], reverse=True)
     if len(rows) < minimum:
-        raise ValueError(f'Not enough price history for {code}: {len(rows)} rows (minimum {minimum} sessions requested)')
+        raise ValueError(f'Not enough price history for {code}: {len(rows)} rows (75MA requires 75+ sessions)')
     return rows, attribution
 
 
@@ -367,67 +352,88 @@ def screening_metric(code, name, target_date, field):
 
 
 def fetch_supply_batch(target_date, watch_items):
-    """Fetch weekly margin data with one API call per stock.
+    """Fetch the five validated supply metrics for every watchlist stock.
 
-    IRBANK added GET /securities/{code}/weekly-margin-balance on 2026-09-16.
-    It returns buy balance, sell balance, weekly changes and credit ratio in
-    one response, replacing the old 5 screening requests per stock.
+    This is deliberately per-stock rather than a market-wide top-100 query.
+    A market-wide sort can omit perfectly valid watchlist stocks that are not
+    in the first 100 rows.  The request pacing in get() keeps this below the
+    API's rate limit while making the result deterministic for all watchlist
+    names.
+
+    Missing weekly fields remain missing; they are never guessed or copied from
+    another security.
     """
-    result = {}
-    errors = []
+    fields = [
+        'marginBuyBalance',
+        'marginSellBalance',
+        'marginBuyBalanceChangeWow',
+        'marginSellBalanceChangeWow',
+        'marginRatio',
+    ]
+
+    entries = []
     for item in watch_items:
-        code = normalize_security_code(item.get('code') if isinstance(item, dict) else item)
+        if isinstance(item, dict):
+            code = normalize_security_code(item.get('code'))
+            name = str(item.get('name') or code or '').strip()
+        else:
+            code = normalize_security_code(item)
+            name = code or ''
         if not code:
             continue
+        entries.append((code, name))
+
+    result = {}
+    errors = []
+
+    for code, name in entries:
         row = {
             'date': target_date,
             'status': 'unavailable',
-            'source_url': f'https://api.irbank.net/v1/securities/{code}/weekly-margin-balance',
-            'source_note': 'IRBANK API 週次信用残高（信用買い残・信用売り残・前週比・信用倍率）',
-            'missing_fields': ['marginBuyBalance','marginSellBalance','marginBuyBalanceChangeWow','marginSellBalanceChangeWow','marginRatio'],
+            'source_url': 'https://api.irbank.net/v1/screening',
+            'source_note': 'IRBANK API スクリーニング（信用買い残・信用売り残・前週比・信用倍率）',
+            'missing_fields': list(fields),
             'field_dates': {},
             'api_errors': [],
         }
-        try:
-            data = get(f'/securities/{code}/weekly-margin-balance', {'period': '26w'})
-            weeks = data.get('weeks') or []
-            usable = [w for w in weeks if w.get('report_date')]
-            if not usable:
-                raise ValueError('weekly margin data is empty')
-            w = usable[-1]
-            row['date'] = w.get('report_date') or target_date
-            row['marginBuyBalance'] = w.get('buy_balance_total')
-            row['marginSellBalance'] = w.get('sell_balance_total')
-            row['marginBuyBalanceChangeWow'] = w.get('buy_balance_change')
-            row['marginSellBalanceChangeWow'] = w.get('sell_balance_change')
-            row['marginRatio'] = w.get('margin_ratio')
-            mapping = {
-                'marginBuyBalance': row.get('marginBuyBalance'),
-                'marginSellBalance': row.get('marginSellBalance'),
-                'marginBuyBalanceChangeWow': row.get('marginBuyBalanceChangeWow'),
-                'marginSellBalanceChangeWow': row.get('marginSellBalanceChangeWow'),
-                'marginRatio': row.get('marginRatio'),
-            }
-            row['missing_fields'] = [k for k,v in mapping.items() if v is None]
-            row['field_dates'] = {k: row['date'] for k,v in mapping.items() if v is not None}
-            row['buy_balance'] = row.get('marginBuyBalance')
-            row['sell_balance'] = row.get('marginSellBalance')
-            row['credit_ratio'] = row.get('marginRatio')
-            row['buy_change'] = row.get('marginBuyBalanceChangeWow')
-            row['sell_change'] = row.get('marginSellBalanceChangeWow')
-            if row['buy_balance'] is not None and row['sell_balance'] is not None:
-                row['net_balance'] = row['buy_balance'] - row['sell_balance']
-            if row['buy_change'] is not None and row['sell_change'] is not None:
-                row['net_change'] = row['buy_change'] - row['sell_change']
-            if not row['missing_fields']:
-                row['status'] = 'complete'
-            elif len(row['missing_fields']) < 5:
-                row['status'] = 'partial'
-        except Exception as e:
-            row['api_errors'].append(f'{code}: {e}')
-            errors.append(row['api_errors'][-1])
+
+        for field in fields:
+            try:
+                value, as_of = screening_metric(code, name, target_date, field)
+                if value is None:
+                    continue
+                row[field] = value
+                row[field + '_as_of'] = as_of
+                row['field_dates'][field] = as_of
+                if field in row['missing_fields']:
+                    row['missing_fields'].remove(field)
+            except Exception as e:
+                message = f'{code}:{field}: {e}'
+                row['api_errors'].append(message)
+                errors.append(message)
+
+        row['buy_balance'] = row.get('marginBuyBalance')
+        row['sell_balance'] = row.get('marginSellBalance')
+        row['credit_ratio'] = row.get('marginRatio')
+        row['buy_change'] = row.get('marginBuyBalanceChangeWow')
+        row['sell_change'] = row.get('marginSellBalanceChangeWow')
+        # Net credit balance = buy balance - sell balance.
+        # Net weekly change = buy-balance change - sell-balance change.
+        row['net_balance'] = (row['buy_balance'] - row['sell_balance']) if row.get('buy_balance') is not None and row.get('sell_balance') is not None else None
+        row['net_change'] = (row['buy_change'] - row['sell_change']) if row.get('buy_change') is not None and row.get('sell_change') is not None else None
+
+        if not row['missing_fields']:
+            row['status'] = 'complete'
+        elif len(row['missing_fields']) < len(fields):
+            row['status'] = 'partial'
+
+        available_dates = list(row['field_dates'].values())
+        if available_dates:
+            row['date'] = max(available_dates)
+
         row['api_partial'] = row['status'] != 'complete'
         result[code] = row
+
     return result, errors
 
 def supply_points(s):
@@ -489,7 +495,7 @@ def pct(a, b):
     return ((a / b) - 1) * 100 if a is not None and b not in (None, 0) else None
 
 
-def signal_icons(candle_signal, breakout, supply_info, volume_ratio, price_change, vs20, ret5, range_position60, rsi_daily=None, rsi_weekly=None, bb_daily=None, bb_weekly=None, monthly_bottom=None):
+def signal_icons(candle_signal, breakout, supply_info, volume_ratio, price_change, vs20, ret5, range_position60, rsi_daily=None, rsi_weekly=None, bb_daily=None, bb_weekly=None):
     """Expose independent technical/supply clues as icons.
 
     These are clues, not recommendations. Each icon can light independently;
@@ -572,14 +578,6 @@ def signal_icons(candle_signal, breakout, supply_info, volume_ratio, price_chang
             'strength': 'strong', 'reason': f'週足RSI(14)={rsi_weekly:.1f}。70超の買われ過ぎ水準。'
         })
 
-    # Very strict multi-timeframe bottom clue.
-    mb = monthly_bottom or {}
-    if mb.get('active'):
-        icons.append({
-            'code': 'MONTHLY_MACD_BOTTOM', 'icon': '🟣', 'label': '大底候補（月足MACD）',
-            'strength': 'strong', 'reason': mb.get('reason', '')
-        })
-
     # Bollinger-band breakout clues. These are independent signals and do not
     # automatically change the aggregate BUY decision. We use closing-price
     # breaks outside +/-2 sigma, not intraday touches.
@@ -659,64 +657,6 @@ def weekly_closes(rows):
         closes.append(float(raw))
     return closes
 
-
-def monthly_closes(rows):
-    """Return one adjusted closing price per ISO calendar month, newest first."""
-    seen = set()
-    closes = []
-    for row in rows:
-        date = row.get('date')
-        if not date:
-            continue
-        try:
-            key = date[:7]
-            __import__('datetime').date.fromisoformat(date)
-        except Exception:
-            continue
-        if key in seen:
-            continue
-        raw = row.get('adj_close') if row.get('adj_close') is not None else row.get('close')
-        if raw is None:
-            continue
-        seen.add(key)
-        closes.append(float(raw))
-    return closes
-
-def monthly_macd_bottom_signal(monthly_vals, weekly_rsi):
-    """Strict multi-timeframe bottom clue: weekly RSI<=30 plus monthly MACD turn."""
-    result = {
-        'active': False, 'state': 'データ不足', 'weekly_rsi_ok': False,
-        'monthly_points': len(monthly_vals), 'macd': None, 'signal': None,
-        'hist': None, 'prev_hist': None, 'prev2_hist': None,
-        'reason': '週足RSIまたは月足MACDに必要な履歴が不足しています。'
-    }
-    if weekly_rsi is None:
-        return result
-    result['weekly_rsi_ok'] = weekly_rsi <= 30
-    if len(monthly_vals) < 30:
-        result['reason'] = f'月足データが不足（{len(monthly_vals)}か月）。30か月以上を必要とします。'
-        return result
-    m, sig, hist = macd_series(monthly_vals)
-    if len(hist) < 3:
-        return result
-    h0, h1, h2 = hist[0], hist[1], hist[2]
-    result.update({'macd': m[0], 'signal': sig[0], 'hist': h0, 'prev_hist': h1, 'prev2_hist': h2})
-    if not result['weekly_rsi_ok']:
-        result['reason'] = f'週足RSIが30以下ではありません（{weekly_rsi:.1f}）。'
-        return result
-    golden_cross = h0 >= 0 and h1 < 0
-    pre_golden = h0 < 0 and h0 > h1 > h2
-    if golden_cross:
-        result['active'] = True
-        result['state'] = '月足MACDゴールデンクロス'
-        result['reason'] = f'週足RSI {weekly_rsi:.1f}（30以下）＋月足MACDがゴールデンクロス。ヒストグラムは{h0:.3f}。'
-    elif pre_golden:
-        result['active'] = True
-        result['state'] = '月足MACD GC手前・差分縮小'
-        result['reason'] = f'週足RSI {weekly_rsi:.1f}（30以下）＋月足MACDはGC前だが、ヒストグラムが{h2:.3f}→{h1:.3f}→{h0:.3f}と2か月連続で縮小。'
-    else:
-        result['reason'] = f'週足RSIは30以下だが、月足MACDのGCまたは差分縮小を確認できません。ヒストグラム={h0:.3f}。'
-    return result
 
 def breadth_points(b):
     if not b:
@@ -1048,8 +988,6 @@ def calc(rows, breadth_info=None, supply_info=None):
     macd_hist_now = macd_hist_values[0] if macd_hist_values else None
     weekly_vals = weekly_closes(rows)
     rsi_weekly = rsi14(weekly_vals)
-    monthly_vals = monthly_closes(rows)
-    monthly_bottom = monthly_macd_bottom_signal(monthly_vals, rsi_weekly)
     bb_weekly_mid, bb_weekly_upper, bb_weekly_lower = bollinger(weekly_vals, 13, 2)
     bb_daily_signal = bollinger_signal(vals[0], bb_daily_mid, bb_daily_upper, bb_daily_lower, 'DAILY', 25)
     bb_weekly_signal = bollinger_signal(weekly_vals[0] if weekly_vals else None, bb_weekly_mid, bb_weekly_upper, bb_weekly_lower, 'WEEKLY', 13)
@@ -1104,7 +1042,7 @@ def calc(rows, breadth_info=None, supply_info=None):
     momentum_text = '反発' if change is not None and change > 0 else '下落' if change is not None and change < 0 else '横ばい'
     candle_signal = candle_reversal_signals(rows)
     breakout = breakout_signal(rows)
-    icons = signal_icons(candle_signal, breakout, supply_info, vr, change, d20, r5, range_position60, rsi, rsi_weekly, bb_daily_signal, bb_weekly_signal, monthly_bottom)
+    icons = signal_icons(candle_signal, breakout, supply_info, vr, change, d20, r5, range_position60, rsi, rsi_weekly, bb_daily_signal, bb_weekly_signal)
 
     # Keep a compact recent history for the UI chart.  The chart is intentionally
     # presentation data only; decisions continue to use the full calculation above.
@@ -1202,12 +1140,6 @@ def calc(rows, breadth_info=None, supply_info=None):
         'macd': round(macd_now, 3) if macd_now is not None else None,
         'macd_signal': round(macd_signal_now, 3) if macd_signal_now is not None else None,
         'macd_hist': round(macd_hist_now, 3) if macd_hist_now is not None else None,
-        'monthly_rsi_bottom_signal': monthly_bottom,
-        'monthly_macd': round(monthly_bottom['macd'], 3) if monthly_bottom.get('macd') is not None else None,
-        'monthly_macd_signal': round(monthly_bottom['signal'], 3) if monthly_bottom.get('signal') is not None else None,
-        'monthly_macd_hist': round(monthly_bottom['hist'], 3) if monthly_bottom.get('hist') is not None else None,
-        'monthly_macd_state': monthly_bottom.get('state'),
-        'monthly_points': monthly_bottom.get('monthly_points', len(monthly_vals)),
         'score': total, 'score_max': 100,
         'data_points': len(vals), 'rows_received': len(rows),
         'candle_signal': candle_signal,
@@ -1221,7 +1153,6 @@ def calc(rows, breadth_info=None, supply_info=None):
         'diagnostic': {
             'usable_points': len(vals), 'rsi_ready': len(vals) >= 15, 'weekly_rsi_ready': len(weekly_vals) >= 15, 'weekly_points': len(weekly_vals),
             'ma20_ready': len(vals) >= 20, 'ma25_ready': len(vals) >= 25, 'ma75_ready': len(vals) >= 75, 'ma200_ready': len(vals) >= 200,
-            'monthly_macd_ready': len(monthly_vals) >= 30, 'monthly_points': len(monthly_vals),
         },
         'breadth': (breadth_info or {}).get('breadth') or {'6d': None, '10d': None, '15d': None, '25d': None},
         'breadth_points': bp, 'breadth_breakdown': bdetail,
@@ -1243,44 +1174,6 @@ def calc(rows, breadth_info=None, supply_info=None):
     }
 
 
-def load_cached_supply(code, max_age_days=10, reference_date=None):
-    """Reuse weekly supply data when it is fresh relative to the latest price date.
-
-    Supply is weekly, while the price target is a trading day.  The old caller
-    compared a weekly date directly with the daily target date using ``>=``; a
-    Friday supply row therefore became stale on the next trading day even though
-    it was still only a few days old.  Use an age window instead, and never accept
-    a future-dated cache.
-    """
-    try:
-        with open("data/stocks.json", encoding="utf-8") as f:
-            payload = json.load(f)
-        stock = (payload.get("stocks") or {}).get(str(code)) or {}
-        supply = stock.get("supply") or {}
-        supply_date = supply.get("date")
-        if not supply_date:
-            return None
-        # Accept ISO dates and ISO datetimes.
-        cached = str(supply_date)[:10]
-        cached_dt = datetime.fromisoformat(cached).date()
-        ref_dt = reference_date
-        if ref_dt:
-            ref_dt = datetime.fromisoformat(str(ref_dt)[:10]).date()
-        else:
-            ref_dt = now_jst().date()
-        age_days = (ref_dt - cached_dt).days
-        if age_days < 0 or age_days > max_age_days:
-            return None
-        if not any(supply.get(k) is not None for k in (
-            "marginBuyBalance", "marginSellBalance", "marginRatio",
-            "buy_balance", "sell_balance", "credit_ratio"
-        )):
-            return None
-        return supply
-    except (FileNotFoundError, json.JSONDecodeError, ValueError, TypeError):
-        return None
-
-
 def main():
     # Market breadth is fetched once. Failure is non-fatal because market context is
     # never used as a hard buy veto.
@@ -1288,46 +1181,27 @@ def main():
     breadth_error = None
     supply_batch_cache = {}
     supply_batch_errors = []
-    run_started = time.monotonic()
 
     out = {
         'updated_at': now_jst().isoformat(),
         'source': 'IRBANK API + 豆腐ハードボイルド（騰落銘柄数）',
-        'api_strategy': 'price:260 rows/stock; weekly margin:1 endpoint/stock only when cache is stale; breadth:1/run; monthly MACD:1000 rows only for weekly-RSI<=30',
+        'api_strategy': 'price:up to 500 rows/stock with cursor pagination as needed + supply:5 metric calls/stock (rate-limited, exact-code matched) + breadth:1 call/run',
         'stocks': {},
         'diagnostics': [],
     }
 
-    # Probe one price series first. This gives us the actual latest trading date
-    # so cached weekly supply can be compared against the market date.
-    probe_code = normalize_security_code(watch[0].get('code') if isinstance(watch[0], dict) else watch[0]) if watch else None
-    probe_rows = []
-    probe_attribution = {}
-    if probe_code:
-        probe_rows, probe_attribution = get_all_prices(probe_code, minimum=260)
+    # Supply is fetched once per metric for the whole watchlist (5 calls total).
+    try:
+        # Target date is based on the latest available price date from the first stock.
+        probe_code = normalize_security_code(watch[0].get('code') if isinstance(watch[0], dict) else watch[0])
+        probe_rows, _ = get_all_prices(probe_code)
         probe_date = probe_rows[0]['date']
-    else:
-        probe_date = now_jst().date().isoformat()
+        supply_batch_cache, supply_batch_errors = fetch_supply_batch(probe_date, watch)
+    except Exception as e:
+        supply_batch_cache = {}
+        supply_batch_errors = [str(e)]
 
-    cached_supply = {}
-    stale_supply_items = []
     for item in watch:
-        code0 = normalize_security_code(item.get('code') if isinstance(item, dict) else item)
-        if not code0:
-            continue
-        cached = load_cached_supply(code0, max_age_days=10, reference_date=probe_date)
-        if cached is not None:
-            cached_supply[code0] = cached
-        else:
-            stale_supply_items.append(item)
-
-    supply_batch_cache = dict(cached_supply)
-    if stale_supply_items:
-        fresh_supply, supply_batch_errors = fetch_supply_batch(probe_date, stale_supply_items)
-        supply_batch_cache.update(fresh_supply)
-    print(f'Daily setup: watch={len(watch)} cache_supply={len(cached_supply)} refresh_supply={len(stale_supply_items)} requests={_request_count} elapsed={time.monotonic()-run_started:.1f}s')
-
-    for idx, item in enumerate(watch, start=1):
         if isinstance(item, str):
             code = normalize_security_code(item)
             name, industry = code, None
@@ -1340,13 +1214,7 @@ def main():
             continue
 
         try:
-            # Fast path: normal daily analysis only needs enough history for the
-            # 200MA and the daily/weekly indicators.  The expensive long-history
-            # fetch for monthly MACD is only done for strict bottom-signal candidates.
-            if code == probe_code and probe_rows:
-                rows, attribution = probe_rows, probe_attribution
-            else:
-                rows, attribution = get_all_prices(code, minimum=260)
+            rows, attribution = get_all_prices(code)
             target_date = rows[0]['date']
 
             if breadth_cache is None and breadth_error is None:
@@ -1359,21 +1227,10 @@ def main():
             supply_info = supply_batch_cache.get(code) or {
                 'date': target_date, 'status': 'unavailable',
                 'error': '; '.join(supply_batch_errors) if supply_batch_errors else 'supply batch unavailable',
-                'source_url': 'https://api.irbank.net/v1/securities/{code}/weekly-margin-balance'
+                'source_url': 'https://api.irbank.net/v1/screening'
             }
 
             s = calc(rows, breadth_cache, supply_info)
-
-            # Monthly MACD needs a much longer history.  Only stocks that pass the
-            # strict weekly-RSI<=30 gate are expanded, so the usual daily update
-            # stays fast while the bottom signal remains fully evaluated.
-            if s.get('rsi14_weekly') is not None and s.get('rsi14_weekly') <= 30:
-                long_rows, long_attribution = get_all_prices(code, minimum=1000)
-                rows = long_rows
-                attribution = long_attribution or attribution
-                s = calc(rows, breadth_cache, supply_info)
-                target_date = rows[0]['date']
-
             regime = classify_regime(rows, s.get('candle_signal'))
             decision = decide(s, regime)
             s.update(regime)
@@ -1393,7 +1250,6 @@ def main():
         except Exception as e:
             out['stocks'][code] = {'code': code, 'name': name, 'industry': industry, 'error': str(e)}
             out['diagnostics'].append({'code': code, 'status': 'error', 'error': str(e)})
-        print(f'Daily progress: {idx}/{len(watch)} {code} requests={_request_count} elapsed={time.monotonic()-run_started:.1f}s')
 
     out['breadth_status'] = 'ok' if breadth_cache else 'unavailable'
     out['breadth_error'] = breadth_error
@@ -1404,22 +1260,15 @@ def main():
         raise SystemExit('No stock data calculated: ' + json.dumps(out['diagnostics'], ensure_ascii=False))
 
     os.makedirs('data', exist_ok=True)
-    out['timing'] = {
-        'total_seconds': round(time.monotonic() - run_started, 1),
-        'api_requests': _request_count,
-        'rate_limit_wait_seconds': round(_rate_wait_seconds, 1),
-        'retry_count': _retry_count,
-        'http_seconds': round(_http_seconds, 1),
-    }
     with open('data/stocks.json', 'w', encoding='utf-8') as f:
         json.dump(out, f, ensure_ascii=False, indent=2)
+
     print(json.dumps({
         'updated_at': out['updated_at'],
         'successful_stocks': out['successful_stocks'],
         'failed_stocks': out['failed_stocks'],
         'breadth_status': out['breadth_status'],
         'api_strategy': out['api_strategy'],
-        'timing': out['timing'],
     }, ensure_ascii=False, indent=2))
 
 
