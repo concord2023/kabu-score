@@ -30,7 +30,8 @@ jobs:
           python-version: '3.12'
       - name: Install company-master dependency
         run: python -m pip install openpyxl
-      - name: Refresh listed-company master
+      - name: Refresh listed-company master (only when adding a stock)
+        if: ${{ github.event_name == 'issues' || inputs.add_stock != '' }}
         continue-on-error: true
         run: python update_company_master.py
       - name: Validate stock-add issue
