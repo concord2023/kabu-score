@@ -1,13 +1,13 @@
 {
-  "updated_at": "2026-09-21T23:27:52.476482+09:00",
+  "updated_at": "2026-09-22T00:24:12.647879+09:00",
   "source": "IRBANK API / Prime market",
   "status": "complete",
   "request_budget": 1000,
   "request_safety_target": 900,
   "request_count": 177,
-  "daily_remaining_before": 3569,
-  "daily_remaining_after": 3394,
-  "elapsed_seconds": 187.5,
+  "daily_remaining_before": 4000,
+  "daily_remaining_after": 3825,
+  "elapsed_seconds": 187.1,
   "universe_count": 1552,
   "universe_pages": 4,
   "prefilter": {
@@ -17,24 +17,7 @@
   "prefilter_count": 83,
   "checked_count": 83,
   "error_count": 0,
-  "rule": "トラさん：週足RSI(14) <= 30 AND 月足MACDゴールデンクロス OR 月足MACD GC手前でヒストグラムが2か月連続縮小。",
-  "candidates": [
-    {
-      "code": "9989",
-      "name": "サンドラッグ",
-      "market": "Prime",
-      "weekly_rsi": 29.133858267716533,
-      "monthly_macd_state": "月足MACD GC手前・差分縮小",
-      "monthly_macd": -123.52823037346707,
-      "monthly_signal": -46.66839951256068,
-      "monthly_hist": -76.85983086090638,
-      "prev_hist": -77.82545911723949,
-      "prev2_hist": -82.9449866466222,
-      "weekly_points": 214,
-      "monthly_points": 50,
-      "reason": "週足RSI 29.1（30以下）＋月足MACDはGC前だが、ヒストグラムが-82.945→-77.825→-76.860と2か月連続で縮小。",
-      "as_of": "2026-09-18"
-    }
-  ],
+  "rule": "トラさん：標準Wilder RSI(14)の週足RSI <= 30 AND （月足MACDゴールデンクロス OR 月足MACD GC手前でヒストグラムが2か月連続縮小）。",
+  "candidates": [],
   "note": "表示するのはトラさん条件を同時に満たした銘柄だけ。大底Score・信用需給・通常BUYスコアは判定に使用しない。IRBANKのRequest上限を守るため、日足RSI＋日足MACDヒストグラムで候補を事前に絞ってから、週足/月足を厳密判定する。"
 }
