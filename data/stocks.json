@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-21T12:36:50.644714+09:00",
+  "updated_at": "2026-09-21T12:53:49.313783+09:00",
   "source": "IRBANK API + 豆腐ハードボイルド（騰落銘柄数）",
   "api_strategy": "price:800-row target/stock; weekly margin:1 endpoint/stock only when cache is stale; breadth:1/run; monthly MACD:1000-row target only for weekly-RSI<=30; quota preflight via /usage",
   "stocks": {
@@ -76263,16 +76263,16 @@
   "successful_stocks": 20,
   "failed_stocks": 0,
   "timing": {
-    "total_seconds": 40.9,
+    "total_seconds": 41.7,
     "api_requests": 38,
-    "rate_limit_wait_seconds": 14.0,
+    "rate_limit_wait_seconds": 16.3,
     "retry_count": 0,
-    "http_seconds": 24.2
+    "http_seconds": 22.6
   },
   "irbank_usage_at_start": {
     "limit": 4000,
-    "used": 156,
-    "remaining": 3844,
+    "used": 193,
+    "remaining": 3807,
     "resets_at": "2026-09-22T00:00:00+09:00"
   }
 }
