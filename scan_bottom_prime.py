@@ -143,7 +143,10 @@ def fetch_prices(code):
 
 def tora_check(rows):
     weekly = ud.weekly_closes(rows)
-    weekly_rsi = ud.rsi14(weekly)
+    # Tora uses one RSI definition only: standard Wilder RSI(14).
+    # The app's legacy simple RSI remains untouched, but it is deliberately
+    # excluded from this scanner so there is no ambiguity about the gate.
+    weekly_rsi = ud.rsi14_wilder(weekly)
     monthly = ud.monthly_closes(rows)
     signal = ud.monthly_macd_bottom_signal(monthly, weekly_rsi)
     return weekly_rsi, signal, len(weekly), len(monthly)
@@ -178,6 +181,7 @@ def main():
                     'name': hit['name'],
                     'market': 'Prime',
                     'weekly_rsi': weekly_rsi,
+                    'weekly_rsi_method': 'Wilder',
                     'monthly_macd_state': signal.get('state'),
                     'monthly_macd': signal.get('macd'),
                     'monthly_signal': signal.get('signal'),
@@ -214,7 +218,7 @@ def main():
         'prefilter_count': len(screened),
         'checked_count': len(screened) if not incomplete else None,
         'error_count': errors,
-        'rule': 'トラさん：週足RSI(14) <= 30 AND 月足MACDゴールデンクロス OR 月足MACD GC手前でヒストグラムが2か月連続縮小。',
+        'rule': 'トラさん：標準Wilder RSI(14)の週足RSI <= 30 AND （月足MACDゴールデンクロス OR 月足MACD GC手前でヒストグラムが2か月連続縮小）。',
         'candidates': results,
         'note': '表示するのはトラさん条件を同時に満たした銘柄だけ。大底Score・信用需給・通常BUYスコアは判定に使用しない。IRBANKのRequest上限を守るため、日足RSI＋日足MACDヒストグラムで候補を事前に絞ってから、週足/月足を厳密判定する。',
     }

@@ -726,6 +726,34 @@ def rsi14(vals):
     return 100 - (100 / (1 + ag / al))
 
 
+def rsi14_wilder(vals):
+    """Standard Wilder RSI(14), accepting newest-first values.
+
+    The existing rsi14() is intentionally retained for the app's historical
+    score calculations. The strict Prime "トラさん" scanner uses this
+    conventional Wilder form so its <=30 gate matches common charting tools.
+    """
+    if len(vals) < 15:
+        return None
+    chronological = [float(v) for v in reversed(vals)]
+    gains = []
+    losses = []
+    for i in range(1, len(chronological)):
+        d = chronological[i] - chronological[i - 1]
+        gains.append(max(d, 0.0))
+        losses.append(max(-d, 0.0))
+    if len(gains) < 14:
+        return None
+    avg_gain = sum(gains[:14]) / 14
+    avg_loss = sum(losses[:14]) / 14
+    for gain, loss in zip(gains[14:], losses[14:]):
+        avg_gain = (avg_gain * 13 + gain) / 14
+        avg_loss = (avg_loss * 13 + loss) / 14
+    if avg_loss == 0:
+        return 100.0
+    return 100 - (100 / (1 + avg_gain / avg_loss))
+
+
 def ema_series(values, period):
     """Return standard EMA values in chronological order."""
     if not values or period <= 0:
