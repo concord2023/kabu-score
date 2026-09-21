@@ -96,6 +96,8 @@ rec=(ROOT/'.github/workflows/recommendation-scan.yml').read_text(encoding='utf-8
 assert_true('scan_recommendations.py' not in daily, 'all-listed scan leaked into daily workflow')
 assert_true('workflow_dispatch:' in rec, 'recommendation scan must be manual')
 assert_true("build_period_chart_history(rows, 'monthly', 18)" in (ROOT/'update_data.py').read_text(encoding='utf-8'), 'monthly chart must keep 18 months')
+rd=(ROOT/'rank_decisions.py').read_text(encoding='utf-8')
+assert_true("'chart_history_weekly'" in rd and "'chart_history_monthly'" in rd, 'weekly/monthly chart histories must survive ranking output')
 assert_true('stock_change_from_issue.py' in daily and '[株スコア削除]' in daily, 'daily workflow must support stock deletion')
 assert_true('watchlist_exclusions.json' in daily and 'watchlist_exclusions.json' in (ROOT/'update_data.py').read_text(encoding='utf-8'), 'deletion persistence is missing')
 print('RELEASE VALIDATION OK')

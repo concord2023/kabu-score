@@ -17,7 +17,7 @@ def pick_metrics(s):
         'weekly_ma26','weekly_ma52','weekly_vs13','weekly_vs26','weekly_vs52',
         'weekly_ma13_slope4w','weekly_ma26_slope4w','daily_vs20','daily_ma20_slope5','supply','supply_status',
         'supply_reason','nikkei_change','relative_strength','breadth','daily_vs25','daily_vs75','daily_ma25_slope5','daily_ma75_slope20','score','score_breakdown',
-        'condition_checks','candle_signal','breakout_signal','signal_icons','chart_history','interpretation','attribution','high20','low20','high60','low60','weekly_direction','weekly_points','daily_ret1','daily_ret5','daily_ret10','daily_ret20'
+        'condition_checks','candle_signal','breakout_signal','signal_icons','chart_history','chart_history_weekly','chart_history_monthly','interpretation','attribution','high20','low20','high60','low60','weekly_direction','weekly_points','daily_ret1','daily_ret5','daily_ret10','daily_ret20'
     ]
     return {k:s.get(k) for k in keys if k in s}
 
