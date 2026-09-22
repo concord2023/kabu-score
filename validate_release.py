@@ -105,6 +105,7 @@ assert_true('weekly RSI(14) <= 30' in bottom_py and 'monthly_macd_bottom_signal'
 assert_true('rsi14_wilder' in bottom_py and "weekly_rsi_method': 'Wilder'" in bottom_py, 'Prime Tora scan must use conventional Wilder weekly RSI and expose the method')
 assert_true('weekly_rsi_simple' not in bottom_py, 'Prime Tora scan must not carry a second/simple RSI definition into its result path')
 assert_true("build_period_chart_history(rows, 'monthly', 18)" in (ROOT/'update_data.py').read_text(encoding='utf-8'), 'monthly chart must keep 18 months')
+assert_true('Calculate period indicators from the full available monthly history' in (ROOT/'update_data.py').read_text(encoding='utf-8'), 'monthly indicators must be calculated before presentation trimming')
 rd=(ROOT/'rank_decisions.py').read_text(encoding='utf-8')
 assert_true("'chart_history_weekly'" in rd and "'chart_history_monthly'" in rd, 'weekly/monthly chart histories must survive ranking output')
 assert_true('stock_change_from_issue.py' in daily and '[株スコア削除]' in daily, 'daily workflow must support stock deletion')

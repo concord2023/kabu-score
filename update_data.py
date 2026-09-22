@@ -1225,10 +1225,15 @@ def build_period_chart_history(rows, timeframe, limit):
         })
 
     periods.sort(key=lambda z: str(z.get('date') or ''))
-    periods = periods[-limit:]
-    newest = list(reversed(periods))
-    vals = [r['close'] for r in newest if r.get('close') is not None]
+    # Calculate period indicators from the full available monthly history, then
+    # trim only the presentation window.  Trimming to 18 months before MACD
+    # calculation made MACD(12,26,9) impossible because macd_series requires
+    # at least 26 monthly closes, even though the underlying daily history was
+    # already long enough.
+    newest_all = list(reversed(periods))
+    vals = [r['close'] for r in newest_all if r.get('close') is not None]
     macd_values, macd_signal_values, macd_hist_values = macd_series(vals)
+    newest = newest_all[:limit]
     out = []
     for idx, r in enumerate(newest):
         def ma(window):
