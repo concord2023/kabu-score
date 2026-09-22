@@ -51,6 +51,17 @@ if excluded_codes:
     watch = [x for x in watch if re.sub(r'[^0-9A-Z]', '', str(x.get('code') if isinstance(x, dict) else x).strip().upper()) not in excluded_codes]
 watch_data['stocks'] = watch
 
+# Materialize the effective watchlist before analysis. Custom additions are
+# stored separately under data/ so they survive source ZIP replacement, but
+# rank_decisions.py and the public app read watchlist.json. Without persisting
+# the merged list here, an already-present custom addition can be analyzed in
+# update_data.py yet never reach watchlist.json, making the Issue appear
+# successful while the newly added stock remains invisible to the app.
+_base_watch = json.loads(Path('watchlist.json').read_text(encoding='utf-8')).get('stocks', [])
+if watch != _base_watch:
+    with open('watchlist.json', 'w', encoding='utf-8') as f:
+        json.dump(watch_data, f, ensure_ascii=False, indent=2)
+
 # Keep API traffic below IRBANK's current 60 requests/minute limit.
 # 1.05s means at most ~57 requests/minute, leaving a small safety margin.
 MIN_REQUEST_INTERVAL = 1.05
