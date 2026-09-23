@@ -1242,12 +1242,11 @@ def build_period_chart_history(rows, timeframe, limit):
         win25 = vals[idx:idx + 25]
         bb_mid, bb_upper, bb_lower = bollinger(win25, 25, 2)
         vol_window = [float(z['volume']) for z in newest[idx+1:idx+21] if z.get('volume') is not None]
-        out.append({
+        out_row = {
             **r,
-            'ma5': ma(5),
-            'ma25': ma(25),
-            'ma75': ma(75),
-            'ma200': ma(200),
+            # Period-specific MA sets: daily=5/25/75/200, weekly=5/13/26/52,
+            # monthly=6/12/18.  Keep the field names explicit so the UI cannot
+            # accidentally draw daily MA periods on weekly/monthly charts.
             'bb25_mid': round(bb_mid, 2) if bb_mid is not None else None,
             'bb25_upper': round(bb_upper, 2) if bb_upper is not None else None,
             'bb25_lower': round(bb_lower, 2) if bb_lower is not None else None,
@@ -1256,7 +1255,20 @@ def build_period_chart_history(rows, timeframe, limit):
             'macd': round(macd_values[idx], 3) if idx < len(macd_values) else None,
             'macd_signal': round(macd_signal_values[idx], 3) if idx < len(macd_signal_values) else None,
             'macd_hist': round(macd_hist_values[idx], 3) if idx < len(macd_hist_values) else None,
-        })
+        }
+        if timeframe == 'weekly':
+            out_row.update({
+                'ma5': ma(5), 'ma13': ma(13), 'ma26': ma(26), 'ma52': ma(52),
+            })
+        elif timeframe == 'monthly':
+            out_row.update({
+                'ma6': ma(6), 'ma12': ma(12), 'ma18': ma(18),
+            })
+        else:
+            out_row.update({
+                'ma5': ma(5), 'ma25': ma(25), 'ma75': ma(75), 'ma200': ma(200),
+            })
+        out.append(out_row)
     return list(reversed(out))
 
 
@@ -1300,6 +1312,9 @@ def calc(rows, breadth_info=None, supply_info=None):
     weekly_vs5 = pct(weekly_vals[0], weekly_ma5) if weekly_vals and weekly_ma5 is not None else None
     rsi_weekly = rsi14(weekly_vals)
     monthly_vals = monthly_closes(rows)
+    monthly_ma6 = statistics.mean(monthly_vals[:6]) if len(monthly_vals) >= 6 else None
+    monthly_ma12 = statistics.mean(monthly_vals[:12]) if len(monthly_vals) >= 12 else None
+    monthly_ma18 = statistics.mean(monthly_vals[:18]) if len(monthly_vals) >= 18 else None
     monthly_bottom = monthly_macd_bottom_signal(monthly_vals, rsi_weekly)
     bb_weekly_mid, bb_weekly_upper, bb_weekly_lower = bollinger(weekly_vals, 13, 2)
     bb_daily_signal = bollinger_signal(vals[0], bb_daily_mid, bb_daily_upper, bb_daily_lower, 'DAILY', 25)
@@ -1454,6 +1469,9 @@ def calc(rows, breadth_info=None, supply_info=None):
         'rsi14_weekly': round(rsi_weekly, 1) if rsi_weekly is not None else None,
         'weekly_ma5': round(weekly_ma5, 2) if weekly_ma5 is not None else None,
         'weekly_vs5': round(weekly_vs5, 2) if weekly_vs5 is not None else None,
+        'monthly_ma6': round(monthly_ma6, 2) if monthly_ma6 is not None else None,
+        'monthly_ma12': round(monthly_ma12, 2) if monthly_ma12 is not None else None,
+        'monthly_ma18': round(monthly_ma18, 2) if monthly_ma18 is not None else None,
         'macd': round(macd_now, 3) if macd_now is not None else None,
         'macd_signal': round(macd_signal_now, 3) if macd_signal_now is not None else None,
         'macd_hist': round(macd_hist_now, 3) if macd_hist_now is not None else None,
@@ -1479,6 +1497,8 @@ def calc(rows, breadth_info=None, supply_info=None):
             'usable_points': len(vals), 'rsi_ready': len(vals) >= 15, 'weekly_rsi_ready': len(weekly_vals) >= 15, 'weekly_points': len(weekly_vals), 'weekly_ma5_ready': len(weekly_vals) >= 5,
             'ma20_ready': len(vals) >= 20, 'ma25_ready': len(vals) >= 25, 'ma75_ready': len(vals) >= 75, 'ma200_ready': len(vals) >= 200,
             'monthly_macd_ready': len(monthly_vals) >= 30, 'monthly_points': len(monthly_vals),
+            'monthly_ma6_ready': len(monthly_vals) >= 6, 'monthly_ma12_ready': len(monthly_vals) >= 12,
+            'monthly_ma18_ready': len(monthly_vals) >= 18,
         },
         'breadth': (breadth_info or {}).get('breadth') or {'6d': None, '10d': None, '15d': None, '25d': None},
         'breadth_points': bp, 'breadth_breakdown': bdetail,
