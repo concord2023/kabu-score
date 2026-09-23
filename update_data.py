@@ -1296,6 +1296,8 @@ def calc(rows, breadth_info=None, supply_info=None):
     macd_signal_now = macd_signal_values[0] if macd_signal_values else None
     macd_hist_now = macd_hist_values[0] if macd_hist_values else None
     weekly_vals = weekly_closes(rows)
+    weekly_ma5 = statistics.mean(weekly_vals[:5]) if len(weekly_vals) >= 5 else None
+    weekly_vs5 = pct(weekly_vals[0], weekly_ma5) if weekly_vals and weekly_ma5 is not None else None
     rsi_weekly = rsi14(weekly_vals)
     monthly_vals = monthly_closes(rows)
     monthly_bottom = monthly_macd_bottom_signal(monthly_vals, rsi_weekly)
@@ -1450,6 +1452,8 @@ def calc(rows, breadth_info=None, supply_info=None):
         'ret20': round(r20, 2) if r20 is not None else None,
         'rsi14': round(rsi, 1) if rsi is not None else None,
         'rsi14_weekly': round(rsi_weekly, 1) if rsi_weekly is not None else None,
+        'weekly_ma5': round(weekly_ma5, 2) if weekly_ma5 is not None else None,
+        'weekly_vs5': round(weekly_vs5, 2) if weekly_vs5 is not None else None,
         'macd': round(macd_now, 3) if macd_now is not None else None,
         'macd_signal': round(macd_signal_now, 3) if macd_signal_now is not None else None,
         'macd_hist': round(macd_hist_now, 3) if macd_hist_now is not None else None,
@@ -1472,7 +1476,7 @@ def calc(rows, breadth_info=None, supply_info=None):
             'rsi': rsi_text, 'rsi_daily': rsi_text, 'rsi_weekly': (f'RSI {rsi_weekly:.1f}（売られ過ぎ）' if rsi_weekly is not None and rsi_weekly < 30 else f'RSI {rsi_weekly:.1f}（過熱警戒）' if rsi_weekly is not None and rsi_weekly > 70 else f'RSI {rsi_weekly:.1f}（中立）' if rsi_weekly is not None else '判定不可'), 'volume': volume_text, 'range60': range_text, 'momentum': momentum_text,
         },
         'diagnostic': {
-            'usable_points': len(vals), 'rsi_ready': len(vals) >= 15, 'weekly_rsi_ready': len(weekly_vals) >= 15, 'weekly_points': len(weekly_vals),
+            'usable_points': len(vals), 'rsi_ready': len(vals) >= 15, 'weekly_rsi_ready': len(weekly_vals) >= 15, 'weekly_points': len(weekly_vals), 'weekly_ma5_ready': len(weekly_vals) >= 5,
             'ma20_ready': len(vals) >= 20, 'ma25_ready': len(vals) >= 25, 'ma75_ready': len(vals) >= 75, 'ma200_ready': len(vals) >= 200,
             'monthly_macd_ready': len(monthly_vals) >= 30, 'monthly_points': len(monthly_vals),
         },

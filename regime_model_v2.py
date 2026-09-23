@@ -48,7 +48,7 @@ def weekly_metrics(rows):
     ws = _weekly_closes(rows)
     vals = [x['close'] for x in ws]
     result = {'weekly_date': ws[0]['date'] if ws else None, 'weekly_points': len(vals)}
-    for n in (13, 26, 52):
+    for n in (5, 13, 26, 52):
         ma = _ma(vals, n)
         result[f'weekly_ma{n}'] = round(ma, 2) if ma is not None else None
         result[f'weekly_vs{n}'] = round(_pct(vals[0], ma), 2) if ma is not None else None
