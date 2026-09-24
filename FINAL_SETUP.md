@@ -1,7 +1,7 @@
 # 最終セットアップ
 
 1. GitHub `concord2023/kabu-score` にこのZIPの中身をアップロード。
-2. 既存の同名ファイルは上書き。古い不要ファイルは削除不要。
+2. 既存の同名ファイルは上書き。**旧 `.github/workflows/update.yml`（Update stock scores）が残っている場合は削除する。**
 3. `.github/workflows/daily-update.yml` はその場所に置く。
 4. Repository Secrets に `IRBANK_API_KEY` を設定。
 5. Actions → Daily stock update → Run workflow を1回実行。
@@ -36,7 +36,7 @@ The Daily stock update workflow runs only the watchlist analysis. The all-listed
 全上場銘柄を一度に800営業日以上取得する方式はAPIリクエスト数が多いため、手動の `recommendation-scan.yml` は2段階方式とする。
 1. 各銘柄から直近約120営業日だけを1回取得し、週足RSI(14)<=30（Wilder方式）を一次選別。
 2. 一次選別を通過した銘柄だけ800営業日以上を取得し、月足MACDを含む通常の `decide()` で詳細判定。
-通常の `daily-update.yml` は変更しない。
+通常の `daily-update.yml` を唯一の定期更新ワークフローとして使用する。旧 `Update stock scores` は使用しない。
 
 
 ## 銘柄の追加・削除
