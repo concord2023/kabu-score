@@ -1,7 +1,7 @@
 # 最終セットアップ
 
 1. GitHub `concord2023/kabu-score` にこのZIPの中身をアップロード。
-2. 既存の同名ファイルは上書き。**旧 `.github/workflows/update.yml`（Update stock scores）が残っている場合は削除する。**
+2. 既存の同名ファイルは上書き。旧 `.github/workflows/update.yml`（Update stock scores）や旧 `scripts/update_data.py` が残っていても、**Daily stock update の初回実行時に自動削除**される。
 3. `.github/workflows/daily-update.yml` はその場所に置く。
 4. Repository Secrets に `IRBANK_API_KEY` を設定。
 5. Actions → Daily stock update → Run workflow を1回実行。
