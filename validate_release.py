@@ -127,5 +127,8 @@ rd=(ROOT/'rank_decisions.py').read_text(encoding='utf-8')
 assert_true("'chart_history_weekly'" in rd and "'chart_history_monthly'" in rd, 'weekly/monthly chart histories must survive ranking output')
 assert_true('stock_change_from_issue.py' in daily and '[株スコア削除]' in daily, 'daily workflow must support stock deletion')
 assert_true('watchlist_exclusions.json' in daily and 'watchlist_exclusions.json' in (ROOT/'update_data.py').read_text(encoding='utf-8'), 'deletion persistence is missing')
+compat=ROOT/'scripts/update_data.py'
+assert_true(compat.exists(), 'legacy scripts/update_data.py compatibility entry point missing')
+assert_true('runpy.run_path' in compat.read_text(encoding='utf-8'), 'legacy updater must delegate to canonical root updater')
 print('RELEASE VALIDATION OK')
 print(f'watchlist={len(codes)}; full_history={s["data_points"]}; short_history={ss["data_points"]}')
