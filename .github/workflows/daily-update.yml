@@ -32,6 +32,12 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Remove legacy daily updater files
+        run: |
+          # Older repository versions may still contain the legacy updater.
+          # Remove it before validation so Daily stock update can self-clean
+          # the repository on its first successful run.
+          rm -f scripts/update_data.py .github/workflows/update.yml
       - name: Validate release before API calls
         run: python validate_release.py
       - name: Install company-master dependency (only when adding a stock)
