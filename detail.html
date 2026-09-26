@@ -76,18 +76,32 @@ function forecastPerBox(x){
 }
 function perPayload(x){
   const d=x.details||{}, f=d.per_forecast||{};
-  const forecastPe=Number.isFinite(Number(f.forecast_pe))&&Number(f.forecast_pe)>0?Number(f.forecast_pe):null;let forecastEps=Number.isFinite(Number(f.forecast_eps))&&Number(f.forecast_eps)>0?Number(f.forecast_eps):null;if(forecastEps==null&&forecastPe!=null&&Number.isFinite(Number(x.price))&&Number(x.price)>0)forecastEps=Number(x.price)/forecastPe;return {actual:Array.isArray(d.per_history)?d.per_history:[], forecastPe, forecastEps, switchDate:f.switch_date||null, updatedAt:d.per_updated_at||null, error:d.per_forecast_error||null, daily:Array.isArray(d.chart_history)?d.chart_history:[], weekly:Array.isArray(d.chart_history_weekly)?d.chart_history_weekly:[]};
+  const forecastPe=Number.isFinite(Number(f.forecast_pe))&&Number(f.forecast_pe)>0?Number(f.forecast_pe):null;
+  let forecastEps=Number.isFinite(Number(f.forecast_eps))&&Number(f.forecast_eps)>0?Number(f.forecast_eps):null;
+  if(forecastEps==null&&forecastPe!=null&&Number.isFinite(Number(x.price))&&Number(x.price)>0)forecastEps=Number(x.price)/forecastPe;
+  const daily=Array.isArray(d.chart_history)?d.chart_history:[];
+  let weekly=Array.isArray(d.chart_history_weekly)?d.chart_history_weekly:[];
+  // Older daily-update payloads may not contain the aggregated weekly series.
+  // Build it from the saved daily chart history so weekly PER never depends on
+  // another network request or on a new Daily stock update.
+  if(!weekly.length&&daily.length){
+    const groups={};
+    daily.forEach(r=>{if(!r.date)return;const dt=new Date(r.date+'T00:00:00');if(Number.isNaN(dt.getTime()))return;const y=dt.getFullYear(), one=new Date(y,0,1), week=Math.ceil((((dt-one)/86400000)+one.getDay()+1)/7);const k=y+'-'+String(week).padStart(2,'0');(groups[k]||(groups[k]=[])).push(r);});
+    weekly=Object.values(groups).map(a=>{a.sort((u,v)=>String(u.date).localeCompare(String(v.date)));return {date:a[a.length-1].date,close:Number(a[a.length-1].close)};});
+  }
+  return {actual:Array.isArray(d.per_history)?d.per_history:[], forecastPe, forecastEps, switchDate:f.switch_date||null, updatedAt:d.per_updated_at||null, error:d.per_forecast_error||null, daily, weekly};
 }
 function perRows(data, mode){
+  const eps=data.forecastEps;
+  const make=(src, applySwitch)=>src.map(r=>({date:r.date,pe:Number.isFinite(eps)&&eps>0&&Number.isFinite(Number(r.close))?Number(r.close)/eps:null,kind:'forecast'})).filter(r=>r.date&&Number.isFinite(r.pe)&&r.pe>0&&(!applySwitch||!data.switchDate||r.date>=data.switchDate));
   if(mode==='full'){
     const actual=data.actual.map(r=>({date:r.date,pe:Number(r.per),kind:'actual'})).filter(r=>r.date&&Number.isFinite(r.pe)&&r.pe>0);
-    // For the recent forecast segment in the full-history view, keep the weekly cadence.
-    const eps=data.forecastEps, sw=data.switchDate;
-    const forecast=data.weekly.map(r=>({date:r.date,pe:Number.isFinite(eps)&&eps>0?Number(r.close)/eps:null,kind:'forecast'})).filter(r=>r.date&&Number.isFinite(r.pe)&&(!sw||r.date>=sw));
-    return [...actual,...forecast].sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+    return [...actual,...make(data.weekly,true)].sort((a,b)=>String(a.date).localeCompare(String(b.date)));
   }
-  const src=mode==='daily'?data.daily:data.weekly, eps=data.forecastEps, sw=data.switchDate;
-  return src.map(r=>({date:r.date,pe:Number.isFinite(eps)&&eps>0?Number(r.close)/eps:null,kind:'forecast'})).filter(r=>r.date&&Number.isFinite(r.pe)&&(!sw||r.date>=sw));
+  // Weekly/daily views are explicitly "recent valuation views". Do not apply
+  // the full-history switch-date filter here; doing so can make the entire
+  // series disappear when the saved earnings date is newer than the chart data.
+  return make(mode==='daily'?data.daily:data.weekly,false);
 }
 function renderPerChart(x,mode='full'){
   const panel=document.getElementById('per-panel'); if(!panel)return;
@@ -129,5 +143,5 @@ ${metric('5日MA',d.ma5)}${metric('5日MA乖離',d.vs5,'%')}${metric('20日MA',d
 function iconClass(code){return code==='SUPPLY_BUY'||code==='SUPPLY_IMPROVING'?'supply':code==='BOTTOM_VOLUME'||code==='BOTTOM_REVERSAL'?'bottom':code.startsWith('RANGE_')?'breakout':code.startsWith('RSI_')?'rsi':code.startsWith('BB_')?'bb':code==='MONTHLY_MACD_BOTTOM'?'bottom':code==='EXTENDED'?'warn':''}
 function iconHtml(x){const arr=(x.signal_icons||[]).slice();if(x.signal==='BUY_CANDIDATE')arr.unshift({code:'AGG_BUY',icon:'🟢',label:'総合BUY',reason:x.signal_reason||''});return arr.length?'<div class=\"signal-icons\">'+arr.map(i=>'<span class=\"signal-icon '+(i.code==='AGG_BUY'?'buy':iconClass(i.code))+'\">'+esc(i.icon)+' '+esc(i.label)+'</span>').join('')+'</div>':''}
 function renderDetail(payload){const code=new URLSearchParams(location.search).get('code');const x=(payload.ranking||[]).find(v=>String(v.code)===String(code));if(!x){document.getElementById('content').innerHTML='<div class="card error">銘柄データが見つかりません。<br><a href="./index.html">一覧に戻る</a></div>';return;}window.__chartStock=x;document.title=(x.name||x.code)+' | 株スコア';document.getElementById('head').innerHTML='<a class="back" href="./index.html">← 一覧に戻る</a><a class="navlink" href="./signals.html">🚦 サイン一覧</a><div class="detail-page-title">'+esc(x.name||x.code)+'</div>'+iconHtml(x)+'<div class="muted">'+esc(x.code)+'　'+(jp[x.regime]||esc(x.regime||''))+'　'+(sg[x.signal]||esc(x.signal||''))+'</div><div class="reason" style="margin-top:6px">'+esc(x.signal_reason||x.regime_reason||'')+'</div>';document.getElementById('content').innerHTML='<div class="card">'+oneLine(x)+'<div class="signalbox"><div class="section-title">🎯 買いサイン</div><div class="reason">'+esc(x.signal_reason||'')+'</div>'+(x.details?.condition_checks?.length?'<div class="checks" style="margin-top:7px">'+conditionRows(x.details.condition_checks)+'</div>':'')+'</div>'+details(x).replace('<details class="detail">','<details class="detail" open>')+'</div>';}
-Promise.all([fetch('./data/decision_ranking.json?'+Date.now(),{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('日次ランキングがありません');return r.json()}),fetch('./data/stocks.json?'+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null)]).then(([ranking,stocks])=>{if(stocks?.stocks){for(const item of (ranking.ranking||[])){const raw=stocks.stocks[String(item.code)];if(raw){item.details=item.details||{};for(const k of ['chart_history','chart_history_weekly','chart_history_monthly']){if(!item.details[k]||!item.details[k].length)item.details[k]=raw[k]||[];}}}}renderDetail(ranking)}).catch(e=>{document.getElementById('content').innerHTML='<div class="card error">'+esc(e.message)+'<br><a href="./index.html">一覧に戻る</a></div>';});if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js?ver=20260926-display-fix-3').catch(()=>{});
+Promise.all([fetch('./data/decision_ranking.json?'+Date.now(),{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('日次ランキングがありません');return r.json()}),fetch('./data/stocks.json?'+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null)]).then(([ranking,stocks])=>{if(stocks?.stocks){for(const item of (ranking.ranking||[])){const raw=stocks.stocks[String(item.code)];if(raw){item.details=item.details||{};for(const k of ['chart_history','chart_history_weekly','chart_history_monthly','per_history','per_forecast','per_5y_avg','per_forecast_error','per_updated_at','per_actual_attribution']){if(item.details[k]==null || (Array.isArray(item.details[k])&&!item.details[k].length))item.details[k]=raw[k] ?? (Array.isArray(item.details[k])?[]:null);}}}}renderDetail(ranking)}).catch(e=>{document.getElementById('content').innerHTML='<div class="card error">'+esc(e.message)+'<br><a href="./index.html">一覧に戻る</a></div>';});if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js?ver=20260926-display-fix-3').catch(()=>{});
 </script></body></html>

@@ -1589,9 +1589,12 @@ def fetch_yahoo_forecast_per(code):
     text = re.sub(r'<[^>]+>', ' ', html)
     text = re.sub(r'&nbsp;|&#160;', ' ', text)
     text = re.sub(r'\s+', ' ', text)
-    pe_m = re.search(r'PER（会社予想）.{0,220}?([0-9]{1,4}(?:\.[0-9]+)?)倍', text)
-    eps_m = re.search(r'EPS（会社予想）.{0,220}?([0-9][0-9,]*(?:\.[0-9]+)?)', text)
-    date_m = re.search(r'直近の決算発表日は(\d{4})年(\d{1,2})月(\d{1,2})日', text)
+    # Yahoo's server-rendered page currently exposes these labels, but the
+    # surrounding markup can change.  Allow whitespace, parentheses such as
+    # (連), and a larger distance between label and value.
+    pe_m = re.search(r'PER（会社予想）\s*(?:\([^)]*\))?\s*([0-9]{1,4}(?:\.[0-9]+)?)\s*倍', text)
+    eps_m = re.search(r'EPS（会社予想）\s*(?:\([^)]*\))?\s*([0-9][0-9,]*(?:\.[0-9]+)?)', text)
+    date_m = re.search(r'直近の決算発表日は\s*(\d{4})年\s*(\d{1,2})月\s*(\d{1,2})日', text)
     pe = float(pe_m.group(1)) if pe_m else None
     eps = float(eps_m.group(1).replace(',', '')) if eps_m else None
     switch_date = None
@@ -1778,6 +1781,10 @@ def main():
                                  'switch_date_basis': '取得できず'},
                     'forecast_error': str(per_error), 'updated_at': now_jst().isoformat(),
                 }
+            # Forecast PER can always be reconstructed from current price /
+            # company-forecast EPS, even if Yahoo omits the displayed PER.
+            if per_data['forecast'].get('forecast_pe') is None and per_data['forecast'].get('forecast_eps') is not None and s.get('price'):
+                per_data['forecast']['forecast_pe'] = round(float(s['price']) / float(per_data['forecast']['forecast_eps']), 3)
             s.update({
                 'code': code, 'name': name, 'industry': industry,
                 'attribution': attribution,
@@ -1795,6 +1802,10 @@ def main():
                 'regime': s.get('regime'), 'signal': s.get('signal'),
                 'relative_strength': s['relative_strength'],
                 'supply_status': s.get('supply', {}).get('status', 'ok'),
+                'per_actual_count': len(s.get('per_history') or []),
+                'per_forecast_eps': (s.get('per_forecast') or {}).get('forecast_eps'),
+                'per_forecast_pe': (s.get('per_forecast') or {}).get('forecast_pe'),
+                'per_error': s.get('per_forecast_error'),
             })
         except Exception as e:
             out['stocks'][code] = {'code': code, 'name': name, 'industry': industry, 'error': str(e)}
