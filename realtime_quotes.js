@@ -18,7 +18,7 @@
     const started=performance.now();
     try{
       const r=await fetch('./data/realtime_quotes.json?ts='+Date.now(),{cache:'no-store'});
-      if(!r.ok)throw new Error('最新株価データがまだ作成されていません');
+      if(!r.ok)throw new Error('最新株価スナップショットがありません。Daily stock updateまたはRealtime quote snapshotを実行してください');
       const payload=await r.json();
       const quotes=payload?.quotes||{};
       let ok=0;
@@ -33,7 +33,11 @@
         if(t)t.textContent=q.market_time?`更新 ${String(q.market_time).replace('T',' ').slice(0,16)}`:'更新時刻不明';
         row.classList.add('live-updated');
       });
-      if(!ok)throw new Error('表示銘柄の現在値がありません');
+      if(!ok){
+        const stamp=payload.updated_at?String(payload.updated_at).replace('T',' ').slice(0,16):'時刻不明';
+        updateStatus(`市場時間外または未取得：保存済みスナップショット ${stamp}`,'warn');
+        return;
+      }
       const sec=((performance.now()-started)/1000).toFixed(2);
       const stamp=payload.updated_at?String(payload.updated_at).replace('T',' ').slice(0,16):'時刻不明';
       updateStatus(`取得 ${ok}/${codes.length}銘柄｜${sec}秒｜サーバー更新 ${stamp}｜保存スコアは変更しません`,'ok');
