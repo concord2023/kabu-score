@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-26T10:35:17.649978+09:00",
+  "updated_at": "2026-09-26T11:07:56.444202+09:00",
   "summary": {
     "buy_candidates": 0,
     "watch": 20,
@@ -2206,6 +2206,159 @@
             "macd_hist": -11.995
           }
         ],
+        "per_history": [
+          {
+            "fiscal_year": "2010/03",
+            "date": "2010-03-31",
+            "per": 56.071,
+            "per_source": "reported",
+            "stock_price": 749,
+            "eps": 12.149430524
+          },
+          {
+            "fiscal_year": "2011/03",
+            "date": "2011-03-31",
+            "per": 25.736,
+            "per_source": "reported",
+            "stock_price": 670,
+            "eps": 26.033070779
+          },
+          {
+            "fiscal_year": "2012/03",
+            "date": "2012-03-31",
+            "per": 39.574,
+            "per_source": "reported",
+            "stock_price": 714,
+            "eps": 18.041144873
+          },
+          {
+            "fiscal_year": "2013/03",
+            "date": "2013-03-31",
+            "per": 15.996,
+            "per_source": "reported",
+            "stock_price": 972,
+            "eps": 60.763542687
+          },
+          {
+            "fiscal_year": "2014/03",
+            "date": "2014-03-31",
+            "per": 10.127,
+            "per_source": "reported",
+            "stock_price": 1165.2,
+            "eps": 115.05997026
+          },
+          {
+            "fiscal_year": "2015/03",
+            "date": "2015-03-31",
+            "per": 12.184,
+            "per_source": "reported",
+            "stock_price": 1676.6000000000001,
+            "eps": 137.603066443
+          },
+          {
+            "fiscal_year": "2016/03",
+            "date": "2016-03-31",
+            "per": 8.028,
+            "per_source": "reported",
+            "stock_price": 1190.4,
+            "eps": 148.663870118
+          },
+          {
+            "fiscal_year": "2017/03",
+            "date": "2017-03-31",
+            "per": 9.979,
+            "per_source": "reported",
+            "stock_price": 1208.4,
+            "eps": 121.745695777
+          },
+          {
+            "fiscal_year": "2018/03",
+            "date": "2018-03-31",
+            "per": 8.106,
+            "per_source": "reported",
+            "stock_price": 1365,
+            "eps": 169.234754621
+          },
+          {
+            "fiscal_year": "2019/03",
+            "date": "2019-03-31",
+            "per": 9.972,
+            "per_source": "reported",
+            "stock_price": 1297.4,
+            "eps": 131.140573918
+          },
+          {
+            "fiscal_year": "2020/03",
+            "date": "2020-03-31",
+            "per": 8.838,
+            "per_source": "reported",
+            "stock_price": 1300.2,
+            "eps": 148.356115657
+          },
+          {
+            "fiscal_year": "2021/03",
+            "date": "2021-03-31",
+            "per": 10.727,
+            "per_source": "reported",
+            "stock_price": 1723.2,
+            "eps": 160.64610457
+          },
+          {
+            "fiscal_year": "2022/03",
+            "date": "2022-03-31",
+            "per": 10.829,
+            "per_source": "reported",
+            "stock_price": 2222.5,
+            "eps": 205.230691123
+          },
+          {
+            "fiscal_year": "2023/03",
+            "date": "2023-03-31",
+            "per": 10.475,
+            "per_source": "reported",
+            "stock_price": 1880,
+            "eps": 179.473531009
+          },
+          {
+            "fiscal_year": "2024/03",
+            "date": "2024-03-31",
+            "per": 10.362,
+            "per_source": "reported",
+            "stock_price": 3792,
+            "eps": 365.943053863
+          },
+          {
+            "fiscal_year": "2025/03",
+            "date": "2025-03-31",
+            "per": 7.276,
+            "per_source": "reported",
+            "stock_price": 2616,
+            "eps": 359.562486911
+          },
+          {
+            "fiscal_year": "2026/03",
+            "date": "2026-03-31",
+            "per": 10.71,
+            "per_source": "reported",
+            "stock_price": 3162,
+            "eps": 295.251835755
+          }
+        ],
+        "per_5y_avg": 9.930416693143627,
+        "per_forecast": {
+          "forecast_pe": null,
+          "forecast_eps": null,
+          "switch_date": null,
+          "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
+          "switch_date_basis": "取得できず"
+        },
+        "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
+        "per_updated_at": "2026-09-26T11:06:58.945633+09:00",
+        "per_actual_attribution": {
+          "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
+          "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
+          "processed_by": "IRBANK"
+        },
         "chart_history_weekly": [
           {
             "date": "2025-08-08",
@@ -5980,6 +6133,159 @@
             "macd_hist": 39.258
           }
         ],
+        "per_history": [
+          {
+            "fiscal_year": "2010/03",
+            "date": "2010-03-31",
+            "per": 12.144,
+            "per_source": "reported",
+            "stock_price": 2305,
+            "eps": 180.754298051
+          },
+          {
+            "fiscal_year": "2011/03",
+            "date": "2011-03-31",
+            "per": 15.064,
+            "per_source": "reported",
+            "stock_price": 1990,
+            "eps": 132.092342283
+          },
+          {
+            "fiscal_year": "2012/03",
+            "date": "2012-03-31",
+            "per": 11.054,
+            "per_source": "reported",
+            "stock_price": 1620,
+            "eps": 146.53364601
+          },
+          {
+            "fiscal_year": "2013/03",
+            "date": "2013-03-31",
+            "per": 13.215,
+            "per_source": "reported",
+            "stock_price": 2090,
+            "eps": 158.123095359
+          },
+          {
+            "fiscal_year": "2014/03",
+            "date": "2014-03-31",
+            "per": 12.73,
+            "per_source": "reported",
+            "stock_price": 1935,
+            "eps": 151.975617273
+          },
+          {
+            "fiscal_year": "2015/03",
+            "date": "2015-03-31",
+            "per": 13.4,
+            "per_source": "reported",
+            "stock_price": 2615,
+            "eps": 195.138876352
+          },
+          {
+            "fiscal_year": "2016/03",
+            "date": "2016-03-31",
+            "per": 11.987,
+            "per_source": "reported",
+            "stock_price": 2570,
+            "eps": 214.377989544
+          },
+          {
+            "fiscal_year": "2017/03",
+            "date": "2017-03-31",
+            "per": 11.218,
+            "per_source": "reported",
+            "stock_price": 3375,
+            "eps": 300.843876657
+          },
+          {
+            "fiscal_year": "2018/03",
+            "date": "2018-03-31",
+            "per": 16.436,
+            "per_source": "reported",
+            "stock_price": 5270,
+            "eps": 320.632218914
+          },
+          {
+            "fiscal_year": "2019/03",
+            "date": "2019-03-31",
+            "per": 11.894,
+            "per_source": "reported",
+            "stock_price": 5400,
+            "eps": 454.007930611
+          },
+          {
+            "fiscal_year": "2020/03",
+            "date": "2020-03-31",
+            "per": 9.529,
+            "per_source": "reported",
+            "stock_price": 4035,
+            "eps": 423.431757127
+          },
+          {
+            "fiscal_year": "2021/03",
+            "date": "2021-03-31",
+            "per": 12.491,
+            "per_source": "reported",
+            "stock_price": 4860,
+            "eps": 389.080677234
+          },
+          {
+            "fiscal_year": "2022/03",
+            "date": "2022-03-31",
+            "per": 10.431,
+            "per_source": "reported",
+            "stock_price": 3990,
+            "eps": 382.490854251
+          },
+          {
+            "fiscal_year": "2023/03",
+            "date": "2023-03-31",
+            "per": 11.496,
+            "per_source": "reported",
+            "stock_price": 4905,
+            "eps": 426.680140452
+          },
+          {
+            "fiscal_year": "2024/03",
+            "date": "2024-03-31",
+            "per": 12.184,
+            "per_source": "reported",
+            "stock_price": 5222,
+            "eps": 428.587750533
+          },
+          {
+            "fiscal_year": "2025/03",
+            "date": "2025-03-31",
+            "per": 10.739,
+            "per_source": "reported",
+            "stock_price": 6132,
+            "eps": 570.974060912
+          },
+          {
+            "fiscal_year": "2026/03",
+            "date": "2026-03-31",
+            "per": 14.206,
+            "per_source": "reported",
+            "stock_price": 8723,
+            "eps": 614.038604503
+          }
+        ],
+        "per_5y_avg": 11.811177482359216,
+        "per_forecast": {
+          "forecast_pe": null,
+          "forecast_eps": null,
+          "switch_date": null,
+          "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
+          "switch_date_basis": "取得できず"
+        },
+        "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
+        "per_updated_at": "2026-09-26T11:07:08.070278+09:00",
+        "per_actual_attribution": {
+          "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
+          "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
+          "processed_by": "IRBANK"
+        },
         "chart_history_weekly": [
           {
             "date": "2025-08-08",
@@ -9749,6 +10055,159 @@
             "macd_hist": -2.886
           }
         ],
+        "per_history": [
+          {
+            "fiscal_year": "2010/03",
+            "date": "2010-03-31",
+            "per": 14.821,
+            "per_source": "reported",
+            "stock_price": 1110,
+            "eps": 70.274077239
+          },
+          {
+            "fiscal_year": "2011/03",
+            "date": "2011-03-31",
+            "per": 13.723,
+            "per_source": "reported",
+            "stock_price": 1183.5,
+            "eps": 86.245457635
+          },
+          {
+            "fiscal_year": "2012/03",
+            "date": "2012-03-31",
+            "per": 12.824,
+            "per_source": "reported",
+            "stock_price": 1280,
+            "eps": 99.804236133
+          },
+          {
+            "fiscal_year": "2013/03",
+            "date": "2013-03-31",
+            "per": 17.594,
+            "per_source": "reported",
+            "stock_price": 2087.5,
+            "eps": 118.646640965
+          },
+          {
+            "fiscal_year": "2014/03",
+            "date": "2014-03-31",
+            "per": 18.862,
+            "per_source": "reported",
+            "stock_price": 2357.5,
+            "eps": 124.985604521
+          },
+          {
+            "fiscal_year": "2015/03",
+            "date": "2015-03-31",
+            "per": 23.373,
+            "per_source": "reported",
+            "stock_price": 3120,
+            "eps": 133.47834249
+          },
+          {
+            "fiscal_year": "2016/03",
+            "date": "2016-03-31",
+            "per": 23.595,
+            "per_source": "reported",
+            "stock_price": 4210,
+            "eps": 178.426611982
+          },
+          {
+            "fiscal_year": "2017/03",
+            "date": "2017-03-31",
+            "per": 18.929,
+            "per_source": "reported",
+            "stock_price": 3735,
+            "eps": 197.317708172
+          },
+          {
+            "fiscal_year": "2018/03",
+            "date": "2018-03-31",
+            "per": 23.15,
+            "per_source": "reported",
+            "stock_price": 4915,
+            "eps": 212.305708831
+          },
+          {
+            "fiscal_year": "2019/03",
+            "date": "2019-03-31",
+            "per": 14.895,
+            "per_source": "reported",
+            "stock_price": 3050,
+            "eps": 204.752252469
+          },
+          {
+            "fiscal_year": "2020/03",
+            "date": "2020-03-31",
+            "per": 17.072,
+            "per_source": "reported",
+            "stock_price": 3460,
+            "eps": 202.66893915
+          },
+          {
+            "fiscal_year": "2021/03",
+            "date": "2021-03-31",
+            "per": 18.691,
+            "per_source": "reported",
+            "stock_price": 4050,
+            "eps": 216.672423298
+          },
+          {
+            "fiscal_year": "2022/03",
+            "date": "2022-03-31",
+            "per": 14.582,
+            "per_source": "reported",
+            "stock_price": 2975,
+            "eps": 204.015385085
+          },
+          {
+            "fiscal_year": "2023/03",
+            "date": "2023-03-31",
+            "per": 16.536,
+            "per_source": "reported",
+            "stock_price": 3635,
+            "eps": 219.827851264
+          },
+          {
+            "fiscal_year": "2024/03",
+            "date": "2024-03-31",
+            "per": 18.738,
+            "per_source": "reported",
+            "stock_price": 4667,
+            "eps": 249.06215179
+          },
+          {
+            "fiscal_year": "2025/03",
+            "date": "2025-03-31",
+            "per": 16.009,
+            "per_source": "reported",
+            "stock_price": 4209,
+            "eps": 262.904334362
+          },
+          {
+            "fiscal_year": "2026/03",
+            "date": "2026-03-31",
+            "per": 14.57,
+            "per_source": "reported",
+            "stock_price": 3910,
+            "eps": 268.357485236
+          }
+        ],
+        "per_5y_avg": 16.086874813692248,
+        "per_forecast": {
+          "forecast_pe": null,
+          "forecast_eps": null,
+          "switch_date": null,
+          "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
+          "switch_date_basis": "取得できず"
+        },
+        "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
+        "per_updated_at": "2026-09-26T11:07:56.276827+09:00",
+        "per_actual_attribution": {
+          "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
+          "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
+          "processed_by": "IRBANK"
+        },
         "chart_history_weekly": [
           {
             "date": "2025-08-08",
@@ -13549,6 +14008,151 @@
             "macd_hist": 9.904
           }
         ],
+        "per_history": [
+          {
+            "fiscal_year": "2011/03",
+            "date": "2011-03-31",
+            "per": 17.241,
+            "per_source": "reported",
+            "stock_price": 370,
+            "eps": 21.458531025
+          },
+          {
+            "fiscal_year": "2012/03",
+            "date": "2012-03-31",
+            "per": 50.419,
+            "per_source": "reported",
+            "stock_price": 361,
+            "eps": 7.157124515
+          },
+          {
+            "fiscal_year": "2013/03",
+            "date": "2013-03-31",
+            "per": 24.496,
+            "per_source": "reported",
+            "stock_price": 450,
+            "eps": 18.371286911
+          },
+          {
+            "fiscal_year": "2014/03",
+            "date": "2014-03-31",
+            "per": 19.329,
+            "per_source": "reported",
+            "stock_price": 582,
+            "eps": 30.112991262
+          },
+          {
+            "fiscal_year": "2015/03",
+            "date": "2015-03-31",
+            "per": 19.52,
+            "per_source": "reported",
+            "stock_price": 780,
+            "eps": 39.956961444
+          },
+          {
+            "fiscal_year": "2016/03",
+            "date": "2016-03-31",
+            "per": 12.562,
+            "per_source": "reported",
+            "stock_price": 1110,
+            "eps": 88.361577475
+          },
+          {
+            "fiscal_year": "2017/03",
+            "date": "2017-03-31",
+            "per": 7.907,
+            "per_source": "reported",
+            "stock_price": 1041,
+            "eps": 131.655790862
+          },
+          {
+            "fiscal_year": "2018/03",
+            "date": "2018-03-31",
+            "per": 9.017,
+            "per_source": "reported",
+            "stock_price": 1164,
+            "eps": 129.090722839
+          },
+          {
+            "fiscal_year": "2019/03",
+            "date": "2019-03-31",
+            "per": 7.066,
+            "per_source": "reported",
+            "stock_price": 1114,
+            "eps": 157.646344081
+          },
+          {
+            "fiscal_year": "2020/03",
+            "date": "2020-03-31",
+            "per": 5.876,
+            "per_source": "reported",
+            "stock_price": 926,
+            "eps": 157.589275395
+          },
+          {
+            "fiscal_year": "2021/03",
+            "date": "2021-03-31",
+            "per": 7.374,
+            "per_source": "reported",
+            "stock_price": 1015,
+            "eps": 137.640980268
+          },
+          {
+            "fiscal_year": "2022/03",
+            "date": "2022-03-31",
+            "per": 16.499,
+            "per_source": "reported",
+            "stock_price": 900,
+            "eps": 54.55129345
+          },
+          {
+            "fiscal_year": "2023/03",
+            "date": "2023-03-31",
+            "per": 9.35,
+            "per_source": "reported",
+            "stock_price": 1013,
+            "eps": 108.338063572
+          },
+          {
+            "fiscal_year": "2024/03",
+            "date": "2024-03-31",
+            "per": 17.791,
+            "per_source": "reported",
+            "stock_price": 1862.5,
+            "eps": 104.689248449
+          },
+          {
+            "fiscal_year": "2025/03",
+            "date": "2025-03-31",
+            "per": 9.731,
+            "per_source": "reported",
+            "stock_price": 1984,
+            "eps": 203.878669829
+          },
+          {
+            "fiscal_year": "2026/03",
+            "date": "2026-03-31",
+            "per": 15.059,
+            "per_source": "reported",
+            "stock_price": 3756,
+            "eps": 249.421040136
+          }
+        ],
+        "per_5y_avg": 13.685918009476271,
+        "per_forecast": {
+          "forecast_pe": null,
+          "forecast_eps": null,
+          "switch_date": null,
+          "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
+          "switch_date_basis": "取得できず"
+        },
+        "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
+        "per_updated_at": "2026-09-26T11:07:04.013504+09:00",
+        "per_actual_attribution": {
+          "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
+          "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
+          "processed_by": "IRBANK"
+        },
         "chart_history_weekly": [
           {
             "date": "2025-08-08",
@@ -17349,6 +17953,159 @@
             "macd_hist": 3.176
           }
         ],
+        "per_history": [
+          {
+            "fiscal_year": "2010/03",
+            "date": "2010-03-31",
+            "per": 23.137,
+            "per_source": "reported",
+            "stock_price": 829,
+            "eps": 33.123484736
+          },
+          {
+            "fiscal_year": "2011/03",
+            "date": "2011-03-31",
+            "per": 12.683,
+            "per_source": "reported",
+            "stock_price": 779,
+            "eps": 61.421169821
+          },
+          {
+            "fiscal_year": "2012/03",
+            "date": "2012-03-31",
+            "per": 10.17,
+            "per_source": "reported",
+            "stock_price": 790,
+            "eps": 77.675933539
+          },
+          {
+            "fiscal_year": "2013/03",
+            "date": "2013-03-31",
+            "per": 11.578,
+            "per_source": "reported",
+            "stock_price": 1191,
+            "eps": 102.868612821
+          },
+          {
+            "fiscal_year": "2014/03",
+            "date": "2014-03-31",
+            "per": 9.864,
+            "per_source": "reported",
+            "stock_price": 1453,
+            "eps": 147.304500036
+          },
+          {
+            "fiscal_year": "2015/03",
+            "date": "2015-03-31",
+            "per": 9.408,
+            "per_source": "reported",
+            "stock_price": 1688.5,
+            "eps": 179.466912689
+          },
+          {
+            "fiscal_year": "2016/03",
+            "date": "2016-03-31",
+            "per": 8.079,
+            "per_source": "reported",
+            "stock_price": 1605.5,
+            "eps": 198.733385844
+          },
+          {
+            "fiscal_year": "2017/03",
+            "date": "2017-03-31",
+            "per": 7.887,
+            "per_source": "reported",
+            "stock_price": 1647.5,
+            "eps": 208.881495577
+          },
+          {
+            "fiscal_year": "2018/03",
+            "date": "2018-03-31",
+            "per": 7.678,
+            "per_source": "reported",
+            "stock_price": 1876.5,
+            "eps": 244.400306515
+          },
+          {
+            "fiscal_year": "2019/03",
+            "date": "2019-03-31",
+            "per": 6.285,
+            "per_source": "reported",
+            "stock_price": 1589.5,
+            "eps": 252.9217511
+          },
+          {
+            "fiscal_year": "2020/03",
+            "date": "2020-03-31",
+            "per": 5.479,
+            "per_source": "reported",
+            "stock_price": 1300.5,
+            "eps": 237.380908911
+          },
+          {
+            "fiscal_year": "2021/03",
+            "date": "2021-03-31",
+            "per": 12.01,
+            "per_source": "reported",
+            "stock_price": 1868,
+            "eps": 155.53758365
+          },
+          {
+            "fiscal_year": "2022/03",
+            "date": "2022-03-31",
+            "per": 9.436,
+            "per_source": "reported",
+            "stock_price": 2447.5,
+            "eps": 259.366421035
+          },
+          {
+            "fiscal_year": "2023/03",
+            "date": "2023-03-31",
+            "per": 9.408,
+            "per_source": "reported",
+            "stock_price": 2176.5,
+            "eps": 231.349603163
+          },
+          {
+            "fiscal_year": "2024/03",
+            "date": "2024-03-31",
+            "per": 11.05,
+            "per_source": "reported",
+            "stock_price": 3299,
+            "eps": 298.552572223
+          },
+          {
+            "fiscal_year": "2025/03",
+            "date": "2025-03-31",
+            "per": 10.021,
+            "per_source": "reported",
+            "stock_price": 3084,
+            "eps": 307.771627196
+          },
+          {
+            "fiscal_year": "2026/03",
+            "date": "2026-03-31",
+            "per": 11.51,
+            "per_source": "reported",
+            "stock_price": 4607,
+            "eps": 400.358844479
+          }
+        ],
+        "per_5y_avg": 10.285080619775758,
+        "per_forecast": {
+          "forecast_pe": null,
+          "forecast_eps": null,
+          "switch_date": null,
+          "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
+          "switch_date_basis": "取得できず"
+        },
+        "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
+        "per_updated_at": "2026-09-26T11:07:26.130202+09:00",
+        "per_actual_attribution": {
+          "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
+          "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
+          "processed_by": "IRBANK"
+        },
         "chart_history_weekly": [
           {
             "date": "2025-08-08",
@@ -21139,6 +21896,111 @@
             "macd_hist": -17.693
           }
         ],
+        "per_history": [
+          {
+            "fiscal_year": "2013/03",
+            "date": "2013-03-31",
+            "per": 39.739,
+            "per_source": "reported",
+            "stock_price": 328.40000000000003,
+            "eps": 8.263242478
+          },
+          {
+            "fiscal_year": "2016/03",
+            "date": "2016-03-31",
+            "per": 24.229,
+            "per_source": "reported",
+            "stock_price": 578.6,
+            "eps": 23.879578841
+          },
+          {
+            "fiscal_year": "2017/03",
+            "date": "2017-03-31",
+            "per": 64.853,
+            "per_source": "reported",
+            "stock_price": 753.2,
+            "eps": 11.614526403
+          },
+          {
+            "fiscal_year": "2018/03",
+            "date": "2018-03-31",
+            "per": 13.252,
+            "per_source": "reported",
+            "stock_price": 1029.2,
+            "eps": 77.66372033
+          },
+          {
+            "fiscal_year": "2019/03",
+            "date": "2019-03-31",
+            "per": 6.421,
+            "per_source": "reported",
+            "stock_price": 929,
+            "eps": 144.682899839
+          },
+          {
+            "fiscal_year": "2020/03",
+            "date": "2020-03-31",
+            "per": 13.614,
+            "per_source": "reported",
+            "stock_price": 1284.2,
+            "eps": 94.327148326
+          },
+          {
+            "fiscal_year": "2021/03",
+            "date": "2021-03-31",
+            "per": 12.176,
+            "per_source": "reported",
+            "stock_price": 2319,
+            "eps": 190.458371954
+          },
+          {
+            "fiscal_year": "2022/03",
+            "date": "2022-03-31",
+            "per": 17.883,
+            "per_source": "reported",
+            "stock_price": 2546,
+            "eps": 142.367212587
+          },
+          {
+            "fiscal_year": "2023/03",
+            "date": "2023-03-31",
+            "per": 15.803,
+            "per_source": "reported",
+            "stock_price": 2397,
+            "eps": 151.675222253
+          },
+          {
+            "fiscal_year": "2024/03",
+            "date": "2024-03-31",
+            "per": 16.472,
+            "per_source": "reported",
+            "stock_price": 2597,
+            "eps": 157.657550372
+          },
+          {
+            "fiscal_year": "2025/03",
+            "date": "2025-03-31",
+            "per": 19.951,
+            "per_source": "reported",
+            "stock_price": 3765,
+            "eps": 188.705067882
+          }
+        ],
+        "per_5y_avg": 17.527566862770634,
+        "per_forecast": {
+          "forecast_pe": null,
+          "forecast_eps": null,
+          "switch_date": null,
+          "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
+          "switch_date_basis": "取得できず"
+        },
+        "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
+        "per_updated_at": "2026-09-26T11:06:28.654276+09:00",
+        "per_actual_attribution": {
+          "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
+          "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
+          "processed_by": "IRBANK"
+        },
         "chart_history_weekly": [
           {
             "date": "2025-08-08",
@@ -24959,6 +25821,159 @@
             "macd_hist": -11.745
           }
         ],
+        "per_history": [
+          {
+            "fiscal_year": "2010/03",
+            "date": "2010-03-31",
+            "per": 10.042,
+            "per_source": "reported",
+            "stock_price": 163.8,
+            "eps": 17.721872005
+          },
+          {
+            "fiscal_year": "2011/03",
+            "date": "2011-03-31",
+            "per": 8.545,
+            "per_source": "reported",
+            "stock_price": 174.20000000000002,
+            "eps": 22.062173851
+          },
+          {
+            "fiscal_year": "2012/03",
+            "date": "2012-03-31",
+            "per": 4.749,
+            "per_source": "reported",
+            "stock_price": 180.60000000000002,
+            "eps": 40.732331852
+          },
+          {
+            "fiscal_year": "2013/03",
+            "date": "2013-03-31",
+            "per": 6.906,
+            "per_source": "reported",
+            "stock_price": 226.20000000000002,
+            "eps": 38.300150296
+          },
+          {
+            "fiscal_year": "2014/03",
+            "date": "2014-03-31",
+            "per": 7.77,
+            "per_source": "reported",
+            "stock_price": 241.20000000000002,
+            "eps": 41.588509391
+          },
+          {
+            "fiscal_year": "2015/03",
+            "date": "2015-03-31",
+            "per": 6.882,
+            "per_source": "reported",
+            "stock_price": 260.3,
+            "eps": 37.82585566
+          },
+          {
+            "fiscal_year": "2016/03",
+            "date": "2016-03-31",
+            "per": 9.11,
+            "per_source": "reported",
+            "stock_price": 277.2,
+            "eps": 30.427942108
+          },
+          {
+            "fiscal_year": "2017/03",
+            "date": "2017-03-31",
+            "per": 7.064,
+            "per_source": "reported",
+            "stock_price": 316,
+            "eps": 44.734776721
+          },
+          {
+            "fiscal_year": "2018/03",
+            "date": "2018-03-31",
+            "per": 8.012,
+            "per_source": "reported",
+            "stock_price": 413.3,
+            "eps": 51.588391355
+          },
+          {
+            "fiscal_year": "2019/03",
+            "date": "2019-03-31",
+            "per": 6.179,
+            "per_source": "reported",
+            "stock_price": 400.5,
+            "eps": 64.813664951
+          },
+          {
+            "fiscal_year": "2020/03",
+            "date": "2020-03-31",
+            "per": 6.682,
+            "per_source": "reported",
+            "stock_price": 448.5,
+            "eps": 67.116714897
+          },
+          {
+            "fiscal_year": "2021/03",
+            "date": "2021-03-31",
+            "per": 13.294,
+            "per_source": "reported",
+            "stock_price": 717.4000000000001,
+            "eps": 53.965837493
+          },
+          {
+            "fiscal_year": "2022/03",
+            "date": "2022-03-31",
+            "per": 7.496,
+            "per_source": "reported",
+            "stock_price": 828.8000000000001,
+            "eps": 110.57134262
+          },
+          {
+            "fiscal_year": "2023/03",
+            "date": "2023-03-31",
+            "per": 7.876,
+            "per_source": "reported",
+            "stock_price": 860.2,
+            "eps": 109.220835748
+          },
+          {
+            "fiscal_year": "2024/03",
+            "date": "2024-03-31",
+            "per": 11.693,
+            "per_source": "reported",
+            "stock_price": 1293.2,
+            "eps": 110.600525637
+          },
+          {
+            "fiscal_year": "2025/03",
+            "date": "2025-03-31",
+            "per": 11.209,
+            "per_source": "reported",
+            "stock_price": 1380.2,
+            "eps": 123.129116657
+          },
+          {
+            "fiscal_year": "2026/03",
+            "date": "2026-03-31",
+            "per": 15.426,
+            "per_source": "reported",
+            "stock_price": 1974.5,
+            "eps": 127.999822663
+          }
+        ],
+        "per_5y_avg": 10.73981471024305,
+        "per_forecast": {
+          "forecast_pe": null,
+          "forecast_eps": null,
+          "switch_date": null,
+          "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
+          "switch_date_basis": "取得できず"
+        },
+        "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
+        "per_updated_at": "2026-09-26T11:07:30.339571+09:00",
+        "per_actual_attribution": {
+          "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
+          "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
+          "processed_by": "IRBANK"
+        },
         "chart_history_weekly": [
           {
             "date": "2025-08-08",
@@ -28759,6 +29774,111 @@
             "macd_hist": -3.652
           }
         ],
+        "per_history": [
+          {
+            "fiscal_year": "2016/03",
+            "date": "2016-03-31",
+            "per": 35.662,
+            "per_source": "reported",
+            "stock_price": 53.28125,
+            "eps": 1.493932026
+          },
+          {
+            "fiscal_year": "2017/03",
+            "date": "2017-03-31",
+            "per": 52.508,
+            "per_source": "reported",
+            "stock_price": 106,
+            "eps": 2.018547644
+          },
+          {
+            "fiscal_year": "2018/03",
+            "date": "2018-03-31",
+            "per": 88.814,
+            "per_source": "reported",
+            "stock_price": 214.375,
+            "eps": 2.414204164
+          },
+          {
+            "fiscal_year": "2019/03",
+            "date": "2019-03-31",
+            "per": 89.769,
+            "per_source": "reported",
+            "stock_price": 252.25,
+            "eps": 2.810310803
+          },
+          {
+            "fiscal_year": "2020/03",
+            "date": "2020-03-31",
+            "per": 180.952,
+            "per_source": "reported",
+            "stock_price": 399,
+            "eps": 2.206052009
+          },
+          {
+            "fiscal_year": "2021/03",
+            "date": "2021-03-31",
+            "per": 131.728,
+            "per_source": "reported",
+            "stock_price": 1067,
+            "eps": 8.102421912
+          },
+          {
+            "fiscal_year": "2022/03",
+            "date": "2022-03-31",
+            "per": 280.504,
+            "per_source": "reported",
+            "stock_price": 834.5,
+            "eps": 2.974375556
+          },
+          {
+            "fiscal_year": "2023/03",
+            "date": "2023-03-31",
+            "per": 269.986,
+            "per_source": "reported",
+            "stock_price": 949,
+            "eps": 3.515172993
+          },
+          {
+            "fiscal_year": "2024/03",
+            "date": "2024-03-31",
+            "per": 88.745,
+            "per_source": "reported",
+            "stock_price": 1025,
+            "eps": 11.54710133
+          },
+          {
+            "fiscal_year": "2025/03",
+            "date": "2025-03-31",
+            "per": 45.269,
+            "per_source": "reported",
+            "stock_price": 1000,
+            "eps": 22.086000961
+          },
+          {
+            "fiscal_year": "2026/03",
+            "date": "2026-03-31",
+            "per": 20.135,
+            "per_source": "reported",
+            "stock_price": 743.2,
+            "eps": 36.913496832
+          }
+        ],
+        "per_5y_avg": 140.92787659323588,
+        "per_forecast": {
+          "forecast_pe": null,
+          "forecast_eps": null,
+          "switch_date": null,
+          "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
+          "switch_date_basis": "取得できず"
+        },
+        "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
+        "per_updated_at": "2026-09-26T11:07:12.229594+09:00",
+        "per_actual_attribution": {
+          "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
+          "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
+          "processed_by": "IRBANK"
+        },
         "chart_history_weekly": [
           {
             "date": "2025-08-08",
@@ -32571,6 +33691,159 @@
             "macd_hist": 110.7
           }
         ],
+        "per_history": [
+          {
+            "fiscal_year": "2010/03",
+            "date": "2010-03-31",
+            "per": 57.571,
+            "per_source": "reported",
+            "stock_price": 3825,
+            "eps": 66.151961871
+          },
+          {
+            "fiscal_year": "2011/03",
+            "date": "2011-03-31",
+            "per": 36.557,
+            "per_source": "reported",
+            "stock_price": 2491,
+            "eps": 68.133887697
+          },
+          {
+            "fiscal_year": "2012/03",
+            "date": "2012-03-31",
+            "per": 15.937,
+            "per_source": "reported",
+            "stock_price": 2253,
+            "eps": 141.363594933
+          },
+          {
+            "fiscal_year": "2013/03",
+            "date": "2013-03-31",
+            "per": 24.644,
+            "per_source": "reported",
+            "stock_price": 3690,
+            "eps": 149.72724762
+          },
+          {
+            "fiscal_year": "2014/03",
+            "date": "2014-03-31",
+            "per": 18.343,
+            "per_source": "reported",
+            "stock_price": 5782,
+            "eps": 315.213921362
+          },
+          {
+            "fiscal_year": "2015/03",
+            "date": "2015-03-31",
+            "per": 19.615,
+            "per_source": "reported",
+            "stock_price": 8046,
+            "eps": 410.185917794
+          },
+          {
+            "fiscal_year": "2016/03",
+            "date": "2016-03-31",
+            "per": 17.927,
+            "per_source": "reported",
+            "stock_price": 8412,
+            "eps": 469.22403
+          },
+          {
+            "fiscal_year": "2017/03",
+            "date": "2017-03-31",
+            "per": 21.232,
+            "per_source": "reported",
+            "stock_price": 11185,
+            "eps": 526.809354324
+          },
+          {
+            "fiscal_year": "2018/03",
+            "date": "2018-03-31",
+            "per": 18.151,
+            "per_source": "reported",
+            "stock_price": 11735,
+            "eps": 646.530156835
+          },
+          {
+            "fiscal_year": "2019/03",
+            "date": "2019-03-31",
+            "per": 20.065,
+            "per_source": "reported",
+            "stock_price": 12970,
+            "eps": 646.384164975
+          },
+          {
+            "fiscal_year": "2020/03",
+            "date": "2020-03-31",
+            "per": 22.566,
+            "per_source": "reported",
+            "stock_price": 13170,
+            "eps": 583.60363085
+          },
+          {
+            "fiscal_year": "2021/03",
+            "date": "2021-03-31",
+            "per": 41.8,
+            "per_source": "reported",
+            "stock_price": 22320,
+            "eps": 533.964339121
+          },
+          {
+            "fiscal_year": "2022/03",
+            "date": "2022-03-31",
+            "per": 30.126,
+            "per_source": "reported",
+            "stock_price": 22410,
+            "eps": 743.880216004
+          },
+          {
+            "fiscal_year": "2023/03",
+            "date": "2023-03-31",
+            "per": 26.863,
+            "per_source": "reported",
+            "stock_price": 23655,
+            "eps": 880.583708307
+          },
+          {
+            "fiscal_year": "2024/03",
+            "date": "2024-03-31",
+            "per": 23.166,
+            "per_source": "reported",
+            "stock_price": 20600,
+            "eps": 889.212576372
+          },
+          {
+            "fiscal_year": "2025/03",
+            "date": "2025-03-31",
+            "per": 17.849,
+            "per_source": "reported",
+            "stock_price": 16140,
+            "eps": 904.27273847
+          },
+          {
+            "fiscal_year": "2026/03",
+            "date": "2026-03-31",
+            "per": 19.879,
+            "per_source": "reported",
+            "stock_price": 18685,
+            "eps": 939.915979682
+          }
+        ],
+        "per_5y_avg": 23.576574344730158,
+        "per_forecast": {
+          "forecast_pe": null,
+          "forecast_eps": null,
+          "switch_date": null,
+          "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
+          "switch_date_basis": "取得できず"
+        },
+        "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
+        "per_updated_at": "2026-09-26T11:07:52.031276+09:00",
+        "per_actual_attribution": {
+          "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
+          "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
+          "processed_by": "IRBANK"
+        },
         "chart_history_weekly": [
           {
             "date": "2025-08-08",
@@ -36332,6 +37605,159 @@
             "macd_hist": -13.931
           }
         ],
+        "per_history": [
+          {
+            "fiscal_year": "2010/03",
+            "date": "2010-03-31",
+            "per": 56.533,
+            "per_source": "reported",
+            "stock_price": 1960,
+            "eps": 33.601203111
+          },
+          {
+            "fiscal_year": "2011/03",
+            "date": "2011-03-31",
+            "per": 18.136,
+            "per_source": "reported",
+            "stock_price": 2825,
+            "eps": 155.767165971
+          },
+          {
+            "fiscal_year": "2012/03",
+            "date": "2012-03-31",
+            "per": 13.599,
+            "per_source": "reported",
+            "stock_price": 2359,
+            "eps": 173.473560251
+          },
+          {
+            "fiscal_year": "2013/03",
+            "date": "2013-03-31",
+            "per": 16.956,
+            "per_source": "reported",
+            "stock_price": 2249,
+            "eps": 132.637720358
+          },
+          {
+            "fiscal_year": "2014/03",
+            "date": "2014-03-31",
+            "per": 12.775,
+            "per_source": "reported",
+            "stock_price": 2138,
+            "eps": 167.361436218
+          },
+          {
+            "fiscal_year": "2015/03",
+            "date": "2015-03-31",
+            "per": 14.577,
+            "per_source": "reported",
+            "stock_price": 2362.5,
+            "eps": 162.06759462
+          },
+          {
+            "fiscal_year": "2016/03",
+            "date": "2016-03-31",
+            "per": 13.141,
+            "per_source": "reported",
+            "stock_price": 1916,
+            "eps": 145.804190324
+          },
+          {
+            "fiscal_year": "2017/03",
+            "date": "2017-03-31",
+            "per": 24.127,
+            "per_source": "reported",
+            "stock_price": 2901.5,
+            "eps": 120.260725371
+          },
+          {
+            "fiscal_year": "2018/03",
+            "date": "2018-03-31",
+            "per": 17.032,
+            "per_source": "reported",
+            "stock_price": 3547,
+            "eps": 208.245171378
+          },
+          {
+            "fiscal_year": "2019/03",
+            "date": "2019-03-31",
+            "per": 9.457,
+            "per_source": "reported",
+            "stock_price": 2570.5,
+            "eps": 271.861600042
+          },
+          {
+            "fiscal_year": "2020/03",
+            "date": "2020-03-31",
+            "per": 10.916,
+            "per_source": "reported",
+            "stock_price": 1778.5,
+            "eps": 163.009816714
+          },
+          {
+            "fiscal_year": "2021/03",
+            "date": "2021-03-31",
+            "per": 30.41,
+            "per_source": "reported",
+            "stock_price": 3419,
+            "eps": 112.521765723
+          },
+          {
+            "fiscal_year": "2022/03",
+            "date": "2022-03-31",
+            "per": 12.367,
+            "per_source": "reported",
+            "stock_price": 2943,
+            "eps": 238.231601485
+          },
+          {
+            "fiscal_year": "2023/03",
+            "date": "2023-03-31",
+            "per": 9.492,
+            "per_source": "reported",
+            "stock_price": 3277,
+            "eps": 345.524463851
+          },
+          {
+            "fiscal_year": "2024/03",
+            "date": "2024-03-31",
+            "per": 10.633,
+            "per_source": "reported",
+            "stock_price": 4423,
+            "eps": 416.334196291
+          },
+          {
+            "fiscal_year": "2025/03",
+            "date": "2025-03-31",
+            "per": 9.095,
+            "per_source": "reported",
+            "stock_price": 4306,
+            "eps": 473.821859096
+          },
+          {
+            "fiscal_year": "2026/03",
+            "date": "2026-03-31",
+            "per": 14.528,
+            "per_source": "reported",
+            "stock_price": 6013,
+            "eps": 414.125161188
+          }
+        ],
+        "per_5y_avg": 11.223126755562523,
+        "per_forecast": {
+          "forecast_pe": null,
+          "forecast_eps": null,
+          "switch_date": null,
+          "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
+          "switch_date_basis": "取得できず"
+        },
+        "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
+        "per_updated_at": "2026-09-26T11:07:47.675764+09:00",
+        "per_actual_attribution": {
+          "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
+          "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
+          "processed_by": "IRBANK"
+        },
         "chart_history_weekly": [
           {
             "date": "2025-08-08",
@@ -40103,6 +41529,159 @@
             "macd_hist": -7.944
           }
         ],
+        "per_history": [
+          {
+            "fiscal_year": "2010/03",
+            "date": "2010-03-31",
+            "per": 16.576,
+            "per_source": "reported",
+            "stock_price": 490,
+            "eps": 27.475445285
+          },
+          {
+            "fiscal_year": "2011/03",
+            "date": "2011-03-31",
+            "per": 9.614,
+            "per_source": "reported",
+            "stock_price": 384,
+            "eps": 41.233636126
+          },
+          {
+            "fiscal_year": "2012/03",
+            "date": "2012-03-31",
+            "per": 6.051,
+            "per_source": "reported",
+            "stock_price": 412,
+            "eps": 69.380533137
+          },
+          {
+            "fiscal_year": "2013/03",
+            "date": "2013-03-31",
+            "per": 9.459,
+            "per_source": "reported",
+            "stock_price": 558,
+            "eps": 60.260301554
+          },
+          {
+            "fiscal_year": "2014/03",
+            "date": "2014-03-31",
+            "per": 8.304,
+            "per_source": "reported",
+            "stock_price": 567,
+            "eps": 69.553211134
+          },
+          {
+            "fiscal_year": "2015/03",
+            "date": "2015-03-31",
+            "per": 10.158,
+            "per_source": "reported",
+            "stock_price": 743.7,
+            "eps": 73.216527909
+          },
+          {
+            "fiscal_year": "2016/03",
+            "date": "2016-03-31",
+            "per": 7.612,
+            "per_source": "reported",
+            "stock_price": 521.5,
+            "eps": 68.512710936
+          },
+          {
+            "fiscal_year": "2017/03",
+            "date": "2017-03-31",
+            "per": 10.249,
+            "per_source": "reported",
+            "stock_price": 699.7,
+            "eps": 68.277758424
+          },
+          {
+            "fiscal_year": "2018/03",
+            "date": "2018-03-31",
+            "per": 9.349,
+            "per_source": "reported",
+            "stock_price": 697,
+            "eps": 74.552386787
+          },
+          {
+            "fiscal_year": "2019/03",
+            "date": "2019-03-31",
+            "per": 8.22,
+            "per_source": "reported",
+            "stock_price": 550,
+            "eps": 66.913370323
+          },
+          {
+            "fiscal_year": "2020/03",
+            "date": "2020-03-31",
+            "per": 9.841,
+            "per_source": "reported",
+            "stock_price": 403,
+            "eps": 40.950453695
+          },
+          {
+            "fiscal_year": "2021/03",
+            "date": "2021-03-31",
+            "per": 9.782,
+            "per_source": "reported",
+            "stock_price": 591.7,
+            "eps": 60.49862789
+          },
+          {
+            "fiscal_year": "2022/03",
+            "date": "2022-03-31",
+            "per": 8.597,
+            "per_source": "reported",
+            "stock_price": 760.3,
+            "eps": 88.448166843
+          },
+          {
+            "fiscal_year": "2023/03",
+            "date": "2023-03-31",
+            "per": 9.346,
+            "per_source": "reported",
+            "stock_price": 847.9,
+            "eps": 90.729883562
+          },
+          {
+            "fiscal_year": "2024/03",
+            "date": "2024-03-31",
+            "per": 12.492,
+            "per_source": "reported",
+            "stock_price": 1557,
+            "eps": 124.647474642
+          },
+          {
+            "fiscal_year": "2025/03",
+            "date": "2025-03-31",
+            "per": 12.568,
+            "per_source": "reported",
+            "stock_price": 2011,
+            "eps": 160.017363461
+          },
+          {
+            "fiscal_year": "2026/03",
+            "date": "2026-03-31",
+            "per": 12.197,
+            "per_source": "reported",
+            "stock_price": 2600,
+            "eps": 213.169226944
+          }
+        ],
+        "per_5y_avg": 11.040096192596291,
+        "per_forecast": {
+          "forecast_pe": null,
+          "forecast_eps": null,
+          "switch_date": null,
+          "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
+          "switch_date_basis": "取得できず"
+        },
+        "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
+        "per_updated_at": "2026-09-26T11:06:54.878657+09:00",
+        "per_actual_attribution": {
+          "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
+          "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
+          "processed_by": "IRBANK"
+        },
         "chart_history_weekly": [
           {
             "date": "2025-08-08",
@@ -43915,6 +45494,135 @@
             "macd_hist": 27.921
           }
         ],
+        "per_history": [
+          {
+            "fiscal_year": "2011/03",
+            "date": "2011-03-31",
+            "per": 29.594,
+            "per_source": "reported",
+            "stock_price": 1058,
+            "eps": 35.751098318
+          },
+          {
+            "fiscal_year": "2014/03",
+            "date": "2014-03-31",
+            "per": 22.514,
+            "per_source": "reported",
+            "stock_price": 1173,
+            "eps": 52.102892683
+          },
+          {
+            "fiscal_year": "2015/03",
+            "date": "2015-03-31",
+            "per": 20.309,
+            "per_source": "reported",
+            "stock_price": 1577,
+            "eps": 77.649641091
+          },
+          {
+            "fiscal_year": "2016/03",
+            "date": "2016-03-31",
+            "per": 12.392,
+            "per_source": "reported",
+            "stock_price": 1033.5,
+            "eps": 83.401241882
+          },
+          {
+            "fiscal_year": "2017/03",
+            "date": "2017-03-31",
+            "per": 19.555,
+            "per_source": "reported",
+            "stock_price": 1258,
+            "eps": 64.327836319
+          },
+          {
+            "fiscal_year": "2018/03",
+            "date": "2018-03-31",
+            "per": 15.03,
+            "per_source": "reported",
+            "stock_price": 1521,
+            "eps": 101.201944071
+          },
+          {
+            "fiscal_year": "2019/03",
+            "date": "2019-03-31",
+            "per": 7.832,
+            "per_source": "reported",
+            "stock_price": 954.2,
+            "eps": 121.828699522
+          },
+          {
+            "fiscal_year": "2020/03",
+            "date": "2020-03-31",
+            "per": 8.526,
+            "per_source": "reported",
+            "stock_price": 825,
+            "eps": 96.761095741
+          },
+          {
+            "fiscal_year": "2021/03",
+            "date": "2021-03-31",
+            "per": 20.12,
+            "per_source": "reported",
+            "stock_price": 1423.5,
+            "eps": 70.753520545
+          },
+          {
+            "fiscal_year": "2022/03",
+            "date": "2022-03-31",
+            "per": 10.863,
+            "per_source": "reported",
+            "stock_price": 1188.5,
+            "eps": 109.41923208
+          },
+          {
+            "fiscal_year": "2023/03",
+            "date": "2023-03-31",
+            "per": 10.391,
+            "per_source": "reported",
+            "stock_price": 1182,
+            "eps": 113.756630911
+          },
+          {
+            "fiscal_year": "2024/03",
+            "date": "2024-03-31",
+            "per": 7.599,
+            "per_source": "reported",
+            "stock_price": 1445.5,
+            "eps": 190.214616221
+          },
+          {
+            "fiscal_year": "2025/03",
+            "date": "2025-03-31",
+            "per": 11.293,
+            "per_source": "reported",
+            "stock_price": 1771.5,
+            "eps": 156.870760666
+          },
+          {
+            "fiscal_year": "2026/03",
+            "date": "2026-03-31",
+            "per": 31.845,
+            "per_source": "reported",
+            "stock_price": 2585.5,
+            "eps": 81.186640036
+          }
+        ],
+        "per_5y_avg": 14.398271743850085,
+        "per_forecast": {
+          "forecast_pe": null,
+          "forecast_eps": null,
+          "switch_date": null,
+          "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
+          "switch_date_basis": "取得できず"
+        },
+        "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
+        "per_updated_at": "2026-09-26T11:07:38.928382+09:00",
+        "per_actual_attribution": {
+          "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
+          "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
+          "processed_by": "IRBANK"
+        },
         "chart_history_weekly": [
           {
             "date": "2025-08-08",
@@ -47681,6 +49389,151 @@
             "macd_hist": 19.872
           }
         ],
+        "per_history": [
+          {
+            "fiscal_year": "2011/03",
+            "date": "2011-03-31",
+            "per": 8.187,
+            "per_source": "reported",
+            "stock_price": 433,
+            "eps": 52.894724289
+          },
+          {
+            "fiscal_year": "2012/03",
+            "date": "2012-03-31",
+            "per": 6.913,
+            "per_source": "reported",
+            "stock_price": 531,
+            "eps": 76.807519864
+          },
+          {
+            "fiscal_year": "2013/03",
+            "date": "2013-03-31",
+            "per": 14.565,
+            "per_source": "reported",
+            "stock_price": 543,
+            "eps": 37.281267852
+          },
+          {
+            "fiscal_year": "2014/03",
+            "date": "2014-03-31",
+            "per": 13.89,
+            "per_source": "reported",
+            "stock_price": 762,
+            "eps": 54.862813164
+          },
+          {
+            "fiscal_year": "2015/03",
+            "date": "2015-03-31",
+            "per": 18.277,
+            "per_source": "reported",
+            "stock_price": 823.2,
+            "eps": 45.038370792
+          },
+          {
+            "fiscal_year": "2016/03",
+            "date": "2016-03-31",
+            "per": 14.771,
+            "per_source": "reported",
+            "stock_price": 526.6,
+            "eps": 35.654917223
+          },
+          {
+            "fiscal_year": "2017/03",
+            "date": "2017-03-31",
+            "per": 12.578,
+            "per_source": "reported",
+            "stock_price": 602.5,
+            "eps": 47.89961671
+          },
+          {
+            "fiscal_year": "2018/03",
+            "date": "2018-03-31",
+            "per": 10.251,
+            "per_source": "reported",
+            "stock_price": 770.8,
+            "eps": 75.188177794
+          },
+          {
+            "fiscal_year": "2019/03",
+            "date": "2019-03-31",
+            "per": 15.555,
+            "per_source": "reported",
+            "stock_price": 717,
+            "eps": 46.093407889
+          },
+          {
+            "fiscal_year": "2020/03",
+            "date": "2020-03-31",
+            "per": 34.649,
+            "per_source": "reported",
+            "stock_price": 628.6,
+            "eps": 18.141284229
+          },
+          {
+            "fiscal_year": "2021/03",
+            "date": "2021-03-31",
+            "per": 9.636,
+            "per_source": "reported",
+            "stock_price": 1000.8000000000001,
+            "eps": 103.857350764
+          },
+          {
+            "fiscal_year": "2022/03",
+            "date": "2022-03-31",
+            "per": 10.211,
+            "per_source": "reported",
+            "stock_price": 1233,
+            "eps": 120.749585538
+          },
+          {
+            "fiscal_year": "2023/03",
+            "date": "2023-03-31",
+            "per": 10.594,
+            "per_source": "reported",
+            "stock_price": 1450.4,
+            "eps": 136.910177419
+          },
+          {
+            "fiscal_year": "2024/03",
+            "date": "2024-03-31",
+            "per": 21.912,
+            "per_source": "reported",
+            "stock_price": 2781,
+            "eps": 126.913217764
+          },
+          {
+            "fiscal_year": "2025/03",
+            "date": "2025-03-31",
+            "per": 25.835,
+            "per_source": "reported",
+            "stock_price": 3458,
+            "eps": 133.85399067
+          },
+          {
+            "fiscal_year": "2026/03",
+            "date": "2026-03-31",
+            "per": 25.255,
+            "per_source": "reported",
+            "stock_price": 4464,
+            "eps": 176.7596917
+          }
+        ],
+        "per_5y_avg": 18.761389866818046,
+        "per_forecast": {
+          "forecast_pe": null,
+          "forecast_eps": null,
+          "switch_date": null,
+          "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
+          "switch_date_basis": "取得できず"
+        },
+        "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
+        "per_updated_at": "2026-09-26T11:06:50.942508+09:00",
+        "per_actual_attribution": {
+          "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
+          "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
+          "processed_by": "IRBANK"
+        },
         "chart_history_weekly": [
           {
             "date": "2025-08-08",
@@ -51458,6 +53311,143 @@
             "macd_hist": 5.523
           }
         ],
+        "per_history": [
+          {
+            "fiscal_year": "2010/03",
+            "date": "2010-03-31",
+            "per": 55.754,
+            "per_source": "reported",
+            "stock_price": 562,
+            "eps": 8.774795728
+          },
+          {
+            "fiscal_year": "2013/03",
+            "date": "2013-03-31",
+            "per": 20.922,
+            "per_source": "reported",
+            "stock_price": 490,
+            "eps": 23.425338927
+          },
+          {
+            "fiscal_year": "2014/03",
+            "date": "2014-03-31",
+            "per": 24.403,
+            "per_source": "reported",
+            "stock_price": 634,
+            "eps": 25.972464308
+          },
+          {
+            "fiscal_year": "2015/03",
+            "date": "2015-03-31",
+            "per": 16.009,
+            "per_source": "reported",
+            "stock_price": 706,
+            "eps": 44.102190111
+          },
+          {
+            "fiscal_year": "2016/03",
+            "date": "2016-03-31",
+            "per": 10.699,
+            "per_source": "reported",
+            "stock_price": 566,
+            "eps": 52.909540553
+          },
+          {
+            "fiscal_year": "2017/03",
+            "date": "2017-03-31",
+            "per": 25.5,
+            "per_source": "reported",
+            "stock_price": 536,
+            "eps": 21.018734743
+          },
+          {
+            "fiscal_year": "2018/03",
+            "date": "2018-03-31",
+            "per": 16.942,
+            "per_source": "reported",
+            "stock_price": 598.2,
+            "eps": 35.308451985
+          },
+          {
+            "fiscal_year": "2019/03",
+            "date": "2019-03-31",
+            "per": 24.2,
+            "per_source": "reported",
+            "stock_price": 749,
+            "eps": 30.950431066
+          },
+          {
+            "fiscal_year": "2020/03",
+            "date": "2020-03-31",
+            "per": 10.246,
+            "per_source": "reported",
+            "stock_price": 789,
+            "eps": 77.003016738
+          },
+          {
+            "fiscal_year": "2021/03",
+            "date": "2021-03-31",
+            "per": 11.702,
+            "per_source": "reported",
+            "stock_price": 1304,
+            "eps": 111.436733916
+          },
+          {
+            "fiscal_year": "2022/03",
+            "date": "2022-03-31",
+            "per": 9.932,
+            "per_source": "reported",
+            "stock_price": 1030,
+            "eps": 103.708755377
+          },
+          {
+            "fiscal_year": "2023/03",
+            "date": "2023-03-31",
+            "per": 12.014,
+            "per_source": "reported",
+            "stock_price": 1020,
+            "eps": 84.902233928
+          },
+          {
+            "fiscal_year": "2024/03",
+            "date": "2024-03-31",
+            "per": 19.581,
+            "per_source": "reported",
+            "stock_price": 2198,
+            "eps": 112.250720909
+          },
+          {
+            "fiscal_year": "2025/03",
+            "date": "2025-03-31",
+            "per": 23.916,
+            "per_source": "reported",
+            "stock_price": 3145,
+            "eps": 131.49502671
+          },
+          {
+            "fiscal_year": "2026/03",
+            "date": "2026-03-31",
+            "per": 18.95,
+            "per_source": "reported",
+            "stock_price": 3846,
+            "eps": 202.945905348
+          }
+        ],
+        "per_5y_avg": 16.87874092935113,
+        "per_forecast": {
+          "forecast_pe": null,
+          "forecast_eps": null,
+          "switch_date": null,
+          "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
+          "switch_date_basis": "取得できず"
+        },
+        "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
+        "per_updated_at": "2026-09-26T11:06:34.104007+09:00",
+        "per_actual_attribution": {
+          "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
+          "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
+          "processed_by": "IRBANK"
+        },
         "chart_history_weekly": [
           {
             "date": "2025-08-08",
@@ -55317,6 +57307,143 @@
             "macd_hist": 954.004
           }
         ],
+        "per_history": [
+          {
+            "fiscal_year": "2012/06",
+            "date": "2012-06-30",
+            "per": 9.23,
+            "per_source": "reported",
+            "stock_price": 184.125,
+            "eps": 19.948033108
+          },
+          {
+            "fiscal_year": "2013/06",
+            "date": "2013-06-30",
+            "per": 17.612,
+            "per_source": "reported",
+            "stock_price": 314.5,
+            "eps": 17.859042744
+          },
+          {
+            "fiscal_year": "2014/06",
+            "date": "2014-06-30",
+            "per": 11.697,
+            "per_source": "reported",
+            "stock_price": 255.5,
+            "eps": 21.842415317
+          },
+          {
+            "fiscal_year": "2015/06",
+            "date": "2015-06-30",
+            "per": 12.913,
+            "per_source": "reported",
+            "stock_price": 423,
+            "eps": 32.757505806
+          },
+          {
+            "fiscal_year": "2016/06",
+            "date": "2016-06-30",
+            "per": 8.674,
+            "per_source": "reported",
+            "stock_price": 310.5,
+            "eps": 35.79492832
+          },
+          {
+            "fiscal_year": "2017/06",
+            "date": "2017-06-30",
+            "per": 19.825,
+            "per_source": "reported",
+            "stock_price": 781.5,
+            "eps": 39.419946473
+          },
+          {
+            "fiscal_year": "2018/06",
+            "date": "2018-06-30",
+            "per": 32.218,
+            "per_source": "reported",
+            "stock_price": 1560,
+            "eps": 48.418773056
+          },
+          {
+            "fiscal_year": "2019/06",
+            "date": "2019-06-30",
+            "per": 32.447,
+            "per_source": "reported",
+            "stock_price": 2135,
+            "eps": 65.802302976
+          },
+          {
+            "fiscal_year": "2020/06",
+            "date": "2020-06-30",
+            "per": 84.653,
+            "per_source": "reported",
+            "stock_price": 10160,
+            "eps": 120.024620212
+          },
+          {
+            "fiscal_year": "2021/06",
+            "date": "2021-06-30",
+            "per": 101.138,
+            "per_source": "reported",
+            "stock_price": 21590,
+            "eps": 213.47048458
+          },
+          {
+            "fiscal_year": "2022/06",
+            "date": "2022-06-30",
+            "per": 58.606,
+            "per_source": "reported",
+            "stock_price": 16150,
+            "eps": 275.570477735
+          },
+          {
+            "fiscal_year": "2023/06",
+            "date": "2023-06-30",
+            "per": 42.148,
+            "per_source": "reported",
+            "stock_price": 21575,
+            "eps": 511.893370761
+          },
+          {
+            "fiscal_year": "2024/06",
+            "date": "2024-06-30",
+            "per": 55.095,
+            "per_source": "reported",
+            "stock_price": 36090,
+            "eps": 655.043920797
+          },
+          {
+            "fiscal_year": "2025/06",
+            "date": "2025-06-30",
+            "per": 20.68,
+            "per_source": "reported",
+            "stock_price": 19410,
+            "eps": 938.601989304
+          },
+          {
+            "fiscal_year": "2026/06",
+            "date": "2026-06-30",
+            "per": 57.59,
+            "per_source": "reported",
+            "stock_price": 49700,
+            "eps": 862.979071023
+          }
+        ],
+        "per_5y_avg": 46.823708529833716,
+        "per_forecast": {
+          "forecast_pe": null,
+          "forecast_eps": null,
+          "switch_date": null,
+          "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
+          "switch_date_basis": "取得できず"
+        },
+        "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
+        "per_updated_at": "2026-09-26T11:07:18.556051+09:00",
+        "per_actual_attribution": {
+          "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
+          "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
+          "processed_by": "IRBANK"
+        },
         "chart_history_weekly": [
           {
             "date": "2025-08-08",
@@ -59125,6 +61252,39 @@
             "macd_hist": 356.785
           }
         ],
+        "per_history": [
+          {
+            "fiscal_year": "2025/03",
+            "date": "2025-03-31",
+            "per": 4.593,
+            "per_source": "reported",
+            "stock_price": 2388,
+            "eps": 519.963960062
+          },
+          {
+            "fiscal_year": "2026/03",
+            "date": "2026-03-31",
+            "per": 18.632,
+            "per_source": "reported",
+            "stock_price": 19080,
+            "eps": 1024.073234085
+          }
+        ],
+        "per_5y_avg": 11.612099916784668,
+        "per_forecast": {
+          "forecast_pe": null,
+          "forecast_eps": null,
+          "switch_date": null,
+          "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
+          "switch_date_basis": "取得できず"
+        },
+        "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
+        "per_updated_at": "2026-09-26T11:07:43.373749+09:00",
+        "per_actual_attribution": {
+          "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
+          "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
+          "processed_by": "IRBANK"
+        },
         "chart_history_weekly": [
           {
             "date": "2025-08-08",
@@ -62925,6 +65085,135 @@
             "macd_hist": -27.787
           }
         ],
+        "per_history": [
+          {
+            "fiscal_year": "2010/03",
+            "date": "2010-03-31",
+            "per": 75.702,
+            "per_source": "reported",
+            "stock_price": 89.83333333333333,
+            "eps": 1.185583818
+          },
+          {
+            "fiscal_year": "2011/03",
+            "date": "2011-03-31",
+            "per": 15.527,
+            "per_source": "reported",
+            "stock_price": 67.33333333333333,
+            "eps": 4.337275367
+          },
+          {
+            "fiscal_year": "2013/03",
+            "date": "2013-03-31",
+            "per": 33.873,
+            "per_source": "reported",
+            "stock_price": 48.83333333333333,
+            "eps": 1.442103645
+          },
+          {
+            "fiscal_year": "2014/03",
+            "date": "2014-03-31",
+            "per": 47.247,
+            "per_source": "reported",
+            "stock_price": 78.66666666666666,
+            "eps": 1.664842264
+          },
+          {
+            "fiscal_year": "2015/03",
+            "date": "2015-03-31",
+            "per": 13.894,
+            "per_source": "reported",
+            "stock_price": 87.83333333333333,
+            "eps": 6.321750587
+          },
+          {
+            "fiscal_year": "2016/03",
+            "date": "2016-03-31",
+            "per": 14.332,
+            "per_source": "reported",
+            "stock_price": 88.33333333333333,
+            "eps": 6.163815446
+          },
+          {
+            "fiscal_year": "2017/03",
+            "date": "2017-03-31",
+            "per": 17.956,
+            "per_source": "reported",
+            "stock_price": 133.5,
+            "eps": 7.434149137
+          },
+          {
+            "fiscal_year": "2018/03",
+            "date": "2018-03-31",
+            "per": 11.218,
+            "per_source": "reported",
+            "stock_price": 120.33333333333333,
+            "eps": 10.726779466
+          },
+          {
+            "fiscal_year": "2019/03",
+            "date": "2019-03-31",
+            "per": 81.925,
+            "per_source": "reported",
+            "stock_price": 69.5,
+            "eps": 0.848852995
+          },
+          {
+            "fiscal_year": "2022/03",
+            "date": "2022-03-31",
+            "per": 4.406,
+            "per_source": "reported",
+            "stock_price": 104.16666666666666,
+            "eps": 23.6418996
+          },
+          {
+            "fiscal_year": "2023/03",
+            "date": "2023-03-31",
+            "per": 6.326,
+            "per_source": "reported",
+            "stock_price": 156.33333333333331,
+            "eps": 24.712654667
+          },
+          {
+            "fiscal_year": "2024/03",
+            "date": "2024-03-31",
+            "per": 12.316,
+            "per_source": "reported",
+            "stock_price": 379.66666666666663,
+            "eps": 30.825919413
+          },
+          {
+            "fiscal_year": "2025/03",
+            "date": "2025-03-31",
+            "per": 16.342,
+            "per_source": "reported",
+            "stock_price": 899.6666666666666,
+            "eps": 55.052394724
+          },
+          {
+            "fiscal_year": "2026/03",
+            "date": "2026-03-31",
+            "per": 43.084,
+            "per_source": "reported",
+            "stock_price": 4090,
+            "eps": 94.929863708
+          }
+        ],
+        "per_5y_avg": 16.494928605747635,
+        "per_forecast": {
+          "forecast_pe": null,
+          "forecast_eps": null,
+          "switch_date": null,
+          "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
+          "switch_date_basis": "取得できず"
+        },
+        "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
+        "per_updated_at": "2026-09-26T11:06:24.412808+09:00",
+        "per_actual_attribution": {
+          "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
+          "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
+          "processed_by": "IRBANK"
+        },
         "chart_history_weekly": [
           {
             "date": "2025-08-08",
@@ -66717,6 +69006,151 @@
             "macd_hist": -18.498
           }
         ],
+        "per_history": [
+          {
+            "fiscal_year": "2010/03",
+            "date": "2010-03-31",
+            "per": 14.596,
+            "per_source": "reported",
+            "stock_price": 816.6666666666666,
+            "eps": 54.181472481
+          },
+          {
+            "fiscal_year": "2011/03",
+            "date": "2011-03-31",
+            "per": 8.17,
+            "per_source": "reported",
+            "stock_price": 769.6666666666666,
+            "eps": 94.207500439
+          },
+          {
+            "fiscal_year": "2012/03",
+            "date": "2012-03-31",
+            "per": 6.984,
+            "per_source": "reported",
+            "stock_price": 640,
+            "eps": 91.637745023
+          },
+          {
+            "fiscal_year": "2013/03",
+            "date": "2013-03-31",
+            "per": 8.872,
+            "per_source": "reported",
+            "stock_price": 581,
+            "eps": 65.482982177
+          },
+          {
+            "fiscal_year": "2014/03",
+            "date": "2014-03-31",
+            "per": 8.737,
+            "per_source": "reported",
+            "stock_price": 638.6666666666666,
+            "eps": 73.099902923
+          },
+          {
+            "fiscal_year": "2015/03",
+            "date": "2015-03-31",
+            "per": 9.824,
+            "per_source": "reported",
+            "stock_price": 806.8333333333333,
+            "eps": 82.130901285
+          },
+          {
+            "fiscal_year": "2017/03",
+            "date": "2017-03-31",
+            "per": 8.659,
+            "per_source": "reported",
+            "stock_price": 801.8333333333333,
+            "eps": 92.596081212
+          },
+          {
+            "fiscal_year": "2018/03",
+            "date": "2018-03-31",
+            "per": 8.101,
+            "per_source": "reported",
+            "stock_price": 954,
+            "eps": 117.758235009
+          },
+          {
+            "fiscal_year": "2019/03",
+            "date": "2019-03-31",
+            "per": 8.255,
+            "per_source": "reported",
+            "stock_price": 1024.6666666666665,
+            "eps": 124.129110954
+          },
+          {
+            "fiscal_year": "2020/03",
+            "date": "2020-03-31",
+            "per": 6.575,
+            "per_source": "reported",
+            "stock_price": 763.8333333333333,
+            "eps": 116.166822908
+          },
+          {
+            "fiscal_year": "2021/03",
+            "date": "2021-03-31",
+            "per": 26.784,
+            "per_source": "reported",
+            "stock_price": 1043.3333333333333,
+            "eps": 38.952840287
+          },
+          {
+            "fiscal_year": "2022/03",
+            "date": "2022-03-31",
+            "per": 7.245,
+            "per_source": "reported",
+            "stock_price": 1533.6666666666665,
+            "eps": 211.687339266
+          },
+          {
+            "fiscal_year": "2023/03",
+            "date": "2023-03-31",
+            "per": 5.871,
+            "per_source": "reported",
+            "stock_price": 1583.6666666666665,
+            "eps": 269.76297573
+          },
+          {
+            "fiscal_year": "2024/03",
+            "date": "2024-03-31",
+            "per": 15.154,
+            "per_source": "reported",
+            "stock_price": 3487,
+            "eps": 230.099567956
+          },
+          {
+            "fiscal_year": "2025/03",
+            "date": "2025-03-31",
+            "per": 11.084,
+            "per_source": "reported",
+            "stock_price": 2626.5,
+            "eps": 236.974505658
+          },
+          {
+            "fiscal_year": "2026/03",
+            "date": "2026-03-31",
+            "per": 25.209,
+            "per_source": "reported",
+            "stock_price": 5317,
+            "eps": 210.923753916
+          }
+        ],
+        "per_5y_avg": 12.912426953095945,
+        "per_forecast": {
+          "forecast_pe": null,
+          "forecast_eps": null,
+          "switch_date": null,
+          "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
+          "switch_date_basis": "取得できず"
+        },
+        "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
+        "per_updated_at": "2026-09-26T11:07:34.211467+09:00",
+        "per_actual_attribution": {
+          "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
+          "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
+          "processed_by": "IRBANK"
+        },
         "chart_history_weekly": [
           {
             "date": "2025-08-08",
@@ -70508,6 +72942,151 @@
             "macd_hist": 18.159
           }
         ],
+        "per_history": [
+          {
+            "fiscal_year": "2010/03",
+            "date": "2010-03-31",
+            "per": 59.34,
+            "per_source": "reported",
+            "stock_price": 414.6666666666667,
+            "eps": 6.955215511
+          },
+          {
+            "fiscal_year": "2011/03",
+            "date": "2011-03-31",
+            "per": 14.007,
+            "per_source": "reported",
+            "stock_price": 327.6666666666667,
+            "eps": 23.39356862
+          },
+          {
+            "fiscal_year": "2013/03",
+            "date": "2013-03-31",
+            "per": 344.211,
+            "per_source": "reported",
+            "stock_price": 218,
+            "eps": 0.633018829
+          },
+          {
+            "fiscal_year": "2014/03",
+            "date": "2014-03-31",
+            "per": 33.29,
+            "per_source": "reported",
+            "stock_price": 287.3333333333333,
+            "eps": 8.631144927
+          },
+          {
+            "fiscal_year": "2015/03",
+            "date": "2015-03-31",
+            "per": 21.742,
+            "per_source": "reported",
+            "stock_price": 569.3333333333334,
+            "eps": 26.185108538
+          },
+          {
+            "fiscal_year": "2016/03",
+            "date": "2016-03-31",
+            "per": 12.154,
+            "per_source": "reported",
+            "stock_price": 416.6666666666667,
+            "eps": 34.281928162
+          },
+          {
+            "fiscal_year": "2017/03",
+            "date": "2017-03-31",
+            "per": 6.13,
+            "per_source": "reported",
+            "stock_price": 470,
+            "eps": 76.677206552
+          },
+          {
+            "fiscal_year": "2018/03",
+            "date": "2018-03-31",
+            "per": 19.073,
+            "per_source": "reported",
+            "stock_price": 639.3333333333334,
+            "eps": 33.519797805
+          },
+          {
+            "fiscal_year": "2019/03",
+            "date": "2019-03-31",
+            "per": 13.318,
+            "per_source": "reported",
+            "stock_price": 578,
+            "eps": 43.401208325
+          },
+          {
+            "fiscal_year": "2020/03",
+            "date": "2020-03-31",
+            "per": 18.318,
+            "per_source": "reported",
+            "stock_price": 558.6666666666666,
+            "eps": 30.497704244
+          },
+          {
+            "fiscal_year": "2021/03",
+            "date": "2021-03-31",
+            "per": 24.408,
+            "per_source": "reported",
+            "stock_price": 1022,
+            "eps": 41.871752295
+          },
+          {
+            "fiscal_year": "2022/03",
+            "date": "2022-03-31",
+            "per": 12.874,
+            "per_source": "reported",
+            "stock_price": 892,
+            "eps": 69.288099136
+          },
+          {
+            "fiscal_year": "2023/03",
+            "date": "2023-03-31",
+            "per": 15.688,
+            "per_source": "reported",
+            "stock_price": 945,
+            "eps": 60.238399876
+          },
+          {
+            "fiscal_year": "2024/03",
+            "date": "2024-03-31",
+            "per": 22.759,
+            "per_source": "reported",
+            "stock_price": 1496.2,
+            "eps": 65.739619249
+          },
+          {
+            "fiscal_year": "2025/03",
+            "date": "2025-03-31",
+            "per": 17.548,
+            "per_source": "reported",
+            "stock_price": 1546,
+            "eps": 88.101348221
+          },
+          {
+            "fiscal_year": "2026/03",
+            "date": "2026-03-31",
+            "per": 19.071,
+            "per_source": "reported",
+            "stock_price": 1966,
+            "eps": 103.092509415
+          }
+        ],
+        "per_5y_avg": 17.587976903935722,
+        "per_forecast": {
+          "forecast_pe": null,
+          "forecast_eps": null,
+          "switch_date": null,
+          "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
+          "switch_date_basis": "取得できず"
+        },
+        "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
+        "per_updated_at": "2026-09-26T11:06:40.433277+09:00",
+        "per_actual_attribution": {
+          "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
+          "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
+          "processed_by": "IRBANK"
+        },
         "chart_history_weekly": [
           {
             "date": "2025-08-08",
@@ -74297,6 +76876,22 @@
             "macd_hist": 24.037
           }
         ],
+        "per_history": [],
+        "per_5y_avg": null,
+        "per_forecast": {
+          "forecast_pe": null,
+          "forecast_eps": null,
+          "switch_date": null,
+          "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
+          "switch_date_basis": "取得できず"
+        },
+        "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
+        "per_updated_at": "2026-09-26T11:07:21.727373+09:00",
+        "per_actual_attribution": {
+          "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
+          "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
+          "processed_by": "IRBANK"
+        },
         "chart_history_weekly": [
           {
             "date": "2025-12-19",
@@ -77534,6 +80129,151 @@
             "macd_hist": 35.801
           }
         ],
+        "per_history": [
+          {
+            "fiscal_year": "2011/03",
+            "date": "2011-03-31",
+            "per": 35.769,
+            "per_source": "reported",
+            "stock_price": 930,
+            "eps": 26.002208416
+          },
+          {
+            "fiscal_year": "2012/03",
+            "date": "2012-03-31",
+            "per": 24.142,
+            "per_source": "reported",
+            "stock_price": 809,
+            "eps": 33.506851164
+          },
+          {
+            "fiscal_year": "2013/03",
+            "date": "2013-03-31",
+            "per": 34.11,
+            "per_source": "reported",
+            "stock_price": 922,
+            "eps": 27.02312167
+          },
+          {
+            "fiscal_year": "2014/03",
+            "date": "2014-03-31",
+            "per": 19.163,
+            "per_source": "reported",
+            "stock_price": 1292,
+            "eps": 67.4193813
+          },
+          {
+            "fiscal_year": "2015/03",
+            "date": "2015-03-31",
+            "per": 18.446,
+            "per_source": "reported",
+            "stock_price": 1816,
+            "eps": 98.448005023
+          },
+          {
+            "fiscal_year": "2016/03",
+            "date": "2016-03-31",
+            "per": 14.733,
+            "per_source": "reported",
+            "stock_price": 1248,
+            "eps": 84.705079033
+          },
+          {
+            "fiscal_year": "2017/03",
+            "date": "2017-03-31",
+            "per": 29.869,
+            "per_source": "reported",
+            "stock_price": 2288,
+            "eps": 76.595641611
+          },
+          {
+            "fiscal_year": "2018/02",
+            "date": "2018-02-28",
+            "per": 31.616,
+            "per_source": "reported",
+            "stock_price": 5010,
+            "eps": 158.545354604
+          },
+          {
+            "fiscal_year": "2019/02",
+            "date": "2019-02-28",
+            "per": 20.307,
+            "per_source": "reported",
+            "stock_price": 3165,
+            "eps": 155.85326248
+          },
+          {
+            "fiscal_year": "2020/02",
+            "date": "2020-02-29",
+            "per": 56.967,
+            "per_source": "reported",
+            "stock_price": 3385,
+            "eps": 59.41863173
+          },
+          {
+            "fiscal_year": "2021/02",
+            "date": "2021-02-28",
+            "per": 73.471,
+            "per_source": "reported",
+            "stock_price": 5320,
+            "eps": 72.408717635
+          },
+          {
+            "fiscal_year": "2022/02",
+            "date": "2022-02-28",
+            "per": 31.148,
+            "per_source": "reported",
+            "stock_price": 4570,
+            "eps": 146.720421208
+          },
+          {
+            "fiscal_year": "2023/02",
+            "date": "2023-02-28",
+            "per": 27.061,
+            "per_source": "reported",
+            "stock_price": 5360,
+            "eps": 198.068305601
+          },
+          {
+            "fiscal_year": "2024/02",
+            "date": "2024-02-29",
+            "per": 31.562,
+            "per_source": "reported",
+            "stock_price": 6119,
+            "eps": 193.872792804
+          },
+          {
+            "fiscal_year": "2025/02",
+            "date": "2025-02-28",
+            "per": 18.448,
+            "per_source": "reported",
+            "stock_price": 4033,
+            "eps": 218.619010027
+          },
+          {
+            "fiscal_year": "2026/02",
+            "date": "2026-02-28",
+            "per": 40.587,
+            "per_source": "reported",
+            "stock_price": 5515,
+            "eps": 135.872752407
+          }
+        ],
+        "per_5y_avg": 29.761221809688358,
+        "per_forecast": {
+          "forecast_pe": null,
+          "forecast_eps": null,
+          "switch_date": null,
+          "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
+          "switch_date_basis": "取得できず"
+        },
+        "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
+        "per_updated_at": "2026-09-26T11:06:46.827619+09:00",
+        "per_actual_attribution": {
+          "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
+          "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
+          "processed_by": "IRBANK"
+        },
         "chart_history_weekly": [
           {
             "date": "2025-08-08",
