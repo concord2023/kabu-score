@@ -1,225 +1,183 @@
 {
-  "updated_at": "2026-09-26T15:28:44.332694+09:00",
+  "updated_at": "2026-09-26T00:00:00+09:00",
   "date": "2026-09-26",
   "title": "今日の注目5選",
   "status": "ok",
-  "method": "同日公開の投資家話題・ニュース・アナリスト言及・YouTube関連情報を銘柄単位に集約。情報源の種類と複数言及を加点し、上位5銘柄を表示。これはBUY判定ではない。",
-  "source_policy": "各記事・動画へのリンクと発信元を保存。外部情報の注目度とkabu-scoreの総合BUY判定は別物として表示する。",
-  "errors": [],
+  "method": "2026/09/26のチャートなび「投資家の話題まとめ」を初期表示として保存。Daily stock updateでニュース・アナリスト・YouTube等の同日情報を追加収集し、通常版に更新します。これはBUY判定ではない。",
+  "source_policy": "外部情報の注目度とkabu-scoreの総合BUY判定は別物として表示する。",
+  "errors": [
+    "初期表示はチャートなびの当日話題ランキング。Daily stock update実行時に追加ソースを再収集します。"
+  ],
   "candidates": [
     {
-      "code": "4716",
-      "name": "日本オラクル",
-      "market": "スタンダード（内国株式）",
+      "code": "285A",
+      "name": "キオクシアホールディングス",
+      "market": null,
       "industry": null,
       "source_types": [
-        "ニュース"
-      ],
-      "score": 22.5,
-      "kabu_score": null,
-      "signal": null,
-      "rsi14": null,
-      "change": null,
-      "reason": "投資家・ニュース等で話題。",
-      "movement_type": "話題集中",
-      "material_summary": "話題株ピックアップ【昼刊】：データセク、日本オラクル、三菱ＵＦＪ - 株探",
-      "sources": [
-        {
-          "name": "株探・Google News",
-          "type": "ニュース",
-          "title": "話題株ピックアップ【昼刊】：データセク、日本オラクル、三菱ＵＦＪ - 株探",
-          "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE5BRXUyWEUyOFdUWFlCcG9RR3doWGJDbm5rS2VpOFhWUFlfUkt5TVFYUmpZdm12M3NmalVTbHNSNGYtVmpzQkRDMXF1Q29TUXNINmtNSHdEbmFGVUdwWEs4ag?oc=5"
-        },
-        {
-          "name": "株探・Google News",
-          "type": "ニュース",
-          "title": "話題株先取り【寄り付き】（1）：日本オラクル、清水建、データセクなど - 株探",
-          "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE16Mld4cGJ1cmNaTVlKeXcwNGljcXVIZ2ItUWVGODhUUzRZWUlNQXE0dlZWZEd0bFZWUWloSGRrcHNYZGM1b29Md242Wncxa0lIb0tnNnRuc1M1Vk12N3E3SQ?oc=5"
-        },
-        {
-          "name": "株探・Google News",
-          "type": "ニュース",
-          "title": "決算プラス・インパクト銘柄 … 日本オラクル、コーセル、トーシンＨＤ (9月18日～24日発表分)(株探ニュース) - Yahoo!ファイナンス",
-          "url": "https://news.google.com/rss/articles/CBMihwFBVV95cUxPcGx4T0R0dTRRc2ZDYkE2b3daZGVBNzRkdXBFRnJ2RjZPcWRodjBXbEk4WXdzeVBzYVBDR1RibXhZT0xvTUpWcWlBY25BNFViY0RXdDZyOWJDWFdKeklKNTZNaElISTkzbTdwWFlRRlF1TnV6cVdmYWNCdFRwWVh6WTI1Z3J3bVU?oc=5"
-        },
-        {
-          "name": "株探・Google News",
-          "type": "ニュース",
-          "title": "★本日の【イチオシ決算】 カバー、日本オラクル、古河電 (9月24日) - 株探",
-          "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE1vOE84ay13TXVSY0N5V014dTZnSG13MXpFbHQxNDJDRlBTSWEyNlAzNjRuejRXekVJaUR2UkUzLW1YZkJOQkpWMEp0MHZMVWk0YVlmSjdNSUNNaTkxY014RQ?oc=5"
-        },
-        {
-          "name": "株探・Google News",
-          "type": "ニュース",
-          "title": "小林製薬に買収提案、日本オラクル好決算、カバー上方修正も急落/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月25日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
-          "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE81VlFSemZlcENkMExadmlMTUx1YnIyMDNGU1VOaklxNHRaWm5rcDJTWnItUWw3UVFEcGlxYjBQM05OX1RnVFJmeF9ELUcyMkNVZDRWakNfaDE0cWVkYnRWc1E3ZGlpQmd4NjBfZmU2WFN3UENGcFcyX3d1VmtfUWc?oc=5"
-        },
-        {
-          "name": "株探・Google News",
-          "type": "ニュース",
-          "title": "【決算速報】日本オラクル、6-8月期(1Q)経常は25％増益で着地(株探ニュース) - Yahoo!ファイナンス",
-          "url": "https://news.google.com/rss/articles/CBMihwFBVV95cUxOMC1GaExHR2dmUzFGVnlvUWdVRlRiSDByQ0VNcThTc3dJakE1N0pRY29sVHF4bDlMR2NPN1R5cVBzSDVSQlVWLXctcHg2X0N2aEVKbzVGWWVoMjFQSG01V0hTVU51UWFqZ1hLcW9PSUIxeFdCaVE2cHExWEd0VmxwTzFrZU1oU3M?oc=5"
-        }
-      ]
-    },
-    {
-      "code": "8118",
-      "name": "キング",
-      "market": "スタンダード（内国株式）",
-      "industry": null,
-      "source_types": [
-        "YouTube",
-        "アナリスト"
-      ],
-      "score": 14.5,
-      "kabu_score": null,
-      "signal": null,
-      "rsi14": null,
-      "change": null,
-      "reason": "複数の情報源で話題。",
-      "movement_type": "複数情報源で話題",
-      "material_summary": "【日本株ランキング】｢第1四半期の進捗率が高い株＆アナリストが強気の株｣ベスト5！ 中東問題がプラスの｢商船三井｣、創薬ベンチャー｢ペプチドリーム｣に注目 - ダイヤモンド・オンライン",
-      "sources": [
-        {
-          "name": "Google News",
-          "type": "アナリスト",
-          "title": "【日本株ランキング】｢第1四半期の進捗率が高い株＆アナリストが強気の株｣ベスト5！ 中東問題がプラスの｢商船三井｣、創薬ベンチャー｢ペプチドリーム｣に注目 - ダイヤモンド・オンライン",
-          "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE5pcGxEc1M1T0p5STlUemcteThzaXpMb2p2bGVVYjFUWmFzNlZ2T3BGQnFpU0dSNldva2wxdlVjcGl3OEk1eWtwMDBNeTdOMTJKMlVB?oc=5"
-        },
-        {
-          "name": "Google News",
-          "type": "アナリスト",
-          "title": "「配当利回り4.2%超×アナリスト高評価」銘柄ランキングTOP15…1位は「利回り5.6％超え」の出遅れ株 - media.rakuten-sec.net",
-          "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1CMjNLUG1ybk9IaUlUUDNqamdsNmFSQTVjLW9Tamh6LUNMWHJ6aFl5Ty15TzgtVGIwRERkMERmdnNBY0JlV1BvX3A5N0hZZm1JcmhyRmxzN0VYdw?oc=5"
-        },
-        {
-          "name": "Google News",
-          "type": "アナリスト",
-          "title": "【日本株ランキング】｢配当利回りが高い株＆少額で買える株｣ランキング！ 2万円台でも投資判断が“買い”の｢CYBERDYNE｣、特配の｢円谷フィールズHD｣に注目（ダイヤモンド・ザイ） - Yahoo!ニュース",
-          "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE9DMlRPS3hNVTN1WTdwYWRxZ2wyNnJZVFYtaUtmQ2dqSHFjdXZuV1BZa01kSS11MWdsSTJhV2xHYnpGT3ZQMjh1VFEwUWc0SVJqZ2hKQ25oTzlkVGo4LWsxQzNiakhtUUhyRHRicUlma1YwOTdZZzFRTzdyWktLMGs?oc=5"
-        },
-        {
-          "name": "Google News",
-          "type": "アナリスト",
-          "title": "【日本株ランキング】｢第1四半期の進捗率が高い株＆アナリストが強気の株｣ベスト5！ 中東問題がプラスの｢商船三井｣、創薬ベンチャー｢ペプチドリーム｣に注目（ダイヤモンド・ザイ） - Yahoo!ニュース",
-          "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE55YnRDOXBUOENYTzlnYi03cjZ2eThqaWlHemR4aUJCVUd5T2ozM0Z6NDRzeS1ZNldnbXNGd3NveUVuOHFya092TTIxLW11cFNOYXpQalo3NzhJdmRzZG1ibTZyNF9WQTVGRkVEbVV1MjBpUkhYQXdRMWhfemJBN2c?oc=5"
-        },
-        {
-          "name": "Google News",
-          "type": "アナリスト",
-          "title": "高配当株ランキング：アナリスト高評価の出遅れ割安株に注目。アマノ、オンワードHDなど - media.rakuten-sec.net",
-          "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5Tc1gtaFRKQ21ZaVVMVkpnRllYdW5GdkZQcTZXanFxejhkeEFMS21Ub3JWXzZ4OVpKUWpCaXNxWVdwazk5WF9ZUm9Uamo3cWxOcWVjVDJYUzRiQQ?oc=5"
-        },
-        {
-          "name": "YouTube/Google News",
-          "type": "YouTube",
-          "title": "【6/12】AI強気予想ランキング【松井証券】 #日本株 #投資 #松井証券 #shorts - YouTube",
-          "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTFBJVnVGRTREQzBXWHRmMmNYVi1MSzJkdk5MZFF6d3NIS2xzNmNEb2ZoMlJmLVEwdGdrcURJMDNxSGhDWnJ1NER5UE0wemlXeXZnQ2pwSw?oc=5"
-        }
-      ]
-    },
-    {
-      "code": "7974",
-      "name": "任天堂",
-      "market": "プライム（内国株式）",
-      "industry": null,
-      "source_types": [
-        "YouTube",
         "investor"
       ],
-      "score": 13.1,
+      "score": 122,
       "kabu_score": null,
       "signal": null,
       "rsi14": null,
       "change": null,
-      "reason": "複数の情報源で話題。",
-      "movement_type": "複数情報源で話題",
-      "material_summary": "9/26の投資家の話題まとめ ポスト トランプ 金利 権利 半導体 確定 発言 確認 アキッパ 優待 修正 原油 中国 キオクシア 判断 信用 資産 円安 継続 言葉 日経平均 応援 発表 円高 経験 介入 銀行 イビデン 子供 現実 ＜＜ 前日へ 2026/09/26 投資家の話題まとめ 話題の銘柄 本日話題になっている日本株のランキングです。 1位 (45) キオクシアホールディングス(285A) Y K 掲 2位 (30) 任天堂(7974) Y K 掲 3位 (29) 共和電業(6853) Y K 掲 4位 (21) エスクリプトエナジー(5721) Y K 掲 5位 (17) ｎｏｔｅ(5243) Y K 掲 6位 (17) メタプラネット(3350) Y K 掲 7位 (15) データセクション(3905) Y K 掲 8位 (12) 楽天グループ(4755) Y K 掲 9位 (11) ソフトバンクグループ(998",
+      "reason": "キオクシア、需給悪化懸念と市場の熱狂",
       "sources": [
         {
           "name": "チャートなび",
           "type": "investor",
-          "title": "9/26の投資家の話題まとめ ポスト トランプ 金利 権利 半導体 確定 発言 確認 アキッパ 優待 修正 原油 中国 キオクシア 判断 信用 資産 円安 継続 言葉 日経平均 応援 発表 円高 経験 介入 銀行 イビデン 子供 現実 ＜＜ 前日へ 2026/09/26 投資家の話題まとめ 話題の銘柄 本日話題になっている日本株のランキングです。 1位 (45) キオクシアホールディングス(285A) Y K 掲 2位 (30) 任天堂(7974) Y K 掲 3位 (29) 共和電業(6853) Y K 掲 4位 (21) エスクリプトエナジー(5721) Y K 掲 5位 (17) ｎｏｔｅ(5243) Y K 掲 6位 (17) メタプラネット(3350) Y K 掲 7位 (15) データセクション(3905) Y K 掲 8位 (12) 楽天グループ(4755) Y K 掲 9位 (11) ソフトバンクグループ(998",
+          "title": "キオクシア、需給悪化懸念と市場の熱狂",
           "url": "https://chartnavi.com/scan/wadai/date/_20260926/"
-        },
-        {
-          "name": "YouTube/Google News",
-          "type": "YouTube",
-          "title": "【窪田真之が推すエンタメ5銘柄】ソニー・任天堂・サンリオ…AIブームの裏で売られた「お宝株」／サンリオを「日本のウォルト・ディズニー」と絶賛する理由／利益7割がエンタメのソニー【セクター超分析】 - YouTube",
-          "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE5id294ZHFEMVBwNmtVamM5elh1cXVndnBxck9vQzdDWmJvYzZtQ2dOZThzOXRCUTVCRndLQi1NMHZnRm9NOTBMeGlwRHJwRzZBWDFRdC1R?oc=5"
         }
-      ]
+      ],
+      "explanation": {
+        "why_selected": "投資家話題ランキング1位＋当日の話題化",
+        "what_is_happening": "キオクシア、需給悪化懸念と市場の熱狂",
+        "material_category": "需給材料",
+        "score_breakdown": {
+          "source_types": 1,
+          "mentions": 1,
+          "investor_rank": 1
+        }
+      },
+      "movement_type": "需給材料"
     },
     {
-      "code": "6857",
-      "name": "アドバンテスト",
-      "market": "プライム（内国株式）",
+      "code": "627A",
+      "name": "ａｋｉｐｐａ",
+      "market": null,
       "industry": null,
       "source_types": [
-        "YouTube",
-        "アナリスト",
-        "ニュース"
+        "investor"
       ],
-      "score": 11.5,
+      "score": 121,
       "kabu_score": null,
       "signal": null,
       "rsi14": null,
       "change": null,
-      "reason": "3種類の情報源で話題。",
-      "movement_type": "複数情報源で話題",
-      "material_summary": "【日本株】エヌビディアの決算を通じて、アドバンテストなどが復調できるか - マネクリ",
-      "sources": [
-        {
-          "name": "株探・Google News",
-          "type": "ニュース",
-          "title": "【日本株】エヌビディアの決算を通じて、アドバンテストなどが復調できるか - マネクリ",
-          "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTFBWT21HRU1xY3RGQjRzTnpLVVBTdzhLYS01WkdYNTEteHh0RjFJS1lXZ2NpYkx2cWI2bUM4dnp2LU1LUWh2RjV3ZzIzMzdkdDVHQUFaUdIBV0FVX3lxTE5iMS0tLUpXbW1EcF94RG1qSFlRMER0Rkk4ckV1ZmdNMkplTkRXbFNhNTNoYzBvY3RsWUdNaTI3UVd4Q05vU3RHT2ZlalM0alRobGt6b1FQbw?oc=5"
-        },
-        {
-          "name": "Google News",
-          "type": "アナリスト",
-          "title": "【日本株】一歩先の業績を見る「今期・来期ダブル上方修正」戦略、アドバンテストなど厳選12銘柄 - マネクリ",
-          "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE9EYUdqMHJzWkg5dnFUODF0QzRRRzJlSlJSTzh3Nks5UXI4bGlmcENmSjYyQU1DZjA3UEE1UXpncllBQjQyRmMyMnZFcGpybTRUUnBjMNIBV0FVX3lxTE94aWY1MzV2bnpNTzE1OTd6MWZUQ0ZQWFJkTUFvdVA0NE1ia3RPbmJoWHpxRU8wSE1peElDOUtyM0FfamNuNkRjU2h4RTZfbnlTM0RzSTVZWQ?oc=5"
-        },
-        {
-          "name": "YouTube/Google News",
-          "type": "YouTube",
-          "title": "【木野内栄治×志田憲太郎】日本株の注目6銘柄／富士通の株価大化けはあるか／トヨタ株復活のタイミング／フィジカルAI銘柄・安川電機の割安感／アドバンテストはさらに上がる？【マーケット超分析】 - YouTube",
-          "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE9NN0NsVTlRN09fLUw0bDFjbUZhWV90Q1ZFYUVrR2ZLQlFVdndRVWJWUHhERnE3SzBkVHcybjF4dFl5cWZrMTc5bkFOSVFERnhoTFJvUldR?oc=5"
-        }
-      ]
-    },
-    {
-      "code": "4755",
-      "name": "楽天グループ",
-      "market": "プライム（内国株式）",
-      "industry": null,
-      "source_types": [
-        "investor",
-        "ニュース"
-      ],
-      "score": 11.2,
-      "kabu_score": null,
-      "signal": null,
-      "rsi14": null,
-      "change": null,
-      "reason": "複数の情報源で話題。",
-      "movement_type": "複数情報源で話題",
-      "material_summary": "のランキングです。 1位 (45) キオクシアホールディングス(285A) Y K 掲 2位 (30) 任天堂(7974) Y K 掲 3位 (29) 共和電業(6853) Y K 掲 4位 (21) エスクリプトエナジー(5721) Y K 掲 5位 (17) ｎｏｔｅ(5243) Y K 掲 6位 (17) メタプラネット(3350) Y K 掲 7位 (15) データセクション(3905) Y K 掲 8位 (12) 楽天グループ(4755) Y K 掲 9位 (11) ソフトバンクグループ(9984) Y K 掲 10位 (11) イビデン(4062) Y K 掲 (adsbygoogle = window.adsbygoogle || []).push({}); 注目のキーワード この24時間で投資家がよく発言したワードについてAIが解説します。 ポスト 投稿内容から人物像を推測し、その評価や感想を述べている。 金利 ",
+      "reason": "アキッパ2日連続Ｓ高！投資家熱狂",
       "sources": [
         {
           "name": "チャートなび",
           "type": "investor",
-          "title": "のランキングです。 1位 (45) キオクシアホールディングス(285A) Y K 掲 2位 (30) 任天堂(7974) Y K 掲 3位 (29) 共和電業(6853) Y K 掲 4位 (21) エスクリプトエナジー(5721) Y K 掲 5位 (17) ｎｏｔｅ(5243) Y K 掲 6位 (17) メタプラネット(3350) Y K 掲 7位 (15) データセクション(3905) Y K 掲 8位 (12) 楽天グループ(4755) Y K 掲 9位 (11) ソフトバンクグループ(9984) Y K 掲 10位 (11) イビデン(4062) Y K 掲 (adsbygoogle = window.adsbygoogle || []).push({}); 注目のキーワード この24時間で投資家がよく発言したワードについてAIが解説します。 ポスト 投稿内容から人物像を推測し、その評価や感想を述べている。 金利 ",
+          "title": "アキッパ2日連続Ｓ高！投資家熱狂",
           "url": "https://chartnavi.com/scan/wadai/date/_20260926/"
-        },
-        {
-          "name": "株探・Google News",
-          "type": "ニュース",
-          "title": "来週の決算発表予定 楽天グループ、住友鉱、東京海上など (8月10日～14日) - 株探",
-          "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTFByQmhTU2NHblMtbE5GQ2RhUnJ1eEU1d1JjNHRTakd1N0dzN0Z4bEFLdHhDSk84X2ZvWmpGamQwQnVQU1VodTRZaGVKVjRNLVhDLXZUZmRoUkNaUUZOSm5xSw?oc=5"
         }
-      ]
+      ],
+      "explanation": {
+        "why_selected": "投資家話題ランキング2位＋当日の話題化",
+        "what_is_happening": "アキッパ2日連続Ｓ高！投資家熱狂",
+        "material_category": "株価上昇・需給/値動き",
+        "score_breakdown": {
+          "source_types": 1,
+          "mentions": 1,
+          "investor_rank": 2
+        }
+      },
+      "movement_type": "株価上昇・需給/値動き"
+    },
+    {
+      "code": "4062",
+      "name": "イビデン",
+      "market": null,
+      "industry": null,
+      "source_types": [
+        "investor"
+      ],
+      "score": 86,
+      "kabu_score": null,
+      "signal": null,
+      "rsi14": null,
+      "change": null,
+      "reason": "イビデン、NVIDIA CEO発言で話題騒然",
+      "sources": [
+        {
+          "name": "チャートなび",
+          "type": "investor",
+          "title": "イビデン、NVIDIA CEO発言で話題騒然",
+          "url": "https://chartnavi.com/scan/wadai/date/_20260926/"
+        }
+      ],
+      "explanation": {
+        "why_selected": "投資家話題ランキング3位＋当日の話題化",
+        "what_is_happening": "イビデン、NVIDIA CEO発言で話題騒然",
+        "material_category": "AI・半導体/データセンターテーマ",
+        "score_breakdown": {
+          "source_types": 1,
+          "mentions": 1,
+          "investor_rank": 3
+        }
+      },
+      "movement_type": "AI・半導体/データセンターテーマ"
+    },
+    {
+      "code": "9984",
+      "name": "ソフトバンクグループ",
+      "market": null,
+      "industry": null,
+      "source_types": [
+        "investor"
+      ],
+      "score": 84,
+      "kabu_score": null,
+      "signal": null,
+      "rsi14": null,
+      "change": null,
+      "reason": "ソフトバンクG、データセンター懸念で株価反落",
+      "sources": [
+        {
+          "name": "チャートなび",
+          "type": "investor",
+          "title": "ソフトバンクG、データセンター懸念で株価反落",
+          "url": "https://chartnavi.com/scan/wadai/date/_20260926/"
+        }
+      ],
+      "explanation": {
+        "why_selected": "投資家話題ランキング4位＋当日の話題化",
+        "what_is_happening": "ソフトバンクG、データセンター懸念で株価反落",
+        "material_category": "AI・半導体/データセンターテーマ",
+        "score_breakdown": {
+          "source_types": 1,
+          "mentions": 1,
+          "investor_rank": 4
+        }
+      },
+      "movement_type": "AI・半導体/データセンターテーマ"
+    },
+    {
+      "code": "3905",
+      "name": "データセクション",
+      "market": null,
+      "industry": null,
+      "source_types": [
+        "investor"
+      ],
+      "score": 75,
+      "kabu_score": null,
+      "signal": null,
+      "rsi14": null,
+      "change": null,
+      "reason": "データセクション、大口受注で株価続伸！",
+      "sources": [
+        {
+          "name": "チャートなび",
+          "type": "investor",
+          "title": "データセクション、大口受注で株価続伸！",
+          "url": "https://chartnavi.com/scan/wadai/date/_20260926/"
+        }
+      ],
+      "explanation": {
+        "why_selected": "投資家話題ランキング5位＋当日の話題化",
+        "what_is_happening": "データセクション、大口受注で株価続伸！",
+        "material_category": "受注・案件材料",
+        "score_breakdown": {
+          "source_types": 1,
+          "mentions": 1,
+          "investor_rank": 5
+        }
+      },
+      "movement_type": "受注・案件材料"
     }
   ]
 }
