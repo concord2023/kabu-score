@@ -1,4 +1,4 @@
-const CACHE='kabu-score-v15-attention-realtime';
+const CACHE='kabu-score-v16-attention-realtime-snapshot';
 const CORE=['./','./index.html','./signals.html','./detail.html','./recommendations.html','./bottom.html','./daily_recommendations.html','./manifest.json'];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));

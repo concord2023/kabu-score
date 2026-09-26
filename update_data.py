@@ -1593,40 +1593,61 @@ def _parse_yahoo_forecast_text(raw):
     return pe, eps, switch_date
 
 def fetch_yahoo_forecast_per(code):
-    """Read current company-forecast EPS/PER without adding IRBANK requests.
+    """Read current company-forecast EPS/PER from Yahoo without IRBANK calls.
 
-    GitHub Actions can occasionally receive a 403/timeout from Yahoo Japan.
-    In that case the same public Yahoo quote page is fetched through Jina's
-    text relay.  This is only a transport fallback; the source remains Yahoo.
+    Prefer Yahoo's quote JSON endpoint because it is much less fragile than
+    scraping the rendered Yahoo Japan HTML. Fall back to the quote page/relay
+    only when the JSON endpoint does not expose forward EPS/PER.
     """
-    code = str(code).strip()
-    url = f'https://finance.yahoo.co.jp/quote/{urllib.parse.quote(code)}.T'
+    code = str(code).strip().upper()
     errors=[]
+    for host in ('https://query1.finance.yahoo.com','https://query2.finance.yahoo.com'):
+        try:
+            qurl = host + '/v7/finance/quote?' + urllib.parse.urlencode({'symbols': code+'.T'})
+            req = urllib.request.Request(qurl, headers={'User-Agent':'Mozilla/5.0 (compatible; kabu-score/14.0)','Accept':'application/json'})
+            with urllib.request.urlopen(req, timeout=15) as r:
+                obj=json.loads(r.read().decode('utf-8','replace'))
+            rows=((obj.get('quoteResponse') or {}).get('result') or [])
+            if rows:
+                q=rows[0]
+                pe=q.get('forwardPE')
+                eps=q.get('epsForward') if q.get('epsForward') is not None else q.get('forwardEps')
+                if pe is not None or eps is not None:
+                    pe=float(pe) if pe is not None else None
+                    eps=float(eps) if eps is not None else None
+                    if pe is None and eps and q.get('regularMarketPrice'):
+                        pe=float(q['regularMarketPrice'])/eps
+                    return {'forecast_pe':round(pe,3) if pe and pe>0 else None,
+                            'forecast_eps':round(eps,3) if eps and eps>0 else None,
+                            'switch_date':None,
+                            'source':'Yahoo!ファイナンス（会社予想PER/EPS）',
+                            'switch_date_basis':'Yahoo quote API'}
+            errors.append(host+': forwardPE/epsForward unavailable')
+        except Exception as e:
+            errors.append(host+': '+str(e))
+
+    url = f'https://finance.yahoo.co.jp/quote/{urllib.parse.quote(code)}.T'
     texts=[]
     try:
-        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 (compatible; kabu-score/13.0)'})
+        req = urllib.request.Request(url, headers={'User-Agent':'Mozilla/5.0 (compatible; kabu-score/14.0)'})
         with urllib.request.urlopen(req, timeout=15) as r:
             texts.append(r.read().decode('utf-8', errors='ignore'))
-    except Exception as e:
-        errors.append(f'direct: {e}')
+    except Exception as e: errors.append(f'direct: {e}')
     if not texts:
         try:
-            relay = 'https://r.jina.ai/' + url
-            req = urllib.request.Request(relay, headers={'User-Agent': 'kabu-score/13.0'})
+            relay='https://r.jina.ai/'+url
+            req=urllib.request.Request(relay, headers={'User-Agent':'kabu-score/14.0'})
             with urllib.request.urlopen(req, timeout=20) as r:
                 texts.append(r.read().decode('utf-8', errors='ignore'))
-        except Exception as e:
-            errors.append(f'relay: {e}')
+        except Exception as e: errors.append(f'relay: {e}')
     for raw in texts:
-        pe, eps, switch_date = _parse_yahoo_forecast_text(raw)
+        pe,eps,switch_date=_parse_yahoo_forecast_text(raw)
         if pe is not None or eps is not None:
-            return {
-                'forecast_pe': round(pe, 3) if pe is not None else None,
-                'forecast_eps': round(eps, 3) if eps is not None else None,
-                'switch_date': switch_date,
-                'source': 'Yahoo!ファイナンス（会社予想PER/EPS）',
-                'switch_date_basis': '直近の決算発表日（現在の会社予想EPSの切替基準として保存）',
-            }
+            return {'forecast_pe':round(pe,3) if pe is not None else None,
+                    'forecast_eps':round(eps,3) if eps is not None else None,
+                    'switch_date':switch_date,
+                    'source':'Yahoo!ファイナンス（会社予想PER/EPS）',
+                    'switch_date_basis':'直近の決算発表日（現在の会社予想EPSの切替基準として保存）'}
     raise RuntimeError('Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした' + (f' ({"; ".join(errors)})' if errors else ''))
 
 

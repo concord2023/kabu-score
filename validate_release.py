@@ -46,7 +46,7 @@ def assert_true(cond, msg):
 # 1. Syntax / required files
 required=['update_data.py','regime_model_v2.py','rank_decisions.py','run_daily.py','watchlist.json',
           'index.html','dashboard.html','detail.html','signals.html','recommendations.html','daily_recommendations.html','bottom.html',
-          '.github/workflows/daily-update.yml','.github/workflows/recommendation-scan.yml']
+          '.github/workflows/daily-update.yml','.github/workflows/recommendation-scan.yml','.github/workflows/realtime-quotes.yml']
 for name in required: assert_true((ROOT/name).exists(), f'missing {name}')
 for p in ROOT.glob('*.py'): ast.parse(p.read_text(encoding='utf-8'))
 
@@ -130,7 +130,7 @@ upd=(ROOT/'update_data.py').read_text(encoding='utf-8')
 assert_true('MAX_API_REQUESTS = 3999' in upd, 'IRBANK absolute request ceiling missing')
 assert_true('worst_case_requests' in upd and 'minimum_needed = max(10, worst_case_requests)' in upd, 'IRBANK preflight worst-case budget missing')
 sw=(ROOT/'sw.js').read_text(encoding='utf-8')
-assert_true('kabu-score-v15-attention-realtime' in sw, 'service worker cache must be bumped for the latest Daily PER change')
+assert_true('kabu-score-v16-attention-realtime-snapshot' in sw, 'service worker cache must be bumped for the latest quote/PER change')
 
 assert_true('Calculate period indicators from the full available monthly history' in (ROOT/'update_data.py').read_text(encoding='utf-8'), 'monthly indicators must be calculated before presentation trimming')
 html=(ROOT/'detail.html').read_text(encoding='utf-8')
@@ -139,6 +139,9 @@ assert_true("[['ma6','6か月MA'],['ma12','12か月MA'],['ma18','18か月MA']]" 
 assert_true('200週MA' not in html and '200か月MA' not in html, 'weekly/monthly charts must not display old 200-period MAs')
 rd=(ROOT/'rank_decisions.py').read_text(encoding='utf-8')
 assert_true("'chart_history_weekly'" in rd and "'chart_history_monthly'" in rd, 'weekly/monthly chart histories must survive ranking output')
+assert_true((ROOT/'realtime_quotes_update.py').exists(), 'server-side realtime quote updater missing')
+assert_true((ROOT/'.github/workflows/realtime-quotes.yml').exists(), 'realtime quote workflow missing')
+assert_true('data/realtime_quotes.json' in (ROOT/'realtime_quotes.js').read_text(encoding='utf-8') and 'fetchTimed' not in (ROOT/'realtime_quotes.js').read_text(encoding='utf-8'), 'browser realtime must use static snapshot, not CORS proxy calls')
 assert_true('stock_change_from_issue.py' in daily and '[株スコア削除]' in daily, 'daily workflow must support stock deletion')
 assert_true('watchlist_exclusions.json' in daily and 'watchlist_exclusions.json' in (ROOT/'update_data.py').read_text(encoding='utf-8'), 'deletion persistence is missing')
 assert_true(not (ROOT/'scripts/update_data.py').exists(), 'legacy scripts/update_data.py must be removed; Daily stock update is the only daily updater')

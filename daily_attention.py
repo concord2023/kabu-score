@@ -80,12 +80,11 @@ def code_from_text(text, master):
         # codes only when the master confirms them; letter-suffixed codes such
         # as 285A are accepted directly because they are unambiguous.
         if len(c)==4 and c.isdigit() and c not in master:
-            # ChartNavi/news commonly writes company codes as (7203).
-            # Accept that explicit ticker notation even if the local master is stale.
-            after=text[m.end():m.end()+1]
-            before=text[max(0,m.start()-1):m.start()]
-            if after not in (')','）') and before not in ('(','（'):
-                continue
+            # Four-digit codes are accepted only when JPX master confirms the
+            # listing. This prevents dates, index values and other numbers from
+            # being misread as stock tickers. The master is refreshed immediately
+            # before the daily collector in GitHub Actions.
+            continue
         if c not in found: found.append(c)
     return found
 
@@ -129,9 +128,15 @@ def rss_items(query, source_type, source_name, master, weight):
         if not codes and master:
             # Many news/video titles show the company name but omit the ticker.
             # Match only reasonably distinctive master names.
+            generic_names={'キング','インデックス','INDEX','指数','株価','日本株','投資','ニュース','テクノロジー','アドバンス'}
             for c,info in master.items():
                 n=clean(str(info.get('name') or ''))
-                if len(n)>=3 and n in title:
+                # Short/common words create false positives in news headlines
+                # (e.g. 「キング」「インデックス」). Require an explicit ticker
+                # for these names; longer company names can still be matched.
+                if n.upper() in generic_names or len(n)<5:
+                    continue
+                if n in title:
                     codes.append(c)
                     if len(codes)>=3: break
         if not codes: continue
