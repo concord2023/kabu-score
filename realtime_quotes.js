@@ -8,7 +8,7 @@
   const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
   const fmt=v=>v==null||!Number.isFinite(Number(v))?'—':Number(v).toLocaleString('ja-JP',{maximumFractionDigits:2});
   const pct=v=>v==null||!Number.isFinite(Number(v))?'—':`${Number(v)>=0?'+':''}${Number(v).toFixed(2)}%`;
-  const cls=v=>{const n=Number(v);if(!Number.isFinite(n))return 'zero';const s=n>0?'pos':n<0?'neg':'zero';const a=Math.abs(n);return s+(a>=10?' extreme':a>=3?' strong':'');};
+  const cls=v=>{const n=Number(v);if(!Number.isFinite(n))return 'zero';const s=n>0?'pos':n<0?'neg':'zero';const a=Math.abs(n);return s+(a>=10?' extreme':a>=5?' strong':'');};
   const jstNow=()=>new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Tokyo'}));
   function marketPhase(){
     const d=jstNow(), day=d.getDay(), mins=d.getHours()*60+d.getMinutes();
@@ -58,8 +58,8 @@
         ok++;
         const p=row.querySelector('.live-price'),c=row.querySelector('.live-change'),t=row.querySelector('.live-time');
         if(p)p.textContent=fmt(q.price);
-        if(c){c.textContent=`前日比 ${pct(q.changePct)}`;c.className=`quote-change live-change ${cls(q.changePct)}`;}
-        if(t)t.textContent=q.marketTime?`更新 ${q.marketTime.toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}`:'更新時刻不明';
+        if(c){c.textContent=pct(q.changePct);c.className=`quote-change live-change ${cls(q.changePct)}`;}
+        if(t)t.textContent=q.marketTime?`更新 ${q.marketTime.toLocaleString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'})}`:'更新時刻不明';
         row.classList.add('live-updated');
       });
       const phase=marketPhase();
