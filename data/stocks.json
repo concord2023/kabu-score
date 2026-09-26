@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-26T23:21:26.100709+09:00",
+  "updated_at": "2026-09-27T00:17:50.304044+09:00",
   "source": "IRBANK API + 豆腐ハードボイルド（騰落銘柄数）",
   "api_strategy": "price:800-row target/stock; weekly margin:1 endpoint/stock only when cache is stale; valuations:20 fiscal years/stock; Yahoo company forecast PER/EPS/stock; breadth:1/run; monthly MACD:1000-row target only for weekly-RSI<=30; quota preflight via /usage",
   "stocks": {
@@ -3951,7 +3951,7 @@
         "switch_date_basis": "取得できず"
       },
       "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした (https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized)",
-      "per_updated_at": "2026-09-26T23:21:32.593393+09:00",
+      "per_updated_at": "2026-09-27T00:17:55.708996+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -7880,7 +7880,7 @@
         "switch_date_basis": "取得できず"
       },
       "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした (https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized)",
-      "per_updated_at": "2026-09-26T23:21:37.248127+09:00",
+      "per_updated_at": "2026-09-27T00:18:00.457473+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -11820,7 +11820,7 @@
         "switch_date_basis": "取得できず"
       },
       "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした (https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized)",
-      "per_updated_at": "2026-09-26T23:21:41.822253+09:00",
+      "per_updated_at": "2026-09-27T00:18:04.470808+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -15775,7 +15775,7 @@
         "switch_date_basis": "取得できず"
       },
       "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした (https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized)",
-      "per_updated_at": "2026-09-26T23:21:48.332643+09:00",
+      "per_updated_at": "2026-09-27T00:18:10.800670+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -19715,7 +19715,7 @@
         "switch_date_basis": "取得できず"
       },
       "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした (https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized)",
-      "per_updated_at": "2026-09-26T23:21:55.087141+09:00",
+      "per_updated_at": "2026-09-27T00:18:17.199431+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -23660,7 +23660,7 @@
         "switch_date_basis": "取得できず"
       },
       "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした (https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized)",
-      "per_updated_at": "2026-09-26T23:21:59.971594+09:00",
+      "per_updated_at": "2026-09-27T00:18:20.943852+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -27618,7 +27618,7 @@
         "switch_date_basis": "取得できず"
       },
       "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした (https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized)",
-      "per_updated_at": "2026-09-26T23:22:04.372728+09:00",
+      "per_updated_at": "2026-09-27T00:18:24.962780+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -31579,7 +31579,7 @@
         "switch_date_basis": "取得できず"
       },
       "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした (https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized)",
-      "per_updated_at": "2026-09-26T23:22:08.875039+09:00",
+      "per_updated_at": "2026-09-27T00:18:29.185341+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -35550,7 +35550,7 @@
         "switch_date_basis": "取得できず"
       },
       "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした (https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized)",
-      "per_updated_at": "2026-09-26T23:22:13.603366+09:00",
+      "per_updated_at": "2026-09-27T00:18:33.237279+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -39511,7 +39511,7 @@
         "switch_date_basis": "取得できず"
       },
       "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした (https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized)",
-      "per_updated_at": "2026-09-26T23:22:18.522753+09:00",
+      "per_updated_at": "2026-09-27T00:18:37.309204+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -43450,7 +43450,7 @@
         "switch_date_basis": "取得できず"
       },
       "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした (https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized)",
-      "per_updated_at": "2026-09-26T23:22:22.879219+09:00",
+      "per_updated_at": "2026-09-27T00:18:41.313253+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -47437,7 +47437,7 @@
         "switch_date_basis": "取得できず"
       },
       "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした (https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized)",
-      "per_updated_at": "2026-09-26T23:22:29.587021+09:00",
+      "per_updated_at": "2026-09-27T00:18:47.630813+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -50736,7 +50736,7 @@
         "switch_date_basis": "取得できず"
       },
       "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした (https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized)",
-      "per_updated_at": "2026-09-26T23:22:33.735528+09:00",
+      "per_updated_at": "2026-09-27T00:18:50.911601+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -54723,7 +54723,7 @@
         "switch_date_basis": "取得できず"
       },
       "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした (https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized)",
-      "per_updated_at": "2026-09-26T23:22:38.685624+09:00",
+      "per_updated_at": "2026-09-27T00:18:54.849402+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -58715,7 +58715,7 @@
         "switch_date_basis": "取得できず"
       },
       "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした (https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized)",
-      "per_updated_at": "2026-09-26T23:22:43.857650+09:00",
+      "per_updated_at": "2026-09-27T00:18:58.764566+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -62678,7 +62678,7 @@
         "switch_date_basis": "取得できず"
       },
       "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした (https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized)",
-      "per_updated_at": "2026-09-26T23:22:48.501624+09:00",
+      "per_updated_at": "2026-09-27T00:19:02.639185+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -66631,7 +66631,7 @@
         "switch_date_basis": "取得できず"
       },
       "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした (https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized)",
-      "per_updated_at": "2026-09-26T23:22:53.028948+09:00",
+      "per_updated_at": "2026-09-27T00:19:06.769132+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -70498,7 +70498,7 @@
         "switch_date_basis": "取得できず"
       },
       "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした (https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized)",
-      "per_updated_at": "2026-09-26T23:22:57.494449+09:00",
+      "per_updated_at": "2026-09-27T00:19:10.532193+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -74446,7 +74446,7 @@
         "switch_date_basis": "取得できず"
       },
       "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした (https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized)",
-      "per_updated_at": "2026-09-26T23:23:02.055275+09:00",
+      "per_updated_at": "2026-09-27T00:19:14.389911+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -78430,7 +78430,7 @@
         "switch_date_basis": "取得できず"
       },
       "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした (https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized)",
-      "per_updated_at": "2026-09-26T23:23:06.730542+09:00",
+      "per_updated_at": "2026-09-27T00:19:18.118769+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -82386,7 +82386,7 @@
         "switch_date_basis": "取得できず"
       },
       "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした (https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized)",
-      "per_updated_at": "2026-09-26T23:23:11.286855+09:00",
+      "per_updated_at": "2026-09-27T00:19:22.204068+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -82716,16 +82716,16 @@
   "successful_stocks": 21,
   "failed_stocks": 0,
   "timing": {
-    "total_seconds": 105.2,
+    "total_seconds": 91.9,
     "api_requests": 68,
-    "rate_limit_wait_seconds": 20.5,
+    "rate_limit_wait_seconds": 24.4,
     "retry_count": 0,
-    "http_seconds": 40.3
+    "http_seconds": 32.1
   },
   "irbank_usage_at_start": {
     "limit": 4000,
-    "used": 989,
-    "remaining": 3011,
-    "resets_at": "2026-09-27T00:00:00+09:00"
+    "used": 0,
+    "remaining": 4000,
+    "resets_at": "2026-09-28T00:00:00+09:00"
   }
 }
