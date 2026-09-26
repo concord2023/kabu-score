@@ -130,7 +130,7 @@ upd=(ROOT/'update_data.py').read_text(encoding='utf-8')
 assert_true('MAX_API_REQUESTS = 3999' in upd, 'IRBANK absolute request ceiling missing')
 assert_true('worst_case_requests' in upd and 'minimum_needed = max(10, worst_case_requests)' in upd, 'IRBANK preflight worst-case budget missing')
 sw=(ROOT/'sw.js').read_text(encoding='utf-8')
-assert_true('kabu-score-v16-attention-realtime-snapshot' in sw, 'service worker cache must be bumped for the latest quote/PER change')
+assert_true('kabu-score-v17-realtime-per-fallback' in sw, 'service worker cache must be bumped for the latest quote/PER change')
 
 assert_true('Calculate period indicators from the full available monthly history' in (ROOT/'update_data.py').read_text(encoding='utf-8'), 'monthly indicators must be calculated before presentation trimming')
 html=(ROOT/'detail.html').read_text(encoding='utf-8')

@@ -17,9 +17,29 @@
     btn.disabled=true; btn.textContent='取得中…';
     const started=performance.now();
     try{
-      const r=await fetch('./data/realtime_quotes.json?ts='+Date.now(),{cache:'no-store'});
-      if(!r.ok)throw new Error('最新株価スナップショットがありません。Daily stock updateまたはRealtime quote snapshotを実行してください');
-      const payload=await r.json();
+      let payload=null;
+      try{
+        const r=await fetch('./data/realtime_quotes.json?ts='+Date.now(),{cache:'no-store'});
+        if(r.ok) payload=await r.json();
+      }catch(_e){}
+      // Snapshot may not exist immediately after deployment. In that case,
+      // fall back to the already-published daily analysis instead of showing
+      // the old hard error. This is explicitly NOT labelled realtime.
+      if(!payload){
+        try{
+          const r=await fetch('./data/stocks.json?ts='+Date.now(),{cache:'no-store'});
+          if(r.ok){
+            const stocks=await r.json();
+            const quotes={};
+            for(const code of codes){
+              const x=(stocks.stocks||{})[code];
+              if(x&&x.price!=null) quotes[code]={price:x.price,change:x.change,change_pct:x.change!=null&&Number(x.price)-Number(x.change)!==0?Number(x.change)/(Number(x.price)-Number(x.change))*100:null,market_time:x.date,quote_type:'daily_close_fallback'};
+            }
+            payload={updated_at:stocks.updated_at,quotes,fallback:true,source:'保存済み日次終値'};
+          }
+        }catch(_e){}
+      }
+      if(!payload)throw new Error('株価データを読み込めませんでした');
       const quotes=payload?.quotes||{};
       let ok=0;
       rows.forEach(row=>{
@@ -40,7 +60,11 @@
       }
       const sec=((performance.now()-started)/1000).toFixed(2);
       const stamp=payload.updated_at?String(payload.updated_at).replace('T',' ').slice(0,16):'時刻不明';
-      updateStatus(`取得 ${ok}/${codes.length}銘柄｜${sec}秒｜サーバー更新 ${stamp}｜保存スコアは変更しません`,'ok');
+      if(payload.fallback){
+        updateStatus(`最新リアルタイム値は未取得｜保存済み日次終値 ${ok}/${codes.length}銘柄｜${stamp}`,'warn');
+      }else{
+        updateStatus(`取得 ${ok}/${codes.length}銘柄｜${sec}秒｜サーバー更新 ${stamp}｜保存スコアは変更しません`,'ok');
+      }
     }catch(e){updateStatus(`取得できませんでした：${e.message}`,'error');}
     finally{btn.disabled=false;btn.textContent='↻ リアルタイム株価を取得';}
   }
