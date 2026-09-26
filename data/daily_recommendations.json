@@ -1,15 +1,128 @@
 {
-  "updated_at": "2026-09-26T12:22:15.213819+09:00",
+  "updated_at": "2026-09-26T00:00:00+09:00",
   "date": "2026-09-26",
   "title": "今日の注目5選",
-  "status": "no_data",
-  "method": "同日公開の投資家話題・ニュース・アナリスト言及・YouTube関連情報を銘柄単位に集約。情報源の種類と複数言及を加点し、上位5銘柄を表示。これはBUY判定ではない。",
-  "source_policy": "各記事・動画へのリンクと発信元を保存。外部情報の注目度とkabu-scoreの総合BUY判定は別物として表示する。",
+  "status": "ok",
+  "method": "2026/09/26のチャートなび「投資家の話題まとめ」を初期表示として保存。Daily stock updateでニュース・アナリスト・YouTube等の同日情報を追加収集し、通常版に更新します。これはBUY判定ではない。",
+  "source_policy": "外部情報の注目度とkabu-scoreの総合BUY判定は別物として表示する。",
   "errors": [
-    "chartnavi: URLError: <urlopen error [Errno -3] Temporary failure in name resolution>",
-    "kabutan: URLError: <urlopen error [Errno -3] Temporary failure in name resolution>",
-    "analyst: URLError: <urlopen error [Errno -3] Temporary failure in name resolution>",
-    "youtube: URLError: <urlopen error [Errno -3] Temporary failure in name resolution>"
+    "初期表示はチャートなびの当日話題ランキング。Daily stock update実行時に追加ソースを再収集します。"
   ],
-  "candidates": []
+  "candidates": [
+    {
+      "code": "285A",
+      "name": "キオクシアホールディングス",
+      "market": null,
+      "industry": null,
+      "source_types": [
+        "investor"
+      ],
+      "score": 122,
+      "kabu_score": null,
+      "signal": null,
+      "rsi14": null,
+      "change": null,
+      "reason": "キオクシア、需給悪化懸念と市場の熱狂",
+      "sources": [
+        {
+          "name": "チャートなび",
+          "type": "investor",
+          "title": "キオクシア、需給悪化懸念と市場の熱狂",
+          "url": "https://chartnavi.com/scan/wadai/date/_20260926/"
+        }
+      ]
+    },
+    {
+      "code": "627A",
+      "name": "ａｋｉｐｐａ",
+      "market": null,
+      "industry": null,
+      "source_types": [
+        "investor"
+      ],
+      "score": 121,
+      "kabu_score": null,
+      "signal": null,
+      "rsi14": null,
+      "change": null,
+      "reason": "アキッパ2日連続Ｓ高！投資家熱狂",
+      "sources": [
+        {
+          "name": "チャートなび",
+          "type": "investor",
+          "title": "アキッパ2日連続Ｓ高！投資家熱狂",
+          "url": "https://chartnavi.com/scan/wadai/date/_20260926/"
+        }
+      ]
+    },
+    {
+      "code": "4062",
+      "name": "イビデン",
+      "market": null,
+      "industry": null,
+      "source_types": [
+        "investor"
+      ],
+      "score": 86,
+      "kabu_score": null,
+      "signal": null,
+      "rsi14": null,
+      "change": null,
+      "reason": "イビデン、NVIDIA CEO発言で話題騒然",
+      "sources": [
+        {
+          "name": "チャートなび",
+          "type": "investor",
+          "title": "イビデン、NVIDIA CEO発言で話題騒然",
+          "url": "https://chartnavi.com/scan/wadai/date/_20260926/"
+        }
+      ]
+    },
+    {
+      "code": "9984",
+      "name": "ソフトバンクグループ",
+      "market": null,
+      "industry": null,
+      "source_types": [
+        "investor"
+      ],
+      "score": 84,
+      "kabu_score": null,
+      "signal": null,
+      "rsi14": null,
+      "change": null,
+      "reason": "ソフトバンクG、データセンター懸念で株価反落",
+      "sources": [
+        {
+          "name": "チャートなび",
+          "type": "investor",
+          "title": "ソフトバンクG、データセンター懸念で株価反落",
+          "url": "https://chartnavi.com/scan/wadai/date/_20260926/"
+        }
+      ]
+    },
+    {
+      "code": "3905",
+      "name": "データセクション",
+      "market": null,
+      "industry": null,
+      "source_types": [
+        "investor"
+      ],
+      "score": 75,
+      "kabu_score": null,
+      "signal": null,
+      "rsi14": null,
+      "change": null,
+      "reason": "データセクション、大口受注で株価続伸！",
+      "sources": [
+        {
+          "name": "チャートなび",
+          "type": "investor",
+          "title": "データセクション、大口受注で株価続伸！",
+          "url": "https://chartnavi.com/scan/wadai/date/_20260926/"
+        }
+      ]
+    }
+  ]
 }
