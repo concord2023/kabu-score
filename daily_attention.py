@@ -168,7 +168,8 @@ def main():
         except Exception as e: errors.append(f'{label}: {type(e).__name__}: {e}')
     by={}
     for e in events:
-        c=e['code']; b=by.setdefault(c,{'code':c,'name':e['name'],'market':master[c].get('market'),'industry':master[c].get('industry'),'events':[],'source_types':set(),'score':0.0})
+        c=e['code']; info=master.get(c,{})
+        b=by.setdefault(c,{'code':c,'name':e['name'],'market':info.get('market'),'industry':info.get('industry'),'events':[],'source_types':set(),'score':0.0})
         b['events'].append(e); b['source_types'].add(e['source_type'])
         b['score'] += float(e.get('weight',1))
         if e.get('rank'):
@@ -192,11 +193,22 @@ def main():
         result.append(b)
     result.sort(key=lambda x:(-x['score'],x['code']))
     top=result[:5]
+    previous=None
+    if OUT.exists():
+        try:
+            previous=json.loads(OUT.read_text(encoding='utf-8'))
+        except Exception:
+            previous=None
+    if not top and previous and previous.get('candidates'):
+        top=previous.get('candidates',[])[:5]
+        status='stale'
+    else:
+        status='ok' if top else 'no_data'
     payload={
         'updated_at':now.isoformat(),
         'date':now.strftime('%Y-%m-%d'),
         'title':'今日の注目5選',
-        'status':'ok' if top else 'no_data',
+        'status':status,
         'method':'同日公開の投資家話題・ニュース・アナリスト言及・YouTube関連情報を銘柄単位に集約。情報源の種類と複数言及を加点し、上位5銘柄を表示。これはBUY判定ではない。',
         'source_policy':'各記事・動画へのリンクと発信元を保存。外部情報の注目度とkabu-scoreの総合BUY判定は別物として表示する。',
         'errors':errors,

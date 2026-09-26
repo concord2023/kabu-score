@@ -1575,24 +1575,14 @@ def fetch_historical_per(code):
     }
 
 
-def fetch_yahoo_forecast_per(code):
-    """Read current company-forecast EPS/PER and the latest earnings date.
-
-    The daily job stores this so the detail page never needs to make a network
-    request merely to open the PER chart. The latest earnings announcement is
-    retained as the same switch-date proxy previously used by the UI.
-    """
-    url = f'https://finance.yahoo.co.jp/quote/{urllib.parse.quote(str(code).strip())}.T'
-    req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 (compatible; kabu-score/12.0)'})
-    with urllib.request.urlopen(req, timeout=15) as r:
-        html = r.read().decode('utf-8', errors='ignore')
-    text = re.sub(r'<[^>]+>', ' ', html)
-    text = re.sub(r'&nbsp;|&#160;', ' ', text)
+def _parse_yahoo_forecast_text(raw):
+    """Parse Yahoo Japan quote text; works with HTML or a text relay response."""
+    from html import unescape
+    text = unescape(re.sub(r'<[^>]+>', ' ', raw or ''))
     text = re.sub(r'\s+', ' ', text)
-    # Yahoo's server-rendered page currently exposes these labels, but the
-    # surrounding markup can change.  Allow whitespace, parentheses such as
-    # (連), and a larger distance between label and value.
-    pe_m = re.search(r'PER（会社予想）\s*(?:\([^)]*\))?\s*([0-9]{1,4}(?:\.[0-9]+)?)\s*倍', text)
+    # Current Yahoo pages expose e.g. PER（会社予想） -> (連)11.23倍 and
+    # EPS（会社予想） -> (連)265.55.  Keep the parser tolerant of markup/spacing.
+    pe_m = re.search(r'PER（会社予想）\s*(?:\([^)]*\))?\s*([0-9]{1,5}(?:\.[0-9]+)?)\s*倍', text)
     eps_m = re.search(r'EPS（会社予想）\s*(?:\([^)]*\))?\s*([0-9][0-9,]*(?:\.[0-9]+)?)', text)
     date_m = re.search(r'直近の決算発表日は\s*(\d{4})年\s*(\d{1,2})月\s*(\d{1,2})日', text)
     pe = float(pe_m.group(1)) if pe_m else None
@@ -1600,15 +1590,44 @@ def fetch_yahoo_forecast_per(code):
     switch_date = None
     if date_m:
         switch_date = f'{date_m.group(1)}-{int(date_m.group(2)):02d}-{int(date_m.group(3)):02d}'
-    if pe is None and eps is None:
-        raise RuntimeError('Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした')
-    return {
-        'forecast_pe': round(pe, 3) if pe is not None else None,
-        'forecast_eps': round(eps, 3) if eps is not None else None,
-        'switch_date': switch_date,
-        'source': 'Yahoo!ファイナンス（会社予想PER/EPS）',
-        'switch_date_basis': '直近の決算発表日（現在の会社予想EPSの切替基準として保存）',
-    }
+    return pe, eps, switch_date
+
+def fetch_yahoo_forecast_per(code):
+    """Read current company-forecast EPS/PER without adding IRBANK requests.
+
+    GitHub Actions can occasionally receive a 403/timeout from Yahoo Japan.
+    In that case the same public Yahoo quote page is fetched through Jina's
+    text relay.  This is only a transport fallback; the source remains Yahoo.
+    """
+    code = str(code).strip()
+    url = f'https://finance.yahoo.co.jp/quote/{urllib.parse.quote(code)}.T'
+    errors=[]
+    texts=[]
+    try:
+        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 (compatible; kabu-score/13.0)'})
+        with urllib.request.urlopen(req, timeout=15) as r:
+            texts.append(r.read().decode('utf-8', errors='ignore'))
+    except Exception as e:
+        errors.append(f'direct: {e}')
+    if not texts:
+        try:
+            relay = 'https://r.jina.ai/' + url
+            req = urllib.request.Request(relay, headers={'User-Agent': 'kabu-score/13.0'})
+            with urllib.request.urlopen(req, timeout=20) as r:
+                texts.append(r.read().decode('utf-8', errors='ignore'))
+        except Exception as e:
+            errors.append(f'relay: {e}')
+    for raw in texts:
+        pe, eps, switch_date = _parse_yahoo_forecast_text(raw)
+        if pe is not None or eps is not None:
+            return {
+                'forecast_pe': round(pe, 3) if pe is not None else None,
+                'forecast_eps': round(eps, 3) if eps is not None else None,
+                'switch_date': switch_date,
+                'source': 'Yahoo!ファイナンス（会社予想PER/EPS）',
+                'switch_date_basis': '直近の決算発表日（現在の会社予想EPSの切替基準として保存）',
+            }
+    raise RuntimeError('Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした' + (f' ({"; ".join(errors)})' if errors else ''))
 
 
 def collect_per_data(code):
