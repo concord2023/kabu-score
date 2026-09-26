@@ -76,7 +76,7 @@ function forecastPerBox(x){
 }
 function perPayload(x){
   const d=x.details||{}, f=d.per_forecast||{};
-  return {actual:Array.isArray(d.per_history)?d.per_history:[], forecastPe:Number.isFinite(Number(f.forecast_pe))?Number(f.forecast_pe):null, forecastEps:Number.isFinite(Number(f.forecast_eps))?Number(f.forecast_eps):null, switchDate:f.switch_date||null, updatedAt:d.per_updated_at||null, error:d.per_forecast_error||null, daily:Array.isArray(d.chart_history)?d.chart_history:[], weekly:Array.isArray(d.chart_history_weekly)?d.chart_history_weekly:[]};
+  const forecastPe=Number.isFinite(Number(f.forecast_pe))&&Number(f.forecast_pe)>0?Number(f.forecast_pe):null;let forecastEps=Number.isFinite(Number(f.forecast_eps))&&Number(f.forecast_eps)>0?Number(f.forecast_eps):null;if(forecastEps==null&&forecastPe!=null&&Number.isFinite(Number(x.price))&&Number(x.price)>0)forecastEps=Number(x.price)/forecastPe;return {actual:Array.isArray(d.per_history)?d.per_history:[], forecastPe, forecastEps, switchDate:f.switch_date||null, updatedAt:d.per_updated_at||null, error:d.per_forecast_error||null, daily:Array.isArray(d.chart_history)?d.chart_history:[], weekly:Array.isArray(d.chart_history_weekly)?d.chart_history_weekly:[]};
 }
 function perRows(data, mode){
   if(mode==='full'){
