@@ -76,32 +76,30 @@ function forecastPerBox(x){
 }
 function perPayload(x){
   const d=x.details||{}, f=d.per_forecast||{};
-  const forecastPe=Number.isFinite(Number(f.forecast_pe))&&Number(f.forecast_pe)>0?Number(f.forecast_pe):null;
+  let forecastPe=Number.isFinite(Number(f.forecast_pe))&&Number(f.forecast_pe)>0?Number(f.forecast_pe):null;
+  if(forecastPe==null&&Number.isFinite(Number(d.per_forecast_pe))&&Number(d.per_forecast_pe)>0)forecastPe=Number(d.per_forecast_pe);
   let forecastEps=Number.isFinite(Number(f.forecast_eps))&&Number(f.forecast_eps)>0?Number(f.forecast_eps):null;
-  if(forecastEps==null&&forecastPe!=null&&Number.isFinite(Number(x.price))&&Number(x.price)>0)forecastEps=Number(x.price)/forecastPe;
+  if(forecastEps==null&&Number.isFinite(Number(d.per_forecast_eps))&&Number(d.per_forecast_eps)>0)forecastEps=Number(d.per_forecast_eps);
   const daily=Array.isArray(d.chart_history)?d.chart_history:[];
   let weekly=Array.isArray(d.chart_history_weekly)?d.chart_history_weekly:[];
-  // Older daily-update payloads may not contain the aggregated weekly series.
-  // Build it from the saved daily chart history so weekly PER never depends on
-  // another network request or on a new Daily stock update.
   if(!weekly.length&&daily.length){
     const groups={};
-    daily.forEach(r=>{if(!r.date)return;const dt=new Date(r.date+'T00:00:00');if(Number.isNaN(dt.getTime()))return;const y=dt.getFullYear(), one=new Date(y,0,1), week=Math.ceil((((dt-one)/86400000)+one.getDay()+1)/7);const k=y+'-'+String(week).padStart(2,'0');(groups[k]||(groups[k]=[])).push(r);});
-    weekly=Object.values(groups).map(a=>{a.sort((u,v)=>String(u.date).localeCompare(String(v.date)));return {date:a[a.length-1].date,close:Number(a[a.length-1].close)};});
+    daily.forEach(r=>{if(!r.date)return;const dt=new Date(r.date+'T00:00:00');if(Number.isNaN(dt.getTime()))return;const day=(dt.getDay()+6)%7;const monday=new Date(dt);monday.setDate(dt.getDate()-day);const k=monday.toISOString().slice(0,10);(groups[k]||(groups[k]=[])).push(r);});
+    weekly=Object.values(groups).map(a=>{a.sort((u,v)=>String(u.date).localeCompare(String(v.date)));const z=a[a.length-1];return {date:z.date,close:Number(z.close)};});
   }
-  return {actual:Array.isArray(d.per_history)?d.per_history:[], forecastPe, forecastEps, switchDate:f.switch_date||null, updatedAt:d.per_updated_at||null, error:d.per_forecast_error||null, daily, weekly};
+  // Last-resort EPS reconstruction: forecast PE = current price / forecast EPS.
+  // This keeps daily/weekly PER available even when Yahoo exposes PE but omits EPS.
+  const latestClose=Number(x.price)>0?Number(x.price):(daily.length?Number(daily[daily.length-1].close):null);
+  if(forecastEps==null&&forecastPe!=null&&latestClose>0)forecastEps=latestClose/forecastPe;
+  return {actual:Array.isArray(d.per_history)?d.per_history:[],forecastPe,forecastEps,switchDate:f.switch_date||null,updatedAt:d.per_updated_at||null,error:d.per_forecast_error||null,daily,weekly,latestClose};
 }
-function perRows(data, mode){
-  const eps=data.forecastEps;
-  const make=(src, applySwitch)=>src.map(r=>({date:r.date,pe:Number.isFinite(eps)&&eps>0&&Number.isFinite(Number(r.close))?Number(r.close)/eps:null,kind:'forecast'})).filter(r=>r.date&&Number.isFinite(r.pe)&&r.pe>0&&(!applySwitch||!data.switchDate||r.date>=data.switchDate));
+function perRows(data,mode){
+  const make=(src)=>src.map(r=>{const close=Number(r.close);let pe=null;if(Number.isFinite(data.forecastEps)&&data.forecastEps>0&&Number.isFinite(close)&&close>0)pe=close/data.forecastEps;else if(Number.isFinite(data.forecastPe)&&data.forecastPe>0&&Number.isFinite(data.latestClose)&&data.latestClose>0&&Number.isFinite(close)&&close>0)pe=(close/data.latestClose)*data.forecastPe;return {date:r.date,pe,kind:'forecast'};}).filter(r=>r.date&&Number.isFinite(r.pe)&&r.pe>0);
   if(mode==='full'){
     const actual=data.actual.map(r=>({date:r.date,pe:Number(r.per),kind:'actual'})).filter(r=>r.date&&Number.isFinite(r.pe)&&r.pe>0);
-    return [...actual,...make(data.weekly,true)].sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+    return [...actual,...make(data.weekly)].sort((a,b)=>String(a.date).localeCompare(String(b.date)));
   }
-  // Weekly/daily views are explicitly "recent valuation views". Do not apply
-  // the full-history switch-date filter here; doing so can make the entire
-  // series disappear when the saved earnings date is newer than the chart data.
-  return make(mode==='daily'?data.daily:data.weekly,false);
+  return make(mode==='daily'?data.daily:data.weekly);
 }
 function renderPerChart(x,mode='full'){
   const panel=document.getElementById('per-panel'); if(!panel)return;

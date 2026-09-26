@@ -80,7 +80,12 @@ def code_from_text(text, master):
         # codes only when the master confirms them; letter-suffixed codes such
         # as 285A are accepted directly because they are unambiguous.
         if len(c)==4 and c.isdigit() and c not in master:
-            continue
+            # ChartNavi/news commonly writes company codes as (7203).
+            # Accept that explicit ticker notation even if the local master is stale.
+            after=text[m.end():m.end()+1]
+            before=text[max(0,m.start()-1):m.start()]
+            if after not in (')','）') and before not in ('(','（'):
+                continue
         if c not in found: found.append(c)
     return found
 

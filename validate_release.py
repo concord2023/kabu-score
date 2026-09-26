@@ -45,7 +45,7 @@ def assert_true(cond, msg):
 
 # 1. Syntax / required files
 required=['update_data.py','regime_model_v2.py','rank_decisions.py','run_daily.py','watchlist.json',
-          'index.html','dashboard.html','detail.html','signals.html','recommendations.html','bottom.html',
+          'index.html','dashboard.html','detail.html','signals.html','recommendations.html','daily_recommendations.html','bottom.html',
           '.github/workflows/daily-update.yml','.github/workflows/recommendation-scan.yml']
 for name in required: assert_true((ROOT/name).exists(), f'missing {name}')
 for p in ROOT.glob('*.py'): ast.parse(p.read_text(encoding='utf-8'))
@@ -120,6 +120,8 @@ assert_true('weekly_rsi_simple' not in bottom_py, 'Prime Tora scan must not carr
 assert_true("build_period_chart_history(rows, 'monthly', 18)" in (ROOT/'update_data.py').read_text(encoding='utf-8'), 'monthly chart must keep 18 months')
 # 8. PER/weekly valuation UI and IRBANK hard safety ceiling.
 detail=(ROOT/'detail.html').read_text(encoding='utf-8')
+idx=(ROOT/'index.html').read_text(encoding='utf-8')
+assert_true('dailyAttentionCard' in idx and 'data/daily_recommendations.json' in idx and '今日の注目5選' in idx, 'daily attention must be visible on the main page')
 assert_true('forecastPerBox' in detail and 'togglePerChart' in detail, 'forecast PER toggle missing')
 assert_true('chart_history_weekly' in detail and 'per_history' in detail and 'per_forecast' in detail and '全期間（20年度）' in detail and '実績PER（20年度）' in detail and '予想PER' in detail, 'stored 20-fiscal-year actual/forecast PER chart missing')
 assert_true('per_history' in detail and 'per_forecast' in detail and '直近の決算発表日' in (ROOT/'update_data.py').read_text(encoding='utf-8'), 'stored historical actual PER or forecast switch date missing')
@@ -128,7 +130,7 @@ upd=(ROOT/'update_data.py').read_text(encoding='utf-8')
 assert_true('MAX_API_REQUESTS = 3999' in upd, 'IRBANK absolute request ceiling missing')
 assert_true('worst_case_requests' in upd and 'minimum_needed = max(10, worst_case_requests)' in upd, 'IRBANK preflight worst-case budget missing')
 sw=(ROOT/'sw.js').read_text(encoding='utf-8')
-assert_true('kabu-score-v13-daily-per' in sw, 'service worker cache must be bumped for the latest Daily PER change')
+assert_true('kabu-score-v14-attention-per-realtime' in sw, 'service worker cache must be bumped for the latest Daily PER change')
 
 assert_true('Calculate period indicators from the full available monthly history' in (ROOT/'update_data.py').read_text(encoding='utf-8'), 'monthly indicators must be calculated before presentation trimming')
 html=(ROOT/'detail.html').read_text(encoding='utf-8')

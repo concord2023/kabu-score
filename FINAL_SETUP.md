@@ -46,3 +46,6 @@ The Daily stock update workflow runs only the watchlist analysis. The all-listed
 - 削除した銘柄を再追加すると除外状態を解除して分析対象へ戻します。
 - 端末の「表示する銘柄を選択」は表示だけを切り替える機能で、分析対象そのものは増減させません。
 - 月足チャートは直近18か月を表示します。月足MACDの大底候補判定に必要な長期履歴は別途確保するため、判定ロジックは変更しません。
+
+- Main index.html now renders 今日の注目5選 directly from data/daily_recommendations.json; daily_recommendations.html remains the detail page.
+- Realtime quote refresh uses Yahoo spark first and Yahoo chart fallback through two CORS relays; a single relay outage no longer makes the button fail immediately.
