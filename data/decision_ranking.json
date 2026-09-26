@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-26T12:04:53.511169+09:00",
+  "updated_at": "2026-09-26T12:15:36.290645+09:00",
   "summary": {
     "buy_candidates": 0,
     "watch": 20,
@@ -2353,7 +2353,7 @@
           "switch_date_basis": "取得できず"
         },
         "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
-        "per_updated_at": "2026-09-26T12:04:07.660219+09:00",
+        "per_updated_at": "2026-09-26T12:14:32.967239+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -6280,7 +6280,7 @@
           "switch_date_basis": "取得できず"
         },
         "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
-        "per_updated_at": "2026-09-26T12:04:15.739711+09:00",
+        "per_updated_at": "2026-09-26T12:14:41.679383+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -10201,8 +10201,8 @@
           "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
           "switch_date_basis": "取得できず"
         },
-        "per_forecast_error": "HTTP Error 500: Internal Server Error",
-        "per_updated_at": "2026-09-26T12:04:53.339882+09:00",
+        "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
+        "per_updated_at": "2026-09-26T12:15:36.118181+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -14147,7 +14147,7 @@
           "switch_date_basis": "取得できず"
         },
         "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
-        "per_updated_at": "2026-09-26T12:04:11.724377+09:00",
+        "per_updated_at": "2026-09-26T12:14:37.405186+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -18099,8 +18099,8 @@
           "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
           "switch_date_basis": "取得できず"
         },
-        "per_forecast_error": "HTTP Error 500: Internal Server Error",
-        "per_updated_at": "2026-09-26T12:04:30.885364+09:00",
+        "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
+        "per_updated_at": "2026-09-26T12:15:02.085275+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -21995,7 +21995,7 @@
           "switch_date_basis": "取得できず"
         },
         "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
-        "per_updated_at": "2026-09-26T12:03:36.246135+09:00",
+        "per_updated_at": "2026-09-26T12:13:59.984062+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -25967,8 +25967,8 @@
           "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
           "switch_date_basis": "取得できず"
         },
-        "per_forecast_error": "HTTP Error 500: Internal Server Error",
-        "per_updated_at": "2026-09-26T12:04:34.270107+09:00",
+        "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
+        "per_updated_at": "2026-09-26T12:15:06.205548+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -29873,7 +29873,7 @@
           "switch_date_basis": "取得できず"
         },
         "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
-        "per_updated_at": "2026-09-26T12:04:20.300663+09:00",
+        "per_updated_at": "2026-09-26T12:14:46.196896+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -33837,8 +33837,8 @@
           "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
           "switch_date_basis": "取得できず"
         },
-        "per_forecast_error": "HTTP Error 500: Internal Server Error",
-        "per_updated_at": "2026-09-26T12:04:50.328948+09:00",
+        "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
+        "per_updated_at": "2026-09-26T12:15:31.576622+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -37751,8 +37751,8 @@
           "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
           "switch_date_basis": "取得できず"
         },
-        "per_forecast_error": "HTTP Error 500: Internal Server Error",
-        "per_updated_at": "2026-09-26T12:04:46.915127+09:00",
+        "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
+        "per_updated_at": "2026-09-26T12:15:25.909132+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -41676,7 +41676,7 @@
           "switch_date_basis": "取得できず"
         },
         "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
-        "per_updated_at": "2026-09-26T12:04:03.566619+09:00",
+        "per_updated_at": "2026-09-26T12:14:28.051738+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -45616,8 +45616,8 @@
           "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
           "switch_date_basis": "取得できず"
         },
-        "per_forecast_error": "HTTP Error 500: Internal Server Error",
-        "per_updated_at": "2026-09-26T12:04:40.426762+09:00",
+        "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
+        "per_updated_at": "2026-09-26T12:15:15.062509+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -49528,7 +49528,7 @@
           "switch_date_basis": "取得できず"
         },
         "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
-        "per_updated_at": "2026-09-26T12:03:59.111957+09:00",
+        "per_updated_at": "2026-09-26T12:14:23.763063+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -53442,7 +53442,7 @@
           "switch_date_basis": "取得できず"
         },
         "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
-        "per_updated_at": "2026-09-26T12:03:41.140386+09:00",
+        "per_updated_at": "2026-09-26T12:14:04.309750+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -57437,8 +57437,8 @@
           "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
           "switch_date_basis": "取得できず"
         },
-        "per_forecast_error": "HTTP Error 500: Internal Server Error",
-        "per_updated_at": "2026-09-26T12:04:25.522892+09:00",
+        "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
+        "per_updated_at": "2026-09-26T12:14:53.096972+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -61278,8 +61278,8 @@
           "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
           "switch_date_basis": "取得できず"
         },
-        "per_forecast_error": "HTTP Error 500: Internal Server Error",
-        "per_updated_at": "2026-09-26T12:04:43.975078+09:00",
+        "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
+        "per_updated_at": "2026-09-26T12:15:19.970118+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -65208,7 +65208,7 @@
           "switch_date_basis": "取得できず"
         },
         "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
-        "per_updated_at": "2026-09-26T12:03:31.473419+09:00",
+        "per_updated_at": "2026-09-26T12:13:55.149276+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -69144,8 +69144,8 @@
           "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
           "switch_date_basis": "取得できず"
         },
-        "per_forecast_error": "HTTP Error 500: Internal Server Error",
-        "per_updated_at": "2026-09-26T12:04:37.368761+09:00",
+        "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
+        "per_updated_at": "2026-09-26T12:15:10.730605+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -73081,7 +73081,7 @@
           "switch_date_basis": "取得できず"
         },
         "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
-        "per_updated_at": "2026-09-26T12:03:48.030266+09:00",
+        "per_updated_at": "2026-09-26T12:14:11.180204+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -76885,8 +76885,8 @@
           "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
           "switch_date_basis": "取得できず"
         },
-        "per_forecast_error": "HTTP Error 500: Internal Server Error",
-        "per_updated_at": "2026-09-26T12:04:27.641669+09:00",
+        "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
+        "per_updated_at": "2026-09-26T12:14:57.260277+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -80268,7 +80268,7 @@
           "switch_date_basis": "取得できず"
         },
         "per_forecast_error": "Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした",
-        "per_updated_at": "2026-09-26T12:03:54.644746+09:00",
+        "per_updated_at": "2026-09-26T12:14:18.282374+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
