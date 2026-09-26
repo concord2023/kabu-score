@@ -75,13 +75,13 @@ function forecastPerBox(x){
   return `<div class="section"><div class="section-title">💹 PER推移（実績 → 直近予想）</div><button type="button" class="pertoggle" id="perToggle" onclick="togglePerChart()">▶ PER推移を表示</button><div id="per-panel" style="display:none"></div></div>`;
 }
 function perPayload(x){
-  const d=x.details||{}, f=d.per_forecast||{};
+  const d=x.details||{}, f=(d.per_forecast&&typeof d.per_forecast==='object'?d.per_forecast:(x.per_forecast&&typeof x.per_forecast==='object'?x.per_forecast:{}));
   let forecastPe=Number.isFinite(Number(f.forecast_pe))&&Number(f.forecast_pe)>0?Number(f.forecast_pe):null;
   if(forecastPe==null&&Number.isFinite(Number(d.per_forecast_pe))&&Number(d.per_forecast_pe)>0)forecastPe=Number(d.per_forecast_pe);
   let forecastEps=Number.isFinite(Number(f.forecast_eps))&&Number(f.forecast_eps)>0?Number(f.forecast_eps):null;
   if(forecastEps==null&&Number.isFinite(Number(d.per_forecast_eps))&&Number(d.per_forecast_eps)>0)forecastEps=Number(d.per_forecast_eps);
-  const daily=Array.isArray(d.chart_history)?d.chart_history:[];
-  let weekly=Array.isArray(d.chart_history_weekly)?d.chart_history_weekly:[];
+  const daily=Array.isArray(d.chart_history)&&d.chart_history.length?d.chart_history:(Array.isArray(x.chart_history)?x.chart_history:[]);
+  let weekly=Array.isArray(d.chart_history_weekly)&&d.chart_history_weekly.length?d.chart_history_weekly:(Array.isArray(x.chart_history_weekly)?x.chart_history_weekly:[]);
   if(!weekly.length&&daily.length){
     const groups={};
     daily.forEach(r=>{if(!r.date)return;const dt=new Date(r.date+'T00:00:00');if(Number.isNaN(dt.getTime()))return;const day=(dt.getDay()+6)%7;const monday=new Date(dt);monday.setDate(dt.getDate()-day);const k=monday.toISOString().slice(0,10);(groups[k]||(groups[k]=[])).push(r);});
@@ -91,7 +91,8 @@ function perPayload(x){
   // This keeps daily/weekly PER available even when Yahoo exposes PE but omits EPS.
   const latestClose=Number(x.price)>0?Number(x.price):(daily.length?Number(daily[daily.length-1].close):null);
   if(forecastEps==null&&forecastPe!=null&&latestClose>0)forecastEps=latestClose/forecastPe;
-  return {actual:Array.isArray(d.per_history)?d.per_history:[],forecastPe,forecastEps,switchDate:f.switch_date||null,updatedAt:d.per_updated_at||null,error:d.per_forecast_error||null,daily,weekly,latestClose};
+  const actual=Array.isArray(d.per_history)&&d.per_history.length?d.per_history:(Array.isArray(x.per_history)?x.per_history:[]);
+  return {actual,forecastPe,forecastEps,switchDate:f.switch_date||null,updatedAt:d.per_updated_at||x.per_updated_at||null,error:d.per_forecast_error||x.per_forecast_error||null,daily,weekly,latestClose};
 }
 function perRows(data,mode){
   const make=(src)=>src.map(r=>{const close=Number(r.close);let pe=null;if(Number.isFinite(data.forecastEps)&&data.forecastEps>0&&Number.isFinite(close)&&close>0)pe=close/data.forecastEps;else if(Number.isFinite(data.forecastPe)&&data.forecastPe>0&&Number.isFinite(data.latestClose)&&data.latestClose>0&&Number.isFinite(close)&&close>0)pe=(close/data.latestClose)*data.forecastPe;return {date:r.date,pe,kind:'forecast'};}).filter(r=>r.date&&Number.isFinite(r.pe)&&r.pe>0);
@@ -105,7 +106,7 @@ function renderPerChart(x,mode='full'){
   const panel=document.getElementById('per-panel'); if(!panel)return;
   const data=perPayload(x), rows=perRows(data,mode);
   const labels={full:'全期間（20年度）',weekly:'週足',daily:'日足'};
-  if(!rows.length){panel.innerHTML='<div class="perbox"><div class="mini">PERデータがありません。Daily stock update後に再表示してください。</div></div>';return;}
+  if(!rows.length){panel.innerHTML='<div class="perbox"><div class="mini">PERデータを描画できません。実績件数 '+data.actual.length+'件／日足 '+data.daily.length+'件／週足 '+data.weekly.length+'件／予想PER '+(Number.isFinite(data.forecastPe)?data.forecastPe.toFixed(2)+'倍':'未取得')+'。Daily stock updateで会社予想PER/EPSを更新してください。</div></div>';return;}
   const w=820,H=270,left=58,right=16,top=18,bottom=34,plotH=H-top-bottom;
   const vals=rows.map(r=>r.pe),lo=Math.min(...vals),hi=Math.max(...vals),span=(hi-lo)||1,pad=span*.08;
   const min=Math.max(0,lo-pad),max=hi+pad, xAt=i=>left+(rows.length===1?0:i/(rows.length-1))*(w-left-right), yAt=v=>top+(1-(v-min)/(max-min||1))*plotH;
@@ -141,5 +142,5 @@ ${metric('5日MA',d.ma5)}${metric('5日MA乖離',d.vs5,'%')}${metric('20日MA',d
 function iconClass(code){return code==='SUPPLY_BUY'||code==='SUPPLY_IMPROVING'?'supply':code==='BOTTOM_VOLUME'||code==='BOTTOM_REVERSAL'?'bottom':code.startsWith('RANGE_')?'breakout':code.startsWith('RSI_')?'rsi':code.startsWith('BB_')?'bb':code==='MONTHLY_MACD_BOTTOM'?'bottom':code==='EXTENDED'?'warn':''}
 function iconHtml(x){const arr=(x.signal_icons||[]).slice();if(x.signal==='BUY_CANDIDATE')arr.unshift({code:'AGG_BUY',icon:'🟢',label:'総合BUY',reason:x.signal_reason||''});return arr.length?'<div class=\"signal-icons\">'+arr.map(i=>'<span class=\"signal-icon '+(i.code==='AGG_BUY'?'buy':iconClass(i.code))+'\">'+esc(i.icon)+' '+esc(i.label)+'</span>').join('')+'</div>':''}
 function renderDetail(payload){const code=new URLSearchParams(location.search).get('code');const x=(payload.ranking||[]).find(v=>String(v.code)===String(code));if(!x){document.getElementById('content').innerHTML='<div class="card error">銘柄データが見つかりません。<br><a href="./index.html">一覧に戻る</a></div>';return;}window.__chartStock=x;document.title=(x.name||x.code)+' | 株スコア';document.getElementById('head').innerHTML='<a class="back" href="./index.html">← 一覧に戻る</a><a class="navlink" href="./signals.html">🚦 サイン一覧</a><div class="detail-page-title">'+esc(x.name||x.code)+'</div>'+iconHtml(x)+'<div class="muted">'+esc(x.code)+'　'+(jp[x.regime]||esc(x.regime||''))+'　'+(sg[x.signal]||esc(x.signal||''))+'</div><div class="reason" style="margin-top:6px">'+esc(x.signal_reason||x.regime_reason||'')+'</div>';document.getElementById('content').innerHTML='<div class="card">'+oneLine(x)+'<div class="signalbox"><div class="section-title">🎯 買いサイン</div><div class="reason">'+esc(x.signal_reason||'')+'</div>'+(x.details?.condition_checks?.length?'<div class="checks" style="margin-top:7px">'+conditionRows(x.details.condition_checks)+'</div>':'')+'</div>'+details(x).replace('<details class="detail">','<details class="detail" open>')+'</div>';}
-Promise.all([fetch('./data/decision_ranking.json?'+Date.now(),{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('日次ランキングがありません');return r.json()}),fetch('./data/stocks.json?'+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null)]).then(([ranking,stocks])=>{if(stocks?.stocks){for(const item of (ranking.ranking||[])){const raw=stocks.stocks[String(item.code)];if(raw){item.details=item.details||{};for(const k of ['chart_history','chart_history_weekly','chart_history_monthly','per_history','per_forecast','per_5y_avg','per_forecast_error','per_updated_at','per_actual_attribution']){if(item.details[k]==null || (Array.isArray(item.details[k])&&!item.details[k].length))item.details[k]=raw[k] ?? (Array.isArray(item.details[k])?[]:null);}}}}renderDetail(ranking)}).catch(e=>{document.getElementById('content').innerHTML='<div class="card error">'+esc(e.message)+'<br><a href="./index.html">一覧に戻る</a></div>';});if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js?ver=20260926-display-fix-3').catch(()=>{});
+Promise.all([fetch('./data/decision_ranking.json?'+Date.now(),{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('日次ランキングがありません');return r.json()}),fetch('./data/stocks.json?'+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null)]).then(([ranking,stocks])=>{if(stocks?.stocks){for(const item of (ranking.ranking||[])){const raw=stocks.stocks[String(item.code)];if(raw){item.details=item.details||{};for(const k of ['chart_history','chart_history_weekly','chart_history_monthly','per_history','per_5y_avg','per_forecast','per_forecast_error','per_updated_at','per_actual_attribution','per_forecast_eps','per_forecast_pe']){const v=item.details[k],rv=raw[k];const empty=v==null||(Array.isArray(v)&&!v.length)||(typeof v==='object'&&!Array.isArray(v)&&v!==null&&!Object.keys(v).length);if(empty&&rv!=null)item.details[k]=rv;}}}}renderDetail(ranking)}).catch(e=>{document.getElementById('content').innerHTML='<div class="card error">'+esc(e.message)+'<br><a href="./index.html">一覧に戻る</a></div>';});if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js?ver=20260926-display-fix-3').catch(()=>{});
 </script></body></html>

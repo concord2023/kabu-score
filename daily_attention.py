@@ -220,6 +220,50 @@ def explain_attention(b, score_row):
         parts.append('当日の外部情報で言及が増えた')
     return '。'.join(parts)+'。'
 
+def build_research_memo(b):
+    """Create an app-readable research memo instead of dumping source headlines.
+
+    This is a factual synthesis of the collected same-day material. It deliberately
+    separates (1) why it surfaced, (2) what the source material says, and (3) what
+    still needs confirmation. It does not turn attention into a BUY recommendation.
+    """
+    events=sorted(b.get('events',[]),key=lambda x:x.get('rank',999))
+    titles=[clean(e.get('title','')) for e in events if clean(e.get('title',''))]
+    category=material_category(titles[0] if titles else '')
+    rank=events[0].get('rank') if events else None
+    source_types=sorted(b.get('source_types',[]))
+    src_label={'investor':'投資家話題','ニュース':'ニュース','アナリスト':'アナリスト','YouTube':'YouTube'}
+    labels=[src_label.get(x,x) for x in source_types]
+    # Deduplicate nearly identical headlines while preserving source evidence.
+    uniq=[]
+    for t in titles:
+        if t and all(t not in u and u not in t for u in uniq): uniq.append(t)
+    lead=uniq[0] if uniq else '当日の外部情報で話題化しています。'
+    corroboration=''
+    if len(labels)>=2:
+        corroboration='、'.join(labels)+f'の{len(labels)}種類で言及が確認されています。'
+    elif labels:
+        corroboration=f'{labels[0]}で話題化が確認されています。'
+    evidence=[]
+    if rank: evidence.append(f'投資家話題ランキング{int(rank)}位')
+    if len(events)>1: evidence.append(f'同日{len(events)}件の関連言及')
+    if b.get('change') is not None:
+        try: evidence.append(f'前日比{float(b["change"]):+.2f}%')
+        except Exception: pass
+    check='ニュース本文・決算資料・開示内容まで取得できていない場合は、見出しだけで材料を断定しないよう「要確認」とします。'
+    return {
+        'headline': lead,
+        'summary': f'{lead} {corroboration}'.strip(),
+        'why': '、'.join(evidence) if evidence else '当日の外部情報で言及が増えたため',
+        'category': category,
+        'evidence': evidence,
+        'check_point': check,
+        'source_count': len(source_types),
+        'mention_count': len(events),
+        'sources': labels,
+        'detail': ' '.join(uniq[:3]),
+    }
+
 def build_attention_explanation(b):
     """Return structured explanation used by both the compact card and detail page."""
     events=sorted(b.get('events',[]),key=lambda x:x.get('rank',999))
@@ -302,6 +346,7 @@ def main():
         b['movement_type']=attention_type(b)
         b['material_summary']=ev[0]['title'] if ev else ''
         b['explanation']=build_attention_explanation({**b, 'events': ev})
+        b['research_memo']=build_research_memo({**b, 'events': ev})
         b['sources']=[{'name':e['source_name'],'type':e['source_type'],'title':e['title'],'url':e['url']} for e in ev[:6]]
         b['source_types']=sorted(b['source_types'])
         b.pop('events',None); b.pop('_score_row',None)

@@ -1,16 +1,18 @@
-/* Fast on-demand quote refresh.
- * Browser -> Yahoo Finance needs a CORS bridge.  Use one batch request first;
- * never make 20 serial requests.  The result is display-only and never saved.
+/* On-demand quote refresh.
+ * GitHub Pages cannot call Yahoo Finance directly from browser JavaScript because
+ * Yahoo does not expose the required CORS headers. Use several public CORS
+ * transports in parallel, with one Yahoo batch request only (never 20 serial calls).
+ * Display-only: saved score data is never changed.
  */
 (function(){
   const YAHOO_HOSTS=['https://query1.finance.yahoo.com','https://query2.finance.yahoo.com'];
-  const PROXY_TARGETS=[
+  const PROXIES=[
     {name:'CORS.lol', make:u=>'https://api.cors.lol/?url='+encodeURIComponent(u), mode:'raw'},
-    {name:'AllOrigins', make:u=>'https://api.allorigins.win/get?url='+encodeURIComponent(u), mode:'allorigins'},
+    {name:'CorsProxy', make:u=>'https://corsproxy.io/?url='+encodeURIComponent(u), mode:'raw'},
+    {name:'AllOrigins', make:u=>'https://api.allorigins.win/raw?url='+encodeURIComponent(u), mode:'raw'},
     {name:'Jina', make:u=>'https://r.jina.ai/'+u, mode:'jina'}
   ];
-  const TIMEOUT=1800;
-  const BATCH_TIMEOUT=6500;
+  const ROUTE_TIMEOUT=4500, BATCH_TIMEOUT=9500;
   const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
   const fmt=v=>v==null||!Number.isFinite(Number(v))?'—':Number(v).toLocaleString('ja-JP',{maximumFractionDigits:2});
   const pct=v=>v==null||!Number.isFinite(Number(v))?'—':`${Number(v)>=0?'+':''}${Number(v).toFixed(2)}%`;
@@ -28,78 +30,53 @@
     }
     return out;
   }
-  function parseChart(data,symbol){
-    const r=data?.chart?.result?.[0],m=r?.meta||{}; const price=Number(m.regularMarketPrice),prev=Number(m.previousClose??m.chartPreviousClose);
-    if(!Number.isFinite(price))return null;
-    const change=Number.isFinite(prev)&&prev!==0?price-prev:null;
-    return {symbol:m.symbol||symbol,price,previousClose:Number.isFinite(prev)?prev:null,change,changePct:change==null?null:change/prev*100,marketTime:m.regularMarketTime?new Date(Number(m.regularMarketTime)*1000):null};
-  }
-  async function fetchTimed(url,ms=TIMEOUT){
+  async function fetchTimed(url,ms=ROUTE_TIMEOUT){
     const ctl=new AbortController(),timer=setTimeout(()=>ctl.abort(),ms);
-    try{return await fetch(url,{cache:'no-store',signal:ctl.signal,headers:{'Accept':'application/json,text/plain,*/*'}})}finally{clearTimeout(timer);}
+    try{return await fetch(url,{cache:'no-store',signal:ctl.signal,headers:{Accept:'application/json,text/plain,*/*'}})}finally{clearTimeout(timer);}
   }
   async function parseResponse(r,mode){
     if(!r.ok)throw new Error('HTTP '+r.status);
-    if(mode==='allorigins'){
-      const wrap=await r.json();
-      if(!wrap||typeof wrap.contents!=='string')throw new Error('AllOrigins response invalid');
-      return parseText(wrap.contents);
-    }
     const text=await r.text();
-    return parseText(text);
-  }
-  function parseText(text){
-    let t=String(text||'').trim();
-    // Jina may add a short markdown/code fence around JSON.
-    t=t.replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/,'').trim();
+    let t=String(text||'').trim().replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/,'').trim();
+    if(mode==='allorigins'){try{const wrap=JSON.parse(t);t=String(wrap.contents||'');}catch(_){} }
     try{return JSON.parse(t);}catch(_){
       const a=t.indexOf('{'),b=t.lastIndexOf('}');
       if(a>=0&&b>a){try{return JSON.parse(t.slice(a,b+1));}catch(__){}}
     }
     throw new Error('JSON parse failed');
   }
-  async function tryTarget(target,mode){
-    const r=await fetchTimed(target,TIMEOUT); return parseResponse(r,mode);
-  }
   async function fetchBatch(codes){
     const symbols=codes.map(c=>`${String(c).trim()}.T`).join(',');
-    let last='';
-    // One Yahoo endpoint + several transport paths, all raced in parallel.
+    let errors=[];
     for(const host of YAHOO_HOSTS){
-      const yahoo=`${host}/v7/finance/spark?symbols=${encodeURIComponent(symbols)}&range=1d&interval=1m&indicators=close&includeTimestamps=false&includePrePost=false`;
+      const yahoo=`${host}/v7/finance/spark?symbols=${encodeURIComponent(symbols)}&range=1d&interval=1m&indicators=close&includeTimestamps=false&includePrePost=false&corsDomain=finance.yahoo.com&.tsrc=finance`;
       const jobs=[
-        {name:'Yahoo直接',p:fetchTimed(yahoo,TIMEOUT).then(r=>parseResponse(r,'raw'))},
-        ...PROXY_TARGETS.map(x=>({name:x.name,p:tryTarget(x.make(yahoo),x.mode)}))
+        {name:'Yahoo直接',p:fetchTimed(yahoo).then(r=>parseResponse(r,'raw'))},
+        ...PROXIES.map(x=>({name:x.name,p:fetchTimed(x.make(yahoo)).then(r=>parseResponse(r,x.mode))}))
       ];
       try{
-        const winner=await Promise.any(jobs.map(x=>x.p));
-        const map=parseSpark(winner);
+        const settled=await Promise.any(jobs.map(j=>j.p));
+        const map=parseSpark(settled);
         if(map.size)return {map,route:'Yahoo Finance batch'};
-        last='Yahooから銘柄データが返りませんでした';
-      }catch(e){last=e?.message||String(e);}
+        errors.push('Yahooから銘柄データが空でした');
+      }catch(e){errors.push(e?.message||String(e));}
     }
-    // Do not fan out to one request per stock here. A 20-stock fallback was the
-    // main source of the old 'spinning/no response' feeling. If the single
-    // batch route fails, return promptly with a clear error.
-    throw new Error(last||'Yahoo Financeから現在値を取得できませんでした');
+    throw new Error(errors.slice(0,2).join(' / ')||'Yahoo Financeから現在値を取得できませんでした');
   }
   function updateStatus(text,kind){const el=document.getElementById('realtimeStatus');if(!el)return;el.textContent=text;el.className='realtime-status '+(kind||'');}
   async function refresh(){
     const btn=document.getElementById('realtimeRefresh'),rows=[...document.querySelectorAll('[data-live-code]')],codes=[...new Set(rows.map(x=>String(x.dataset.liveCode||'').trim()).filter(Boolean))];
     if(!codes.length){updateStatus('表示銘柄がありません。','warn');return;}
-    btn.disabled=true;btn.textContent='取得中…';updateStatus(`現在値を取得中… ${codes.length}銘柄（最大約6秒）`,'loading');
+    btn.disabled=true;btn.textContent='取得中…';updateStatus(`現在値を取得中… ${codes.length}銘柄（最大約10秒）`,'loading');
     const started=performance.now();
     try{
-      const {map,route}=await Promise.race([
-        fetchBatch(codes),
-        new Promise((_,rej)=>setTimeout(()=>rej(new Error('取得がタイムアウトしました（6秒）')),BATCH_TIMEOUT))
-      ]);
+      const {map}=await Promise.race([fetchBatch(codes),new Promise((_,rej)=>setTimeout(()=>rej(new Error('10秒で応答しませんでした。通信経路を確認してください。')),BATCH_TIMEOUT))]);
       let ok=0; rows.forEach(row=>{
-        const code=String(row.dataset.liveCode||'').trim(),q=map.get(`${code}.T`)||map.get(code)||map.get(`${code}`); if(!q)return; ok++;
+        const code=String(row.dataset.liveCode||'').trim(),q=map.get(`${code}.T`)||map.get(code); if(!q)return; ok++;
         const p=row.querySelector('.live-price'),c=row.querySelector('.live-change'),t=row.querySelector('.live-time');
         if(p)p.textContent=fmt(q.price);
         if(c){c.textContent=pct(q.changePct);c.className=`quote-change live-change ${cls(q.changePct)}`;}
-        if(t)t.textContent=q.marketTime?`更新 ${q.marketTime.toLocaleString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'})}`:'更新時刻不明';
+        if(t)t.textContent=q.marketTime?`更新 ${q.marketTime.toLocaleString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',timeZone:'Asia/Tokyo'})}`:'更新時刻不明';
         row.classList.add('live-updated');
       });
       if(!ok)throw new Error('現在値を1銘柄も受け取れませんでした');
