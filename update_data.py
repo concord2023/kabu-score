@@ -65,6 +65,9 @@ if watch != _base_watch:
 # Keep API traffic below IRBANK's current 60 requests/minute limit.
 # 1.05s means at most ~57 requests/minute, leaving a small safety margin.
 MIN_REQUEST_INTERVAL = 1.05
+# Hard safety ceiling: never allow this process to issue 4,000 IRBANK HTTP calls.
+# The /usage preflight below reserves the full planned budget before any data call.
+MAX_IRBANK_REQUESTS = 3999
 _last_request_at = 0.0
 _request_count = 0
 _rate_wait_seconds = 0.0
@@ -100,6 +103,10 @@ def _http_error_payload(error):
 
 def get(path, params=None, retries=4):
     global _request_count, _retry_count, _http_seconds
+    # Absolute process-level guard. If retries or unexpected pagination would
+    # consume the safety budget, stop before issuing the next HTTP request.
+    if _request_count >= MAX_IRBANK_REQUESTS:
+        raise IRBankRateLimitError('IRBANK request safety budget reached; refusing to issue another request.')
     url = API + path
     if params:
         url += '?' + urllib.parse.urlencode(params)
@@ -170,14 +177,19 @@ def check_api_usage(watch_count):
     if remaining is None:
         print('IRBANK usage: unavailable (continuing; endpoint returned no remaining count)')
         return
-    # A normal run needs at least one price call + one supply call per stock,
-    # plus one breadth request. Long-history monthly-MACD checks may add pages.
-    # We deliberately use a conservative lower bound only to catch the obvious
-    # exhausted-quota case; we do not reject a run merely because the estimate
-    # is imperfect.
-    minimum_needed = max(10, watch_count * 4 + 2)
-    print(f'IRBANK usage: remaining={remaining}/{limit} resets_at={resets_at}')
-    if int(remaining) <= 0:
+    # Planned maximum for the normal daily run:
+    #   1 probe price page
+    #   19 additional stocks × 2 price pages (500 rows/page, 1,000-row target)
+    #   20 weekly-margin calls (worst case: no usable cache)
+    #   20 valuation-history calls (20 annual observations/stock)
+    # = 79 quota-consuming data calls for the current 20-stock watchlist.
+    # We deliberately reserve the full worst-case count before starting.
+    # The process-level MAX_IRBANK_REQUESTS guard is a second, absolute backstop.
+    stock_price_pages = 2
+    planned_data_calls = 1 + max(0, watch_count - 1) * stock_price_pages + watch_count + watch_count
+    minimum_needed = planned_data_calls
+    print(f'IRBANK usage: remaining={remaining}/{limit} resets_at={resets_at}; planned_worst_case={planned_data_calls}; hard_cap={MAX_IRBANK_REQUESTS}')
+    if int(remaining) < minimum_needed:
         raise IRBankRateLimitError(
             f'IRBANKの日次API上限に到達しています（remaining=0）。次回リセット: {resets_at}'
         )
@@ -1016,7 +1028,7 @@ def candle_reversal_signals(rows):
             bottom_zone = decline_context and pos20 is not None and pos20 <= 8
         if bottom_zone:
             zone_reason = '大きな下落後で、直近安値に近い底値圏'
-    
+
     # Confirmation means the current session actually reclaimed the prior
     # high.  It is intentionally separate from merely seeing a pattern.
     confirmed = bool(current and prev and current['bull'] and current['close'] > prev['high'])
@@ -1558,6 +1570,34 @@ def load_cached_supply(code, max_age_days=10, reference_date=None):
         return None
 
 
+
+def fetch_historical_per(code, years=20):
+    """Fetch annual historical PER observations for the detail-page chart.
+
+    IRBANK's valuations endpoint provides annual PER based on the actual EPS
+    reported for each fiscal year. It does NOT provide point-in-time forecast
+    PER history, so the UI labels this series as historical PER rather than
+    pretending it is forecast-PER history. Current forecast PER is kept as a
+    separate value when available from the screening endpoint.
+    """
+    try:
+        data = get('/valuations', {'security_code': code, 'years': years})
+        history = []
+        for row in data.get('history') or []:
+            per = row.get('per')
+            if per is None or not isinstance(per, (int, float)):
+                continue
+            history.append({
+                'fiscal_year': row.get('fiscal_year'),
+                'date': row.get('fiscal_year'),
+                'per': round(float(per), 2),
+            })
+        history.sort(key=lambda x: str(x.get('fiscal_year') or ''))
+        return history, data.get('attribution') or {}
+    except Exception as e:
+        return [], {'error': str(e)}
+
+
 def main():
     # Market breadth is fetched once. Failure is non-fatal because market context is
     # never used as a hard buy veto.
@@ -1570,7 +1610,7 @@ def main():
     out = {
         'updated_at': now_jst().isoformat(),
         'source': 'IRBANK API + 豆腐ハードボイルド（騰落銘柄数）',
-        'api_strategy': 'price:800-row target/stock; weekly margin:1 endpoint/stock only when cache is stale; breadth:1/run; monthly MACD:1000-row target only for weekly-RSI<=30; quota preflight via /usage',
+        'api_strategy': 'price:1000-row target/stock (2 pages max); weekly margin:1 endpoint/stock only when cache is stale; breadth:1/run; 20-year annual PER history:1 valuation endpoint/stock; quota preflight + hard 3999-call guard',
         'stocks': {},
         'diagnostics': [],
     }
@@ -1625,7 +1665,7 @@ def main():
             if code == probe_code and probe_rows:
                 rows, attribution = probe_rows, probe_attribution
             else:
-                rows, attribution = get_all_prices(code, minimum=800)
+                rows, attribution = get_all_prices(code, minimum=1000)
             target_date = rows[0]['date']
 
             if breadth_cache is None and breadth_error is None:
@@ -1643,15 +1683,11 @@ def main():
 
             s = calc(rows, breadth_cache, supply_info)
 
-            # Monthly MACD needs a much longer history.  Only stocks that pass the
-            # strict weekly-RSI<=30 gate are expanded, so the usual daily update
-            # stays fast while the bottom signal remains fully evaluated.
-            if s.get('rsi14_weekly') is not None and s.get('rsi14_weekly') <= 30:
-                long_rows, long_attribution = get_all_prices(code, minimum=1000)
-                rows = long_rows
-                attribution = long_attribution or attribution
-                s = calc(rows, breadth_cache, supply_info)
-                target_date = rows[0]['date']
+            # Detail-page valuation panel: annual historical PER.
+            # This is deliberately display-only and never enters the BUY score.
+            historical_per, per_attr = fetch_historical_per(code, years=20)
+            s['per_history'] = historical_per
+            s['per_attribution'] = per_attr or {}
 
             regime = classify_regime(rows, s.get('candle_signal'))
             decision = decide(s, regime)
