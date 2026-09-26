@@ -156,40 +156,94 @@ def load_scores():
     return out
 
 
+def _num(v):
+    try:
+        n=float(v)
+        return n if n == n else None
+    except Exception:
+        return None
+
+def material_category(title):
+    """Translate a source headline into a compact, factual 'what is moving it' tag."""
+    t=clean(title)
+    rules=[
+        (r'ストップ高|Ｓ高|S高|急騰|急上昇|大幅高|続伸|上昇|反発', '株価上昇・需給/値動き'),
+        (r'急落|大幅安|反落|下落|売られ|暴落', '株価下落・警戒'),
+        (r'受注|受注高|契約|案件', '受注・案件材料'),
+        (r'決算|業績|増益|減益|上方修正|下方修正|利益|売上', '決算・業績材料'),
+        (r'NVIDIA|エヌビディア|AI|ＡＩ|データセンター|半導体', 'AI・半導体/データセンターテーマ'),
+        (r'自社株買い|株主還元|増配|配当', '株主還元材料'),
+        (r'提携|協業|買収|TOB|ＴＯＢ|M&A|Ｍ＆Ａ', '提携・M&A材料'),
+        (r'需給|信用|貸借|空売り|買い残|売り残', '需給材料'),
+        (r'懸念|警戒|問題|不透明|悪化', '懸念・警戒材料'),
+    ]
+    for pat,label in rules:
+        if re.search(pat,t,re.I): return label
+    return '投資家の話題・材料'
+
 def explain_attention(b, score_row):
-    """Create a human-readable reason from the day's observable signals."""
+    """Explain both *why it was selected* and *what is actually happening*."""
     d=score_row.get('details',score_row) if isinstance(score_row,dict) else {}
+    ch=_num(d.get('change',score_row.get('change') if isinstance(score_row,dict) else None))
+    vr=_num(d.get('volume_ratio',score_row.get('volume_ratio') if isinstance(score_row,dict) else None))
+    rsi=_num(d.get('rsi14',score_row.get('rsi14') if isinstance(score_row,dict) else None))
+    rs=_num(d.get('relative_strength',score_row.get('relative_strength') if isinstance(score_row,dict) else None))
+    srcs=sorted(b.get('source_types',[]))
+    events=b.get('events',[])
+    ranked=sorted(events,key=lambda x:x.get('rank',999))
+    top=ranked[0] if ranked else {}
+    title=clean(top.get('title',''))
+    rank=top.get('rank')
     parts=[]
-    ch=d.get('change',score_row.get('change')) if isinstance(score_row,dict) else None
-    vr=d.get('volume_ratio',score_row.get('volume_ratio')) if isinstance(score_row,dict) else None
-    rsi=d.get('rsi14',score_row.get('rsi14')) if isinstance(score_row,dict) else None
-    src=len(b.get('source_types',[]))
-    try:
-        ch=float(ch) if ch is not None else None
-    except Exception: ch=None
-    try:
-        vr=float(vr) if vr is not None else None
-    except Exception: vr=None
-    try:
-        rsi=float(rsi) if rsi is not None else None
-    except Exception: rsi=None
+    if rank:
+        parts.append(f'当日の投資家話題ランキング{int(rank)}位')
+    if len(srcs)>=3: parts.append(f'{len(srcs)}種類の情報源で言及')
+    elif len(srcs)==2: parts.append('複数の情報源で言及')
+    elif len(srcs)==1:
+        src_label={'investor':'投資家話題','ニュース':'ニュース','アナリスト':'アナリスト','YouTube':'YouTube'}.get(srcs[0],srcs[0])
+        parts.append(f'{src_label}で話題化')
+    if title:
+        parts.append(f'材料は「{title[:90]}」')
+    # Quantitative confirmation from the stock-score data, when available.
     if ch is not None:
-        if ch>=10: parts.append(f'株価が{ch:+.1f}%と急騰')
-        elif ch>=5: parts.append(f'株価が{ch:+.1f}%と大きく上昇')
-        elif ch<=-10: parts.append(f'株価が{ch:+.1f}%と急落')
-        elif ch<=-5: parts.append(f'株価が{ch:+.1f}%と大きく下落')
-        elif abs(ch)>=2: parts.append(f'株価が{ch:+.1f}%と動意')
-    if vr is not None:
-        if vr>=3: parts.append(f'出来高が平常比{vr:.1f}倍で急増')
-        elif vr>=2: parts.append(f'出来高が平常比{vr:.1f}倍に増加')
-    if src>=3: parts.append(f'{src}種類の情報源で話題')
-    elif src==2: parts.append('複数の情報源で話題')
-    elif src==1: parts.append('投資家・ニュース等で話題')
-    if rsi is not None and rsi>=70: parts.append(f'RSI{rsi:.0f}で短期過熱にも注意')
-    elif rsi is not None and rsi<=30: parts.append(f'RSI{rsi:.0f}で売られ過ぎ圏')
+        if abs(ch)>=5: parts.append(f'株価も前日比{ch:+.1f}%と大きく動いた')
+        elif abs(ch)>=2: parts.append(f'株価も前日比{ch:+.1f}%と動意')
+    if vr is not None and vr>=1.5:
+        parts.append(f'出来高は平常比{vr:.1f}倍')
+    if rs is not None and abs(rs)>=2:
+        parts.append(f'日経平均比の相対強度は{rs:+.1f}pt')
+    if rsi is not None and rsi>=70:
+        parts.append(f'RSI{rsi:.1f}で過熱警戒')
+    elif rsi is not None and rsi<=30:
+        parts.append(f'RSI{rsi:.1f}で売られ過ぎ圏')
     if not parts:
-        parts.append('当日の投資家・ニュース等で言及が増えたため注目')
-    return '。'.join(parts)+ '。'
+        parts.append('当日の外部情報で言及が増えた')
+    return '。'.join(parts)+'。'
+
+def build_attention_explanation(b):
+    """Return structured explanation used by both the compact card and detail page."""
+    events=sorted(b.get('events',[]),key=lambda x:x.get('rank',999))
+    top=events[0] if events else {}
+    title=clean(top.get('title',''))
+    category=material_category(title)
+    reasons=[]
+    rank=top.get('rank')
+    if rank: reasons.append(f'投資家話題ランキング{int(rank)}位')
+    if len(b.get('source_types',[]))>1: reasons.append(f"{len(b['source_types'])}種類の情報源")
+    elif len(events)>1: reasons.append(f'{len(events)}件の同日言及')
+    else: reasons.append('当日の話題化')
+    why='＋'.join(reasons)
+    score_parts={
+        'source_types':len(b.get('source_types',[])),
+        'mentions':len(events),
+        'investor_rank':rank,
+    }
+    return {
+        'why_selected':why,
+        'what_is_happening':title or '当日の外部情報で話題化',
+        'material_category':category,
+        'score_breakdown':score_parts,
+    }
 
 def attention_type(b):
     d=b.get('_score_row',{}); d=d.get('details',d) if isinstance(d,dict) else {}
@@ -244,9 +298,10 @@ def main():
         b['change']=d.get('change',s.get('change'))
         b['_score_row']=s
         ev=sorted(b['events'], key=lambda x:x.get('rank',999))
-        b['reason']=explain_attention(b,s)
+        b['reason']=explain_attention({**b, 'events': ev}, s)
         b['movement_type']=attention_type(b)
         b['material_summary']=ev[0]['title'] if ev else ''
+        b['explanation']=build_attention_explanation({**b, 'events': ev})
         b['sources']=[{'name':e['source_name'],'type':e['source_type'],'title':e['title'],'url':e['url']} for e in ev[:6]]
         b['source_types']=sorted(b['source_types'])
         b.pop('events',None); b.pop('_score_row',None)
