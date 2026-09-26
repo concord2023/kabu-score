@@ -121,9 +121,9 @@ assert_true("build_period_chart_history(rows, 'monthly', 18)" in (ROOT/'update_d
 # 8. PER/weekly valuation UI and IRBANK hard safety ceiling.
 detail=(ROOT/'detail.html').read_text(encoding='utf-8')
 assert_true('forecastPerBox' in detail and 'togglePerChart' in detail, 'forecast PER toggle missing')
-assert_true('chart_history_weekly' in detail and '過去20年度の実績PER' in detail and '保存されたPER' in detail, 'stored 20-fiscal-year actual/forecast PER chart missing')
+assert_true('chart_history_weekly' in detail and 'per_history' in detail and 'per_forecast' in detail and '全期間（20年度）' in detail and '実績PER（20年度）' in detail and '予想PER' in detail, 'stored 20-fiscal-year actual/forecast PER chart missing')
 assert_true('per_history' in detail and 'per_forecast' in detail and '直近の決算発表日' in (ROOT/'update_data.py').read_text(encoding='utf-8'), 'stored historical actual PER or forecast switch date missing')
-assert_true('過去20年度の実績PER' in detail and 'current forecast EPS' not in detail, 'must not replace historical actual PER with current forecast EPS')
+assert_true('実績PER（20年度）' in detail and '過去20年度はIRBANKの実績PER' in detail and 'current forecast EPS' not in detail, 'must not replace historical actual PER with current forecast EPS')
 upd=(ROOT/'update_data.py').read_text(encoding='utf-8')
 assert_true('MAX_API_REQUESTS = 3999' in upd, 'IRBANK absolute request ceiling missing')
 assert_true('worst_case_requests' in upd and 'minimum_needed = max(10, worst_case_requests)' in upd, 'IRBANK preflight worst-case budget missing')
