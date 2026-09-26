@@ -6,6 +6,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 import re
+import calendar
 from datetime import datetime, timezone, timedelta
 from html.parser import HTMLParser
 from pathlib import Path
@@ -183,7 +184,7 @@ def check_api_usage(watch_count):
     # probe price request, one breadth request, and up to 4 attempts per API
     # call are included. This deliberately overestimates the normal run.
     # The resulting ceiling is still far below IRBANK's 4000/day limit.
-    logical_calls = 2 + watch_count * 6
+    logical_calls = 2 + watch_count * 7
     worst_case_requests = logical_calls * 4
     minimum_needed = max(10, worst_case_requests)
     print(f'IRBANK usage: remaining={remaining}/{limit} resets_at={resets_at}')
@@ -1530,6 +1531,106 @@ def calc(rows, breadth_info=None, supply_info=None):
     }
 
 
+
+def fiscal_year_end_date(fiscal_year):
+    """Convert IRBANK fiscal-year label YYYY/MM to the fiscal month-end date."""
+    m = re.fullmatch(r'(\d{4})/(\d{2})', str(fiscal_year or ''))
+    if not m:
+        return None
+    year, month = int(m.group(1)), int(m.group(2))
+    day = calendar.monthrange(year, month)[1]
+    return f'{year:04d}-{month:02d}-{day:02d}'
+
+
+def fetch_historical_per(code):
+    """Fetch the 20-fiscal-year actual PER series from IRBANK.
+
+    IRBANK's /valuations.per is based on each fiscal period's adjusted
+    closing price divided by that period's actual EPS.  This is the historical
+    annual actual-PER series used by the PER chart; it is not current forecast
+    EPS applied retroactively.
+    """
+    data = get('/valuations', {'security_code': code, 'years': 20})
+    history = data.get('history') or [] if isinstance(data, dict) else []
+    rows = []
+    for row in history:
+        if not isinstance(row, dict):
+            continue
+        per = row.get('per')
+        fy = row.get('fiscal_year')
+        if fy and isinstance(per, (int, float)) and per > 0:
+            rows.append({
+                'fiscal_year': str(fy),
+                'date': fiscal_year_end_date(fy),
+                'per': round(float(per), 3),
+                'per_source': row.get('per_source'),
+                'stock_price': row.get('stock_price_adjusted'),
+                'eps': row.get('eps_adjusted'),
+            })
+    rows.sort(key=lambda x: x.get('date') or '')
+    return {
+        'history': rows,
+        'per_5y_avg': data.get('per_5y_avg') if isinstance(data, dict) else None,
+        'attribution': data.get('attribution') if isinstance(data, dict) else None,
+    }
+
+
+def fetch_yahoo_forecast_per(code):
+    """Read current company-forecast EPS/PER and the latest earnings date.
+
+    The daily job stores this so the detail page never needs to make a network
+    request merely to open the PER chart. The latest earnings announcement is
+    retained as the same switch-date proxy previously used by the UI.
+    """
+    url = f'https://finance.yahoo.co.jp/quote/{urllib.parse.quote(str(code).strip())}.T'
+    req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 (compatible; kabu-score/12.0)'})
+    with urllib.request.urlopen(req, timeout=15) as r:
+        html = r.read().decode('utf-8', errors='ignore')
+    text = re.sub(r'<[^>]+>', ' ', html)
+    text = re.sub(r'&nbsp;|&#160;', ' ', text)
+    text = re.sub(r'\s+', ' ', text)
+    pe_m = re.search(r'PER（会社予想）.{0,220}?([0-9]{1,4}(?:\.[0-9]+)?)倍', text)
+    eps_m = re.search(r'EPS（会社予想）.{0,220}?([0-9][0-9,]*(?:\.[0-9]+)?)', text)
+    date_m = re.search(r'直近の決算発表日は(\d{4})年(\d{1,2})月(\d{1,2})日', text)
+    pe = float(pe_m.group(1)) if pe_m else None
+    eps = float(eps_m.group(1).replace(',', '')) if eps_m else None
+    switch_date = None
+    if date_m:
+        switch_date = f'{date_m.group(1)}-{int(date_m.group(2)):02d}-{int(date_m.group(3)):02d}'
+    if pe is None and eps is None:
+        raise RuntimeError('Yahoo!ファイナンスから会社予想PER/EPSを取得できませんでした')
+    return {
+        'forecast_pe': round(pe, 3) if pe is not None else None,
+        'forecast_eps': round(eps, 3) if eps is not None else None,
+        'switch_date': switch_date,
+        'source': 'Yahoo!ファイナンス（会社予想PER/EPS）',
+        'switch_date_basis': '直近の決算発表日（現在の会社予想EPSの切替基準として保存）',
+    }
+
+
+def collect_per_data(code):
+    """Collect all PER inputs during Daily stock update; UI only reads saved data."""
+    actual = fetch_historical_per(code)
+    try:
+        forecast = fetch_yahoo_forecast_per(code)
+        forecast_error = None
+    except Exception as e:
+        forecast = {
+            'forecast_pe': None, 'forecast_eps': None, 'switch_date': None,
+            'source': 'Yahoo!ファイナンス（会社予想PER/EPS）',
+            'switch_date_basis': '取得できず',
+        }
+        forecast_error = str(e)
+    return {
+        'actual_history': actual.get('history', []),
+        'per_5y_avg': actual.get('per_5y_avg'),
+        'actual_attribution': actual.get('attribution'),
+        'forecast': forecast,
+        'forecast_error': forecast_error,
+        'updated_at': now_jst().isoformat(),
+    }
+
+
 def load_cached_supply(code, max_age_days=10, reference_date=None):
     """Reuse weekly supply data when it is fresh relative to the latest price date.
 
@@ -1580,7 +1681,7 @@ def main():
     out = {
         'updated_at': now_jst().isoformat(),
         'source': 'IRBANK API + 豆腐ハードボイルド（騰落銘柄数）',
-        'api_strategy': 'price:800-row target/stock; weekly margin:1 endpoint/stock only when cache is stale; breadth:1/run; monthly MACD:1000-row target only for weekly-RSI<=30; quota preflight via /usage',
+        'api_strategy': 'price:800-row target/stock; weekly margin:1 endpoint/stock only when cache is stale; valuations:20 fiscal years/stock; Yahoo company forecast PER/EPS/stock; breadth:1/run; monthly MACD:1000-row target only for weekly-RSI<=30; quota preflight via /usage',
         'stocks': {},
         'diagnostics': [],
     }
@@ -1667,9 +1768,25 @@ def main():
             decision = decide(s, regime)
             s.update(regime)
             s.update(decision)
+            try:
+                per_data = collect_per_data(code)
+            except Exception as per_error:
+                per_data = {
+                    'actual_history': [], 'per_5y_avg': None, 'actual_attribution': None,
+                    'forecast': {'forecast_pe': None, 'forecast_eps': None, 'switch_date': None,
+                                 'source': 'Yahoo!ファイナンス（会社予想PER/EPS）',
+                                 'switch_date_basis': '取得できず'},
+                    'forecast_error': str(per_error), 'updated_at': now_jst().isoformat(),
+                }
             s.update({
                 'code': code, 'name': name, 'industry': industry,
                 'attribution': attribution,
+                'per_history': per_data['actual_history'],
+                'per_5y_avg': per_data['per_5y_avg'],
+                'per_forecast': per_data['forecast'],
+                'per_forecast_error': per_data['forecast_error'],
+                'per_updated_at': per_data['updated_at'],
+                'per_actual_attribution': per_data['actual_attribution'],
             })
             out['stocks'][code] = s
             out['diagnostics'].append({
