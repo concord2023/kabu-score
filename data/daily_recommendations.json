@@ -1,0 +1,15 @@
+{
+  "updated_at": "2026-09-26T12:22:15.213819+09:00",
+  "date": "2026-09-26",
+  "title": "今日の注目5選",
+  "status": "no_data",
+  "method": "同日公開の投資家話題・ニュース・アナリスト言及・YouTube関連情報を銘柄単位に集約。情報源の種類と複数言及を加点し、上位5銘柄を表示。これはBUY判定ではない。",
+  "source_policy": "各記事・動画へのリンクと発信元を保存。外部情報の注目度とkabu-scoreの総合BUY判定は別物として表示する。",
+  "errors": [
+    "chartnavi: URLError: <urlopen error [Errno -3] Temporary failure in name resolution>",
+    "kabutan: URLError: <urlopen error [Errno -3] Temporary failure in name resolution>",
+    "analyst: URLError: <urlopen error [Errno -3] Temporary failure in name resolution>",
+    "youtube: URLError: <urlopen error [Errno -3] Temporary failure in name resolution>"
+  ],
+  "candidates": []
+}
