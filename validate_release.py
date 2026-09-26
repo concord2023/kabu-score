@@ -118,6 +118,18 @@ assert_true('weekly RSI(14) <= 30' in bottom_py and 'monthly_macd_bottom_signal'
 assert_true('rsi14_wilder' in bottom_py and "weekly_rsi_method': 'Wilder'" in bottom_py, 'Prime Tora scan must use conventional Wilder weekly RSI and expose the method')
 assert_true('weekly_rsi_simple' not in bottom_py, 'Prime Tora scan must not carry a second/simple RSI definition into its result path')
 assert_true("build_period_chart_history(rows, 'monthly', 18)" in (ROOT/'update_data.py').read_text(encoding='utf-8'), 'monthly chart must keep 18 months')
+# 8. PER/weekly valuation UI and IRBANK hard safety ceiling.
+detail=(ROOT/'detail.html').read_text(encoding='utf-8')
+assert_true('forecastPerBox' in detail and 'togglePerChart' in detail, 'forecast PER toggle missing')
+assert_true('chart_history_weekly' in detail and 'PER推移：過去は実績PER、直近予想EPS発表後は予想PER' in detail, 'mixed actual/forecast PER chart missing')
+assert_true('monthlyPeRatio' in detail and '直近の決算発表日' in detail, 'historical actual PER source or forecast switch date missing')
+assert_true('過去の実績PERを現在の予想EPSで置き換えることはしていません' in detail, 'must not use current forecast EPS for historical actual PER')
+upd=(ROOT/'update_data.py').read_text(encoding='utf-8')
+assert_true('MAX_API_REQUESTS = 3999' in upd, 'IRBANK absolute request ceiling missing')
+assert_true('worst_case_requests' in upd and 'minimum_needed = max(10, worst_case_requests)' in upd, 'IRBANK preflight worst-case budget missing')
+sw=(ROOT/'sw.js').read_text(encoding='utf-8')
+assert_true('kabu-score-v11-deviation-table' in sw, 'service worker cache must be bumped for the latest UI change')
+
 assert_true('Calculate period indicators from the full available monthly history' in (ROOT/'update_data.py').read_text(encoding='utf-8'), 'monthly indicators must be calculated before presentation trimming')
 html=(ROOT/'detail.html').read_text(encoding='utf-8')
 assert_true("[['ma5','5週MA'],['ma13','13週MA'],['ma26','26週MA'],['ma52','52週MA']]" in html, 'weekly chart MA set must be 5/13/26/52')
