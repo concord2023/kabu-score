@@ -155,6 +155,56 @@ def load_scores():
         except Exception: pass
     return out
 
+
+def explain_attention(b, score_row):
+    """Create a human-readable reason from the day's observable signals."""
+    d=score_row.get('details',score_row) if isinstance(score_row,dict) else {}
+    parts=[]
+    ch=d.get('change',score_row.get('change')) if isinstance(score_row,dict) else None
+    vr=d.get('volume_ratio',score_row.get('volume_ratio')) if isinstance(score_row,dict) else None
+    rsi=d.get('rsi14',score_row.get('rsi14')) if isinstance(score_row,dict) else None
+    src=len(b.get('source_types',[]))
+    try:
+        ch=float(ch) if ch is not None else None
+    except Exception: ch=None
+    try:
+        vr=float(vr) if vr is not None else None
+    except Exception: vr=None
+    try:
+        rsi=float(rsi) if rsi is not None else None
+    except Exception: rsi=None
+    if ch is not None:
+        if ch>=10: parts.append(f'株価が{ch:+.1f}%と急騰')
+        elif ch>=5: parts.append(f'株価が{ch:+.1f}%と大きく上昇')
+        elif ch<=-10: parts.append(f'株価が{ch:+.1f}%と急落')
+        elif ch<=-5: parts.append(f'株価が{ch:+.1f}%と大きく下落')
+        elif abs(ch)>=2: parts.append(f'株価が{ch:+.1f}%と動意')
+    if vr is not None:
+        if vr>=3: parts.append(f'出来高が平常比{vr:.1f}倍で急増')
+        elif vr>=2: parts.append(f'出来高が平常比{vr:.1f}倍に増加')
+    if src>=3: parts.append(f'{src}種類の情報源で話題')
+    elif src==2: parts.append('複数の情報源で話題')
+    elif src==1: parts.append('投資家・ニュース等で話題')
+    if rsi is not None and rsi>=70: parts.append(f'RSI{rsi:.0f}で短期過熱にも注意')
+    elif rsi is not None and rsi<=30: parts.append(f'RSI{rsi:.0f}で売られ過ぎ圏')
+    if not parts:
+        parts.append('当日の投資家・ニュース等で言及が増えたため注目')
+    return '。'.join(parts)+ '。'
+
+def attention_type(b):
+    d=b.get('_score_row',{}); d=d.get('details',d) if isinstance(d,dict) else {}
+    ch=d.get('change',b.get('change')); vr=d.get('volume_ratio')
+    try: ch=float(ch) if ch is not None else None
+    except Exception: ch=None
+    try: vr=float(vr) if vr is not None else None
+    except Exception: vr=None
+    if ch is not None and ch>=10 and vr is not None and vr>=2: return '急騰＋出来高集中'
+    if ch is not None and ch>=5: return '上昇・動意'
+    if ch is not None and ch<=-5: return '下落・急変'
+    if vr is not None and vr>=2: return '出来高集中'
+    if len(b.get('source_types',[]))>=2: return '複数情報源で話題'
+    return '話題集中'
+
 def main():
     now=datetime.now(JST); master=load_master(); events=[]; errors=[]
     sources=[
@@ -181,15 +231,25 @@ def main():
         b['score'] += max(0,len(b['source_types'])-1)*2.5
         s=scores.get(b['code'],{})
         d=s.get('details',s)
+        # A name appearing in a news title is not enough: require a real
+        # listed-company master entry, and when daily score data exists use it
+        # to validate that the code has an actual market price.
+        if b['code'] not in master:
+            continue
+        if s and s.get('price') is None and d.get('price') is None:
+            continue
         b['kabu_score']=d.get('score',s.get('score'))
         b['signal']=s.get('signal',d.get('signal'))
         b['rsi14']=d.get('rsi14',s.get('rsi14'))
         b['change']=d.get('change',s.get('change'))
+        b['_score_row']=s
         ev=sorted(b['events'], key=lambda x:x.get('rank',999))
-        b['reason']=ev[0]['title'] if ev else ''
+        b['reason']=explain_attention(b,s)
+        b['movement_type']=attention_type(b)
+        b['material_summary']=ev[0]['title'] if ev else ''
         b['sources']=[{'name':e['source_name'],'type':e['source_type'],'title':e['title'],'url':e['url']} for e in ev[:6]]
         b['source_types']=sorted(b['source_types'])
-        b.pop('events',None)
+        b.pop('events',None); b.pop('_score_row',None)
         result.append(b)
     result.sort(key=lambda x:(-x['score'],x['code']))
     top=result[:5]
