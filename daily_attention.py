@@ -68,25 +68,28 @@ def load_master():
         return {}
 
 def code_from_text(text, master):
-    """Extract JP stock codes even when the company master is stale.
+    """Extract stock codes only when the evidence is unambiguous.
 
-    New listings can appear in same-day source pages before company_master.json
-    is refreshed.  Therefore code extraction must not require a master hit.
+    Plain 4-digit codes must exist in the current JPX/company master.  A
+    letter-suffixed code (e.g. 285A) is accepted only when it looks like a
+    JPX-style code and is not embedded in another number.  Company-name
+    matching is handled separately and never guesses from generic words.
     """
     found=[]
-    for m in re.finditer(r'(?<!\d)(\d{3,4}[A-Z]?)(?!\d)', text or ''):
+    for m in re.finditer(r'(?<![0-9A-Z])([0-9]{4}[A-Z]?)(?![0-9A-Z])', text or '', re.I):
         c=m.group(1).upper()
-        # A plain 4-digit number can be a date/price.  Accept plain 4-digit
-        # codes only when the master confirms them; letter-suffixed codes such
-        # as 285A are accepted directly because they are unambiguous.
-        if len(c)==4 and c.isdigit() and c not in master:
-            # Four-digit codes are accepted only when JPX master confirms the
-            # listing. This prevents dates, index values and other numbers from
-            # being misread as stock tickers. The master is refreshed immediately
-            # before the daily collector in GitHub Actions.
-            continue
-        if c not in found: found.append(c)
+        if c.isdigit() and c not in master:
+            # Without the master, accept a 4-digit code only when the source
+            # itself labels it as a security code (e.g. Company(6853), 6853.T).
+            lo=max(0,m.start()-12); hi=min(len(text),m.end()+12)
+            ctx=(text[lo:hi] or '')
+            explicit=(f'({c})' in ctx or f'（{c}）' in ctx or f'{c}.T' in ctx.upper() or re.search(r'コード.{0,4}'+re.escape(c),ctx))
+            if not explicit:
+                continue
+        if c not in found:
+            found.append(c)
     return found
+
 
 def name_from_chart_window(window, code, master):
     if code in master and master[code].get('name'):
@@ -126,19 +129,21 @@ def rss_items(query, source_type, source_name, master, weight):
         href=html.unescape(lm.group(1)).strip()
         codes=code_from_text(title,master)
         if not codes and master:
-            # Many news/video titles show the company name but omit the ticker.
-            # Match only reasonably distinctive master names.
-            generic_names={'キング','インデックス','INDEX','指数','株価','日本株','投資','ニュース','テクノロジー','アドバンス'}
+            # Company-name matching is deliberately conservative.  Generic words
+            # such as 「キング」「インデックス」 must never become a ticker merely
+            # because they occur in an unrelated headline.
+            generic_names={'キング','インデックス','INDEX','指数','株価','日本株','投資','ニュース','テクノロジー','アドバンス','市場','銘柄'}
+            candidates=[]
             for c,info in master.items():
                 n=clean(str(info.get('name') or ''))
-                # Short/common words create false positives in news headlines
-                # (e.g. 「キング」「インデックス」). Require an explicit ticker
-                # for these names; longer company names can still be matched.
-                if n.upper() in generic_names or len(n)<5:
+                if not n or n.upper() in generic_names or len(n)<5:
                     continue
+                # Require the exact company name as a standalone-ish phrase and
+                # prefer longer names so substrings do not win over the real name.
                 if n in title:
-                    codes.append(c)
-                    if len(codes)>=3: break
+                    candidates.append((len(n),c,n))
+            for _,c,_ in sorted(candidates, reverse=True)[:3]:
+                codes.append(c)
         if not codes: continue
         for code in codes[:3]:
             name=master.get(code,{}).get('name') or code
@@ -187,87 +192,66 @@ def material_category(title):
     return '投資家の話題・材料'
 
 def explain_attention(b, score_row):
-    """Explain both *why it was selected* and *what is actually happening*."""
     d=score_row.get('details',score_row) if isinstance(score_row,dict) else {}
     ch=_num(d.get('change',score_row.get('change') if isinstance(score_row,dict) else None))
     vr=_num(d.get('volume_ratio',score_row.get('volume_ratio') if isinstance(score_row,dict) else None))
-    rsi=_num(d.get('rsi14',score_row.get('rsi14') if isinstance(score_row,dict) else None))
-    rs=_num(d.get('relative_strength',score_row.get('relative_strength') if isinstance(score_row,dict) else None))
-    srcs=sorted(b.get('source_types',[]))
-    events=b.get('events',[])
-    ranked=sorted(events,key=lambda x:x.get('rank',999))
-    top=ranked[0] if ranked else {}
-    title=clean(top.get('title',''))
-    rank=top.get('rank')
-    parts=[]
-    if rank:
-        parts.append(f'当日の投資家話題ランキング{int(rank)}位')
-    if len(srcs)>=3: parts.append(f'{len(srcs)}種類の情報源で言及')
-    elif len(srcs)==2: parts.append('複数の情報源で言及')
-    elif len(srcs)==1:
-        src_label={'investor':'投資家話題','ニュース':'ニュース','アナリスト':'アナリスト','YouTube':'YouTube'}.get(srcs[0],srcs[0])
-        parts.append(f'{src_label}で話題化')
-    if title:
-        parts.append(f'材料は「{title[:90]}」')
-    # Quantitative confirmation from the stock-score data, when available.
-    if ch is not None:
-        if abs(ch)>=5: parts.append(f'株価も前日比{ch:+.1f}%と大きく動いた')
-        elif abs(ch)>=2: parts.append(f'株価も前日比{ch:+.1f}%と動意')
-    if vr is not None and vr>=1.5:
-        parts.append(f'出来高は平常比{vr:.1f}倍')
-    if rs is not None and abs(rs)>=2:
-        parts.append(f'日経平均比の相対強度は{rs:+.1f}pt')
-    if rsi is not None and rsi>=70:
-        parts.append(f'RSI{rsi:.1f}で過熱警戒')
-    elif rsi is not None and rsi<=30:
-        parts.append(f'RSI{rsi:.1f}で売られ過ぎ圏')
-    if not parts:
-        parts.append('当日の外部情報で言及が増えた')
-    return '。'.join(parts)+'。'
+    srcs=sorted(b.get('source_types',[])); events=b.get('events',[])
+    basis=_selection_basis(b)
+    if not basis: basis=['同日の外部情報で言及']
+    return '＋'.join(basis)+f'（話題強度{b.get("heat_score",0):.1f}）。'
+
 
 def build_research_memo(b):
-    """Create an app-readable research memo instead of dumping source headlines.
-
-    This is a factual synthesis of the collected same-day material. It deliberately
-    separates (1) why it surfaced, (2) what the source material says, and (3) what
-    still needs confirmation. It does not turn attention into a BUY recommendation.
-    """
+    """Turn collected evidence into a simple, auditable research note."""
     events=sorted(b.get('events',[]),key=lambda x:x.get('rank',999))
-    titles=[clean(e.get('title','')) for e in events if clean(e.get('title',''))]
+    titles=[]
+    for e in events:
+        t=clean(e.get('title',''))
+        if t and t not in titles: titles.append(t)
+    rank=_rank_value(events); srcs=sorted(b.get('source_types',[]))
+    labels={'investor':'投資家話題','ニュース':'ニュース','アナリスト':'アナリスト','YouTube':'YouTube'}
+    source_labels=[labels.get(x,x) for x in srcs]
     category=material_category(titles[0] if titles else '')
-    rank=events[0].get('rank') if events else None
-    source_types=sorted(b.get('source_types',[]))
-    src_label={'investor':'投資家話題','ニュース':'ニュース','アナリスト':'アナリスト','YouTube':'YouTube'}
-    labels=[src_label.get(x,x) for x in source_types]
-    # Deduplicate nearly identical headlines while preserving source evidence.
-    uniq=[]
-    for t in titles:
-        if t and all(t not in u and u not in t for u in uniq): uniq.append(t)
-    lead=uniq[0] if uniq else '当日の外部情報で話題化しています。'
-    corroboration=''
-    if len(labels)>=2:
-        corroboration='、'.join(labels)+f'の{len(labels)}種類で言及が確認されています。'
-    elif labels:
-        corroboration=f'{labels[0]}で話題化が確認されています。'
-    evidence=[]
-    if rank: evidence.append(f'投資家話題ランキング{int(rank)}位')
-    if len(events)>1: evidence.append(f'同日{len(events)}件の関連言及')
-    if b.get('change') is not None:
-        try: evidence.append(f'前日比{float(b["change"]):+.2f}%')
-        except Exception: pass
-    check='ニュース本文・決算資料・開示内容まで取得できていない場合は、見出しだけで材料を断定しないよう「要確認」とします。'
+    ch=_num(b.get('change')); vr=_num(b.get('volume_ratio')); heat=b.get('heat_score')
+
+    # Evidence is presented in the same order a human researcher would check it:
+    # attention -> material -> market confirmation -> remaining uncertainty.
+    attention=[]
+    if rank is not None: attention.append(f'投資家話題ランキングは{rank}位')
+    if len(srcs): attention.append(f'情報源は{len(srcs)}種類（{"・".join(source_labels)}）')
+    if len(events): attention.append(f'同日言及は{len(events)}件')
+    attention_text='。'.join(attention)+'。' if attention else '同日の外部情報で言及が確認されています。'
+
+    material=[]
+    for t in titles[:3]: material.append(t)
+    material_text=' / '.join(material) if material else '具体的な材料を特定できませんでした。'
+
+    confirmation=[]
+    if ch is not None: confirmation.append(f'株価は前日比{ch:+.2f}%')
+    if vr is not None: confirmation.append(f'出来高は平常比{vr:.1f}倍')
+    confirmation_text='。'.join(confirmation)+'。' if confirmation else '日次株価データからの確認材料はありません。'
+
+    if rank is not None and rank<=5:
+        conclusion='投資家話題の上位に入り、上記の情報量・材料・値動きの確認がそろったため、当日の注目候補として残しました。'
+    elif len(srcs)>=2:
+        conclusion='複数種類の情報源で同日に言及が重なったため、単一記事だけの話題ではないと判断して残しました。'
+    else:
+        conclusion='外部情報だけで十分な熱量を確認できるかを追加条件で確認したうえで掲載しています。'
+    check='見出しだけでは因果関係を断定しません。決算短信・適時開示・原記事本文など、リンク先の一次情報を確認してください。'
     return {
-        'headline': lead,
-        'summary': f'{lead} {corroboration}'.strip(),
-        'why': '、'.join(evidence) if evidence else '当日の外部情報で言及が増えたため',
+        'headline': titles[0] if titles else '当日の外部情報で話題化',
+        'summary': f'【話題の事実】{attention_text}【材料】{material_text}【値動き確認】{confirmation_text}',
+        'why': f'【選定理由】{conclusion}',
         'category': category,
-        'evidence': evidence,
+        'evidence': attention + confirmation,
         'check_point': check,
-        'source_count': len(source_types),
+        'source_count': len(srcs),
         'mention_count': len(events),
-        'sources': labels,
-        'detail': ' '.join(uniq[:3]),
+        'sources': source_labels,
+        'detail': material_text,
+        'heat_score': heat,
     }
+
 
 def build_attention_explanation(b):
     """Return structured explanation used by both the compact card and detail page."""
@@ -308,6 +292,69 @@ def attention_type(b):
     if len(b.get('source_types',[]))>=2: return '複数情報源で話題'
     return '話題集中'
 
+
+def _rank_value(events):
+    ranks=[e.get('rank') for e in events if isinstance(e.get('rank'),int)]
+    return min(ranks) if ranks else None
+
+def _heat_score(b):
+    """Measure *evidence of attention*, not stock attractiveness.
+
+    A single weak headline is intentionally unable to fill one of the five
+    slots.  The score rewards independent evidence, same-day repetition and
+    market confirmation.  It is paired with hard eligibility rules below.
+    """
+    events=b.get('events',[]); src=len(b.get('source_types',[])); rank=_rank_value(events)
+    score=0.0
+    if rank is not None:
+        if rank<=3: score+=5
+        elif rank<=5: score+=4
+        elif rank<=10: score+=2
+    if src>=3: score+=5
+    elif src==2: score+=3
+    if len(events)>=4: score+=3
+    elif len(events)>=3: score+=2
+    elif len(events)>=2: score+=1
+    ch=_num(b.get('change')); vr=_num(b.get('volume_ratio'))
+    if ch is not None:
+        if abs(ch)>=7: score+=4
+        elif abs(ch)>=5: score+=3
+        elif abs(ch)>=3: score+=2
+        elif abs(ch)>=1.5: score+=1
+    if vr is not None:
+        if vr>=3: score+=4
+        elif vr>=2: score+=3
+        elif vr>=1.5: score+=2
+    # Concrete material words are stronger than generic "注目/話題" wording.
+    material=sum(1 for e in events if material_category(e.get('title',''))!='投資家の話題・材料')
+    if material>=2: score+=2
+    elif material==1: score+=1
+    return round(score,1)
+
+def _eligible_for_top5(b):
+    """Require a minimum evidence pattern; do not force five names."""
+    events=b.get('events',[]); src=len(b.get('source_types',[])); rank=_rank_value(events)
+    ch=_num(b.get('change')); vr=_num(b.get('volume_ratio'))
+    # Strong investor buzz: top-5 ranking plus at least one corroborating signal.
+    strong_rank = rank is not None and rank<=5
+    market_confirm = (ch is not None and abs(ch)>=3) or (vr is not None and vr>=1.5)
+    # Cross-source buzz: at least two source groups plus repeated same-day mention.
+    cross_source = src>=2 and len(events)>=2
+    # Strong market move can qualify when there is at least one concrete source.
+    strong_move = (ch is not None and abs(ch)>=5) or (vr is not None and vr>=2)
+    concrete_material = any(material_category(e.get('title',''))!='投資家の話題・材料' for e in events)
+    return (strong_rank and (market_confirm or len(events)>=2 or concrete_material)) or cross_source or (strong_move and concrete_material)
+
+def _selection_basis(b):
+    rank=_rank_value(b.get('events',[])); src=len(b.get('source_types',[])); ch=_num(b.get('change')); vr=_num(b.get('volume_ratio'))
+    basis=[]
+    if rank is not None and rank<=5: basis.append(f'投資家話題{rank}位以内')
+    if src>=2: basis.append(f'{src}種類の情報源')
+    if len(b.get('events',[]))>=2: basis.append(f'同日{len(b["events"])}件の言及')
+    if ch is not None and abs(ch)>=3: basis.append(f'前日比{ch:+.2f}%')
+    if vr is not None and vr>=1.5: basis.append(f'出来高平常比{vr:.1f}倍')
+    return basis
+
 def main():
     now=datetime.now(JST); master=load_master(); events=[]; errors=[]
     sources=[
@@ -345,6 +392,9 @@ def main():
         b['signal']=s.get('signal',d.get('signal'))
         b['rsi14']=d.get('rsi14',s.get('rsi14'))
         b['change']=d.get('change',s.get('change'))
+        b['volume_ratio']=d.get('volume_ratio',s.get('volume_ratio'))
+        b['heat_score']=_heat_score(b)
+        b['selection_basis']=_selection_basis(b)
         b['_score_row']=s
         ev=sorted(b['events'], key=lambda x:x.get('rank',999))
         b['reason']=explain_attention({**b, 'events': ev}, s)
@@ -354,29 +404,25 @@ def main():
         b['research_memo']=build_research_memo({**b, 'events': ev})
         b['sources']=[{'name':e['source_name'],'type':e['source_type'],'title':e['title'],'url':e['url']} for e in ev[:6]]
         b['source_types']=sorted(b['source_types'])
+        b['selection_eligible']=_eligible_for_top5(b)
         b.pop('events',None); b.pop('_score_row',None)
         result.append(b)
-    result.sort(key=lambda x:(-x['score'],x['code']))
-    top=result[:5]
-    previous=None
-    if OUT.exists():
-        try:
-            previous=json.loads(OUT.read_text(encoding='utf-8'))
-        except Exception:
-            previous=None
-    if not top and previous and previous.get('candidates'):
-        top=previous.get('candidates',[])[:5]
-        status='stale'
-    else:
-        status='ok' if top else 'no_data'
+    result.sort(key=lambda x:(-x.get('heat_score',0),-x['score'],x['code']))
+    eligible=[x for x in result if x.get('selection_eligible') and x.get('heat_score',0)>=4]
+    top=eligible[:5]
+    # Never fill today's list with yesterday's names.  A missing/weak day is
+    # intentionally shown as "十分な話題なし" rather than manufacturing five picks.
+    status='ok' if top else ('no_data' if not result else 'insufficient_heat')
     payload={
         'updated_at':now.isoformat(),
         'date':now.strftime('%Y-%m-%d'),
         'title':'今日の注目5選',
         'status':status,
-        'method':'同日公開の投資家話題・ニュース・アナリスト言及・YouTube関連情報を銘柄単位に集約。情報源の種類と複数言及を加点し、上位5銘柄を表示。これはBUY判定ではない。',
+        'method':'同日公開の投資家話題・ニュース・アナリスト言及・YouTube関連情報を銘柄単位に集約。投資家話題順位、情報源の種類、同日言及数、株価/出来高の確認、具体的材料の有無を使って「話題の強さ」を判定し、基準を満たす銘柄だけ最大5件を表示。基準未達なら5件未満とする。これはBUY判定ではない。',
         'source_policy':'各記事・動画へのリンクと発信元を保存。外部情報の注目度とkabu-scoreの総合BUY判定は別物として表示する。',
         'errors':errors,
+        'candidate_pool':len(result),
+        'eligible_count':len(eligible),
         'candidates':top,
     }
     OUT.parent.mkdir(parents=True,exist_ok=True); OUT.write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding='utf-8')
