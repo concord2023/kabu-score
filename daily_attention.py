@@ -332,18 +332,32 @@ def _heat_score(b):
     return round(score,1)
 
 def _eligible_for_top5(b):
-    """Require a minimum evidence pattern; do not force five names."""
-    events=b.get('events',[]); src=len(b.get('source_types',[])); rank=_rank_value(events)
-    ch=_num(b.get('change')); vr=_num(b.get('volume_ratio'))
-    # Strong investor buzz: top-5 ranking plus at least one corroborating signal.
-    strong_rank = rank is not None and rank<=5
-    market_confirm = (ch is not None and abs(ch)>=3) or (vr is not None and vr>=1.5)
-    # Cross-source buzz: at least two source groups plus repeated same-day mention.
-    cross_source = src>=2 and len(events)>=2
-    # Strong market move can qualify when there is at least one concrete source.
-    strong_move = (ch is not None and abs(ch)>=5) or (vr is not None and vr>=2)
-    concrete_material = any(material_category(e.get('title',''))!='投資家の話題・材料' for e in events)
-    return (strong_rank and (market_confirm or len(events)>=2 or concrete_material)) or cross_source or (strong_move and concrete_material)
+    """Use several independent ways to find real same-day attention.
+
+    The list should be selective, but it must not become empty merely because
+    one source or the price snapshot is unavailable.  A top-10 investor-topic
+    result with a concrete reason is enough to enter the pool; cross-source
+    evidence and strong market movement are additional routes.
+    """
+    events=b.get('events',[])
+    src=len(b.get('source_types',[]))
+    rank=_rank_value(events)
+    ch=_num(b.get('change'))
+    vr=_num(b.get('volume_ratio'))
+    concrete_material=any(material_category(e.get('title',''))!='投資家の話題・材料' for e in events)
+    top10 = rank is not None and rank<=10
+    market_confirm=(ch is not None and abs(ch)>=2) or (vr is not None and vr>=1.3)
+    cross_source=src>=2
+    repeated=len(events)>=2
+    strong_move=(ch is not None and abs(ch)>=5) or (vr is not None and vr>=2)
+    # Four complementary routes.  This is deliberately much broader than the
+    # previous "top-5 + confirmation" rule.
+    return (
+        (top10 and concrete_material) or
+        (top10 and (market_confirm or repeated)) or
+        (cross_source and (repeated or concrete_material)) or
+        (strong_move and concrete_material)
+    )
 
 def _selection_basis(b):
     rank=_rank_value(b.get('events',[])); src=len(b.get('source_types',[])); ch=_num(b.get('change')); vr=_num(b.get('volume_ratio'))
@@ -359,9 +373,13 @@ def main():
     now=datetime.now(JST); master=load_master(); events=[]; errors=[]
     sources=[
         ('chartnavi', lambda: chartnavi(master,now)),
-        ('kabutan', lambda: rss_items('日本株 話題株 OR 注目株 OR 決算', 'ニュース','株探・Google News',master,2.5)),
-        ('analyst', lambda: rss_items('日本株 アナリスト 注目 銘柄', 'アナリスト','Google News',master,2.0)),
-        ('youtube', lambda: rss_items('site:youtube.com 日本株 投資 株式 銘柄', 'YouTube','YouTube/Google News',master,2.0)),
+        # News is searched from several angles instead of relying on one query.
+        ('news_material', lambda: rss_items('日本株 今日 材料 OR 適時開示 OR 決算 OR 受注', 'ニュース','ニュース・材料検索',master,2.5)),
+        ('news_attention', lambda: rss_items('日本株 今日 注目株 OR 話題株 OR 急騰 OR 急落', 'ニュース','ニュース・話題検索',master,2.5)),
+        ('large_holder', lambda: rss_items('日本株 大量保有報告 変更 株主 自社株買い', '開示','大量保有・開示検索',master,2.2)),
+        ('analyst', lambda: rss_items('日本株 アナリスト 注目 銘柄 レポート', 'アナリスト','アナリスト・レポート検索',master,2.0)),
+        ('theme', lambda: rss_items('日本株 AI 半導体 データセンター 防衛 量子電池 注目', 'テーマ','テーマ・業界検索',master,1.8)),
+        ('youtube', lambda: rss_items('site:youtube.com 日本株 投資 株式 銘柄 今日', 'YouTube','YouTube検索',master,2.0)),
     ]
     for label,fn in sources:
         try: events.extend(fn())
@@ -418,7 +436,7 @@ def main():
         'date':now.strftime('%Y-%m-%d'),
         'title':'今日の注目5選',
         'status':status,
-        'method':'同日公開の投資家話題・ニュース・アナリスト言及・YouTube関連情報を銘柄単位に集約。投資家話題順位、情報源の種類、同日言及数、株価/出来高の確認、具体的材料の有無を使って「話題の強さ」を判定し、基準を満たす銘柄だけ最大5件を表示。基準未達なら5件未満とする。これはBUY判定ではない。',
+        'method':'同日公開の投資家話題・ニュース/開示・大量保有・アナリスト・テーマ・YouTubeを複数の検索角度から収集。投資家話題順位、情報源の種類、同日言及数、株価/出来高、具体的材料を組み合わせ、複数のルートのいずれかを満たす銘柄を最大5件表示する。無理に5件へ水増ししない。これはBUY判定ではない。',
         'source_policy':'各記事・動画へのリンクと発信元を保存。外部情報の注目度とkabu-scoreの総合BUY判定は別物として表示する。',
         'errors':errors,
         'candidate_pool':len(result),
