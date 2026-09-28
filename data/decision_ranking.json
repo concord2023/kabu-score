@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-27T17:37:18.191589+09:00",
+  "updated_at": "2026-09-28T09:01:39.498478+09:00",
   "summary": {
     "buy_candidates": 0,
     "watch": 20,
@@ -2353,7 +2353,7 @@
           "switch_date_basis": "Yahoo fundamentals-timeseries"
         },
         "per_forecast_error": null,
-        "per_updated_at": "2026-09-27T17:36:28.401096+09:00",
+        "per_updated_at": "2026-09-28T09:00:43.614866+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -6273,14 +6273,14 @@
         ],
         "per_5y_avg": 11.811177482359216,
         "per_forecast": {
-          "forecast_pe": 12.49,
+          "forecast_pe": 12.53,
           "forecast_eps": 658.32,
           "switch_date": null,
           "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
           "switch_date_basis": "直近の決算発表日"
         },
         "per_forecast_error": null,
-        "per_updated_at": "2026-09-27T17:36:37.897860+09:00",
+        "per_updated_at": "2026-09-28T09:00:53.792381+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -10195,14 +10195,14 @@
         ],
         "per_5y_avg": 16.086874813692248,
         "per_forecast": {
-          "forecast_pe": 13.35,
+          "forecast_pe": 13.45,
           "forecast_eps": 274.83,
           "switch_date": null,
           "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
           "switch_date_basis": "直近の決算発表日"
         },
         "per_forecast_error": null,
-        "per_updated_at": "2026-09-27T17:37:18.021757+09:00",
+        "per_updated_at": "2026-09-28T09:01:39.337685+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -14140,14 +14140,14 @@
         ],
         "per_5y_avg": 13.685918009476271,
         "per_forecast": {
-          "forecast_pe": 13.43,
+          "forecast_pe": 13.54,
           "forecast_eps": 228.39,
           "switch_date": null,
           "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
           "switch_date_basis": "直近の決算発表日"
         },
         "per_forecast_error": null,
-        "per_updated_at": "2026-09-27T17:36:33.291357+09:00",
+        "per_updated_at": "2026-09-28T09:00:49.195328+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -18093,14 +18093,14 @@
         ],
         "per_5y_avg": 10.285080619775758,
         "per_forecast": {
-          "forecast_pe": 12.77,
+          "forecast_pe": 12.7,
           "forecast_eps": 483.4,
           "switch_date": null,
           "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
           "switch_date_basis": "直近の決算発表日"
         },
         "per_forecast_error": null,
-        "per_updated_at": "2026-09-27T17:36:54.712475+09:00",
+        "per_updated_at": "2026-09-28T09:01:12.468686+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -21995,7 +21995,7 @@
           "switch_date_basis": "Yahoo fundamentals-timeseries"
         },
         "per_forecast_error": null,
-        "per_updated_at": "2026-09-27T17:36:05.010434+09:00",
+        "per_updated_at": "2026-09-28T09:00:20.578630+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -25968,7 +25968,7 @@
           "switch_date_basis": "Yahoo fundamentals-timeseries"
         },
         "per_forecast_error": null,
-        "per_updated_at": "2026-09-27T17:36:57.542075+09:00",
+        "per_updated_at": "2026-09-28T09:01:15.551485+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -29866,14 +29866,14 @@
         ],
         "per_5y_avg": 140.92787659323588,
         "per_forecast": {
-          "forecast_pe": 14.72,
+          "forecast_pe": 14.75,
           "forecast_eps": 71.16,
           "switch_date": null,
           "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
           "switch_date_basis": "直近の決算発表日"
         },
         "per_forecast_error": null,
-        "per_updated_at": "2026-09-27T17:36:42.036744+09:00",
+        "per_updated_at": "2026-09-28T09:00:58.631276+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -33838,7 +33838,7 @@
           "switch_date_basis": "Yahoo fundamentals-timeseries"
         },
         "per_forecast_error": null,
-        "per_updated_at": "2026-09-27T17:37:13.352158+09:00",
+        "per_updated_at": "2026-09-28T09:01:32.646261+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -37752,7 +37752,7 @@
           "switch_date_basis": "Yahoo fundamentals-timeseries"
         },
         "per_forecast_error": null,
-        "per_updated_at": "2026-09-27T17:37:10.121372+09:00",
+        "per_updated_at": "2026-09-28T09:01:30.137887+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -41676,7 +41676,7 @@
           "switch_date_basis": "Yahoo fundamentals-timeseries"
         },
         "per_forecast_error": null,
-        "per_updated_at": "2026-09-27T17:36:25.357211+09:00",
+        "per_updated_at": "2026-09-28T09:00:40.194695+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -45617,7 +45617,7 @@
           "switch_date_basis": "Yahoo fundamentals-timeseries"
         },
         "per_forecast_error": null,
-        "per_updated_at": "2026-09-27T17:37:03.853337+09:00",
+        "per_updated_at": "2026-09-28T09:01:21.490736+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -49528,7 +49528,7 @@
           "switch_date_basis": "Yahoo fundamentals-timeseries"
         },
         "per_forecast_error": null,
-        "per_updated_at": "2026-09-27T17:36:22.110351+09:00",
+        "per_updated_at": "2026-09-28T09:00:37.443119+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -53442,7 +53442,7 @@
           "switch_date_basis": "Yahoo fundamentals-timeseries"
         },
         "per_forecast_error": null,
-        "per_updated_at": "2026-09-27T17:36:08.138833+09:00",
+        "per_updated_at": "2026-09-28T09:00:23.335931+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -57438,7 +57438,7 @@
           "switch_date_basis": "Yahoo fundamentals-timeseries"
         },
         "per_forecast_error": null,
-        "per_updated_at": "2026-09-27T17:36:46.620549+09:00",
+        "per_updated_at": "2026-09-28T09:01:04.771555+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -61279,7 +61279,7 @@
           "switch_date_basis": "Yahoo fundamentals-timeseries"
         },
         "per_forecast_error": null,
-        "per_updated_at": "2026-09-27T17:37:06.913829+09:00",
+        "per_updated_at": "2026-09-28T09:01:25.702782+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -65208,7 +65208,7 @@
           "switch_date_basis": "Yahoo fundamentals-timeseries"
         },
         "per_forecast_error": null,
-        "per_updated_at": "2026-09-27T17:36:01.945305+09:00",
+        "per_updated_at": "2026-09-28T09:00:17.518427+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -69145,7 +69145,7 @@
           "switch_date_basis": "Yahoo fundamentals-timeseries"
         },
         "per_forecast_error": null,
-        "per_updated_at": "2026-09-27T17:37:00.341103+09:00",
+        "per_updated_at": "2026-09-28T09:01:19.019327+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -73081,7 +73081,7 @@
           "switch_date_basis": "Yahoo fundamentals-timeseries"
         },
         "per_forecast_error": null,
-        "per_updated_at": "2026-09-27T17:36:13.389778+09:00",
+        "per_updated_at": "2026-09-28T09:00:28.943697+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -76879,14 +76879,14 @@
         "per_history": [],
         "per_5y_avg": null,
         "per_forecast": {
-          "forecast_pe": 240.68,
+          "forecast_pe": 236.93,
           "forecast_eps": 8.8,
           "switch_date": null,
           "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
           "switch_date_basis": "直近の決算発表日"
         },
         "per_forecast_error": null,
-        "per_updated_at": "2026-09-27T17:36:50.577143+09:00",
+        "per_updated_at": "2026-09-28T09:01:08.173302+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -80268,7 +80268,7 @@
           "switch_date_basis": "Yahoo fundamentals-timeseries"
         },
         "per_forecast_error": null,
-        "per_updated_at": "2026-09-27T17:36:18.981014+09:00",
+        "per_updated_at": "2026-09-28T09:00:34.143600+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
