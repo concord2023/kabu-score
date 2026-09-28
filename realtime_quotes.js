@@ -25,8 +25,8 @@
         const rr=await fetch('./data/decision_ranking.json?ts='+Date.now(),{cache:'no-store'});
         if(rr.ok) ranking=await rr.json();
       }catch(_e){}
-      const dailyStamp=ranking?.updated_at?new Date(ranking.updated_at):null;
-      const dailyDay=dailyStamp&&!Number.isNaN(dailyStamp.getTime())?dailyStamp.toISOString().slice(0,10):null;
+      const dailyDays=(ranking?.ranking||[]).map(x=>(x?.details?.date||x?.date||'').slice(0,10)).filter(Boolean);
+      const dailyDay=dailyDays.length?dailyDays.sort().slice(-1)[0]:null;
 
       let payload=null;
       try{
@@ -34,19 +34,20 @@
         if(r.ok) payload=await r.json();
       }catch(_e){}
 
-      const payloadStamp=payload?.updated_at?new Date(payload.updated_at):null;
-      const payloadDay=payloadStamp&&!Number.isNaN(payloadStamp.getTime())?payloadStamp.toISOString().slice(0,10):null;
+      const payloadDay=payload?.market_date?String(payload.market_date).slice(0,10):(
+        Object.values(payload?.quotes||{}).map(q=>q?.market_time?String(q.market_time).slice(0,10):'').filter(Boolean).sort().slice(-1)[0]||null
+      );
       const snapshotStale=!!(dailyDay&&payloadDay&&payloadDay<dailyDay);
+      const rankingRows=ranking?.ranking||[];
 
       // If the snapshot is missing or stale, use the SAME daily ranking that
       // drives the page, not data/stocks.json. This keeps the date consistent.
       if(!payload || snapshotStale){
         const quotes={};
-        const rankingRows=ranking?.ranking||[];
         for(const code of codes){
           const x=rankingRows.find(v=>String(v.code)===code);
           const d=x?.details||{};
-          if(x&&d.price!=null) quotes[code]={price:d.price,change:d.change,change_pct:d.change,market_time:ranking.updated_at,quote_type:'daily_ranking_fallback'};
+          if(x&&d.price!=null) quotes[code]={price:d.price,change:d.change,change_pct:d.change,market_time:d.date||x.date||ranking.updated_at,quote_type:'daily_ranking_fallback'};
         }
         if(Object.keys(quotes).length){
           payload={updated_at:ranking.updated_at,quotes,fallback:true,stale_snapshot:snapshotStale,source:'現在表示中のDaily stock update',errors:payload?.errors||[]};
@@ -63,12 +64,18 @@
         ok++;
         // Never apply a quote whose own timestamp predates the daily data.
         const qStamp=q.market_time?new Date(q.market_time):null;
-        const qDay=qStamp&&!Number.isNaN(qStamp.getTime())?qStamp.toISOString().slice(0,10):null;
-        if(dailyDay&&qDay&&qDay<dailyDay)return;
+        const qDay=qStamp&&!Number.isNaN(qStamp.getTime())?qStamp.toLocaleDateString('en-CA',{timeZone:'Asia/Tokyo'}):null;
+        let use=q;
+        if(dailyDay&&qDay&&qDay<dailyDay){
+          const daily=rankingRows.find(v=>String(v.code)===code);
+          const dd=daily?.details||{};
+          if(daily&&dd.price!=null) use={price:dd.price,change:dd.change,change_pct:dd.change,market_time:dd.date||daily.date||ranking?.updated_at,quote_type:'daily_ranking_fallback'};
+          else return;
+        }
         const p=row.querySelector('.live-price'),c=row.querySelector('.live-change'),t=row.querySelector('.live-time');
-        if(p)p.textContent=fmt(q.price);
-        if(c){c.textContent=pct(q.change_pct);c.className=`quote-change live-change ${cls(q.change_pct)}`;}
-        if(t)t.textContent=q.market_time?`更新 ${String(q.market_time).replace('T',' ').slice(0,16)}`:'更新時刻不明';
+        if(p)p.textContent=fmt(use.price);
+        if(c){c.textContent=pct(use.change_pct);c.className=`quote-change live-change ${cls(use.change_pct)}`;}
+        if(t)t.textContent=use.market_time?`更新 ${String(use.market_time).replace('T',' ').slice(0,16)}`:'更新時刻不明';
         row.classList.add('live-updated');
         applied++;
       });

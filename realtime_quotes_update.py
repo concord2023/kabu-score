@@ -63,18 +63,19 @@ def parse_chart(payload):
     return out
 
 def fetch_chart(codes):
-    errors=[]
+    errors=[]; out={}; used_host=None
     for code in codes:
+        got=False
         for host in ('https://query1.finance.yahoo.com','https://query2.finance.yahoo.com'):
             url=host+'/v8/finance/chart/'+urllib.parse.quote(code+'.T')+'?'+urllib.parse.urlencode({'range':'1d','interval':'1m','includePrePost':'false','events':'div,splits'})
             try:
                 result=parse_chart(fetch_json(url))
                 if result:
-                    return result,host,errors
+                    out.update(result); used_host=used_host or host; got=True; break
                 errors.append(code+' '+host+': empty')
-            except Exception as e:
-                errors.append(code+' '+host+': '+str(e))
-    return {},None,errors
+            except Exception as e: errors.append(code+' '+host+': '+str(e))
+        if not got: errors.append(code+': no usable chart quote')
+    return out,used_host,errors
 
 def fallback_from_stocks(codes):
     try: data=json.loads(Path('data/stocks.json').read_text(encoding='utf-8'))
@@ -88,36 +89,83 @@ def fallback_from_stocks(codes):
         out[code]={'symbol':code+'.T','price':price,'previous_close':round(price-float(change),4) if change is not None else None,'change':change,'change_pct':round(float(change)/(price-float(change))*100,4) if change is not None and price-float(change) else None,'market_time':row.get('date'),'quote_type':'daily_close_fallback'}
     return out,'保存済み日次終値（Yahoo取得失敗/時間外）'
 
+def load_daily_ranking():
+    try:
+        return json.loads(Path('data/decision_ranking.json').read_text(encoding='utf-8'))
+    except Exception:
+        return None
+
+
+def latest_daily_day_from_ranking(d):
+    days=[]
+    for row in (d or {}).get('ranking') or []:
+        dd=(row.get('details') or {}).get('date') or row.get('date')
+        if dd:
+            try: days.append(datetime.fromisoformat(str(dd)[:10]).date())
+            except Exception: pass
+    return max(days) if days else None
+
+
+def daily_fallback_quotes(codes, ranking):
+    out={}
+    for row in (ranking or {}).get('ranking') or []:
+        code=str(row.get('code') or '').strip().upper()
+        if code not in codes: continue
+        d=row.get('details') or {}
+        price=d.get('price',row.get('price'))
+        if price is None: continue
+        change=d.get('change',row.get('change'))
+        out[code]={'symbol':code+'.T','price':price,'previous_close':round(float(price)-float(change),4) if change is not None else None,
+                   'change':change,'change_pct':change,'market_time':d.get('date') or row.get('date') or (ranking or {}).get('updated_at'),
+                   'quote_type':'daily_ranking_fallback'}
+    return out
+
+
 def main():
     codes=codes_from_watchlist()
     if not codes: raise SystemExit('watchlist is empty')
     quotes,host,errors=fetch_batch(codes); source='Yahoo Finance spark API'; fallback=False
-    if len(quotes) < len(codes):
-        chart_quotes,chart_host,chart_errors=fetch_chart([c for c in codes if c not in quotes])
-        quotes.update(chart_quotes)
-        errors.extend(chart_errors)
+    missing=[c for c in codes if c not in quotes]
+    if missing:
+        chart_quotes,chart_host,chart_errors=fetch_chart(missing)
+        quotes.update(chart_quotes); errors.extend(chart_errors)
         if chart_quotes:
             source='Yahoo Finance chart API' if not host else 'Yahoo Finance spark + chart API'
             host=host or chart_host
-    if not quotes:
-        quotes,source=fallback_from_stocks(codes); fallback=True
-    now=datetime.now(JST)
-    # Never publish an older Yahoo result over today's Daily stock update.
-    # Yahoo can occasionally return a cached previous-session value.
-    latest_day=None
-    for candidate in ('data/decision_ranking.json','data/stocks.json'):
-        try:
-            d=json.loads(Path(candidate).read_text(encoding='utf-8'))
-            stamp=d.get('updated_at')
-            if stamp:
-                dt=datetime.fromisoformat(str(stamp).replace('Z','+00:00'))
+    ranking=load_daily_ranking()
+    latest_day=latest_daily_day_from_ranking(ranking)
+    # A quote is valid only when its own market date is the same trading day as
+    # the latest Daily stock update. Older quotes are rejected per ticker.
+    valid_quotes={}
+    rejected=[]
+    for code in codes:
+        q=quotes.get(code)
+        if not q:
+            continue
+        qday=None
+        mt=q.get('market_time')
+        if mt:
+            try:
+                dt=datetime.fromisoformat(str(mt).replace('Z','+00:00'))
                 if dt.tzinfo is None: dt=dt.replace(tzinfo=JST)
-                day=dt.astimezone(JST).date()
-                latest_day=max(latest_day,day) if latest_day else day
-        except Exception:
-            pass
+                qday=dt.astimezone(JST).date()
+            except Exception: pass
+        if latest_day and qday and qday < latest_day:
+            rejected.append({'code':code,'quote_day':str(qday),'latest_daily_day':str(latest_day)})
+            continue
+        valid_quotes[code]=q
+
+    # Never let a partial/old Yahoo response erase newer daily values. Fill only
+    # missing/rejected names from the exact ranking currently displayed by the UI.
+    fallback_quotes=daily_fallback_quotes(codes, ranking)
+    for code in codes:
+        if code not in valid_quotes and code in fallback_quotes:
+            valid_quotes[code]=fallback_quotes[code]
+            fallback=True
+
+    now=datetime.now(JST)
     quote_days=[]
-    for q in quotes.values():
+    for q in valid_quotes.values():
         mt=q.get('market_time')
         if mt:
             try:
@@ -125,14 +173,21 @@ def main():
                 if dt.tzinfo is None: dt=dt.replace(tzinfo=JST)
                 quote_days.append(dt.astimezone(JST).date())
             except Exception: pass
-    if latest_day and quote_days and max(quote_days)<latest_day:
-        # Keep the old snapshot rather than regressing to an older trading day.
-        if OUT.exists():
-            print(json.dumps({'preserved':True,'reason':'fetched quote is older than latest daily update','latest_daily_day':str(latest_day),'quote_day':str(max(quote_days))},ensure_ascii=False))
-            return
-        fallback_quotes, fallback_source=fallback_from_stocks(codes)
-        quotes=fallback_quotes; source=fallback_source; fallback=True
-    payload={'updated_at':now.isoformat(),'source':source,'source_host':host,'count':len(quotes),'requested':len(codes),'quotes':quotes,'fallback':fallback,'errors':errors,'note':'Yahoo取得時は市場データ。古い取得値は公開せず、取得不能時は保存済み日次値を明示的に区別します。'}
+    market_date=str(max(quote_days)) if quote_days else (str(latest_day) if latest_day else None)
+    if latest_day and market_date and market_date < str(latest_day):
+        # Safety net: do not publish a snapshot that globally regresses.
+        valid_quotes=fallback_quotes
+        market_date=str(latest_day)
+        fallback=True
+        source='現在表示中のDaily stock update（古いリアルタイム値を除外）'
+    elif fallback and not source.startswith('現在表示中'):
+        source += ' + 現在表示中のDaily stock update（不足/古い値を補完）'
+
+    payload={'updated_at':now.isoformat(),'market_date':market_date,'source':source,'source_host':host,
+             'count':len(valid_quotes),'requested':len(codes),'quotes':valid_quotes,'fallback':fallback,
+             'rejected_old_quotes':rejected,'errors':errors,
+             'note':'Yahoo取得値は銘柄ごとに市場日を検証。Daily stock updateより古い値は公開せず、同日の日次値で補完します。'}
     OUT.parent.mkdir(parents=True,exist_ok=True); OUT.write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding='utf-8')
-    print(json.dumps({'count':len(quotes),'requested':len(codes),'source':source,'fallback':fallback,'errors':errors},ensure_ascii=False))
+    print(json.dumps({'count':len(valid_quotes),'requested':len(codes),'source':source,'fallback':fallback,'rejected_old_quotes':len(rejected),'errors':errors},ensure_ascii=False))
+
 if __name__=='__main__': main()
