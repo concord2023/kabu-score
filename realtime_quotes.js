@@ -17,53 +17,71 @@
     btn.disabled=true; btn.textContent='取得中…';
     const started=performance.now();
     try{
+      // The quote snapshot is supplementary data. Never let an older snapshot
+      // overwrite a newer Daily stock update. This was the cause of the
+      // 9/25 "time travel" regression after pressing the button.
+      let ranking=null;
+      try{
+        const rr=await fetch('./data/decision_ranking.json?ts='+Date.now(),{cache:'no-store'});
+        if(rr.ok) ranking=await rr.json();
+      }catch(_e){}
+      const dailyStamp=ranking?.updated_at?new Date(ranking.updated_at):null;
+      const dailyDay=dailyStamp&&!Number.isNaN(dailyStamp.getTime())?dailyStamp.toISOString().slice(0,10):null;
+
       let payload=null;
       try{
         const r=await fetch('./data/realtime_quotes.json?ts='+Date.now(),{cache:'no-store'});
         if(r.ok) payload=await r.json();
       }catch(_e){}
-      // Snapshot may not exist immediately after deployment. In that case,
-      // fall back to the already-published daily analysis instead of showing
-      // the old hard error. This is explicitly NOT labelled realtime.
-      if(!payload){
-        try{
-          const r=await fetch('./data/stocks.json?ts='+Date.now(),{cache:'no-store'});
-          if(r.ok){
-            const stocks=await r.json();
-            const quotes={};
-            for(const code of codes){
-              const x=(stocks.stocks||{})[code];
-              if(x&&x.price!=null) quotes[code]={price:x.price,change:x.change,change_pct:x.change!=null&&Number(x.price)-Number(x.change)!==0?Number(x.change)/(Number(x.price)-Number(x.change))*100:null,market_time:x.date,quote_type:'daily_close_fallback'};
-            }
-            payload={updated_at:stocks.updated_at,quotes,fallback:true,source:'保存済み日次終値'};
-          }
-        }catch(_e){}
+
+      const payloadStamp=payload?.updated_at?new Date(payload.updated_at):null;
+      const payloadDay=payloadStamp&&!Number.isNaN(payloadStamp.getTime())?payloadStamp.toISOString().slice(0,10):null;
+      const snapshotStale=!!(dailyDay&&payloadDay&&payloadDay<dailyDay);
+
+      // If the snapshot is missing or stale, use the SAME daily ranking that
+      // drives the page, not data/stocks.json. This keeps the date consistent.
+      if(!payload || snapshotStale){
+        const quotes={};
+        const rankingRows=ranking?.ranking||[];
+        for(const code of codes){
+          const x=rankingRows.find(v=>String(v.code)===code);
+          const d=x?.details||{};
+          if(x&&d.price!=null) quotes[code]={price:d.price,change:d.change,change_pct:d.change,market_time:ranking.updated_at,quote_type:'daily_ranking_fallback'};
+        }
+        if(Object.keys(quotes).length){
+          payload={updated_at:ranking.updated_at,quotes,fallback:true,stale_snapshot:snapshotStale,source:'現在表示中のDaily stock update',errors:payload?.errors||[]};
+        }
       }
       if(!payload)throw new Error('株価データを読み込めませんでした');
+
       const quotes=payload?.quotes||{};
-      let ok=0;
+      let ok=0, applied=0;
       rows.forEach(row=>{
         const code=String(row.dataset.liveCode||'').trim();
         const q=quotes[`${code}.T`]||quotes[code];
         if(!q)return;
         ok++;
+        // Never apply a quote whose own timestamp predates the daily data.
+        const qStamp=q.market_time?new Date(q.market_time):null;
+        const qDay=qStamp&&!Number.isNaN(qStamp.getTime())?qStamp.toISOString().slice(0,10):null;
+        if(dailyDay&&qDay&&qDay<dailyDay)return;
         const p=row.querySelector('.live-price'),c=row.querySelector('.live-change'),t=row.querySelector('.live-time');
         if(p)p.textContent=fmt(q.price);
         if(c){c.textContent=pct(q.change_pct);c.className=`quote-change live-change ${cls(q.change_pct)}`;}
         if(t)t.textContent=q.market_time?`更新 ${String(q.market_time).replace('T',' ').slice(0,16)}`:'更新時刻不明';
         row.classList.add('live-updated');
+        applied++;
       });
-      if(!ok){
-        const stamp=payload.updated_at?String(payload.updated_at).replace('T',' ').slice(0,16):'時刻不明';
-        updateStatus(`市場時間外または未取得：保存済みスナップショット ${stamp}`,'warn');
+      if(!applied){
+        updateStatus(`古い株価スナップショットは適用せず、日次データ ${dailyDay||'—'} を維持しました。`,'warn');
         return;
       }
       const sec=((performance.now()-started)/1000).toFixed(2);
       const stamp=payload.updated_at?String(payload.updated_at).replace('T',' ').slice(0,16):'時刻不明';
-      if(payload.fallback){
-        updateStatus(`最新リアルタイム値は未取得｜保存済み日次終値 ${ok}/${codes.length}銘柄｜${stamp}`,'warn');
+      if(payload.fallback||snapshotStale){
+        updateStatus(`リアルタイム未取得｜日次データ ${applied}/${codes.length}銘柄を維持｜${stamp}`,'warn');
       }else{
-        updateStatus(`取得 ${ok}/${codes.length}銘柄｜${sec}秒｜サーバー更新 ${stamp}｜保存スコアは変更しません`,'ok');
+        updateStatus(`取得 ${applied}/${codes.length}銘柄｜${sec}秒｜サーバー更新 ${stamp}｜日次スコアは変更しません`,'ok');
       }
     }catch(e){updateStatus(`取得できませんでした：${e.message}`,'error');}
     finally{btn.disabled=false;btn.textContent='↻ リアルタイム株価を取得';}

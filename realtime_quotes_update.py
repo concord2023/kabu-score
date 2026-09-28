@@ -101,7 +101,38 @@ def main():
             host=host or chart_host
     if not quotes:
         quotes,source=fallback_from_stocks(codes); fallback=True
-    payload={'updated_at':datetime.now(JST).isoformat(),'source':source,'source_host':host,'count':len(quotes),'requested':len(codes),'quotes':quotes,'fallback':fallback,'errors':errors,'note':'Yahoo取得時は市場データ。取得不能時は保存済み日次終値を表示し、リアルタイム値とは明示的に区別します。'}
+    now=datetime.now(JST)
+    # Never publish an older Yahoo result over today's Daily stock update.
+    # Yahoo can occasionally return a cached previous-session value.
+    latest_day=None
+    for candidate in ('data/decision_ranking.json','data/stocks.json'):
+        try:
+            d=json.loads(Path(candidate).read_text(encoding='utf-8'))
+            stamp=d.get('updated_at')
+            if stamp:
+                dt=datetime.fromisoformat(str(stamp).replace('Z','+00:00'))
+                if dt.tzinfo is None: dt=dt.replace(tzinfo=JST)
+                day=dt.astimezone(JST).date()
+                latest_day=max(latest_day,day) if latest_day else day
+        except Exception:
+            pass
+    quote_days=[]
+    for q in quotes.values():
+        mt=q.get('market_time')
+        if mt:
+            try:
+                dt=datetime.fromisoformat(str(mt).replace('Z','+00:00'))
+                if dt.tzinfo is None: dt=dt.replace(tzinfo=JST)
+                quote_days.append(dt.astimezone(JST).date())
+            except Exception: pass
+    if latest_day and quote_days and max(quote_days)<latest_day:
+        # Keep the old snapshot rather than regressing to an older trading day.
+        if OUT.exists():
+            print(json.dumps({'preserved':True,'reason':'fetched quote is older than latest daily update','latest_daily_day':str(latest_day),'quote_day':str(max(quote_days))},ensure_ascii=False))
+            return
+        fallback_quotes, fallback_source=fallback_from_stocks(codes)
+        quotes=fallback_quotes; source=fallback_source; fallback=True
+    payload={'updated_at':now.isoformat(),'source':source,'source_host':host,'count':len(quotes),'requested':len(codes),'quotes':quotes,'fallback':fallback,'errors':errors,'note':'Yahoo取得時は市場データ。古い取得値は公開せず、取得不能時は保存済み日次値を明示的に区別します。'}
     OUT.parent.mkdir(parents=True,exist_ok=True); OUT.write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding='utf-8')
     print(json.dumps({'count':len(quotes),'requested':len(codes),'source':source,'fallback':fallback,'errors':errors},ensure_ascii=False))
 if __name__=='__main__': main()
