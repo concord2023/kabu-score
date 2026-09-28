@@ -26,7 +26,11 @@
         if(rr.ok) ranking=await rr.json();
       }catch(_e){}
       const dailyDays=(ranking?.ranking||[]).map(x=>(x?.details?.date||x?.date||'').slice(0,10)).filter(Boolean);
-      const dailyDay=dailyDays.length?dailyDays.sort().slice(-1)[0]:null;
+      // decision_ranking.updated_at is the authoritative date when individual
+      // rows do not carry a date. Never let a quote from an older market day
+      // replace the currently published Daily stock update.
+      const rankingUpdatedDay=ranking?.updated_at?String(ranking.updated_at).slice(0,10):null;
+      const dailyDay=dailyDays.length?dailyDays.sort().slice(-1)[0]:rankingUpdatedDay;
 
       let payload=null;
       try{
@@ -56,7 +60,7 @@
       if(!payload)throw new Error('株価データを読み込めませんでした');
 
       const quotes=payload?.quotes||{};
-      let ok=0, applied=0;
+      let ok=0, applied=0, usedFallback=false;
       rows.forEach(row=>{
         const code=String(row.dataset.liveCode||'').trim();
         const q=quotes[`${code}.T`]||quotes[code];
@@ -66,11 +70,16 @@
         const qStamp=q.market_time?new Date(q.market_time):null;
         const qDay=qStamp&&!Number.isNaN(qStamp.getTime())?qStamp.toLocaleDateString('en-CA',{timeZone:'Asia/Tokyo'}):null;
         let use=q;
-        if(dailyDay&&qDay&&qDay<dailyDay){
+        if(dailyDay&&(!qDay || qDay<dailyDay)){
           const daily=rankingRows.find(v=>String(v.code)===code);
           const dd=daily?.details||{};
-          if(daily&&dd.price!=null) use={price:dd.price,change:dd.change,change_pct:dd.change,market_time:dd.date||daily.date||ranking?.updated_at,quote_type:'daily_ranking_fallback'};
-          else return;
+          if(daily&&dd.price!=null){
+            use={price:dd.price,change:dd.change,change_pct:dd.change_pct,market_time:dd.date||daily.date||ranking?.updated_at,quote_type:'daily_ranking_fallback'};
+            usedFallback=true;
+          }else{
+            // Do not show an unverified old quote. Keep the row unchanged.
+            return;
+          }
         }
         const p=row.querySelector('.live-price'),c=row.querySelector('.live-change'),t=row.querySelector('.live-time');
         if(p)p.textContent=fmt(use.price);
@@ -85,7 +94,7 @@
       }
       const sec=((performance.now()-started)/1000).toFixed(2);
       const stamp=payload.updated_at?String(payload.updated_at).replace('T',' ').slice(0,16):'時刻不明';
-      if(payload.fallback||snapshotStale){
+      if(payload.fallback||snapshotStale||usedFallback){
         updateStatus(`リアルタイム未取得｜日次データ ${applied}/${codes.length}銘柄を維持｜${stamp}`,'warn');
       }else{
         updateStatus(`取得 ${applied}/${codes.length}銘柄｜${sec}秒｜サーバー更新 ${stamp}｜日次スコアは変更しません`,'ok');

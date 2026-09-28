@@ -116,7 +116,7 @@ def daily_fallback_quotes(codes, ranking):
         if price is None: continue
         change=d.get('change',row.get('change'))
         out[code]={'symbol':code+'.T','price':price,'previous_close':round(float(price)-float(change),4) if change is not None else None,
-                   'change':change,'change_pct':change,'market_time':d.get('date') or row.get('date') or (ranking or {}).get('updated_at'),
+                   'change':change,'change_pct':(round(float(change)/float(price-float(change))*100,4) if change is not None and float(price)-float(change) else None),'market_time':d.get('date') or row.get('date') or (ranking or {}).get('updated_at'),
                    'quote_type':'daily_ranking_fallback'}
     return out
 
