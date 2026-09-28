@@ -39,6 +39,43 @@ def fetch_batch(codes):
         except Exception as e: errors.append(host+': '+str(e))
     return {},None,errors
 
+
+def parse_chart(payload):
+    out={}
+    for result in ((payload.get('chart') or {}).get('result') or []):
+        meta=result.get('meta') or {}
+        symbol=meta.get('symbol')
+        if not symbol:
+            continue
+        price=meta.get('regularMarketPrice')
+        if price is None:
+            closes=((result.get('indicators') or {}).get('quote') or [{}])[0].get('close') or []
+            vals=[v for v in closes if v is not None]
+            price=vals[-1] if vals else None
+        try: price=float(price)
+        except (TypeError,ValueError): continue
+        prev=meta.get('previousClose',meta.get('chartPreviousClose'))
+        try: prev=float(prev) if prev is not None else None
+        except (TypeError,ValueError): prev=None
+        change=price-prev if prev is not None else None
+        rmt=meta.get('regularMarketTime')
+        out[symbol.replace('.T','')]={'symbol':symbol,'price':round(price,4),'previous_close':round(prev,4) if prev is not None else None,'change':round(change,4) if change is not None else None,'change_pct':round(change/prev*100,4) if change is not None and prev else None,'market_time':datetime.fromtimestamp(rmt,timezone.utc).astimezone(JST).isoformat() if rmt else datetime.now(JST).isoformat(),'quote_type':'yahoo_chart'}
+    return out
+
+def fetch_chart(codes):
+    errors=[]
+    for code in codes:
+        for host in ('https://query1.finance.yahoo.com','https://query2.finance.yahoo.com'):
+            url=host+'/v8/finance/chart/'+urllib.parse.quote(code+'.T')+'?'+urllib.parse.urlencode({'range':'1d','interval':'1m','includePrePost':'false','events':'div,splits'})
+            try:
+                result=parse_chart(fetch_json(url))
+                if result:
+                    return result,host,errors
+                errors.append(code+' '+host+': empty')
+            except Exception as e:
+                errors.append(code+' '+host+': '+str(e))
+    return {},None,errors
+
 def fallback_from_stocks(codes):
     try: data=json.loads(Path('data/stocks.json').read_text(encoding='utf-8'))
     except Exception as e: return {},'stocks.json unavailable: '+str(e)
@@ -55,6 +92,13 @@ def main():
     codes=codes_from_watchlist()
     if not codes: raise SystemExit('watchlist is empty')
     quotes,host,errors=fetch_batch(codes); source='Yahoo Finance spark API'; fallback=False
+    if len(quotes) < len(codes):
+        chart_quotes,chart_host,chart_errors=fetch_chart([c for c in codes if c not in quotes])
+        quotes.update(chart_quotes)
+        errors.extend(chart_errors)
+        if chart_quotes:
+            source='Yahoo Finance chart API' if not host else 'Yahoo Finance spark + chart API'
+            host=host or chart_host
     if not quotes:
         quotes,source=fallback_from_stocks(codes); fallback=True
     payload={'updated_at':datetime.now(JST).isoformat(),'source':source,'source_host':host,'count':len(quotes),'requested':len(codes),'quotes':quotes,'fallback':fallback,'errors':errors,'note':'Yahoo取得時は市場データ。取得不能時は保存済み日次終値を表示し、リアルタイム値とは明示的に区別します。'}
