@@ -88,6 +88,11 @@
         row.classList.add('live-updated');
         applied++;
       });
+      if(applied){
+        const savedQuotes={};
+        rows.forEach(row=>{const code=String(row.dataset.liveCode||'');const q=quotes[code]||quotes[`${code}.T`];if(q){const qDay=q.market_time?new Date(q.market_time).toLocaleDateString('en-CA',{timeZone:'Asia/Tokyo'}):null;if(!dailyDay||qDay===dailyDay)savedQuotes[code]={...q,market_time:q.market_time};}});
+        try{localStorage.setItem('kabuScoreRealtimeQuotes',JSON.stringify({saved_at:new Date().toISOString(),market_day:dailyDay,quotes:savedQuotes}));}catch(_e){}
+      }
       if(!applied){
         updateStatus(`古い株価スナップショットは適用せず、日次データ ${dailyDay||'—'} を維持しました。`,'warn');
         return;
