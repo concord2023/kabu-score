@@ -1,14 +1,99 @@
 {
-  "updated_at": "2026-09-30T07:27:17.133206+09:00",
+  "updated_at": "2026-09-30T12:57:46.153522+09:00",
   "date": "2026-09-30",
   "title": "今日の注目5選",
   "status": "ok",
   "method": "同日公開の投資家話題・ニュース/開示・大量保有・アナリスト・テーマ・YouTubeを複数の検索角度から収集。投資家話題順位、情報源の種類、同日言及数、株価/出来高、具体的材料を組み合わせ、複数のルートのいずれかを満たす銘柄を最大5件表示する。無理に5件へ水増ししない。これはBUY判定ではない。",
   "source_policy": "各記事・動画へのリンクと発信元を保存。外部情報の注目度とkabu-scoreの総合BUY判定は別物として表示する。",
   "errors": [],
-  "candidate_pool": 63,
-  "eligible_count": 14,
+  "candidate_pool": 75,
+  "eligible_count": 15,
   "candidates": [
+    {
+      "code": "7203",
+      "name": "トヨタ自動車",
+      "market": "プライム（内国株式）",
+      "industry": null,
+      "source_types": [
+        "アナリスト",
+        "ニュース",
+        "開示"
+      ],
+      "score": 14.2,
+      "kabu_score": 69,
+      "signal": "AVOID",
+      "rsi14": 26.9,
+      "change": -3.52,
+      "volume_ratio": 1.37,
+      "heat_score": 12.0,
+      "selection_basis": [
+        "3種類の情報源",
+        "同日4件の言及",
+        "前日比-3.52%"
+      ],
+      "reason": "3種類の情報源＋同日4件の言及＋前日比-3.52%（話題強度12.0）。",
+      "movement_type": "複数情報源で話題",
+      "material_summary": "【日本株】株価上昇に期待できる｢2026年の大本命株｣5銘柄！ フィジカルAIが話題の｢ファナック｣、今期は減益も来期は2ケタ増益予想の｢トヨタ自動車｣に注目！ - ダイヤモンド・オンライン",
+      "explanation": {
+        "why_selected": "3種類の情報源",
+        "what_is_happening": "【日本株】株価上昇に期待できる｢2026年の大本命株｣5銘柄！ フィジカルAIが話題の｢ファナック｣、今期は減益も来期は2ケタ増益予想の｢トヨタ自動車｣に注目！ - ダイヤモンド・オンライン",
+        "material_category": "株価上昇・需給/値動き",
+        "score_breakdown": {
+          "source_types": 3,
+          "mentions": 4,
+          "investor_rank": null
+        }
+      },
+      "research_memo": {
+        "headline": "【日本株】株価上昇に期待できる｢2026年の大本命株｣5銘柄！ フィジカルAIが話題の｢ファナック｣、今期は減益も来期は2ケタ増益予想の｢トヨタ自動車｣に注目！ - ダイヤモンド・オンライン",
+        "summary": "【話題の事実】情報源は3種類（アナリスト・ニュース・開示）。同日言及は4件。【材料】【日本株】株価上昇に期待できる｢2026年の大本命株｣5銘柄！ フィジカルAIが話題の｢ファナック｣、今期は減益も来期は2ケタ増益予想の｢トヨタ自動車｣に注目！ - ダイヤモンド・オンライン / 【4月15日の注目株＆日本株市場見通し】「前年同期比」「前四半期比」正しい使い方/日経平均続伸・トヨタ自動車が上昇 「デイリーZAi」4/15号 - ダイヤモンド・オンライン / トヨタ自動車(株)【7203】：株価・株式情報（夜間PTS含む） - Yahoo!ファイナンス【値動き確認】株価は前日比-3.52%。出来高は平常比1.4倍。",
+        "why": "【選定理由】複数種類の情報源で同日に言及が重なったため、単一記事だけの話題ではないと判断して残しました。",
+        "category": "株価上昇・需給/値動き",
+        "evidence": [
+          "情報源は3種類（アナリスト・ニュース・開示）",
+          "同日言及は4件",
+          "株価は前日比-3.52%",
+          "出来高は平常比1.4倍"
+        ],
+        "check_point": "見出しだけでは因果関係を断定しません。決算短信・適時開示・原記事本文など、リンク先の一次情報を確認してください。",
+        "source_count": 3,
+        "mention_count": 4,
+        "sources": [
+          "アナリスト",
+          "ニュース",
+          "開示"
+        ],
+        "detail": "【日本株】株価上昇に期待できる｢2026年の大本命株｣5銘柄！ フィジカルAIが話題の｢ファナック｣、今期は減益も来期は2ケタ増益予想の｢トヨタ自動車｣に注目！ - ダイヤモンド・オンライン / 【4月15日の注目株＆日本株市場見通し】「前年同期比」「前四半期比」正しい使い方/日経平均続伸・トヨタ自動車が上昇 「デイリーZAi」4/15号 - ダイヤモンド・オンライン / トヨタ自動車(株)【7203】：株価・株式情報（夜間PTS含む） - Yahoo!ファイナンス",
+        "heat_score": 12.0
+      },
+      "sources": [
+        {
+          "name": "ニュース・材料検索",
+          "type": "ニュース",
+          "title": "【日本株】株価上昇に期待できる｢2026年の大本命株｣5銘柄！ フィジカルAIが話題の｢ファナック｣、今期は減益も来期は2ケタ増益予想の｢トヨタ自動車｣に注目！ - ダイヤモンド・オンライン",
+          "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE5tczR2TW5xbzM4ckN6azNZOFNONWhRa1RFSjdOQk1iQjdHWTNXSjJobWZZN2dRd1pEcE9LdHh4NzhOcEFsc20zWXFQWmxEZnhRYm9n?oc=5"
+        },
+        {
+          "name": "ニュース・話題検索",
+          "type": "ニュース",
+          "title": "【4月15日の注目株＆日本株市場見通し】「前年同期比」「前四半期比」正しい使い方/日経平均続伸・トヨタ自動車が上昇 「デイリーZAi」4/15号 - ダイヤモンド・オンライン",
+          "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE85V3dkYzJLcXNKMkNFM2U5Yi1Gbk84aWNFQUxTaHU2bFVwMzRXNW52b0d2NzlGT0l1WnVJRGdHei1NdDNwMVU5WkwyQmN5OExsYlkw?oc=5"
+        },
+        {
+          "name": "大量保有・開示検索",
+          "type": "開示",
+          "title": "トヨタ自動車(株)【7203】：株価・株式情報（夜間PTS含む） - Yahoo!ファイナンス",
+          "url": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE1DQkM1WTNHT0laZ1dmVk1yeTY4YjB0Y2tQV1MzNUdxVXJzNThLWFotdUd2NDdwZmpQWkpUWWhaOUVhU0VJU05QbFk5YWNOUTRKc3c?oc=5"
+        },
+        {
+          "name": "アナリスト・レポート検索",
+          "type": "アナリスト",
+          "title": "トヨタ自動車は今後も有望な投資先か？ 注目企業の決算レポート特集 - Yahoo!ファイナンス",
+          "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTE9lZm92cnNDWE5CN05nTTNuS3BiVVNMX1AyM0xNRmVMZ044Nzd6dnlXZG5falpzQTYxMC1oMGI5SHdUM0c4MW1RNTJrdU8xR2Z3SThTOEFEbUZOQmpCd2JocnRxNDJuRHFVUEo5NGFuVQ?oc=5"
+        }
+      ],
+      "selection_eligible": true
+    },
     {
       "code": "9984",
       "name": "ソフトバンクグループ",
@@ -32,10 +117,10 @@
       ],
       "reason": "投資家話題1位以内＋2種類の情報源＋同日2件の言及（話題強度11.0）。",
       "movement_type": "複数情報源で話題",
-      "material_summary": "と需給バランスの変化) 2位 (180) ａｋｉｐｐａ(627A) Y K 掲 AIコメント ＡＫＩＰＰＡ、値幅４８３円の荒い値動き(新規上場銘柄 値幅４８３円の荒い値動き IPO銘柄に資金が流れる) 3位 (137) Ｓｋｙｆａｌｌ(625A) Y K 掲 AIコメント スカイフォール米国進出IRで株価沸騰(米国子会社設立で海外展開加速 IPO直後のIRに市場が反応 リワード広告で世界首位目指す) 4位 (75) ソフトバンクグループ(9984) Y K 掲 AIコメント SBG、OpenAI巨額収益でPTS急騰！(OpenAIの年間経常収益が700億ドルに迫るニュース SBGのPTS（夜間取引）が急騰し、買い安心感が増す動き OpenAIの企業価値向上はSBGのNAV（純資産価値）にも好影響) 5位 (64) ニデック(6594) Y K 掲 AIコメント ニデック社長辞任、子会社売却で再建へ(社長辞任と新体制への移行 電子",
+      "material_summary": "ディングス(285A) Y K 掲 AIコメント キオクシア、分割後の動向と将来性への期待(株式分割による流動性向上と今後の株価への影響 メモリ不足とAI需要拡大による事業拡大の可能性 機関投資家の動向と需給バランスの変化) 3位 (144) Ｓｋｙｆａｌｌ(625A) Y K 掲 AIコメント リワード広告世界首位で急騰(米国子会社設立 現地での営業・事業開発を推進 リワード広告で世界首位目指す) 4位 (89) ソフトバンクグループ(9984) Y K 掲 AIコメント SBG、OpenAI巨額収益でPTS急騰！(OpenAIの年間経常収益が700億ドルに迫るニュース SBGのPTS（夜間取引）が急騰し、買い安心感が増す動き OpenAIの企業価値向上はSBGのNAV（純資産価値）にも好影響) 5位 (70) ニデック(6594) Y K 掲 AIコメント ニデック社長辞任、子会社売却で再建へ(社長辞任と新体制への移行 電子",
       "explanation": {
         "why_selected": "投資家話題ランキング1位＋2種類の情報源",
-        "what_is_happening": "と需給バランスの変化) 2位 (180) ａｋｉｐｐａ(627A) Y K 掲 AIコメント ＡＫＩＰＰＡ、値幅４８３円の荒い値動き(新規上場銘柄 値幅４８３円の荒い値動き IPO銘柄に資金が流れる) 3位 (137) Ｓｋｙｆａｌｌ(625A) Y K 掲 AIコメント スカイフォール米国進出IRで株価沸騰(米国子会社設立で海外展開加速 IPO直後のIRに市場が反応 リワード広告で世界首位目指す) 4位 (75) ソフトバンクグループ(9984) Y K 掲 AIコメント SBG、OpenAI巨額収益でPTS急騰！(OpenAIの年間経常収益が700億ドルに迫るニュース SBGのPTS（夜間取引）が急騰し、買い安心感が増す動き OpenAIの企業価値向上はSBGのNAV（純資産価値）にも好影響) 5位 (64) ニデック(6594) Y K 掲 AIコメント ニデック社長辞任、子会社売却で再建へ(社長辞任と新体制への移行 電子",
+        "what_is_happening": "ディングス(285A) Y K 掲 AIコメント キオクシア、分割後の動向と将来性への期待(株式分割による流動性向上と今後の株価への影響 メモリ不足とAI需要拡大による事業拡大の可能性 機関投資家の動向と需給バランスの変化) 3位 (144) Ｓｋｙｆａｌｌ(625A) Y K 掲 AIコメント リワード広告世界首位で急騰(米国子会社設立 現地での営業・事業開発を推進 リワード広告で世界首位目指す) 4位 (89) ソフトバンクグループ(9984) Y K 掲 AIコメント SBG、OpenAI巨額収益でPTS急騰！(OpenAIの年間経常収益が700億ドルに迫るニュース SBGのPTS（夜間取引）が急騰し、買い安心感が増す動き OpenAIの企業価値向上はSBGのNAV（純資産価値）にも好影響) 5位 (70) ニデック(6594) Y K 掲 AIコメント ニデック社長辞任、子会社売却で再建へ(社長辞任と新体制への移行 電子",
         "material_category": "株価上昇・需給/値動き",
         "score_breakdown": {
           "source_types": 2,
@@ -44,8 +129,8 @@
         }
       },
       "research_memo": {
-        "headline": "と需給バランスの変化) 2位 (180) ａｋｉｐｐａ(627A) Y K 掲 AIコメント ＡＫＩＰＰＡ、値幅４８３円の荒い値動き(新規上場銘柄 値幅４８３円の荒い値動き IPO銘柄に資金が流れる) 3位 (137) Ｓｋｙｆａｌｌ(625A) Y K 掲 AIコメント スカイフォール米国進出IRで株価沸騰(米国子会社設立で海外展開加速 IPO直後のIRに市場が反応 リワード広告で世界首位目指す) 4位 (75) ソフトバンクグループ(9984) Y K 掲 AIコメント SBG、OpenAI巨額収益でPTS急騰！(OpenAIの年間経常収益が700億ドルに迫るニュース SBGのPTS（夜間取引）が急騰し、買い安心感が増す動き OpenAIの企業価値向上はSBGのNAV（純資産価値）にも好影響) 5位 (64) ニデック(6594) Y K 掲 AIコメント ニデック社長辞任、子会社売却で再建へ(社長辞任と新体制への移行 電子",
-        "summary": "【話題の事実】投資家話題ランキングは1位。情報源は2種類（投資家話題・ニュース）。同日言及は2件。【材料】と需給バランスの変化) 2位 (180) ａｋｉｐｐａ(627A) Y K 掲 AIコメント ＡＫＩＰＰＡ、値幅４８３円の荒い値動き(新規上場銘柄 値幅４８３円の荒い値動き IPO銘柄に資金が流れる) 3位 (137) Ｓｋｙｆａｌｌ(625A) Y K 掲 AIコメント スカイフォール米国進出IRで株価沸騰(米国子会社設立で海外展開加速 IPO直後のIRに市場が反応 リワード広告で世界首位目指す) 4位 (75) ソフトバンクグループ(9984) Y K 掲 AIコメント SBG、OpenAI巨額収益でPTS急騰！(OpenAIの年間経常収益が700億ドルに迫るニュース SBGのPTS（夜間取引）が急騰し、買い安心感が増す動き OpenAIの企業価値向上はSBGのNAV（純資産価値）にも好影響) 5位 (64) ニデック(6594) Y K 掲 AIコメント ニデック社長辞任、子会社売却で再建へ(社長辞任と新体制への移行 電子 / 円高でセリアや神戸物産が急伸、金利低下でソフトバンクグループも/日経平均反発【今日の注目株＆日本株市場見通し】「デイリーZAi」9月4日号（ダイヤモンド・ザイ） - Yahoo!ニュース【値動き確認】日次株価データからの確認材料はありません。",
+        "headline": "ディングス(285A) Y K 掲 AIコメント キオクシア、分割後の動向と将来性への期待(株式分割による流動性向上と今後の株価への影響 メモリ不足とAI需要拡大による事業拡大の可能性 機関投資家の動向と需給バランスの変化) 3位 (144) Ｓｋｙｆａｌｌ(625A) Y K 掲 AIコメント リワード広告世界首位で急騰(米国子会社設立 現地での営業・事業開発を推進 リワード広告で世界首位目指す) 4位 (89) ソフトバンクグループ(9984) Y K 掲 AIコメント SBG、OpenAI巨額収益でPTS急騰！(OpenAIの年間経常収益が700億ドルに迫るニュース SBGのPTS（夜間取引）が急騰し、買い安心感が増す動き OpenAIの企業価値向上はSBGのNAV（純資産価値）にも好影響) 5位 (70) ニデック(6594) Y K 掲 AIコメント ニデック社長辞任、子会社売却で再建へ(社長辞任と新体制への移行 電子",
+        "summary": "【話題の事実】投資家話題ランキングは1位。情報源は2種類（投資家話題・ニュース）。同日言及は2件。【材料】ディングス(285A) Y K 掲 AIコメント キオクシア、分割後の動向と将来性への期待(株式分割による流動性向上と今後の株価への影響 メモリ不足とAI需要拡大による事業拡大の可能性 機関投資家の動向と需給バランスの変化) 3位 (144) Ｓｋｙｆａｌｌ(625A) Y K 掲 AIコメント リワード広告世界首位で急騰(米国子会社設立 現地での営業・事業開発を推進 リワード広告で世界首位目指す) 4位 (89) ソフトバンクグループ(9984) Y K 掲 AIコメント SBG、OpenAI巨額収益でPTS急騰！(OpenAIの年間経常収益が700億ドルに迫るニュース SBGのPTS（夜間取引）が急騰し、買い安心感が増す動き OpenAIの企業価値向上はSBGのNAV（純資産価値）にも好影響) 5位 (70) ニデック(6594) Y K 掲 AIコメント ニデック社長辞任、子会社売却で再建へ(社長辞任と新体制への移行 電子 / 円高でセリアや神戸物産が急伸、金利低下でソフトバンクグループも/日経平均反発【今日の注目株＆日本株市場見通し】「デイリーZAi」9月4日号（ダイヤモンド・ザイ） - Yahoo!ニュース【値動き確認】日次株価データからの確認材料はありません。",
         "why": "【選定理由】投資家話題の上位に入り、上記の情報量・材料・値動きの確認がそろったため、当日の注目候補として残しました。",
         "category": "株価上昇・需給/値動き",
         "evidence": [
@@ -60,14 +145,14 @@
           "投資家話題",
           "ニュース"
         ],
-        "detail": "と需給バランスの変化) 2位 (180) ａｋｉｐｐａ(627A) Y K 掲 AIコメント ＡＫＩＰＰＡ、値幅４８３円の荒い値動き(新規上場銘柄 値幅４８３円の荒い値動き IPO銘柄に資金が流れる) 3位 (137) Ｓｋｙｆａｌｌ(625A) Y K 掲 AIコメント スカイフォール米国進出IRで株価沸騰(米国子会社設立で海外展開加速 IPO直後のIRに市場が反応 リワード広告で世界首位目指す) 4位 (75) ソフトバンクグループ(9984) Y K 掲 AIコメント SBG、OpenAI巨額収益でPTS急騰！(OpenAIの年間経常収益が700億ドルに迫るニュース SBGのPTS（夜間取引）が急騰し、買い安心感が増す動き OpenAIの企業価値向上はSBGのNAV（純資産価値）にも好影響) 5位 (64) ニデック(6594) Y K 掲 AIコメント ニデック社長辞任、子会社売却で再建へ(社長辞任と新体制への移行 電子 / 円高でセリアや神戸物産が急伸、金利低下でソフトバンクグループも/日経平均反発【今日の注目株＆日本株市場見通し】「デイリーZAi」9月4日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
+        "detail": "ディングス(285A) Y K 掲 AIコメント キオクシア、分割後の動向と将来性への期待(株式分割による流動性向上と今後の株価への影響 メモリ不足とAI需要拡大による事業拡大の可能性 機関投資家の動向と需給バランスの変化) 3位 (144) Ｓｋｙｆａｌｌ(625A) Y K 掲 AIコメント リワード広告世界首位で急騰(米国子会社設立 現地での営業・事業開発を推進 リワード広告で世界首位目指す) 4位 (89) ソフトバンクグループ(9984) Y K 掲 AIコメント SBG、OpenAI巨額収益でPTS急騰！(OpenAIの年間経常収益が700億ドルに迫るニュース SBGのPTS（夜間取引）が急騰し、買い安心感が増す動き OpenAIの企業価値向上はSBGのNAV（純資産価値）にも好影響) 5位 (70) ニデック(6594) Y K 掲 AIコメント ニデック社長辞任、子会社売却で再建へ(社長辞任と新体制への移行 電子 / 円高でセリアや神戸物産が急伸、金利低下でソフトバンクグループも/日経平均反発【今日の注目株＆日本株市場見通し】「デイリーZAi」9月4日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
         "heat_score": 11.0
       },
       "sources": [
         {
           "name": "チャートなび",
           "type": "investor",
-          "title": "と需給バランスの変化) 2位 (180) ａｋｉｐｐａ(627A) Y K 掲 AIコメント ＡＫＩＰＰＡ、値幅４８３円の荒い値動き(新規上場銘柄 値幅４８３円の荒い値動き IPO銘柄に資金が流れる) 3位 (137) Ｓｋｙｆａｌｌ(625A) Y K 掲 AIコメント スカイフォール米国進出IRで株価沸騰(米国子会社設立で海外展開加速 IPO直後のIRに市場が反応 リワード広告で世界首位目指す) 4位 (75) ソフトバンクグループ(9984) Y K 掲 AIコメント SBG、OpenAI巨額収益でPTS急騰！(OpenAIの年間経常収益が700億ドルに迫るニュース SBGのPTS（夜間取引）が急騰し、買い安心感が増す動き OpenAIの企業価値向上はSBGのNAV（純資産価値）にも好影響) 5位 (64) ニデック(6594) Y K 掲 AIコメント ニデック社長辞任、子会社売却で再建へ(社長辞任と新体制への移行 電子",
+          "title": "ディングス(285A) Y K 掲 AIコメント キオクシア、分割後の動向と将来性への期待(株式分割による流動性向上と今後の株価への影響 メモリ不足とAI需要拡大による事業拡大の可能性 機関投資家の動向と需給バランスの変化) 3位 (144) Ｓｋｙｆａｌｌ(625A) Y K 掲 AIコメント リワード広告世界首位で急騰(米国子会社設立 現地での営業・事業開発を推進 リワード広告で世界首位目指す) 4位 (89) ソフトバンクグループ(9984) Y K 掲 AIコメント SBG、OpenAI巨額収益でPTS急騰！(OpenAIの年間経常収益が700億ドルに迫るニュース SBGのPTS（夜間取引）が急騰し、買い安心感が増す動き OpenAIの企業価値向上はSBGのNAV（純資産価値）にも好影響) 5位 (70) ニデック(6594) Y K 掲 AIコメント ニデック社長辞任、子会社売却で再建へ(社長辞任と新体制への移行 電子",
           "url": "https://chartnavi.com/scan/wadai/date/_20260930/"
         },
         {
@@ -75,85 +160,6 @@
           "type": "ニュース",
           "title": "円高でセリアや神戸物産が急伸、金利低下でソフトバンクグループも/日経平均反発【今日の注目株＆日本株市場見通し】「デイリーZAi」9月4日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
           "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE41Rl9qY1h0d2NCSFZnaWRIRWFBV054TlBramtacnNpU2FWa0tZZ2RWdk84OGFXaE4wYW5VVzBfclBpTVRkNDh1bW1OdXExQmNkeFNSQXF5bElzWVI4WEdCdEZQbnJ2NkhiYmNwcTZlT2ljX01uVEJvWjRqR2VHWlE?oc=5"
-        }
-      ],
-      "selection_eligible": true
-    },
-    {
-      "code": "7203",
-      "name": "トヨタ自動車",
-      "market": "プライム（内国株式）",
-      "industry": null,
-      "source_types": [
-        "アナリスト",
-        "ニュース",
-        "開示"
-      ],
-      "score": 11.7,
-      "kabu_score": 69,
-      "signal": "AVOID",
-      "rsi14": 26.9,
-      "change": -3.52,
-      "volume_ratio": 1.37,
-      "heat_score": 11.0,
-      "selection_basis": [
-        "3種類の情報源",
-        "同日3件の言及",
-        "前日比-3.52%"
-      ],
-      "reason": "3種類の情報源＋同日3件の言及＋前日比-3.52%（話題強度11.0）。",
-      "movement_type": "複数情報源で話題",
-      "material_summary": "【日本株】株価上昇に期待できる｢2026年の大本命株｣5銘柄！ フィジカルAIが話題の｢ファナック｣、今期は減益も来期は2ケタ増益予想の｢トヨタ自動車｣に注目！ - ダイヤモンド・オンライン",
-      "explanation": {
-        "why_selected": "3種類の情報源",
-        "what_is_happening": "【日本株】株価上昇に期待できる｢2026年の大本命株｣5銘柄！ フィジカルAIが話題の｢ファナック｣、今期は減益も来期は2ケタ増益予想の｢トヨタ自動車｣に注目！ - ダイヤモンド・オンライン",
-        "material_category": "株価上昇・需給/値動き",
-        "score_breakdown": {
-          "source_types": 3,
-          "mentions": 3,
-          "investor_rank": null
-        }
-      },
-      "research_memo": {
-        "headline": "【日本株】株価上昇に期待できる｢2026年の大本命株｣5銘柄！ フィジカルAIが話題の｢ファナック｣、今期は減益も来期は2ケタ増益予想の｢トヨタ自動車｣に注目！ - ダイヤモンド・オンライン",
-        "summary": "【話題の事実】情報源は3種類（アナリスト・ニュース・開示）。同日言及は3件。【材料】【日本株】株価上昇に期待できる｢2026年の大本命株｣5銘柄！ フィジカルAIが話題の｢ファナック｣、今期は減益も来期は2ケタ増益予想の｢トヨタ自動車｣に注目！ - ダイヤモンド・オンライン / トヨタ自動車(株)【7203】：株価・株式情報（夜間PTS含む） - Yahoo!ファイナンス / トヨタ自動車は今後も有望な投資先か？ 注目企業の決算レポート特集 - Yahoo!ファイナンス【値動き確認】株価は前日比-3.52%。出来高は平常比1.4倍。",
-        "why": "【選定理由】複数種類の情報源で同日に言及が重なったため、単一記事だけの話題ではないと判断して残しました。",
-        "category": "株価上昇・需給/値動き",
-        "evidence": [
-          "情報源は3種類（アナリスト・ニュース・開示）",
-          "同日言及は3件",
-          "株価は前日比-3.52%",
-          "出来高は平常比1.4倍"
-        ],
-        "check_point": "見出しだけでは因果関係を断定しません。決算短信・適時開示・原記事本文など、リンク先の一次情報を確認してください。",
-        "source_count": 3,
-        "mention_count": 3,
-        "sources": [
-          "アナリスト",
-          "ニュース",
-          "開示"
-        ],
-        "detail": "【日本株】株価上昇に期待できる｢2026年の大本命株｣5銘柄！ フィジカルAIが話題の｢ファナック｣、今期は減益も来期は2ケタ増益予想の｢トヨタ自動車｣に注目！ - ダイヤモンド・オンライン / トヨタ自動車(株)【7203】：株価・株式情報（夜間PTS含む） - Yahoo!ファイナンス / トヨタ自動車は今後も有望な投資先か？ 注目企業の決算レポート特集 - Yahoo!ファイナンス",
-        "heat_score": 11.0
-      },
-      "sources": [
-        {
-          "name": "ニュース・材料検索",
-          "type": "ニュース",
-          "title": "【日本株】株価上昇に期待できる｢2026年の大本命株｣5銘柄！ フィジカルAIが話題の｢ファナック｣、今期は減益も来期は2ケタ増益予想の｢トヨタ自動車｣に注目！ - ダイヤモンド・オンライン",
-          "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE5tczR2TW5xbzM4ckN6azNZOFNONWhRa1RFSjdOQk1iQjdHWTNXSjJobWZZN2dRd1pEcE9LdHh4NzhOcEFsc20zWXFQWmxEZnhRYm9n?oc=5"
-        },
-        {
-          "name": "大量保有・開示検索",
-          "type": "開示",
-          "title": "トヨタ自動車(株)【7203】：株価・株式情報（夜間PTS含む） - Yahoo!ファイナンス",
-          "url": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE1DQkM1WTNHT0laZ1dmVk1yeTY4YjB0Y2tQV1MzNUdxVXJzNThLWFotdUd2NDdwZmpQWkpUWWhaOUVhU0VJU05QbFk5YWNOUTRKc3c?oc=5"
-        },
-        {
-          "name": "アナリスト・レポート検索",
-          "type": "アナリスト",
-          "title": "トヨタ自動車は今後も有望な投資先か？ 注目企業の決算レポート特集 - Yahoo!ファイナンス",
-          "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTE9lZm92cnNDWE5CN05nTTNuS3BiVVNMX1AyM0xNRmVMZ044Nzd6dnlXZG5falpzQTYxMC1oMGI5SHdUM0c4MW1RNTJrdU8xR2Z3SThTOEFEbUZOQmpCd2JocnRxNDJuRHFVUEo5NGFuVQ?oc=5"
         }
       ],
       "selection_eligible": true
@@ -168,7 +174,7 @@
         "テーマ",
         "ニュース"
       ],
-      "score": 27.3,
+      "score": 29.8,
       "kabu_score": null,
       "signal": null,
       "rsi14": null,
@@ -177,42 +183,48 @@
       "heat_score": 10.0,
       "selection_basis": [
         "3種類の情報源",
-        "同日10件の言及"
+        "同日11件の言及"
       ],
-      "reason": "3種類の情報源＋同日10件の言及（話題強度10.0）。",
+      "reason": "3種類の情報源＋同日11件の言及（話題強度10.0）。",
       "movement_type": "複数情報源で話題",
-      "material_summary": "ソフトバンクG買い先行、住友電工・NECはメタと海底ケーブル/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月24日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
+      "material_summary": "米雇用統計や米CPI、ソフトバンクG決算/川重・三井不が最高値/日経平均最高値【今日の注目株＆日本株市場見通し】「デイリーZAi」2月9日号 - ダイヤモンド・オンライン",
       "explanation": {
         "why_selected": "3種類の情報源",
-        "what_is_happening": "ソフトバンクG買い先行、住友電工・NECはメタと海底ケーブル/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月24日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
-        "material_category": "株価上昇・需給/値動き",
+        "what_is_happening": "米雇用統計や米CPI、ソフトバンクG決算/川重・三井不が最高値/日経平均最高値【今日の注目株＆日本株市場見通し】「デイリーZAi」2月9日号 - ダイヤモンド・オンライン",
+        "material_category": "決算・業績材料",
         "score_breakdown": {
           "source_types": 3,
-          "mentions": 10,
+          "mentions": 11,
           "investor_rank": null
         }
       },
       "research_memo": {
-        "headline": "ソフトバンクG買い先行、住友電工・NECはメタと海底ケーブル/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月24日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
-        "summary": "【話題の事実】情報源は3種類（YouTube・テーマ・ニュース）。同日言及は10件。【材料】ソフトバンクG買い先行、住友電工・NECはメタと海底ケーブル/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月24日号（ダイヤモンド・ザイ） - Yahoo!ニュース / オープンAIの上場延期でソフトバンクGが急落、神戸物産は大幅高/日経平均続落【今日の注目株＆日本株市場見通し】「デイリーZAi」9月14日号（ダイヤモンド・ザイ） - Yahoo!ニュース / オープンAIの上場延期でソフトバンクGが急落、神戸物産は大幅高/日経平均続落【今日の注目株＆日本株市場見通し】「デイリーZAi」9月14日号 (ダイヤモンド・ザイ) - Yahoo!ニュース【値動き確認】日次株価データからの確認材料はありません。",
+        "headline": "米雇用統計や米CPI、ソフトバンクG決算/川重・三井不が最高値/日経平均最高値【今日の注目株＆日本株市場見通し】「デイリーZAi」2月9日号 - ダイヤモンド・オンライン",
+        "summary": "【話題の事実】情報源は3種類（YouTube・テーマ・ニュース）。同日言及は11件。【材料】米雇用統計や米CPI、ソフトバンクG決算/川重・三井不が最高値/日経平均最高値【今日の注目株＆日本株市場見通し】「デイリーZAi」2月9日号 - ダイヤモンド・オンライン / ソフトバンクG買い先行、住友電工・NECはメタと海底ケーブル/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月24日号（ダイヤモンド・ザイ） - Yahoo!ニュース / オープンAIの上場延期でソフトバンクGが急落、神戸物産は大幅高/日経平均続落【今日の注目株＆日本株市場見通し】「デイリーZAi」9月14日号（ダイヤモンド・ザイ） - Yahoo!ニュース【値動き確認】日次株価データからの確認材料はありません。",
         "why": "【選定理由】複数種類の情報源で同日に言及が重なったため、単一記事だけの話題ではないと判断して残しました。",
-        "category": "株価上昇・需給/値動き",
+        "category": "決算・業績材料",
         "evidence": [
           "情報源は3種類（YouTube・テーマ・ニュース）",
-          "同日言及は10件"
+          "同日言及は11件"
         ],
         "check_point": "見出しだけでは因果関係を断定しません。決算短信・適時開示・原記事本文など、リンク先の一次情報を確認してください。",
         "source_count": 3,
-        "mention_count": 10,
+        "mention_count": 11,
         "sources": [
           "YouTube",
           "テーマ",
           "ニュース"
         ],
-        "detail": "ソフトバンクG買い先行、住友電工・NECはメタと海底ケーブル/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月24日号（ダイヤモンド・ザイ） - Yahoo!ニュース / オープンAIの上場延期でソフトバンクGが急落、神戸物産は大幅高/日経平均続落【今日の注目株＆日本株市場見通し】「デイリーZAi」9月14日号（ダイヤモンド・ザイ） - Yahoo!ニュース / オープンAIの上場延期でソフトバンクGが急落、神戸物産は大幅高/日経平均続落【今日の注目株＆日本株市場見通し】「デイリーZAi」9月14日号 (ダイヤモンド・ザイ) - Yahoo!ニュース",
+        "detail": "米雇用統計や米CPI、ソフトバンクG決算/川重・三井不が最高値/日経平均最高値【今日の注目株＆日本株市場見通し】「デイリーZAi」2月9日号 - ダイヤモンド・オンライン / ソフトバンクG買い先行、住友電工・NECはメタと海底ケーブル/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月24日号（ダイヤモンド・ザイ） - Yahoo!ニュース / オープンAIの上場延期でソフトバンクGが急落、神戸物産は大幅高/日経平均続落【今日の注目株＆日本株市場見通し】「デイリーZAi」9月14日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
         "heat_score": 10.0
       },
       "sources": [
+        {
+          "name": "ニュース・材料検索",
+          "type": "ニュース",
+          "title": "米雇用統計や米CPI、ソフトバンクG決算/川重・三井不が最高値/日経平均最高値【今日の注目株＆日本株市場見通し】「デイリーZAi」2月9日号 - ダイヤモンド・オンライン",
+          "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTFBkeTRybDV1TGtJMnc5dl8yeTVXMGhvTmFpRmdWMFlQcWh6QjhXaVQ3ZVRUWXJqdTRmb0JqUFdsSi03RGpmbjUyVW01RHF0Wk13RFN3?oc=5"
+        },
         {
           "name": "ニュース・話題検索",
           "type": "ニュース",
@@ -228,26 +240,20 @@
         {
           "name": "ニュース・話題検索",
           "type": "ニュース",
-          "title": "オープンAIの上場延期でソフトバンクGが急落、神戸物産は大幅高/日経平均続落【今日の注目株＆日本株市場見通し】「デイリーZAi」9月14日号 (ダイヤモンド・ザイ) - Yahoo!ニュース",
-          "url": "https://news.google.com/rss/articles/CBMijgFBVV95cUxPM1hEZUl6clU3R2tCTFVIWWw0ZTRlREtJYzRpVHdnLTR2N0tKM2hadms4bmJpNEViMnpfbGFUUFFsOGNhR0gtejdFQnh1TFFNcG0xaUdKUXF6cDFkM3N1WHUxeFR5anVwa0paNnVsM3hxRDdRSWZReHd4REE4Q3pTT0JQeXdKOTktVy1HT2pn?oc=5"
-        },
-        {
-          "name": "ニュース・話題検索",
-          "type": "ニュース",
           "title": "円高でセリアや神戸物産が急伸、金利低下でソフトバンクグループも/日経平均反発【今日の注目株＆日本株市場見通し】「デイリーZAi」9月4日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
           "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE41Rl9qY1h0d2NCSFZnaWRIRWFBV054TlBramtacnNpU2FWa0tZZ2RWdk84OGFXaE4wYW5VVzBfclBpTVRkNDh1bW1OdXExQmNkeFNSQXF5bElzWVI4WEdCdEZQbnJ2NkhiYmNwcTZlT2ljX01uVEJvWjRqR2VHWlE?oc=5"
         },
         {
           "name": "ニュース・話題検索",
           "type": "ニュース",
-          "title": "ソフトバンクG株価急落 「オープンAIがIPO延期検討」と伝わる - 日本経済新聞",
-          "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE1MSXBwcVhESlZOMW9aUDhUMnpxMVpSVE5Mc2l3WGNMSUh5SktNTDAxeWtLSHY3WHNtNGJES0NBRnVKaTYxNDlpT043c3NzOWV5RG1nN1pyQ1oyWGlpWTIydml1TlhCZjlGMHZDWQ?oc=5"
+          "title": "今週は米ISM・雇用統計/ソフトバンクGが時価総額トップ！/日経平均最高値【今日の注目株＆日本株市場見通し】「デイリーZAi」6月1日号(ダイヤモンド・ザイ) - Yahoo!ファイナンス",
+          "url": "https://news.google.com/rss/articles/CBMihwFBVV95cUxNb3kzU3J6RnJHdmo1R0RtLWIySVpYcU8zNDduc0hBdkhyVUVvVkFvV253el8zLVU5OGFUMXhNdjVrWVJKTnJYR1dWUGhBQ0dnRl80OWdtOC03dVZzVlJVV3FqNkNRM2JsMGtBT01HQm9jOFowR2RTeFh4SnNkdDlxRWJRMDRrMEU?oc=5"
         },
         {
-          "name": "テーマ・業界検索",
-          "type": "テーマ",
-          "title": "「AIデータセンター」関連銘柄を紹介！ オープンAIがソフトバンクGやオラクルなどと提携して｢巨大AIデータセンター｣建設を発表するなど、世界中で需要拡大！ - ダイヤモンド・オンライン",
-          "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTFBxR1ZjdFBnRjctRnBUYWpKNFhHYTRZSUN2NE85eUtjcEZlakVhaTlhZzdqMUlvYkR3ZUR5RjQtMWNvX2JKX0Y4bVFiYjkzUEZOTFBV?oc=5"
+          "name": "ニュース・話題検索",
+          "type": "ニュース",
+          "title": "ソフトバンクG株価急落 「オープンAIがIPO延期検討」と伝わる - 日本経済新聞",
+          "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE1MSXBwcVhESlZOMW9aUDhUMnpxMVpSVE5Mc2l3WGNMSUh5SktNTDAxeWtLSHY3WHNtNGJES0NBRnVKaTYxNDlpT043c3NzOWV5RG1nN1pyQ1oyWGlpWTIydml1TlhCZjlGMHZDWQ?oc=5"
         }
       ],
       "selection_eligible": true
@@ -261,7 +267,7 @@
         "YouTube",
         "ニュース"
       ],
-      "score": 14.5,
+      "score": 19.5,
       "kabu_score": null,
       "signal": null,
       "rsi14": null,
@@ -270,9 +276,9 @@
       "heat_score": 8.0,
       "selection_basis": [
         "2種類の情報源",
-        "同日5件の言及"
+        "同日7件の言及"
       ],
-      "reason": "2種類の情報源＋同日5件の言及（話題強度8.0）。",
+      "reason": "2種類の情報源＋同日7件の言及（話題強度8.0）。",
       "movement_type": "複数情報源で話題",
       "material_summary": "今週は大型テック決算＆中銀ウィーク/ファナックなどFA株が急伸/日経平均最高値【今日の注目株＆日本株市場見通し】「デイリーZAi」4月27日号 - ダイヤモンド・オンライン",
       "explanation": {
@@ -281,27 +287,27 @@
         "material_category": "決算・業績材料",
         "score_breakdown": {
           "source_types": 2,
-          "mentions": 5,
+          "mentions": 7,
           "investor_rank": null
         }
       },
       "research_memo": {
         "headline": "今週は大型テック決算＆中銀ウィーク/ファナックなどFA株が急伸/日経平均最高値【今日の注目株＆日本株市場見通し】「デイリーZAi」4月27日号 - ダイヤモンド・オンライン",
-        "summary": "【話題の事実】情報源は2種類（YouTube・ニュース）。同日言及は5件。【材料】今週は大型テック決算＆中銀ウィーク/ファナックなどFA株が急伸/日経平均最高値【今日の注目株＆日本株市場見通し】「デイリーZAi」4月27日号 - ダイヤモンド・オンライン / イビデン・NEC急伸/決算序盤戦、ファナック・キーエンス速報/日経平均最高値【今日の注目株＆日本株市場見通し】「デイリーZAi」4月24日号 - ダイヤモンド・オンライン / 【日本株】株価上昇に期待できる｢2026年の大本命株｣5銘柄！ フィジカルAIが話題の｢ファナック｣、今期は減益も来期は2ケタ増益予想の｢トヨタ自動車｣に注目！ - ダイヤモンド・オンライン【値動き確認】日次株価データからの確認材料はありません。",
+        "summary": "【話題の事実】情報源は2種類（YouTube・ニュース）。同日言及は7件。【材料】今週は大型テック決算＆中銀ウィーク/ファナックなどFA株が急伸/日経平均最高値【今日の注目株＆日本株市場見通し】「デイリーZAi」4月27日号 - ダイヤモンド・オンライン / 今週は決算本格化、ファナックや米インテル、注目株はFA関連/日経平均反発【今日の注目株＆日本株市場見通し】「デイリーZAi」4月20日号 - ダイヤモンド・オンライン / イビデン・NEC急伸/決算序盤戦、ファナック・キーエンス速報/日経平均最高値【今日の注目株＆日本株市場見通し】「デイリーZAi」4月24日号 - ダイヤモンド・オンライン【値動き確認】日次株価データからの確認材料はありません。",
         "why": "【選定理由】複数種類の情報源で同日に言及が重なったため、単一記事だけの話題ではないと判断して残しました。",
         "category": "決算・業績材料",
         "evidence": [
           "情報源は2種類（YouTube・ニュース）",
-          "同日言及は5件"
+          "同日言及は7件"
         ],
         "check_point": "見出しだけでは因果関係を断定しません。決算短信・適時開示・原記事本文など、リンク先の一次情報を確認してください。",
         "source_count": 2,
-        "mention_count": 5,
+        "mention_count": 7,
         "sources": [
           "YouTube",
           "ニュース"
         ],
-        "detail": "今週は大型テック決算＆中銀ウィーク/ファナックなどFA株が急伸/日経平均最高値【今日の注目株＆日本株市場見通し】「デイリーZAi」4月27日号 - ダイヤモンド・オンライン / イビデン・NEC急伸/決算序盤戦、ファナック・キーエンス速報/日経平均最高値【今日の注目株＆日本株市場見通し】「デイリーZAi」4月24日号 - ダイヤモンド・オンライン / 【日本株】株価上昇に期待できる｢2026年の大本命株｣5銘柄！ フィジカルAIが話題の｢ファナック｣、今期は減益も来期は2ケタ増益予想の｢トヨタ自動車｣に注目！ - ダイヤモンド・オンライン",
+        "detail": "今週は大型テック決算＆中銀ウィーク/ファナックなどFA株が急伸/日経平均最高値【今日の注目株＆日本株市場見通し】「デイリーZAi」4月27日号 - ダイヤモンド・オンライン / 今週は決算本格化、ファナックや米インテル、注目株はFA関連/日経平均反発【今日の注目株＆日本株市場見通し】「デイリーZAi」4月20日号 - ダイヤモンド・オンライン / イビデン・NEC急伸/決算序盤戦、ファナック・キーエンス速報/日経平均最高値【今日の注目株＆日本株市場見通し】「デイリーZAi」4月24日号 - ダイヤモンド・オンライン",
         "heat_score": 8.0
       },
       "sources": [
@@ -310,6 +316,12 @@
           "type": "ニュース",
           "title": "今週は大型テック決算＆中銀ウィーク/ファナックなどFA株が急伸/日経平均最高値【今日の注目株＆日本株市場見通し】「デイリーZAi」4月27日号 - ダイヤモンド・オンライン",
           "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTFBLLTlIVWhTbHZPbXQzS2I3UXZSc1hTblhQZ3ZJSDVxTW1FM0dwVE1OXzZNVURhZ01RbjhYOTFGUi1oVURzSFZZLXV4M1RlZ2Y2Rld3?oc=5"
+        },
+        {
+          "name": "ニュース・材料検索",
+          "type": "ニュース",
+          "title": "今週は決算本格化、ファナックや米インテル、注目株はFA関連/日経平均反発【今日の注目株＆日本株市場見通し】「デイリーZAi」4月20日号 - ダイヤモンド・オンライン",
+          "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE9NbXNYdjdQNzNEcU1OSDJFQ1B5RjlXYmQxdnBGYVVfcjdpcXJ5d3dFUW90VXU4R2owZ2xURFp1TW1hYlhiUWRRVWd2QmtsMG9sVU1v?oc=5"
         },
         {
           "name": "ニュース・材料検索",
@@ -330,10 +342,10 @@
           "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTFAxdUFlNDM3Z0FtcmxlRlZDNklleERUSVVQaGZlazFOU0kyUUU5MUltSDMxMGltRGw5WTZiT29xSFlmZUtwQVlZbkN6MUNIMi1TT0hkVjg5UFhFUkNXTVcwRE91Q285eF81VnMtRnMtVWhtcXNJcE1sQldsekQyNE0?oc=5"
         },
         {
-          "name": "YouTube検索",
-          "type": "YouTube",
-          "title": "【8月3日(月)東京株式市場】日経平均株価は3日ぶり反落📉607円安／#協調介入 、市場は何を警戒？／#キオクシア 上昇、株主還元強化を好感／#ファナック 急落、市場予想届かず4カ月ぶり安値 - YouTube",
-          "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE9fek1DNnZNV0xiQl9FTkV2b09IdVBvNXlXNFNTakRubnZGbzZfdU9aRHdpQ3h2ZGYyaUNXZnJOdGRUTWgzQWhjaUdXZ2U3c2tnd0F5RmRR?oc=5"
+          "name": "ニュース・話題検索",
+          "type": "ニュース",
+          "title": "ファナックや安川電「産業用ロボット・自動化システム」関連銘柄/日経平均反落【今日の注目株＆日本株市場見通し】「デイリーZAi」6月4日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
+          "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE1OLVhlbmpRM2N5aWI3djhuRWFNZHdJaUkyV1ZvRmt0dHEzMDIyQl9zT3lEVExtY05wN3p6WGwzRkN2N0RrdWpRM0tHcWVIR0hWN19pY1hPeFdvZE15V0hpamlUTXkyRF9DTTd4WDhNeEx0ZGpSRkpyWUNJeHFzNGM?oc=5"
         }
       ],
       "selection_eligible": true

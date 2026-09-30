@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-30T07:25:52.393561+09:00",
+  "updated_at": "2026-09-30T12:56:21.690665+09:00",
   "source": "IRBANK API + 豆腐ハードボイルド（騰落銘柄数）",
   "api_strategy": "price:800-row target/stock; weekly margin:1 endpoint/stock only when cache is stale; valuations:20 fiscal years/stock; Yahoo company forecast PER/EPS/stock; breadth:1/run; monthly MACD:1000-row target only for weekly-RSI<=30; quota preflight via /usage",
   "stocks": {
@@ -3920,12 +3920,16 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-09-30T07:25:56.400797+09:00",
+      "per_updated_at": "2026-09-30T12:56:25.781973+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
         "processed_by": "IRBANK"
-      }
+      },
+      "pbr": null,
+      "dividend_yield": null,
+      "valuation_source": "Yahoo Finance quote API",
+      "valuation_error": "https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized"
     },
     "6758": {
       "date": "2026-09-29",
@@ -7862,12 +7866,16 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-09-30T07:25:59.560259+09:00",
+      "per_updated_at": "2026-09-30T12:56:29.213058+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
         "processed_by": "IRBANK"
-      }
+      },
+      "pbr": null,
+      "dividend_yield": null,
+      "valuation_source": "Yahoo Finance quote API",
+      "valuation_error": "https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized"
     },
     "6701": {
       "date": "2026-09-29",
@@ -11826,12 +11834,16 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-09-30T07:26:02.652276+09:00",
+      "per_updated_at": "2026-09-30T12:56:32.452169+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
         "processed_by": "IRBANK"
-      }
+      },
+      "pbr": null,
+      "dividend_yield": null,
+      "valuation_source": "Yahoo Finance quote API",
+      "valuation_error": "https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized"
     },
     "6762": {
       "date": "2026-09-29",
@@ -15774,12 +15786,16 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-09-30T07:26:06.361683+09:00",
+      "per_updated_at": "2026-09-30T12:56:35.319968+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
         "processed_by": "IRBANK"
-      }
+      },
+      "pbr": null,
+      "dividend_yield": null,
+      "valuation_source": "Yahoo Finance quote API",
+      "valuation_error": "https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized"
     },
     "6506": {
       "date": "2026-09-29",
@@ -19753,12 +19769,16 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-09-30T07:26:11.105144+09:00",
+      "per_updated_at": "2026-09-30T12:56:40.434621+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
         "processed_by": "IRBANK"
-      }
+      },
+      "pbr": null,
+      "dividend_yield": null,
+      "valuation_source": "Yahoo Finance quote API",
+      "valuation_error": "https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized"
     },
     "6501": {
       "date": "2026-09-29",
@@ -23735,12 +23755,16 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-09-30T07:26:14.219074+09:00",
+      "per_updated_at": "2026-09-30T12:56:44.086127+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
         "processed_by": "IRBANK"
-      }
+      },
+      "pbr": null,
+      "dividend_yield": null,
+      "valuation_source": "Yahoo Finance quote API",
+      "valuation_error": "https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized"
     },
     "8306": {
       "date": "2026-09-29",
@@ -27715,12 +27739,16 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-09-30T07:26:17.871228+09:00",
+      "per_updated_at": "2026-09-30T12:56:47.351391+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
         "processed_by": "IRBANK"
-      }
+      },
+      "pbr": null,
+      "dividend_yield": null,
+      "valuation_source": "Yahoo Finance quote API",
+      "valuation_error": "https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized"
     },
     "7203": {
       "date": "2026-09-29",
@@ -31672,12 +31700,16 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-09-30T07:26:20.545002+09:00",
+      "per_updated_at": "2026-09-30T12:56:50.785547+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
         "processed_by": "IRBANK"
-      }
+      },
+      "pbr": null,
+      "dividend_yield": null,
+      "valuation_source": "Yahoo Finance quote API",
+      "valuation_error": "https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized"
     },
     "1802": {
       "date": "2026-09-29",
@@ -35600,19 +35632,23 @@
       ],
       "per_5y_avg": 13.685918009476271,
       "per_forecast": {
-        "forecast_pe": 12.93,
+        "forecast_pe": 13.12,
         "forecast_eps": 228.39,
         "switch_date": null,
         "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
         "switch_date_basis": "直近の決算発表日"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-09-30T07:26:26.470532+09:00",
+      "per_updated_at": "2026-09-30T12:56:56.038053+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
         "processed_by": "IRBANK"
-      }
+      },
+      "pbr": null,
+      "dividend_yield": null,
+      "valuation_source": "Yahoo Finance quote API",
+      "valuation_error": "https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized"
     },
     "9065": {
       "date": "2026-09-29",
@@ -39550,19 +39586,23 @@
       ],
       "per_5y_avg": 11.811177482359218,
       "per_forecast": {
-        "forecast_pe": 11.9,
+        "forecast_pe": 12.16,
         "forecast_eps": 131.66,
         "switch_date": null,
         "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
         "switch_date_basis": "直近の決算発表日"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-09-30T07:26:31.168430+09:00",
+      "per_updated_at": "2026-09-30T12:57:00.699956+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
         "processed_by": "IRBANK"
-      }
+      },
+      "pbr": null,
+      "dividend_yield": null,
+      "valuation_source": "Yahoo Finance quote API",
+      "valuation_error": "https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized"
     },
     "3923": {
       "date": "2026-09-29",
@@ -43474,19 +43514,23 @@
       ],
       "per_5y_avg": 140.92787659323588,
       "per_forecast": {
-        "forecast_pe": 14.4,
+        "forecast_pe": 14.19,
         "forecast_eps": 71.16,
         "switch_date": null,
         "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
         "switch_date_basis": "直近の決算発表日"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-09-30T07:26:36.233562+09:00",
+      "per_updated_at": "2026-09-30T12:57:05.572832+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
         "processed_by": "IRBANK"
-      }
+      },
+      "pbr": null,
+      "dividend_yield": null,
+      "valuation_source": "Yahoo Finance quote API",
+      "valuation_error": "https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized"
     },
     "6920": {
       "date": "2026-09-29",
@@ -47459,12 +47503,16 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-09-30T07:26:39.184499+09:00",
+      "per_updated_at": "2026-09-30T12:57:09.188236+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
         "processed_by": "IRBANK"
-      }
+      },
+      "pbr": null,
+      "dividend_yield": null,
+      "valuation_source": "Yahoo Finance quote API",
+      "valuation_error": "https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized"
     },
     "485A": {
       "date": "2026-09-29",
@@ -50751,19 +50799,23 @@
       "per_history": [],
       "per_5y_avg": null,
       "per_forecast": {
-        "forecast_pe": 231.25,
+        "forecast_pe": 231.02,
         "forecast_eps": 8.8,
         "switch_date": null,
         "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
         "switch_date_basis": "直近の決算発表日"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-09-30T07:26:43.271546+09:00",
+      "per_updated_at": "2026-09-30T12:57:12.799303+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
         "processed_by": "IRBANK"
-      }
+      },
+      "pbr": null,
+      "dividend_yield": null,
+      "valuation_source": "Yahoo Finance quote API",
+      "valuation_error": "https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized"
     },
     "8591": {
       "date": "2026-09-29",
@@ -54721,19 +54773,23 @@
       ],
       "per_5y_avg": 10.285080619775758,
       "per_forecast": {
-        "forecast_pe": 12.13,
+        "forecast_pe": 12.37,
         "forecast_eps": 483.4,
         "switch_date": null,
         "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
         "switch_date_basis": "直近の決算発表日"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-09-30T07:26:48.277680+09:00",
+      "per_updated_at": "2026-09-30T12:57:17.349532+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
         "processed_by": "IRBANK"
-      }
+      },
+      "pbr": null,
+      "dividend_yield": null,
+      "valuation_source": "Yahoo Finance quote API",
+      "valuation_error": "https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized"
     },
     "8001": {
       "date": "2026-09-29",
@@ -58726,12 +58782,16 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-09-30T07:26:51.234427+09:00",
+      "per_updated_at": "2026-09-30T12:57:20.238659+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
         "processed_by": "IRBANK"
-      }
+      },
+      "pbr": null,
+      "dividend_yield": null,
+      "valuation_source": "Yahoo Finance quote API",
+      "valuation_error": "https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized"
     },
     "8058": {
       "date": "2026-09-29",
@@ -62681,12 +62741,16 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-09-30T07:26:54.034511+09:00",
+      "per_updated_at": "2026-09-30T12:57:23.308407+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
         "processed_by": "IRBANK"
-      }
+      },
+      "pbr": null,
+      "dividend_yield": null,
+      "valuation_source": "Yahoo Finance quote API",
+      "valuation_error": "https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized"
     },
     "6752": {
       "date": "2026-09-29",
@@ -66620,12 +66684,16 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-09-30T07:26:57.152393+09:00",
+      "per_updated_at": "2026-09-30T12:57:26.537726+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
         "processed_by": "IRBANK"
-      }
+      },
+      "pbr": null,
+      "dividend_yield": null,
+      "valuation_source": "Yahoo Finance quote API",
+      "valuation_error": "https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized"
     },
     "285A": {
       "date": "2026-09-29",
@@ -70456,12 +70524,16 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-09-30T07:27:00.751984+09:00",
+      "per_updated_at": "2026-09-30T12:57:30.089706+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
         "processed_by": "IRBANK"
-      }
+      },
+      "pbr": null,
+      "dividend_yield": null,
+      "valuation_source": "Yahoo Finance quote API",
+      "valuation_error": "https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized"
     },
     "6301": {
       "date": "2026-09-29",
@@ -74412,12 +74484,16 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-09-30T07:27:04.032147+09:00",
+      "per_updated_at": "2026-09-30T12:57:32.851701+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
         "processed_by": "IRBANK"
-      }
+      },
+      "pbr": null,
+      "dividend_yield": null,
+      "valuation_source": "Yahoo Finance quote API",
+      "valuation_error": "https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized"
     },
     "6367": {
       "date": "2026-09-29",
@@ -78362,12 +78438,16 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-09-30T07:27:09.390852+09:00",
+      "per_updated_at": "2026-09-30T12:57:38.179483+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
         "processed_by": "IRBANK"
-      }
+      },
+      "pbr": null,
+      "dividend_yield": null,
+      "valuation_source": "Yahoo Finance quote API",
+      "valuation_error": "https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized"
     },
     "9989": {
       "date": "2026-09-29",
@@ -82312,19 +82392,23 @@
       ],
       "per_5y_avg": 16.086874813692248,
       "per_forecast": {
-        "forecast_pe": 12.9,
+        "forecast_pe": 12.94,
         "forecast_eps": 274.83,
         "switch_date": null,
         "source": "Yahoo!ファイナンス（会社予想PER/EPS）",
         "switch_date_basis": "直近の決算発表日"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-09-30T07:27:16.785361+09:00",
+      "per_updated_at": "2026-09-30T12:57:45.610537+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
         "processed_by": "IRBANK"
-      }
+      },
+      "pbr": null,
+      "dividend_yield": null,
+      "valuation_source": "Yahoo Finance quote API",
+      "valuation_error": "https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized"
     }
   },
   "diagnostics": [
@@ -82460,7 +82544,7 @@
       "supply_status": "重い",
       "per_actual_count": 16,
       "per_forecast_eps": 228.39,
-      "per_forecast_pe": 12.93,
+      "per_forecast_pe": 13.12,
       "per_error": null
     },
     {
@@ -82475,7 +82559,7 @@
       "supply_status": "重い",
       "per_actual_count": 17,
       "per_forecast_eps": 131.66,
-      "per_forecast_pe": 11.9,
+      "per_forecast_pe": 12.16,
       "per_error": null
     },
     {
@@ -82490,7 +82574,7 @@
       "supply_status": "重い",
       "per_actual_count": 11,
       "per_forecast_eps": 71.16,
-      "per_forecast_pe": 14.4,
+      "per_forecast_pe": 14.19,
       "per_error": null
     },
     {
@@ -82520,7 +82604,7 @@
       "supply_status": "重い",
       "per_actual_count": 0,
       "per_forecast_eps": 8.8,
-      "per_forecast_pe": 231.25,
+      "per_forecast_pe": 231.02,
       "per_error": null
     },
     {
@@ -82535,7 +82619,7 @@
       "supply_status": "重い",
       "per_actual_count": 17,
       "per_forecast_eps": 483.4,
-      "per_forecast_pe": 12.13,
+      "per_forecast_pe": 12.37,
       "per_error": null
     },
     {
@@ -82640,7 +82724,7 @@
       "supply_status": "重い",
       "per_actual_count": 17,
       "per_forecast_eps": 274.83,
-      "per_forecast_pe": 12.9,
+      "per_forecast_pe": 12.94,
       "per_error": null
     }
   ],
@@ -82649,16 +82733,16 @@
   "successful_stocks": 21,
   "failed_stocks": 0,
   "timing": {
-    "total_seconds": 84.4,
+    "total_seconds": 84.2,
     "api_requests": 68,
-    "rate_limit_wait_seconds": 28.1,
+    "rate_limit_wait_seconds": 24.7,
     "retry_count": 0,
-    "http_seconds": 38.4
+    "http_seconds": 38.6
   },
   "irbank_usage_at_start": {
     "limit": 4000,
-    "used": 67,
-    "remaining": 3933,
+    "used": 134,
+    "remaining": 3866,
     "resets_at": "2026-10-01T00:00:00+09:00"
   }
 }
