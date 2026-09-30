@@ -1672,15 +1672,51 @@ def fetch_yahoo_forecast_per(code):
             return {'forecast_pe':round(pe,3) if pe is not None else None,'forecast_eps':round(eps,3) if eps is not None else None,'switch_date':switch_date,'source':'Yahoo!ファイナンス（会社予想PER/EPS）','switch_date_basis':'直近の決算発表日'}
     raise RuntimeError('Yahooから会社予想PER/EPSを取得できませんでした ('+'; '.join(errors)+')')
 
-def fetch_yahoo_pbr_dividend(code):
-    """Fetch current PBR and dividend yield from Yahoo quote data.
+def _parse_yahoo_pbr_dividend_text(raw):
+    """Parse PBR and company-forecast dividend yield from Yahoo Japan quote text."""
+    from html import unescape
+    text = unescape(re.sub(r'<[^>]+>', ' ', raw or ''))
+    text = text.replace('\u00a0', ' ').replace('\u200b', '').replace('\ufeff', '')
+    text = re.sub(r'\s+', ' ', text)
 
-    Yahoo's raw dividendYield is a fraction (e.g. 0.032 for 3.2%), so the
-    saved UI value is normalized to percentage points.  trailingAnnualDividendYield
-    is used as a fallback when the current dividendYield field is unavailable.
+    # Yahoo Japan currently exposes these as:
+    # 配当利回り（会社予想） ... 0.77%
+    # PBR（実績） ... (連)13.42倍
+    div_m = re.search(
+        r'配当利回り\s*（\s*会社予想\s*）\s*(?:用語\s*)?([0-9]{1,4}(?:\.[0-9]+)?)\s*%',
+        text
+    )
+    pbr_m = re.search(
+        r'PBR\s*（\s*実績\s*）\s*(?:用語\s*)?(?:(?:\([^)]*\))|(?:（[^）]*）))?\s*([0-9]{1,6}(?:\.[0-9]+)?)\s*倍',
+        text
+    )
+    # Fallback for markup/text variants that omit the parenthetical label.
+    if div_m is None:
+        div_m = re.search(r'配当利回り[^%]{0,80}?([0-9]{1,4}(?:\.[0-9]+)?)\s*%', text)
+    if pbr_m is None:
+        pbr_m = re.search(r'PBR[^0-9]{0,80}?([0-9]{1,6}(?:\.[0-9]+)?)\s*倍', text)
+
+    pbr = float(pbr_m.group(1)) if pbr_m else None
+    dividend_yield = float(div_m.group(1)) if div_m else None
+    if pbr is not None and pbr <= 0:
+        pbr = None
+    if dividend_yield is not None and dividend_yield < 0:
+        dividend_yield = None
+    return pbr, dividend_yield
+
+
+def fetch_yahoo_pbr_dividend(code):
+    """Fetch current PBR and company-forecast dividend yield from Yahoo.
+
+    Prefer the quote API, but fall back to Yahoo Japan's public quote page.
+    The fallback is important because Yahoo Japan currently exposes PBR and
+    company-forecast dividend yield on the quote page even when the global
+    quote API omits those fields.
     """
     code = str(code).strip().upper()
     errors = []
+
+    # Fast path: Yahoo global quote API.
     for host in ('https://query1.finance.yahoo.com', 'https://query2.finance.yahoo.com'):
         try:
             qurl = host + '/v7/finance/quote?' + urllib.parse.urlencode({'symbols': code + '.T'})
@@ -1711,27 +1747,53 @@ def fetch_yahoo_pbr_dividend(code):
             if div_raw is not None:
                 try:
                     div_raw = float(div_raw)
-                    # Yahoo quote API normally returns a fraction here.
                     dividend_yield = div_raw * 100.0 if abs(div_raw) <= 1.5 else div_raw
                     if dividend_yield < 0:
                         dividend_yield = None
                 except (TypeError, ValueError):
                     dividend_yield = None
 
-            return {
-                'pbr': round(pbr, 3) if pbr is not None else None,
-                'dividend_yield': round(dividend_yield, 3) if dividend_yield is not None else None,
-                'source': 'Yahoo Finance quote API',
-            }
+            if pbr is not None or dividend_yield is not None:
+                return {
+                    'pbr': round(pbr, 3) if pbr is not None else None,
+                    'dividend_yield': round(dividend_yield, 3) if dividend_yield is not None else None,
+                    'source': 'Yahoo Finance quote API',
+                }
+            errors.append(host + ': PBR/dividend fields omitted')
         except Exception as e:
             errors.append(host + ': ' + str(e))
+
+    # Reliable fallback: Yahoo Japan public quote page / Jina text relay.
+    targets = (
+        'https://finance.yahoo.co.jp/quote/' + urllib.parse.quote(code) + '.T',
+        'https://r.jina.ai/https://finance.yahoo.co.jp/quote/' + urllib.parse.quote(code) + '.T',
+        'https://r.jina.ai/http://finance.yahoo.co.jp/quote/' + urllib.parse.quote(code) + '.T',
+    )
+    for target in targets:
+        try:
+            req = urllib.request.Request(
+                target,
+                headers={'User-Agent': 'Mozilla/5.0 (compatible; kabu-score/15.0)', 'Accept': 'text/plain,text/html'}
+            )
+            with urllib.request.urlopen(req, timeout=20) as r:
+                raw = r.read().decode('utf-8', 'ignore')
+            pbr, dividend_yield = _parse_yahoo_pbr_dividend_text(raw)
+            if pbr is not None or dividend_yield is not None:
+                return {
+                    'pbr': round(pbr, 3) if pbr is not None else None,
+                    'dividend_yield': round(dividend_yield, 3) if dividend_yield is not None else None,
+                    'source': 'Yahoo!ファイナンス（参考指標）',
+                }
+            errors.append('page: PBR/dividend not found')
+        except Exception as e:
+            errors.append('page: ' + str(e))
+
     return {
         'pbr': None,
         'dividend_yield': None,
-        'source': 'Yahoo Finance quote API',
+        'source': 'Yahoo!ファイナンス（参考指標）',
         'error': '; '.join(errors),
     }
-
 
 def collect_per_data(code):
     """Collect all PER inputs during Daily stock update; UI only reads saved data."""
