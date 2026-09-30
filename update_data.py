@@ -1672,6 +1672,67 @@ def fetch_yahoo_forecast_per(code):
             return {'forecast_pe':round(pe,3) if pe is not None else None,'forecast_eps':round(eps,3) if eps is not None else None,'switch_date':switch_date,'source':'Yahoo!ファイナンス（会社予想PER/EPS）','switch_date_basis':'直近の決算発表日'}
     raise RuntimeError('Yahooから会社予想PER/EPSを取得できませんでした ('+'; '.join(errors)+')')
 
+def fetch_yahoo_pbr_dividend(code):
+    """Fetch current PBR and dividend yield from Yahoo quote data.
+
+    Yahoo's raw dividendYield is a fraction (e.g. 0.032 for 3.2%), so the
+    saved UI value is normalized to percentage points.  trailingAnnualDividendYield
+    is used as a fallback when the current dividendYield field is unavailable.
+    """
+    code = str(code).strip().upper()
+    errors = []
+    for host in ('https://query1.finance.yahoo.com', 'https://query2.finance.yahoo.com'):
+        try:
+            qurl = host + '/v7/finance/quote?' + urllib.parse.urlencode({'symbols': code + '.T'})
+            req = urllib.request.Request(
+                qurl,
+                headers={'User-Agent': 'Mozilla/5.0 (compatible; kabu-score/15.0)', 'Accept': 'application/json'}
+            )
+            with urllib.request.urlopen(req, timeout=15) as r:
+                obj = json.loads(r.read().decode('utf-8', 'replace'))
+            rows = ((obj.get('quoteResponse') or {}).get('result') or [])
+            if not rows:
+                errors.append(host + ': unavailable')
+                continue
+            q = rows[0]
+            pbr = q.get('priceToBook')
+            if pbr is not None:
+                try:
+                    pbr = float(pbr)
+                    if pbr <= 0:
+                        pbr = None
+                except (TypeError, ValueError):
+                    pbr = None
+
+            div_raw = q.get('dividendYield')
+            if div_raw is None:
+                div_raw = q.get('trailingAnnualDividendYield')
+            dividend_yield = None
+            if div_raw is not None:
+                try:
+                    div_raw = float(div_raw)
+                    # Yahoo quote API normally returns a fraction here.
+                    dividend_yield = div_raw * 100.0 if abs(div_raw) <= 1.5 else div_raw
+                    if dividend_yield < 0:
+                        dividend_yield = None
+                except (TypeError, ValueError):
+                    dividend_yield = None
+
+            return {
+                'pbr': round(pbr, 3) if pbr is not None else None,
+                'dividend_yield': round(dividend_yield, 3) if dividend_yield is not None else None,
+                'source': 'Yahoo Finance quote API',
+            }
+        except Exception as e:
+            errors.append(host + ': ' + str(e))
+    return {
+        'pbr': None,
+        'dividend_yield': None,
+        'source': 'Yahoo Finance quote API',
+        'error': '; '.join(errors),
+    }
+
+
 def collect_per_data(code):
     """Collect all PER inputs during Daily stock update; UI only reads saved data."""
     actual = fetch_historical_per(code)
@@ -1842,6 +1903,7 @@ def main():
                                  'switch_date_basis': '取得できず'},
                     'forecast_error': str(per_error), 'updated_at': now_jst().isoformat(),
                 }
+            valuation_data = fetch_yahoo_pbr_dividend(code)
             # Forecast PER can always be reconstructed from current price /
             # company-forecast EPS, even if Yahoo omits the displayed PER.
             if per_data['forecast'].get('forecast_pe') is None and per_data['forecast'].get('forecast_eps') is not None and s.get('price'):
@@ -1855,6 +1917,10 @@ def main():
                 'per_forecast_error': per_data['forecast_error'],
                 'per_updated_at': per_data['updated_at'],
                 'per_actual_attribution': per_data['actual_attribution'],
+                'pbr': valuation_data.get('pbr'),
+                'dividend_yield': valuation_data.get('dividend_yield'),
+                'valuation_source': valuation_data.get('source'),
+                'valuation_error': valuation_data.get('error'),
             })
             out['stocks'][code] = s
             out['diagnostics'].append({
