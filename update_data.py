@@ -1447,7 +1447,7 @@ def calc(rows, breadth_info=None, supply_info=None):
         })
     chart_history.reverse()
     chart_history_weekly = build_period_chart_history(rows, 'weekly', 60)
-    chart_history_monthly = build_period_chart_history(rows, 'monthly', 18)
+    chart_history_monthly = build_period_chart_history(rows, 'monthly', 36)
 
     return {
         'date': rows[0].get('date'), 'price': close,
@@ -1788,10 +1788,45 @@ def fetch_yahoo_pbr_dividend(code):
         except Exception as e:
             errors.append('page: ' + str(e))
 
+    # Second fallback: MINKABU public valuation/dividend pages. Yahoo can
+    # occasionally omit or block the reference-indicator fields from automated
+    # requests even though they are visible in the browser. Keep this outside
+    # the IRBANK quota because it is an external web source.
+    try:
+        valuation_url = 'https://minkabu.jp/stock/' + urllib.parse.quote(code) + '/daily_valuation'
+        req = urllib.request.Request(valuation_url, headers={'User-Agent': 'Mozilla/5.0 (compatible; kabu-score/16.0)', 'Accept': 'text/html'})
+        with urllib.request.urlopen(req, timeout=20) as r:
+            raw = r.read().decode('utf-8', 'ignore')
+        text = re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', ' ', raw)).replace('\u00a0', ' ')
+        pbr_m = re.search(r'PBR\s*\(倍\)[^0-9]{0,120}([0-9]{1,6}(?:\.[0-9]+)?)', text)
+        if pbr_m is None:
+            pbr_m = re.search(r'PBR[^0-9]{0,120}([0-9]{1,6}(?:\.[0-9]+)?)', text)
+        pbr = float(pbr_m.group(1)) if pbr_m else None
+        dividend_yield = None
+        # Prefer the dedicated dividend page because it exposes the current
+        # company-forecast yield rather than only the historical valuation yield.
+        div_url = 'https://minkabu.jp/stock/' + urllib.parse.quote(code) + '/dividend'
+        req = urllib.request.Request(div_url, headers={'User-Agent': 'Mozilla/5.0 (compatible; kabu-score/16.0)', 'Accept': 'text/html'})
+        with urllib.request.urlopen(req, timeout=20) as r:
+            div_raw = r.read().decode('utf-8', 'ignore')
+        div_text = re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', ' ', div_raw)).replace('\u00a0', ' ')
+        div_m = re.search(r'配当利回り[^%]{0,120}?([0-9]{1,4}(?:\.[0-9]+)?)\s*%', div_text)
+        if div_m:
+            dividend_yield = float(div_m.group(1))
+        if pbr is not None or dividend_yield is not None:
+            return {
+                'pbr': round(pbr, 3) if pbr is not None else None,
+                'dividend_yield': round(dividend_yield, 3) if dividend_yield is not None else None,
+                'source': 'みんかぶ（バリュエーション／配当情報）',
+            }
+        errors.append('minkabu: PBR/dividend not found')
+    except Exception as e:
+        errors.append('minkabu: ' + str(e))
+
     return {
         'pbr': None,
         'dividend_yield': None,
-        'source': 'Yahoo!ファイナンス（参考指標）',
+        'source': 'Yahoo!ファイナンス／みんかぶ（参考指標）',
         'error': '; '.join(errors),
     }
 
