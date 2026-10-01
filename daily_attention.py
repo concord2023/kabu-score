@@ -209,7 +209,7 @@ def build_research_memo(b):
         t=clean(e.get('title',''))
         if t and t not in titles: titles.append(t)
     rank=_rank_value(events); srcs=sorted(b.get('source_types',[]))
-    labels={'investor':'投資家話題','ニュース':'ニュース','アナリスト':'アナリスト','YouTube':'YouTube'}
+    labels={'investor':'投資家話題','ニュース':'ニュース','アナリスト':'アナリスト','YouTube':'YouTube','カタリスト':'カタリスト'}
     source_labels=[labels.get(x,x) for x in srcs]
     category=material_category(titles[0] if titles else '')
     ch=_num(b.get('change')); vr=_num(b.get('volume_ratio')); heat=b.get('heat_score')
@@ -348,6 +348,7 @@ def _eligible_for_top5(b):
     top10 = rank is not None and rank<=10
     market_confirm=(ch is not None and abs(ch)>=2) or (vr is not None and vr>=1.3)
     cross_source=src>=2
+    catalyst_evidence=any(e.get('source_type')=='カタリスト' for e in events)
     repeated=len(events)>=2
     strong_move=(ch is not None and abs(ch)>=5) or (vr is not None and vr>=2)
     # Four complementary routes.  This is deliberately much broader than the
@@ -356,6 +357,7 @@ def _eligible_for_top5(b):
         (top10 and concrete_material) or
         (top10 and (market_confirm or repeated)) or
         (cross_source and (repeated or concrete_material)) or
+        (catalyst_evidence and concrete_material) or
         (strong_move and concrete_material)
     )
 
@@ -364,6 +366,7 @@ def _selection_basis(b):
     basis=[]
     if rank is not None and rank<=5: basis.append(f'投資家話題{rank}位以内')
     if src>=2: basis.append(f'{src}種類の情報源')
+    if any(e.get('source_type')=='カタリスト' for e in b.get('events',[])): basis.append('カタリスト検索で材料確認')
     if len(b.get('events',[]))>=2: basis.append(f'同日{len(b["events"])}件の言及')
     if ch is not None and abs(ch)>=3: basis.append(f'前日比{ch:+.2f}%')
     if vr is not None and vr>=1.5: basis.append(f'出来高平常比{vr:.1f}倍')
@@ -376,6 +379,11 @@ def main():
         # News is searched from several angles instead of relying on one query.
         ('news_material', lambda: rss_items('日本株 今日 材料 OR 適時開示 OR 決算 OR 受注', 'ニュース','ニュース・材料検索',master,2.5)),
         ('news_attention', lambda: rss_items('日本株 今日 注目株 OR 話題株 OR 急騰 OR 急落', 'ニュース','ニュース・話題検索',master,2.5)),
+        # Catalyst route: explicitly search for events that can become a
+        # near-term stock-price trigger. This is an additional evidence route,
+        # not a BUY filter. Stock-kicker sources describe these as "株価カタリスト"
+        # /刺激材料, so keep the source label visible in the app.
+        ('catalyst', lambda: rss_items('日本株 カタリスト 株価注意報 刺激材料 注目銘柄 上方修正 自社株買い 増配 受注 提携 TOB', 'カタリスト','カタリスト検索',master,3.0)),
         ('large_holder', lambda: rss_items('日本株 大量保有報告 変更 株主 自社株買い', '開示','大量保有・開示検索',master,2.2)),
         ('analyst', lambda: rss_items('日本株 アナリスト 注目 銘柄 レポート', 'アナリスト','アナリスト・レポート検索',master,2.0)),
         ('theme', lambda: rss_items('日本株 AI 半導体 データセンター 防衛 量子電池 注目', 'テーマ','テーマ・業界検索',master,1.8)),
@@ -436,7 +444,7 @@ def main():
         'date':now.strftime('%Y-%m-%d'),
         'title':'今日の注目5選',
         'status':status,
-        'method':'同日公開の投資家話題・ニュース/開示・大量保有・アナリスト・テーマ・YouTubeを複数の検索角度から収集。投資家話題順位、情報源の種類、同日言及数、株価/出来高、具体的材料を組み合わせ、複数のルートのいずれかを満たす銘柄を最大5件表示する。無理に5件へ水増ししない。これはBUY判定ではない。',
+        'method':'同日公開の投資家話題・ニュース/開示・大量保有・カタリスト・アナリスト・テーマ・YouTubeを複数の検索角度から収集。投資家話題順位、情報源の種類、同日言及数、株価/出来高、具体的材料を組み合わせ、複数のルートのいずれかを満たす銘柄を最大5件表示する。無理に5件へ水増ししない。これはBUY判定ではない。',
         'source_policy':'各記事・動画へのリンクと発信元を保存。外部情報の注目度とkabu-scoreの総合BUY判定は別物として表示する。',
         'errors':errors,
         'candidate_pool':len(result),
