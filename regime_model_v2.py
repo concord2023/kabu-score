@@ -255,10 +255,14 @@ def decide(stock, regime):
         ]
     elif regime['regime'] == 'RANGE_TRANSITION':
         signal='WATCH'
-        reason='レンジ転換監視。上限ブレイクと出来高増加などを確認するまではBUYにしない。'
+        reason=(f"レンジ転換監視。現在値{bo.get('current_price'):.0f}円 / レンジ上限{bo.get('breakout_level'):.0f}円 / 明確なブレイク目安{bo.get('breakout_trigger'):.0f}円。"
+                 f"出来高は現在{bo.get('current_volume'):.0f}株 / 直前20日平均{bo.get('avg_volume20'):.0f}株 / 判定目安{bo.get('required_volume'):.0f}株（1.5倍）。"
+                 if all(bo.get(k) is not None for k in ('current_price','breakout_level','breakout_trigger','current_volume','avg_volume20','required_volume'))
+                 else 'レンジ転換監視。上限ブレイクと出来高増加などを確認するまではBUYにしない。')
         checks=[
             {'label':'週足方向','ok':regime.get('weekly_direction')=='RANGE','value':regime.get('weekly_direction'),'rule':'週足がRANGE'},
-            {'label':'ブレイク確認待ち','ok':False,'value':None,'rule':'レンジ上限の終値突破＋出来高などを待つ'},
+            {'label':'上限ブレイク','ok':False,'value':bo.get('breakout_trigger'),'rule':f"終値{bo.get('breakout_trigger')}円以上"},
+            {'label':'出来高増','ok':False,'value':bo.get('required_volume'),'rule':f"突破日の出来高{bo.get('required_volume')}株以上（直前20日平均×1.5）"},
         ]
     elif regime['regime'] == 'DOWNTREND_CONTINUED':
         signal='AVOID'; reason='下降継続のため現時点では回避。'

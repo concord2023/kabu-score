@@ -1129,9 +1129,12 @@ def breakout_signal(rows):
     if not candidates:
         return {
             'status':'なし','is_breakout':False,'confirmed':False,
-            'breakout_level':round(current_range_high,2),'breakout_date':None,
+            'breakout_level':round(current_range_high,2),'breakout_trigger':round(current_range_high*1.005,2),'breakout_date':None,
+            'current_price':round(current,2),'current_volume':round(vols[0],0) if vols and vols[0] is not None else None,
+            'avg_volume20':round(sum([v for v in vols[1:21] if v is not None and v>0])/len([v for v in vols[1:21] if v is not None and v>0]),0) if any(v is not None and v>0 for v in vols[1:21]) else None,
+            'required_volume_ratio':1.5,'required_volume':None,
             'breakout_volume_ratio':None,'distance_from_breakout':round((current/current_range_high-1)*100,2),
-            'reason':'直近6営業日に20日レンジ高値を明確に終値突破した形跡なし'
+            'reason':f'現在値{current:.0f}円。20日レンジ上限{current_range_high:.0f}円、明確な終値ブレイク目安{current_range_high*1.005:.0f}円。突破日の出来高は直前20日平均の1.5倍以上（目安）を確認。' 
         }
 
     b=candidates[0]
@@ -1157,7 +1160,11 @@ def breakout_signal(rows):
         reason=f"一度レンジ高値を上抜けたが、現在は突破水準{b['level']:.0f}円を下回る。"
     return {
         'status':status,'strength':strength,'is_breakout':True,'confirmed':confirmed,
-        'breakout_level':round(b['level'],2),'breakout_date':b['date'],
+        'breakout_level':round(b['level'],2),'breakout_trigger':round(b['level']*1.005,2),'breakout_date':b['date'],
+        'current_price':round(current,2),'current_volume':round(vols[0],0) if vols and vols[0] is not None else None,
+        'avg_volume20':round(sum([v for v in vols[1:21] if v is not None and v>0])/len([v for v in vols[1:21] if v is not None and v>0]),0) if any(v is not None and v>0 for v in vols[1:21]) else None,
+        'required_volume_ratio':1.5,
+        'required_volume':round((sum([v for v in vols[1:21] if v is not None and v>0])/len([v for v in vols[1:21] if v is not None and v>0]))*1.5,0) if any(v is not None and v>0 for v in vols[1:21]) else None,
         'breakout_volume_ratio':round(b['volume_ratio'],2) if b['volume_ratio'] is not None else None,
         'distance_from_breakout':round(dist,2),'held':held,'volume_ok':volume_ok,
         'ma20_ok':ma_ok,'trend_ok':trend_ok,'extension_ok':extension_ok,
