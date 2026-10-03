@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-03T14:07:26.429766+09:00",
+  "updated_at": "2026-10-03T14:43:22.284106+09:00",
   "summary": {
     "buy_candidates": 4,
     "watch": 12,
@@ -50,11 +50,11 @@
         "monthly_macd": -10.955,
         "monthly_macd_signal": -9.549,
         "monthly_macd_hist": -1.406,
-        "monthly_macd_state": "データ不足",
+        "monthly_macd_state": "週足RSI条件未達",
         "monthly_points": 51,
         "monthly_rsi_bottom_signal": {
           "active": false,
-          "state": "データ不足",
+          "state": "週足RSI条件未達",
           "weekly_rsi_ok": false,
           "monthly_points": 51,
           "macd": -10.9551662501882,
@@ -62,6 +62,9 @@
           "hist": -1.4059348262650957,
           "prev_hist": -2.290337011202727,
           "prev2_hist": -1.6451105258002237,
+          "gc_gap": 1.4059348262650957,
+          "hist_change": 0.8844021849376311,
+          "hist_change_prev": -0.6452264854025032,
           "reason": "週足RSIが30以下ではありません（57.8）。"
         },
         "drawdown60": -13.39,
@@ -73,6 +76,7 @@
           "middle": 1073.04,
           "upper": 1170.19,
           "lower": 975.89,
+          "position_sigma": -1.11,
           "status": "なし"
         },
         "bb_weekly": {
@@ -81,6 +85,7 @@
           "middle": 1068.25,
           "upper": 1196.72,
           "lower": 939.79,
+          "position_sigma": -0.77,
           "status": "なし"
         },
         "weekly_ma5": 1059.5,
@@ -2331,7 +2336,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T14:06:28.938371+09:00",
+        "per_updated_at": "2026-10-03T14:42:25.292099+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -4305,11 +4310,11 @@
         "monthly_macd": 506.898,
         "monthly_macd_signal": 428.051,
         "monthly_macd_hist": 78.847,
-        "monthly_macd_state": "データ不足",
+        "monthly_macd_state": "週足RSI条件未達",
         "monthly_points": 51,
         "monthly_rsi_bottom_signal": {
           "active": false,
-          "state": "データ不足",
+          "state": "週足RSI条件未達",
           "weekly_rsi_ok": false,
           "monthly_points": 51,
           "macd": 506.8976909396033,
@@ -4317,6 +4322,9 @@
           "hist": 78.84650605665007,
           "prev_hist": 96.43406749278296,
           "prev2_hist": 94.6057067447619,
+          "gc_gap": 0.0,
+          "hist_change": -17.587561436132887,
+          "hist_change_prev": 1.8283607480210549,
           "reason": "週足RSIが30以下ではありません（58.8）。"
         },
         "drawdown60": -6.71,
@@ -4328,6 +4336,7 @@
           "middle": 3659.36,
           "upper": 3779.85,
           "lower": 3538.87,
+          "position_sigma": -1.91,
           "status": "なし"
         },
         "bb_weekly": {
@@ -4336,6 +4345,7 @@
           "middle": 3615.31,
           "upper": 3825.04,
           "lower": 3405.58,
+          "position_sigma": -0.68,
           "status": "なし"
         },
         "weekly_ma5": 3664.8,
@@ -6632,7 +6642,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T14:06:04.565767+09:00",
+        "per_updated_at": "2026-10-03T14:42:01.592250+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -8634,11 +8644,11 @@
         "monthly_macd": 5165.876,
         "monthly_macd_signal": 3671.005,
         "monthly_macd_hist": 1494.871,
-        "monthly_macd_state": "データ不足",
+        "monthly_macd_state": "週足RSI条件未達",
         "monthly_points": 51,
         "monthly_rsi_bottom_signal": {
           "active": false,
-          "state": "データ不足",
+          "state": "週足RSI条件未達",
           "weekly_rsi_ok": false,
           "monthly_points": 51,
           "macd": 5165.876455928636,
@@ -8646,6 +8656,9 @@
           "hist": 1494.8714194596532,
           "prev_hist": 1365.5428778173,
           "prev2_hist": 1506.1263957744018,
+          "gc_gap": 0.0,
+          "hist_change": 129.32854164235323,
+          "hist_change_prev": -140.58351795710178,
           "reason": "週足RSIが30以下ではありません（44.5）。"
         },
         "drawdown60": -7.16,
@@ -8657,6 +8670,7 @@
           "middle": 36880.4,
           "upper": 44471.43,
           "lower": 29289.37,
+          "position_sigma": 2.44,
           "status": "BB_DAILY_UPPER_BREAK"
         },
         "bb_weekly": {
@@ -8665,6 +8679,7 @@
           "middle": 39020.77,
           "upper": 47192.39,
           "lower": 30849.15,
+          "position_sigma": 1.74,
           "status": "なし"
         },
         "weekly_ma5": 38776.0,
@@ -10974,7 +10989,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T14:06:33.843111+09:00",
+        "per_updated_at": "2026-10-03T14:42:30.030616+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -12969,11 +12984,11 @@
         "monthly_macd": 418.659,
         "monthly_macd_signal": 369.317,
         "monthly_macd_hist": 49.341,
-        "monthly_macd_state": "データ不足",
+        "monthly_macd_state": "週足RSI条件未達",
         "monthly_points": 51,
         "monthly_rsi_bottom_signal": {
           "active": false,
-          "state": "データ不足",
+          "state": "週足RSI条件未達",
           "weekly_rsi_ok": false,
           "monthly_points": 51,
           "macd": 418.65853589242715,
@@ -12981,6 +12996,9 @@
           "hist": 49.3413844528003,
           "prev_hist": 61.357353735790525,
           "prev2_hist": 92.29866342918297,
+          "gc_gap": 0.0,
+          "hist_change": -12.015969282990227,
+          "hist_change_prev": -30.94130969339244,
           "reason": "週足RSIが30以下ではありません（41.0）。"
         },
         "drawdown60": -13.54,
@@ -12992,6 +13010,7 @@
           "middle": 2943.46,
           "upper": 3194.2,
           "lower": 2692.72,
+          "position_sigma": 2.03,
           "status": "BB_DAILY_UPPER_BREAK"
         },
         "bb_weekly": {
@@ -13000,6 +13019,7 @@
           "middle": 3036.46,
           "upper": 3354.25,
           "lower": 2718.67,
+          "position_sigma": 1.02,
           "status": "なし"
         },
         "weekly_ma5": 2947.4,
@@ -15320,7 +15340,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T14:05:51.146478+09:00",
+        "per_updated_at": "2026-10-03T14:41:47.408991+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -17301,11 +17321,11 @@
         "monthly_macd": 796.353,
         "monthly_macd_signal": 556.745,
         "monthly_macd_hist": 239.607,
-        "monthly_macd_state": "データ不足",
+        "monthly_macd_state": "週足RSI条件未達",
         "monthly_points": 51,
         "monthly_rsi_bottom_signal": {
           "active": false,
-          "state": "データ不足",
+          "state": "週足RSI条件未達",
           "weekly_rsi_ok": false,
           "monthly_points": 51,
           "macd": 796.3526689994305,
@@ -17313,6 +17333,9 @@
           "hist": 239.60717847598323,
           "prev_hist": 263.04500500538427,
           "prev2_hist": 279.15386497277694,
+          "gc_gap": 0.0,
+          "hist_change": -23.437826529401036,
+          "hist_change_prev": -16.108859967392675,
           "reason": "週足RSIが30以下ではありません（50.5）。"
         },
         "drawdown60": -4.59,
@@ -17324,6 +17347,7 @@
           "middle": 4354.52,
           "upper": 4633.44,
           "lower": 4075.6,
+          "position_sigma": 1.53,
           "status": "なし"
         },
         "bb_weekly": {
@@ -17332,6 +17356,7 @@
           "middle": 4322.77,
           "upper": 4794.7,
           "lower": 3850.84,
+          "position_sigma": 1.04,
           "status": "なし"
         },
         "weekly_ma5": 4361.2,
@@ -19628,7 +19653,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T14:07:00.003372+09:00",
+        "per_updated_at": "2026-10-03T14:42:56.183569+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -21609,11 +21634,11 @@
         "monthly_macd": 561.505,
         "monthly_macd_signal": 567.301,
         "monthly_macd_hist": -5.795,
-        "monthly_macd_state": "データ不足",
+        "monthly_macd_state": "週足RSI条件未達",
         "monthly_points": 51,
         "monthly_rsi_bottom_signal": {
           "active": false,
-          "state": "データ不足",
+          "state": "週足RSI条件未達",
           "weekly_rsi_ok": false,
           "monthly_points": 51,
           "macd": 561.5053110062672,
@@ -21621,6 +21646,9 @@
           "hist": -5.795400487492543,
           "prev_hist": -10.428867909777978,
           "prev2_hist": -21.86184287728804,
+          "gc_gap": 5.795400487492543,
+          "hist_change": 4.633467422285435,
+          "hist_change_prev": 11.432974967510063,
           "reason": "週足RSIが30以下ではありません（67.9）。"
         },
         "drawdown60": -4.25,
@@ -21632,6 +21660,7 @@
           "middle": 5395.44,
           "upper": 5649.44,
           "lower": 5141.44,
+          "position_sigma": 1.0,
           "status": "なし"
         },
         "bb_weekly": {
@@ -21640,6 +21669,7 @@
           "middle": 5294.23,
           "upper": 5993.79,
           "lower": 4594.67,
+          "position_sigma": 0.65,
           "status": "なし"
         },
         "weekly_ma5": 5431.6,
@@ -23945,7 +23975,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T14:06:00.326196+09:00",
+        "per_updated_at": "2026-10-03T14:41:57.212614+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -25919,11 +25949,11 @@
         "monthly_macd": 196.735,
         "monthly_macd_signal": 187.309,
         "monthly_macd_hist": 9.426,
-        "monthly_macd_state": "データ不足",
+        "monthly_macd_state": "週足RSI条件未達",
         "monthly_points": 51,
         "monthly_rsi_bottom_signal": {
           "active": false,
-          "state": "データ不足",
+          "state": "週足RSI条件未達",
           "weekly_rsi_ok": false,
           "monthly_points": 51,
           "macd": 196.7350618278847,
@@ -25931,6 +25961,9 @@
           "hist": 9.425876800698063,
           "prev_hist": 9.152255919860806,
           "prev2_hist": 2.0018416982889846,
+          "gc_gap": 0.0,
+          "hist_change": 0.27362088083725666,
+          "hist_change_prev": 7.150414221571822,
           "reason": "週足RSIが30以下ではありません（76.6）。"
         },
         "drawdown60": -8.21,
@@ -25942,6 +25975,7 @@
           "middle": 2226.72,
           "upper": 2381.64,
           "lower": 2071.8,
+          "position_sigma": -0.66,
           "status": "なし"
         },
         "bb_weekly": {
@@ -25950,6 +25984,7 @@
           "middle": 2099.23,
           "upper": 2372.97,
           "lower": 1825.49,
+          "position_sigma": 0.56,
           "status": "なし"
         },
         "weekly_ma5": 2238.2,
@@ -28246,7 +28281,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T14:06:50.405486+09:00",
+        "per_updated_at": "2026-10-03T14:42:46.541664+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -30220,11 +30255,11 @@
         "monthly_macd": 828.788,
         "monthly_macd_signal": 677.458,
         "monthly_macd_hist": 151.329,
-        "monthly_macd_state": "データ不足",
+        "monthly_macd_state": "週足RSI条件未達",
         "monthly_points": 51,
         "monthly_rsi_bottom_signal": {
           "active": false,
-          "state": "データ不足",
+          "state": "週足RSI条件未達",
           "weekly_rsi_ok": false,
           "monthly_points": 51,
           "macd": 828.7877701109028,
@@ -30232,6 +30267,9 @@
           "hist": 151.3293504718506,
           "prev_hist": 166.05980885693816,
           "prev2_hist": 152.82747680116825,
+          "gc_gap": 0.0,
+          "hist_change": -14.730458385087559,
+          "hist_change_prev": 13.232332055769916,
           "reason": "週足RSIが30以下ではありません（65.3）。"
         },
         "drawdown60": -1.83,
@@ -30243,6 +30281,7 @@
           "middle": 7380.88,
           "upper": 7781.04,
           "lower": 6980.72,
+          "position_sigma": 0.6,
           "status": "なし"
         },
         "bb_weekly": {
@@ -30251,6 +30290,7 @@
           "middle": 7099.62,
           "upper": 7984.43,
           "lower": 6214.8,
+          "position_sigma": 0.91,
           "status": "なし"
         },
         "weekly_ma5": 7351.8,
@@ -32557,7 +32597,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T14:07:08.751825+09:00",
+        "per_updated_at": "2026-10-03T14:43:05.679596+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -34538,11 +34578,11 @@
         "monthly_macd": 164.797,
         "monthly_macd_signal": 111.453,
         "monthly_macd_hist": 53.344,
-        "monthly_macd_state": "データ不足",
+        "monthly_macd_state": "週足RSI条件未達",
         "monthly_points": 51,
         "monthly_rsi_bottom_signal": {
           "active": false,
-          "state": "データ不足",
+          "state": "週足RSI条件未達",
           "weekly_rsi_ok": false,
           "monthly_points": 51,
           "macd": 164.79740365519865,
@@ -34550,6 +34590,9 @@
           "hist": 53.34421631603506,
           "prev_hist": 99.38656949256115,
           "prev2_hist": 180.72010703740222,
+          "gc_gap": 0.0,
+          "hist_change": -46.04235317652609,
+          "hist_change_prev": -81.33353754484106,
           "reason": "週足RSIが30以下ではありません（31.7）。"
         },
         "drawdown60": -35.74,
@@ -34561,6 +34604,7 @@
           "middle": 4553.76,
           "upper": 4944.72,
           "lower": 4162.8,
+          "position_sigma": 1.29,
           "status": "なし"
         },
         "bb_weekly": {
@@ -34569,6 +34613,7 @@
           "middle": 5007.62,
           "upper": 6372.38,
           "lower": 3642.85,
+          "position_sigma": -0.3,
           "status": "なし"
         },
         "weekly_ma5": 4508.0,
@@ -36853,7 +36898,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T14:05:55.916026+09:00",
+        "per_updated_at": "2026-10-03T14:41:52.326572+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -38831,6 +38876,9 @@
           "hist": null,
           "prev_hist": null,
           "prev2_hist": null,
+          "gc_gap": null,
+          "hist_change": null,
+          "hist_change_prev": null,
           "reason": "月足データが不足（26か月）。30か月以上を必要とします。"
         },
         "drawdown60": -7.9,
@@ -38842,6 +38890,7 @@
           "middle": 5130.4,
           "upper": 5620.06,
           "lower": 4640.74,
+          "position_sigma": 1.91,
           "status": "なし"
         },
         "bb_weekly": {
@@ -38850,6 +38899,7 @@
           "middle": 5032.92,
           "upper": 5883.83,
           "lower": 4182.02,
+          "position_sigma": 1.33,
           "status": "なし"
         },
         "weekly_ma5": 5114.2,
@@ -41090,7 +41140,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T14:05:36.609432+09:00",
+        "per_updated_at": "2026-10-03T14:41:33.436967+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -42881,11 +42931,11 @@
         "monthly_macd": 494.9,
         "monthly_macd_signal": 569.728,
         "monthly_macd_hist": -74.828,
-        "monthly_macd_state": "データ不足",
+        "monthly_macd_state": "週足RSI条件未達",
         "monthly_points": 51,
         "monthly_rsi_bottom_signal": {
           "active": false,
-          "state": "データ不足",
+          "state": "週足RSI条件未達",
           "weekly_rsi_ok": false,
           "monthly_points": 51,
           "macd": 494.89975550518693,
@@ -42893,6 +42943,9 @@
           "hist": -74.82828977411498,
           "prev_hist": -91.26905688624288,
           "prev2_hist": -102.74519773334725,
+          "gc_gap": 74.82828977411498,
+          "hist_change": 16.4407671121279,
+          "hist_change_prev": 11.476140847104375,
           "reason": "週足RSIが30以下ではありません（68.1）。"
         },
         "drawdown60": -4.93,
@@ -42904,6 +42957,7 @@
           "middle": 4769.16,
           "upper": 5022.94,
           "lower": 4515.38,
+          "position_sigma": 1.13,
           "status": "なし"
         },
         "bb_weekly": {
@@ -42912,6 +42966,7 @@
           "middle": 4705.69,
           "upper": 5242.31,
           "lower": 4169.08,
+          "position_sigma": 0.77,
           "status": "なし"
         },
         "weekly_ma5": 4780.8,
@@ -45175,7 +45230,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T14:05:46.591440+09:00",
+        "per_updated_at": "2026-10-03T14:41:42.821845+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -47161,6 +47216,9 @@
           "hist": null,
           "prev_hist": null,
           "prev2_hist": null,
+          "gc_gap": null,
+          "hist_change": null,
+          "hist_change_prev": null,
           "reason": "月足データが不足（23か月）。30か月以上を必要とします。"
         },
         "drawdown60": -30.49,
@@ -47172,6 +47230,7 @@
           "middle": 17853.0,
           "upper": 19929.6,
           "lower": 15776.4,
+          "position_sigma": 1.39,
           "status": "なし"
         },
         "bb_weekly": {
@@ -47180,6 +47239,7 @@
           "middle": 18257.69,
           "upper": 23278.78,
           "lower": 13236.61,
+          "position_sigma": 0.42,
           "status": "なし"
         },
         "weekly_ma5": 18449.32,
@@ -49342,7 +49402,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T14:07:04.539535+09:00",
+        "per_updated_at": "2026-10-03T14:43:01.414872+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -51069,11 +51129,11 @@
         "monthly_macd": 150.84,
         "monthly_macd_signal": 192.033,
         "monthly_macd_hist": -41.193,
-        "monthly_macd_state": "データ不足",
+        "monthly_macd_state": "週足RSI条件未達",
         "monthly_points": 51,
         "monthly_rsi_bottom_signal": {
           "active": false,
-          "state": "データ不足",
+          "state": "週足RSI条件未達",
           "weekly_rsi_ok": false,
           "monthly_points": 51,
           "macd": 150.8397554917915,
@@ -51081,6 +51141,9 @@
           "hist": -41.19294160968505,
           "prev_hist": -46.90377034680856,
           "prev2_hist": -55.64618169390627,
+          "gc_gap": 41.19294160968505,
+          "hist_change": 5.7108287371235065,
+          "hist_change_prev": 8.742411347097715,
           "reason": "週足RSIが30以下ではありません（66.3）。"
         },
         "drawdown60": -7.24,
@@ -51092,6 +51155,7 @@
           "middle": 3781.44,
           "upper": 4018.7,
           "lower": 3544.18,
+          "position_sigma": -0.24,
           "status": "なし"
         },
         "bb_weekly": {
@@ -51100,6 +51164,7 @@
           "middle": 3696.0,
           "upper": 4064.59,
           "lower": 3327.41,
+          "position_sigma": 0.31,
           "status": "なし"
         },
         "weekly_ma5": 3735.4,
@@ -53334,7 +53399,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T14:05:41.600856+09:00",
+        "per_updated_at": "2026-10-03T14:41:38.388404+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -55312,6 +55377,9 @@
           "hist": null,
           "prev_hist": null,
           "prev2_hist": null,
+          "gc_gap": null,
+          "hist_change": null,
+          "hist_change_prev": null,
           "reason": "月足データが不足（11か月）。30か月以上を必要とします。"
         },
         "drawdown60": -11.48,
@@ -55323,6 +55391,7 @@
           "middle": 2014.64,
           "upper": 2419.56,
           "lower": 1609.72,
+          "position_sigma": 0.56,
           "status": "なし"
         },
         "bb_weekly": {
@@ -55331,6 +55400,7 @@
           "middle": 1941.92,
           "upper": 2375.37,
           "lower": 1508.48,
+          "position_sigma": 0.86,
           "status": "なし"
         },
         "weekly_ma5": 2122.6,
@@ -57458,7 +57528,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T14:06:39.329756+09:00",
+        "per_updated_at": "2026-10-03T14:42:35.208831+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -58597,11 +58667,11 @@
         "monthly_macd": 559.776,
         "monthly_macd_signal": 547.076,
         "monthly_macd_hist": 12.7,
-        "monthly_macd_state": "データ不足",
+        "monthly_macd_state": "週足RSI条件未達",
         "monthly_points": 51,
         "monthly_rsi_bottom_signal": {
           "active": false,
-          "state": "データ不足",
+          "state": "週足RSI条件未達",
           "weekly_rsi_ok": false,
           "monthly_points": 51,
           "macd": 559.7759345244413,
@@ -58609,6 +58679,9 @@
           "hist": 12.699868797978866,
           "prev_hist": 40.82441691876852,
           "prev2_hist": 66.73379693606603,
+          "gc_gap": 0.0,
+          "hist_change": -28.124548120789655,
+          "hist_change_prev": -25.909380017297508,
           "reason": "週足RSIが30以下ではありません（59.7）。"
         },
         "drawdown60": -7.21,
@@ -58620,6 +58693,7 @@
           "middle": 4874.0,
           "upper": 5111.01,
           "lower": 4636.99,
+          "position_sigma": -1.52,
           "status": "なし"
         },
         "bb_weekly": {
@@ -58628,6 +58702,7 @@
           "middle": 4782.62,
           "upper": 5139.75,
           "lower": 4425.48,
+          "position_sigma": -0.5,
           "status": "なし"
         },
         "weekly_ma5": 4881.4,
@@ -60892,7 +60967,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T14:06:55.564885+09:00",
+        "per_updated_at": "2026-10-03T14:42:51.736646+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -62880,11 +62955,11 @@
         "monthly_macd": 781.376,
         "monthly_macd_signal": 673.504,
         "monthly_macd_hist": 107.872,
-        "monthly_macd_state": "データ不足",
+        "monthly_macd_state": "週足RSI条件未達",
         "monthly_points": 51,
         "monthly_rsi_bottom_signal": {
           "active": false,
-          "state": "データ不足",
+          "state": "週足RSI条件未達",
           "weekly_rsi_ok": false,
           "monthly_points": 51,
           "macd": 781.3761804606675,
@@ -62892,6 +62967,9 @@
           "hist": 107.87191936583326,
           "prev_hist": 167.78588410842985,
           "prev2_hist": 216.9278170949999,
+          "gc_gap": 0.0,
+          "hist_change": -59.91396474259659,
+          "hist_change_prev": -49.141932986570055,
           "reason": "週足RSIが30以下ではありません（41.1）。"
         },
         "drawdown60": -13.91,
@@ -62903,6 +62981,7 @@
           "middle": 6138.92,
           "upper": 6453.47,
           "lower": 5824.37,
+          "position_sigma": -2.5,
           "status": "BB_DAILY_LOWER_BREAK"
         },
         "bb_weekly": {
@@ -62911,6 +62990,7 @@
           "middle": 6235.0,
           "upper": 6641.06,
           "lower": 5828.94,
+          "position_sigma": -2.41,
           "status": "BB_WEEKLY_LOWER_BREAK"
         },
         "weekly_ma5": 6078.6,
@@ -65215,7 +65295,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T14:06:45.966071+09:00",
+        "per_updated_at": "2026-10-03T14:42:41.650667+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -67189,11 +67269,11 @@
         "monthly_macd": -144.487,
         "monthly_macd_signal": -66.896,
         "monthly_macd_hist": -77.591,
-        "monthly_macd_state": "データ不足",
+        "monthly_macd_state": "MACD条件未達",
         "monthly_points": 51,
         "monthly_rsi_bottom_signal": {
           "active": false,
-          "state": "データ不足",
+          "state": "MACD条件未達",
           "weekly_rsi_ok": true,
           "monthly_points": 51,
           "macd": -144.48720709098825,
@@ -67201,6 +67281,9 @@
           "hist": -77.59134235903834,
           "prev_hist": -80.178349379425,
           "prev2_hist": -77.82545911723949,
+          "gc_gap": 77.59134235903834,
+          "hist_change": 2.5870070203866646,
+          "hist_change_prev": -2.352890262185511,
           "reason": "週足RSIは30以下だが、月足MACDのGCまたは差分縮小を確認できません。ヒストグラム=-77.591。"
         },
         "drawdown60": -10.17,
@@ -67212,6 +67295,7 @@
           "middle": 3678.04,
           "upper": 3796.66,
           "lower": 3559.42,
+          "position_sigma": -1.86,
           "status": "なし"
         },
         "bb_weekly": {
@@ -67220,6 +67304,7 @@
           "middle": 3723.23,
           "upper": 3878.98,
           "lower": 3567.48,
+          "position_sigma": -1.99,
           "status": "なし"
         },
         "weekly_ma5": 3651.2,
@@ -69489,7 +69574,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T14:07:24.567541+09:00",
+        "per_updated_at": "2026-10-03T14:43:20.400645+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -71463,11 +71548,11 @@
         "monthly_macd": 332.549,
         "monthly_macd_signal": 416.949,
         "monthly_macd_hist": -84.4,
-        "monthly_macd_state": "データ不足",
+        "monthly_macd_state": "週足RSI条件未達",
         "monthly_points": 51,
         "monthly_rsi_bottom_signal": {
           "active": false,
-          "state": "データ不足",
+          "state": "週足RSI条件未達",
           "weekly_rsi_ok": false,
           "monthly_points": 51,
           "macd": 332.54898921044924,
@@ -71475,6 +71560,9 @@
           "hist": -84.39955553441735,
           "prev_hist": -64.9748488519541,
           "prev2_hist": -39.29914759372974,
+          "gc_gap": 84.39955553441735,
+          "hist_change": -19.42470668246324,
+          "hist_change_prev": -25.675701258224365,
           "reason": "週足RSIが30以下ではありません（37.1）。"
         },
         "drawdown60": -12.92,
@@ -71486,6 +71574,7 @@
           "middle": 3030.42,
           "upper": 3121.09,
           "lower": 2939.75,
+          "position_sigma": -1.44,
           "status": "なし"
         },
         "bb_weekly": {
@@ -71494,6 +71583,7 @@
           "middle": 3079.38,
           "upper": 3294.94,
           "lower": 2863.83,
+          "position_sigma": -1.06,
           "status": "なし"
         },
         "weekly_ma5": 3027.6,
@@ -73755,7 +73845,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T14:06:15.704518+09:00",
+        "per_updated_at": "2026-10-03T14:42:12.262056+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -75729,11 +75819,11 @@
         "monthly_macd": 129.145,
         "monthly_macd_signal": 165.702,
         "monthly_macd_hist": -36.558,
-        "monthly_macd_state": "データ不足",
+        "monthly_macd_state": "週足RSI条件未達",
         "monthly_points": 51,
         "monthly_rsi_bottom_signal": {
           "active": false,
-          "state": "データ不足",
+          "state": "週足RSI条件未達",
           "weekly_rsi_ok": false,
           "monthly_points": 51,
           "macd": 129.14453891390895,
@@ -75741,6 +75831,9 @@
           "hist": -36.557562351623034,
           "prev_hist": -24.79427169983461,
           "prev2_hist": -10.16137695381775,
+          "gc_gap": 36.557562351623034,
+          "hist_change": -11.763290651788424,
+          "hist_change_prev": -14.63289474601686,
           "reason": "週足RSIが30以下ではありません（37.7）。"
         },
         "drawdown60": -17.28,
@@ -75752,6 +75845,7 @@
           "middle": 1624.44,
           "upper": 1690.53,
           "lower": 1558.34,
+          "position_sigma": -1.74,
           "status": "なし"
         },
         "bb_weekly": {
@@ -75760,6 +75854,7 @@
           "middle": 1693.4,
           "upper": 1884.26,
           "lower": 1502.54,
+          "position_sigma": -1.32,
           "status": "なし"
         },
         "weekly_ma5": 1608.16,
@@ -78019,7 +78114,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T14:06:22.918107+09:00",
+        "per_updated_at": "2026-10-03T14:42:18.632253+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -80000,11 +80095,11 @@
         "monthly_macd": 416.311,
         "monthly_macd_signal": 88.82,
         "monthly_macd_hist": 327.491,
-        "monthly_macd_state": "データ不足",
+        "monthly_macd_state": "MACD条件未達",
         "monthly_points": 51,
         "monthly_rsi_bottom_signal": {
           "active": false,
-          "state": "データ不足",
+          "state": "MACD条件未達",
           "weekly_rsi_ok": true,
           "monthly_points": 51,
           "macd": 416.3107627615318,
@@ -80012,6 +80107,9 @@
           "hist": 327.4911665201603,
           "prev_hist": 482.1500095851526,
           "prev2_hist": 653.8566639700961,
+          "gc_gap": 0.0,
+          "hist_change": -154.6588430649923,
+          "hist_change_prev": -171.70665438494348,
           "reason": "週足RSIは30以下だが、月足MACDのGCまたは差分縮小を確認できません。ヒストグラム=327.491。"
         },
         "drawdown60": -21.28,
@@ -80023,6 +80121,7 @@
           "middle": 20769.8,
           "upper": 21131.7,
           "lower": 20407.9,
+          "position_sigma": -1.02,
           "status": "なし"
         },
         "bb_weekly": {
@@ -80031,6 +80130,7 @@
           "middle": 21946.92,
           "upper": 25275.33,
           "lower": 18618.52,
+          "position_sigma": -0.82,
           "status": "なし"
         },
         "weekly_ma5": 20693.0,
@@ -82297,7 +82397,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T14:07:15.439340+09:00",
+        "per_updated_at": "2026-10-03T14:43:12.189786+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -84271,11 +84371,11 @@
         "monthly_macd": 56.058,
         "monthly_macd_signal": 102.068,
         "monthly_macd_hist": -46.01,
-        "monthly_macd_state": "データ不足",
+        "monthly_macd_state": "週足RSI条件未達",
         "monthly_points": 51,
         "monthly_rsi_bottom_signal": {
           "active": false,
-          "state": "データ不足",
+          "state": "週足RSI条件未達",
           "weekly_rsi_ok": false,
           "monthly_points": 51,
           "macd": 56.05825377477731,
@@ -84283,6 +84383,9 @@
           "hist": -46.00982766651961,
           "prev_hist": -36.06227159326707,
           "prev2_hist": -25.29267042834735,
+          "gc_gap": 46.00982766651961,
+          "hist_change": -9.947556073252542,
+          "hist_change_prev": -10.76960116491972,
           "reason": "週足RSIが30以下ではありません（55.3）。"
         },
         "drawdown60": -11.92,
@@ -84294,6 +84397,7 @@
           "middle": 3028.1,
           "upper": 3205.55,
           "lower": 2850.65,
+          "position_sigma": -1.93,
           "status": "なし"
         },
         "bb_weekly": {
@@ -84302,6 +84406,7 @@
           "middle": 2993.65,
           "upper": 3190.74,
           "lower": 2796.56,
+          "position_sigma": -1.39,
           "status": "なし"
         },
         "weekly_ma5": 2996.6,
@@ -86561,7 +86666,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T14:06:09.167068+09:00",
+        "per_updated_at": "2026-10-03T14:42:06.126092+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
