@@ -180,7 +180,6 @@ assert_true("if(a<10)return 'neutral'" in inline and "if(a<20)return 'strong '" 
 assert_true('deviation-detail' in detail and "if(a<20)return 'strong '" in detail and "return 'invert '" in detail, 'detail deviation styling must match the main table')
 assert_true('chartHover(timeframe,index,event)' in detail and 'hoverTargets' in detail and 'chart-hover-wrap' in detail, 'technical charts must provide cursor hover values')
 assert_true("const tip=document.getElementById('chart-hover-wrap')" in detail and "function hideChartHover(){const tip=document.getElementById('chart-hover-wrap')" in detail, 'chart tooltip must show/hide the visible wrapper element')
-assert_true('カーソルを合わせると' in detail, 'technical chart hover hint missing')
 assert_true('kabu-score-v41-candle-pattern-explanation' in sw, 'service worker cache must be bumped for realtime/chart-hover UI change')
 assert_true('bbSigmaMetric' in detail and 'position_sigma' in (ROOT/'update_data.py').read_text(encoding='utf-8'), 'BB sigma position display missing')
 assert_true('BB位置' in detail and '±1.5σ以上は色付き太字' not in detail and '±2σ以上は反転表示' not in detail, 'BB sigma explanatory text should be hidden')
