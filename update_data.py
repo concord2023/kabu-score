@@ -852,7 +852,7 @@ def monthly_macd_bottom_signal(monthly_vals, weekly_rsi):
     result = {
         'active': False, 'state': 'データ不足', 'weekly_rsi_ok': False,
         'monthly_points': len(monthly_vals), 'macd': None, 'signal': None,
-        'hist': None, 'prev_hist': None, 'prev2_hist': None,
+        'hist': None, 'prev_hist': None, 'prev2_hist': None, 'gc_gap': None, 'hist_change': None, 'hist_change_prev': None,
         'reason': '週足RSIまたは月足MACDに必要な履歴が不足しています。'
     }
     if weekly_rsi is None:
@@ -865,8 +865,10 @@ def monthly_macd_bottom_signal(monthly_vals, weekly_rsi):
     if len(hist) < 3:
         return result
     h0, h1, h2 = hist[0], hist[1], hist[2]
-    result.update({'macd': m[0], 'signal': sig[0], 'hist': h0, 'prev_hist': h1, 'prev2_hist': h2})
+    gc_gap = max(float(sig[0]) - float(m[0]), 0.0)
+    result.update({'macd': m[0], 'signal': sig[0], 'hist': h0, 'prev_hist': h1, 'prev2_hist': h2, 'gc_gap': gc_gap, 'hist_change': h0 - h1, 'hist_change_prev': h1 - h2})
     if not result['weekly_rsi_ok']:
+        result['state'] = '週足RSI条件未達'
         result['reason'] = f'週足RSIが30以下ではありません（{weekly_rsi:.1f}）。'
         return result
     golden_cross = h0 >= 0 and h1 < 0
@@ -880,6 +882,7 @@ def monthly_macd_bottom_signal(monthly_vals, weekly_rsi):
         result['state'] = '月足MACD GC手前・差分縮小'
         result['reason'] = f'週足RSI {weekly_rsi:.1f}（30以下）＋月足MACDはGC前だが、ヒストグラムが{h2:.3f}→{h1:.3f}→{h0:.3f}と2か月連続で縮小。'
     else:
+        result['state'] = 'MACD条件未達'
         result['reason'] = f'週足RSIは30以下だが、月足MACDのGCまたは差分縮小を確認できません。ヒストグラム={h0:.3f}。'
     return result
 
@@ -1157,6 +1160,19 @@ def bollinger(vals, period=25, sigma=2):
     sd = statistics.stdev(window) if len(window) >= 2 else 0.0
     return mid, mid + sigma * sd, mid - sigma * sd
 
+def bollinger_sigma_position(current, mid, upper, sigma=2):
+    """Return current price's position in standard-deviation units.
+
+    The Bollinger bands are calculated as mid +/- sigma*SD, so SD can be
+    recovered from (upper-mid)/sigma without changing the existing band logic.
+    """
+    if current is None or mid is None or upper is None or sigma in (None, 0):
+        return None
+    sd = (float(upper) - float(mid)) / float(sigma)
+    if sd == 0:
+        return 0.0
+    return (float(current) - float(mid)) / sd
+
 def bollinger_signal(current, mid, upper, lower, timeframe, period):
     if current is None or upper is None or lower is None:
         return None
@@ -1330,6 +1346,8 @@ def calc(rows, breadth_info=None, supply_info=None):
     bb_weekly_mid, bb_weekly_upper, bb_weekly_lower = bollinger(weekly_vals, 13, 2)
     bb_daily_signal = bollinger_signal(vals[0], bb_daily_mid, bb_daily_upper, bb_daily_lower, 'DAILY', 25)
     bb_weekly_signal = bollinger_signal(weekly_vals[0] if weekly_vals else None, bb_weekly_mid, bb_weekly_upper, bb_weekly_lower, 'WEEKLY', 13)
+    bb_daily_sigma = bollinger_sigma_position(vals[0], bb_daily_mid, bb_daily_upper, 2)
+    bb_weekly_sigma = bollinger_sigma_position(weekly_vals[0] if weekly_vals else None, bb_weekly_mid, bb_weekly_upper, 2)
     d5 = pct(vals[0], ma5)
     d20 = pct(vals[0], ma20)
     d25 = pct(vals[0], ma25)
@@ -1454,6 +1472,8 @@ def calc(rows, breadth_info=None, supply_info=None):
         'change': round(change, 2) if change is not None else None,
         'volume': vols[0] if vols else None,
         'volume_ratio': round(vr, 2) if vr is not None else None,
+        'volume_ratio_basis': '当日出来高 ÷ 直前20営業日の平均出来高',
+        'volume_surge_threshold': 1.8,
         'ma5': round(ma5, 2) if ma5 is not None else None,
         'ma20': round(ma20, 2) if ma20 is not None else None,
         'ma25': round(ma25, 2) if ma25 is not None else None,
@@ -1464,8 +1484,8 @@ def calc(rows, breadth_info=None, supply_info=None):
         'vs25': round(d25, 2) if d25 is not None else None,
         'vs75': round(d75, 2) if d75 is not None else None,
         'vs200': round(d200, 2) if d200 is not None else None,
-        'bb_daily': {'period':25,'sigma':2,'middle':round(bb_daily_mid,2) if bb_daily_mid is not None else None,'upper':round(bb_daily_upper,2) if bb_daily_upper is not None else None,'lower':round(bb_daily_lower,2) if bb_daily_lower is not None else None,'status':bb_daily_signal['code'] if bb_daily_signal else 'なし'},
-        'bb_weekly': {'period':13,'sigma':2,'middle':round(bb_weekly_mid,2) if bb_weekly_mid is not None else None,'upper':round(bb_weekly_upper,2) if bb_weekly_upper is not None else None,'lower':round(bb_weekly_lower,2) if bb_weekly_lower is not None else None,'status':bb_weekly_signal['code'] if bb_weekly_signal else 'なし'},
+        'bb_daily': {'period':25,'sigma':2,'middle':round(bb_daily_mid,2) if bb_daily_mid is not None else None,'upper':round(bb_daily_upper,2) if bb_daily_upper is not None else None,'lower':round(bb_daily_lower,2) if bb_daily_lower is not None else None,'position_sigma':round(bb_daily_sigma,2) if bb_daily_sigma is not None else None,'status':bb_daily_signal['code'] if bb_daily_signal else 'なし'},
+        'bb_weekly': {'period':13,'sigma':2,'middle':round(bb_weekly_mid,2) if bb_weekly_mid is not None else None,'upper':round(bb_weekly_upper,2) if bb_weekly_upper is not None else None,'lower':round(bb_weekly_lower,2) if bb_weekly_lower is not None else None,'position_sigma':round(bb_weekly_sigma,2) if bb_weekly_sigma is not None else None,'status':bb_weekly_signal['code'] if bb_weekly_signal else 'なし'},
         'high20': round(high20, 2) if high20 is not None else None,
         'low20': round(low20, 2) if low20 is not None else None,
         'high60': round(high60, 2) if high60 is not None else None,
