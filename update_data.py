@@ -1037,10 +1037,15 @@ def candle_reversal_signals(rows):
         if bottom_zone:
             zone_reason = '大きな下落後で、直近安値に近い底値圏'
 
-    # Confirmation means the current session actually reclaimed the prior
-    # high.  It is intentionally separate from merely seeing a pattern.
-    confirmed = bool(current and prev and current['bull'] and current['close'] > prev['high'])
-    confirmation = '反転確認（前日高値を上抜け）' if confirmed else ('反発は出たが上値確認待ち' if current and current['bull'] else 'まだ陰線。反転確認待ち')
+    # Confirmation is based on the current candle itself, not on reclaiming
+    # the previous day's high.  This keeps the bottom/reversal check anchored
+    # to the broader 20/60-day decline context instead of making the signal
+    # depend on a single immediately preceding day's price.
+    confirmed = bool(current and current['bull'] and current['close'] >= current['low'] + current['range'] * 0.60)
+    confirmation = ('反転方向の値動きを確認（当日陽線・終値が値幅の上側）'
+                    if confirmed else
+                    ('反発の形はあるが、当日の反転方向は弱い' if current and current['bull']
+                     else '当日は陰線。反転方向の確認待ち'))
 
     if not unique:
         status = 'なし'
