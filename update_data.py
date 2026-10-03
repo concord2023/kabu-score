@@ -1062,9 +1062,12 @@ def candle_reversal_signals(rows):
             strength = '中'
             reason = f"{', '.join(x['label'] for x in unique)}。{zone_reason}。{confirmation}。"
     else:
-        status = '反転サイン' if confirmed else '反転候補'
+        # Avoid the vague label "反転サイン". Show the actual detected
+        # candle pattern(s) so the user can tell what triggered the clue.
+        labels = '・'.join(x['label'] for x in unique)
+        status = labels
         strength = '中' if confirmed else '弱'
-        reason = f"{', '.join(x['label'] for x in unique)}。ただし大底圏の条件は未達。{confirmation}。"
+        reason = f"{labels}。ただし大底圏の条件は未達。{confirmation}。"
 
     return {
         'status': status,
