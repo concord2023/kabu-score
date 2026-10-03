@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-03T21:52:37.899931+09:00",
+  "updated_at": "2026-10-03T22:09:55.410511+09:00",
   "summary": {
     "buy_candidates": 4,
     "watch": 12,
@@ -195,7 +195,7 @@
           }
         ],
         "candle_signal": {
-          "status": "反転候補",
+          "status": "切り返し",
           "strength": "弱",
           "patterns": [
             {
@@ -2336,7 +2336,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T21:51:42.798714+09:00",
+        "per_updated_at": "2026-10-03T22:08:58.965311+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -6642,7 +6642,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T21:51:19.785021+09:00",
+        "per_updated_at": "2026-10-03T22:08:33.731898+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -10989,7 +10989,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T21:51:46.973145+09:00",
+        "per_updated_at": "2026-10-03T22:09:04.007294+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -12922,7 +12922,7 @@
       "regime": "UPTREND",
       "regime_reason": "週足の方向が上向きで、日足も大きく崩れていない。",
       "signal": "BUY_CANDIDATE",
-      "signal_reason": "レンジ抜け・再上昇型の暫定買い候補。突破日の出来高増加、突破水準維持、20日MA上、短期上昇を確認。 🕯️反転サイン",
+      "signal_reason": "レンジ抜け・再上昇型の暫定買い候補。突破日の出来高増加、突破水準維持、20日MA上、短期上昇を確認。",
       "one_condition_away": false,
       "missing_conditions": [],
       "relative_strength": 0.88,
@@ -13123,7 +13123,7 @@
           }
         ],
         "candle_signal": {
-          "status": "反転サイン",
+          "status": "ハンマー",
           "strength": "中",
           "patterns": [
             {
@@ -15340,7 +15340,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T21:51:06.298639+09:00",
+        "per_updated_at": "2026-10-03T22:08:17.486638+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -17273,7 +17273,7 @@
       "regime": "UPTREND_PULLBACK",
       "regime_reason": "週足は上向き。日足は20日MA下/5日下落で押し目状態。",
       "signal": "WATCH",
-      "signal_reason": "上昇トレンドだが現在は押し目BUY水準ではない。20日MAだけでBUYにせず、まず25日MAを第1の押し目目安、75日MAを第2の深い押し目目安として待つ。 🕯️反転サイン：毛抜き底。ただし大底圏の条件は未達。反転方向の値動きを確認（当日陽線・終値が値幅の上側）。 📈レンジ抜け候補：2026-09-25にレンジ高値を上抜け。突破後は水準を維持しているが、出来高/20MA/上昇継続/過熱度の確認待ち。",
+      "signal_reason": "上昇トレンドだが現在は押し目BUY水準ではない。20日MAだけでBUYにせず、まず25日MAを第1の押し目目安、75日MAを第2の深い押し目目安として待つ。 📈レンジ抜け候補：2026-09-25にレンジ高値を上抜け。突破後は水準を維持しているが、出来高/20MA/上昇継続/過熱度の確認待ち。",
       "one_condition_away": false,
       "missing_conditions": [],
       "relative_strength": 1.34,
@@ -17466,7 +17466,7 @@
           }
         ],
         "candle_signal": {
-          "status": "反転サイン",
+          "status": "毛抜き底",
           "strength": "中",
           "patterns": [
             {
@@ -19653,7 +19653,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T21:52:12.441321+09:00",
+        "per_updated_at": "2026-10-03T22:09:29.404327+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -21586,7 +21586,7 @@
       "regime": "UPTREND_PULLBACK",
       "regime_reason": "週足は上向き。日足は20日MA下/5日下落で押し目状態。",
       "signal": "WATCH",
-      "signal_reason": "上昇トレンドだが現在は押し目BUY水準ではない。20日MAだけでBUYにせず、まず25日MAを第1の押し目目安、75日MAを第2の深い押し目目安として待つ。 🕯️反転サイン：毛抜き底。ただし大底圏の条件は未達。反転方向の値動きを確認（当日陽線・終値が値幅の上側）。",
+      "signal_reason": "上昇トレンドだが現在は押し目BUY水準ではない。20日MAだけでBUYにせず、まず25日MAを第1の押し目目安、75日MAを第2の深い押し目目安として待つ。",
       "one_condition_away": false,
       "missing_conditions": [],
       "relative_strength": 1.16,
@@ -21779,7 +21779,7 @@
           }
         ],
         "candle_signal": {
-          "status": "反転サイン",
+          "status": "毛抜き底",
           "strength": "中",
           "patterns": [
             {
@@ -23975,7 +23975,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T21:51:15.588511+09:00",
+        "per_updated_at": "2026-10-03T22:08:29.125325+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -28281,7 +28281,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T21:52:03.396542+09:00",
+        "per_updated_at": "2026-10-03T22:09:20.340165+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -30400,7 +30400,7 @@
           }
         ],
         "candle_signal": {
-          "status": "反転候補",
+          "status": "毛抜き底",
           "strength": "弱",
           "patterns": [
             {
@@ -32597,7 +32597,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T21:52:21.224894+09:00",
+        "per_updated_at": "2026-10-03T22:09:38.499865+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -36898,7 +36898,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T21:51:10.744048+09:00",
+        "per_updated_at": "2026-10-03T22:08:22.871785+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -41140,7 +41140,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T21:50:51.326437+09:00",
+        "per_updated_at": "2026-10-03T22:08:03.276790+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -45230,7 +45230,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T21:51:01.211482+09:00",
+        "per_updated_at": "2026-10-03T22:08:12.967051+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -47163,7 +47163,7 @@
       "regime": "UPTREND",
       "regime_reason": "週足の方向が上向きで、日足も大きく崩れていない。",
       "signal": "WATCH",
-      "signal_reason": "上昇トレンド継続。新規買いは追いかけず、20日MAなどへの押し目を待つ。 🕯️反転サイン：ハンマー。ただし大底圏の条件は未達。反転方向の値動きを確認（当日陽線・終値が値幅の上側）。",
+      "signal_reason": "上昇トレンド継続。新規買いは追いかけず、20日MAなどへの押し目を待つ。",
       "one_condition_away": false,
       "missing_conditions": [],
       "relative_strength": 1.99,
@@ -47325,7 +47325,7 @@
           }
         ],
         "candle_signal": {
-          "status": "反転サイン",
+          "status": "ハンマー",
           "strength": "中",
           "patterns": [
             {
@@ -49402,7 +49402,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T21:52:16.860292+09:00",
+        "per_updated_at": "2026-10-03T22:09:33.976872+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -51250,7 +51250,7 @@
           }
         ],
         "candle_signal": {
-          "status": "反転候補",
+          "status": "毛抜き底",
           "strength": "弱",
           "patterns": [
             {
@@ -53399,7 +53399,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T21:50:56.222366+09:00",
+        "per_updated_at": "2026-10-03T22:08:08.305199+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -57528,7 +57528,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T21:51:52.172431+09:00",
+        "per_updated_at": "2026-10-03T22:09:09.207341+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -60967,7 +60967,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T21:52:08.143107+09:00",
+        "per_updated_at": "2026-10-03T22:09:24.829279+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -63076,7 +63076,7 @@
           }
         ],
         "candle_signal": {
-          "status": "反転候補",
+          "status": "ハンマー・毛抜き底",
           "strength": "弱",
           "patterns": [
             {
@@ -63101,7 +63101,7 @@
           "bottom_zone": false,
           "zone_reason": "大底圏の条件を満たしていない",
           "confirmation": "当日は陰線。反転方向の確認待ち",
-          "reason": "ハンマー, 毛抜き底。ただし大底圏の条件は未達。当日は陰線。反転方向の確認待ち。",
+          "reason": "ハンマー・毛抜き底。ただし大底圏の条件は未達。当日は陰線。反転方向の確認待ち。",
           "lookback_days": 2,
           "decline_context": true,
           "position20": -2.0,
@@ -65295,7 +65295,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T21:51:59.002187+09:00",
+        "per_updated_at": "2026-10-03T22:09:15.818401+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -67377,7 +67377,7 @@
         },
         "condition_checks": [],
         "candle_signal": {
-          "status": "反転候補",
+          "status": "ハンマー",
           "strength": "弱",
           "patterns": [
             {
@@ -69574,7 +69574,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T21:52:36.123098+09:00",
+        "per_updated_at": "2026-10-03T22:09:53.612214+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -71656,7 +71656,7 @@
         },
         "condition_checks": [],
         "candle_signal": {
-          "status": "反転候補",
+          "status": "ハンマー",
           "strength": "弱",
           "patterns": [
             {
@@ -73845,7 +73845,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T21:51:30.264508+09:00",
+        "per_updated_at": "2026-10-03T22:08:45.838172+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -78114,7 +78114,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T21:51:36.789774+09:00",
+        "per_updated_at": "2026-10-03T22:08:52.266279+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -82397,7 +82397,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T21:52:27.593856+09:00",
+        "per_updated_at": "2026-10-03T22:09:45.268096+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -86666,7 +86666,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-03T21:51:24.194547+09:00",
+        "per_updated_at": "2026-10-03T22:08:38.490084+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
