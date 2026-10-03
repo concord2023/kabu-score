@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-04T00:19:11.573045+09:00",
+  "updated_at": "2026-10-04T08:41:20.691856+09:00",
   "summary": {
     "buy_candidates": 4,
     "watch": 12,
@@ -225,10 +225,16 @@
           "is_breakout": false,
           "confirmed": false,
           "breakout_level": 1179.0,
+          "breakout_trigger": 1184.89,
           "breakout_date": null,
+          "current_price": 1019.0,
+          "current_volume": 1252200.0,
+          "avg_volume20": 1682735.0,
+          "required_volume_ratio": 1.5,
+          "required_volume": null,
           "breakout_volume_ratio": null,
           "distance_from_breakout": -13.57,
-          "reason": "直近6営業日に20日レンジ高値を明確に終値突破した形跡なし"
+          "reason": "現在値1019円。20日レンジ上限1179円、明確な終値ブレイク目安1185円。突破日の出来高は直前20日平均の1.5倍以上（目安）を確認。"
         },
         "signal_icons": [],
         "chart_history": [
@@ -2336,7 +2342,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-04T00:18:10.467655+09:00",
+        "per_updated_at": "2026-10-04T08:40:04.278300+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -4475,10 +4481,16 @@
           "is_breakout": false,
           "confirmed": false,
           "breakout_level": 3795.0,
+          "breakout_trigger": 3813.97,
           "breakout_date": null,
+          "current_price": 3544.0,
+          "current_volume": 37659600.0,
+          "avg_volume20": 43567495.0,
+          "required_volume_ratio": 1.5,
+          "required_volume": null,
           "breakout_volume_ratio": null,
           "distance_from_breakout": -6.61,
-          "reason": "直近6営業日に20日レンジ高値を明確に終値突破した形跡なし"
+          "reason": "現在値3544円。20日レンジ上限3795円、明確な終値ブレイク目安3814円。突破日の出来高は直前20日平均の1.5倍以上（目安）を確認。"
         },
         "signal_icons": [
           {
@@ -6642,7 +6654,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-04T00:17:50.774610+09:00",
+        "per_updated_at": "2026-10-04T08:39:37.140158+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -8804,7 +8816,13 @@
           "is_breakout": true,
           "confirmed": true,
           "breakout_level": 42860.0,
+          "breakout_trigger": 43074.3,
           "breakout_date": "2026-10-01",
+          "current_price": 46130.0,
+          "current_volume": 6802900.0,
+          "avg_volume20": 3639845.0,
+          "required_volume_ratio": 1.5,
+          "required_volume": 5459768.0,
           "breakout_volume_ratio": 1.52,
           "distance_from_breakout": 7.63,
           "held": true,
@@ -10989,7 +11007,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-04T00:18:14.756365+09:00",
+        "per_updated_at": "2026-10-04T08:40:10.546121+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -13154,7 +13172,13 @@
           "is_breakout": true,
           "confirmed": true,
           "breakout_level": 3123.0,
+          "breakout_trigger": 3138.61,
           "breakout_date": "2026-10-01",
+          "current_price": 3198.0,
+          "current_volume": 11492100.0,
+          "avg_volume20": 9987215.0,
+          "required_volume_ratio": 1.5,
+          "required_volume": 14980822.0,
           "breakout_volume_ratio": 1.62,
           "distance_from_breakout": 2.4,
           "held": true,
@@ -15340,7 +15364,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-04T00:17:38.111315+09:00",
+        "per_updated_at": "2026-10-04T08:39:22.465889+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -17497,7 +17521,13 @@
           "is_breakout": true,
           "confirmed": false,
           "breakout_level": 4543.0,
+          "breakout_trigger": 4565.71,
           "breakout_date": "2026-09-25",
+          "current_price": 4568.0,
+          "current_volume": 8059400.0,
+          "avg_volume20": 8197065.0,
+          "required_volume_ratio": 1.5,
+          "required_volume": 12295598.0,
           "breakout_volume_ratio": 1.13,
           "distance_from_breakout": 0.55,
           "held": true,
@@ -19653,7 +19683,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-04T00:18:37.653188+09:00",
+        "per_updated_at": "2026-10-04T08:40:38.333753+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -21809,10 +21839,16 @@
           "is_breakout": false,
           "confirmed": false,
           "breakout_level": 5621.0,
+          "breakout_trigger": 5649.1,
           "breakout_date": null,
+          "current_price": 5522.0,
+          "current_volume": 11270600.0,
+          "avg_volume20": 9883970.0,
+          "required_volume_ratio": 1.5,
+          "required_volume": null,
           "breakout_volume_ratio": null,
           "distance_from_breakout": -1.76,
-          "reason": "直近6営業日に20日レンジ高値を明確に終値突破した形跡なし"
+          "reason": "現在値5522円。20日レンジ上限5621円、明確な終値ブレイク目安5649円。突破日の出来高は直前20日平均の1.5倍以上（目安）を確認。"
         },
         "signal_icons": [
           {
@@ -23975,7 +24011,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-04T00:17:46.502656+09:00",
+        "per_updated_at": "2026-10-04T08:39:32.048273+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -26114,10 +26150,16 @@
           "is_breakout": false,
           "confirmed": false,
           "breakout_level": 2399.0,
+          "breakout_trigger": 2410.99,
           "breakout_date": null,
+          "current_price": 2175.5,
+          "current_volume": 12399000.0,
+          "avg_volume20": 19558885.0,
+          "required_volume_ratio": 1.5,
+          "required_volume": null,
           "breakout_volume_ratio": null,
           "distance_from_breakout": -9.32,
-          "reason": "直近6営業日に20日レンジ高値を明確に終値突破した形跡なし"
+          "reason": "現在値2176円。20日レンジ上限2399円、明確な終値ブレイク目安2411円。突破日の出来高は直前20日平均の1.5倍以上（目安）を確認。"
         },
         "signal_icons": [
           {
@@ -28281,7 +28323,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-04T00:18:29.493181+09:00",
+        "per_updated_at": "2026-10-04T08:40:29.267501+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -30430,10 +30472,16 @@
           "is_breakout": false,
           "confirmed": false,
           "breakout_level": 7740.0,
+          "breakout_trigger": 7778.7,
           "breakout_date": null,
+          "current_price": 7500.0,
+          "current_volume": 2905200.0,
+          "avg_volume20": 3144725.0,
+          "required_volume_ratio": 1.5,
+          "required_volume": null,
           "breakout_volume_ratio": null,
           "distance_from_breakout": -3.1,
-          "reason": "直近6営業日に20日レンジ高値を明確に終値突破した形跡なし"
+          "reason": "現在値7500円。20日レンジ上限7740円、明確な終値ブレイク目安7779円。突破日の出来高は直前20日平均の1.5倍以上（目安）を確認。"
         },
         "signal_icons": [
           {
@@ -32597,7 +32645,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-04T00:18:45.879269+09:00",
+        "per_updated_at": "2026-10-04T08:40:47.395154+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -34726,7 +34774,13 @@
           "is_breakout": true,
           "confirmed": false,
           "breakout_level": 4779.0,
+          "breakout_trigger": 4802.89,
           "breakout_date": "2026-10-02",
+          "current_price": 4806.0,
+          "current_volume": 3434500.0,
+          "avg_volume20": 3301055.0,
+          "required_volume_ratio": 1.5,
+          "required_volume": 4951582.0,
           "breakout_volume_ratio": 1.04,
           "distance_from_breakout": 0.56,
           "held": true,
@@ -36898,7 +36952,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-04T00:17:42.117882+09:00",
+        "per_updated_at": "2026-10-04T08:39:27.506941+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -39005,10 +39059,16 @@
           "is_breakout": false,
           "confirmed": false,
           "breakout_level": 5589.0,
+          "breakout_trigger": 5616.94,
           "breakout_date": null,
+          "current_price": 5598.0,
+          "current_volume": 54641800.0,
+          "avg_volume20": 34646490.0,
+          "required_volume_ratio": 1.5,
+          "required_volume": null,
           "breakout_volume_ratio": null,
           "distance_from_breakout": 0.16,
-          "reason": "直近6営業日に20日レンジ高値を明確に終値突破した形跡なし"
+          "reason": "現在値5598円。20日レンジ上限5589円、明確な終値ブレイク目安5617円。突破日の出来高は直前20日平均の1.5倍以上（目安）を確認。"
         },
         "signal_icons": [],
         "chart_history": [
@@ -41140,7 +41200,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-04T00:17:25.899172+09:00",
+        "per_updated_at": "2026-10-04T08:39:04.334083+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -43072,10 +43132,16 @@
           "is_breakout": false,
           "confirmed": false,
           "breakout_level": 5054.0,
+          "breakout_trigger": 5079.27,
           "breakout_date": null,
+          "current_price": 4913.0,
+          "current_volume": 5216300.0,
+          "avg_volume20": 5642350.0,
+          "required_volume_ratio": 1.5,
+          "required_volume": null,
           "breakout_volume_ratio": null,
           "distance_from_breakout": -2.79,
-          "reason": "直近6営業日に20日レンジ高値を明確に終値突破した形跡なし"
+          "reason": "現在値4913円。20日レンジ上限5054円、明確な終値ブレイク目安5079円。突破日の出来高は直前20日平均の1.5倍以上（目安）を確認。"
         },
         "signal_icons": [
           {
@@ -45230,7 +45296,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-04T00:17:34.282719+09:00",
+        "per_updated_at": "2026-10-04T08:39:16.942908+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -47355,10 +47421,16 @@
           "is_breakout": false,
           "confirmed": false,
           "breakout_level": 61040.0,
+          "breakout_trigger": 61345.2,
           "breakout_date": null,
+          "current_price": 19300.0,
+          "current_volume": 41082900.0,
+          "avg_volume20": 30405635.0,
+          "required_volume_ratio": 1.5,
+          "required_volume": null,
           "breakout_volume_ratio": null,
           "distance_from_breakout": -68.38,
-          "reason": "直近6営業日に20日レンジ高値を明確に終値突破した形跡なし"
+          "reason": "現在値19300円。20日レンジ上限61040円、明確な終値ブレイク目安61345円。突破日の出来高は直前20日平均の1.5倍以上（目安）を確認。"
         },
         "signal_icons": [
           {
@@ -49402,7 +49474,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-04T00:18:41.744183+09:00",
+        "per_updated_at": "2026-10-04T08:40:42.852904+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -51280,10 +51352,16 @@
           "is_breakout": false,
           "confirmed": false,
           "breakout_level": 4070.0,
+          "breakout_trigger": 4090.35,
           "breakout_date": null,
+          "current_price": 3753.0,
+          "current_volume": 12893600.0,
+          "avg_volume20": 14257715.0,
+          "required_volume_ratio": 1.5,
+          "required_volume": null,
           "breakout_volume_ratio": null,
           "distance_from_breakout": -7.79,
-          "reason": "直近6営業日に20日レンジ高値を明確に終値突破した形跡なし"
+          "reason": "現在値3753円。20日レンジ上限4070円、明確な終値ブレイク目安4090円。突破日の出来高は直前20日平均の1.5倍以上（目安）を確認。"
         },
         "signal_icons": [
           {
@@ -53399,7 +53477,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-04T00:17:30.139076+09:00",
+        "per_updated_at": "2026-10-04T08:39:10.042138+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -55479,10 +55557,16 @@
             "rule": "週足がRANGE"
           },
           {
-            "label": "ブレイク確認待ち",
+            "label": "上限ブレイク",
+            "ok": false,
+            "value": 2455.21,
+            "rule": "終値2455.21円以上"
+          },
+          {
+            "label": "出来高増",
             "ok": false,
             "value": null,
-            "rule": "レンジ上限の終値突破＋出来高などを待つ"
+            "rule": "突破日の出来高None株以上（直前20日平均×1.5）"
           }
         ],
         "candle_signal": {
@@ -55506,10 +55590,16 @@
           "is_breakout": false,
           "confirmed": false,
           "breakout_level": 2443.0,
+          "breakout_trigger": 2455.21,
           "breakout_date": null,
+          "current_price": 2128.0,
+          "current_volume": 5930200.0,
+          "avg_volume20": 9620140.0,
+          "required_volume_ratio": 1.5,
+          "required_volume": null,
           "breakout_volume_ratio": null,
           "distance_from_breakout": -12.89,
-          "reason": "直近6営業日に20日レンジ高値を明確に終値突破した形跡なし"
+          "reason": "現在値2128円。20日レンジ上限2443円、明確な終値ブレイク目安2455円。突破日の出来高は直前20日平均の1.5倍以上（目安）を確認。"
         },
         "signal_icons": [],
         "chart_history": [
@@ -57528,7 +57618,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-04T00:18:19.033907+09:00",
+        "per_updated_at": "2026-10-04T08:40:16.947964+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -58781,10 +58871,16 @@
             "rule": "週足がRANGE"
           },
           {
-            "label": "ブレイク確認待ち",
+            "label": "上限ブレイク",
+            "ok": false,
+            "value": 5148.61,
+            "rule": "終値5148.61円以上"
+          },
+          {
+            "label": "出来高増",
             "ok": false,
             "value": null,
-            "rule": "レンジ上限の終値突破＋出来高などを待つ"
+            "rule": "突破日の出来高None株以上（直前20日平均×1.5）"
           }
         ],
         "candle_signal": {
@@ -58808,10 +58904,16 @@
           "is_breakout": false,
           "confirmed": false,
           "breakout_level": 5123.0,
+          "breakout_trigger": 5148.61,
           "breakout_date": null,
+          "current_price": 4694.0,
+          "current_volume": 6967800.0,
+          "avg_volume20": 8603775.0,
+          "required_volume_ratio": 1.5,
+          "required_volume": null,
           "breakout_volume_ratio": null,
           "distance_from_breakout": -8.37,
-          "reason": "直近6営業日に20日レンジ高値を明確に終値突破した形跡なし"
+          "reason": "現在値4694円。20日レンジ上限5123円、明確な終値ブレイク目安5149円。突破日の出来高は直前20日平均の1.5倍以上（目安）を確認。"
         },
         "signal_icons": [
           {
@@ -60967,7 +61069,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-04T00:18:33.396083+09:00",
+        "per_updated_at": "2026-10-04T08:40:33.798392+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -63069,10 +63171,16 @@
             "rule": "週足がRANGE"
           },
           {
-            "label": "ブレイク確認待ち",
+            "label": "上限ブレイク",
+            "ok": false,
+            "value": 6615.91,
+            "rule": "終値6615.91円以上"
+          },
+          {
+            "label": "出来高増",
             "ok": false,
             "value": null,
-            "rule": "レンジ上限の終値突破＋出来高などを待つ"
+            "rule": "突破日の出来高None株以上（直前20日平均×1.5）"
           }
         ],
         "candle_signal": {
@@ -63114,10 +63222,16 @@
           "is_breakout": false,
           "confirmed": false,
           "breakout_level": 6583.0,
+          "breakout_trigger": 6615.91,
           "breakout_date": null,
+          "current_price": 5745.0,
+          "current_volume": 5734000.0,
+          "avg_volume20": 3500320.0,
+          "required_volume_ratio": 1.5,
+          "required_volume": null,
           "breakout_volume_ratio": null,
           "distance_from_breakout": -12.73,
-          "reason": "直近6営業日に20日レンジ高値を明確に終値突破した形跡なし"
+          "reason": "現在値5745円。20日レンジ上限6583円、明確な終値ブレイク目安6616円。突破日の出来高は直前20日平均の1.5倍以上（目安）を確認。"
         },
         "signal_icons": [
           {
@@ -65295,7 +65409,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-04T00:18:25.489660+09:00",
+        "per_updated_at": "2026-10-04T08:40:24.732668+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -67407,10 +67521,16 @@
           "is_breakout": false,
           "confirmed": false,
           "breakout_level": 3783.0,
+          "breakout_trigger": 3801.91,
           "breakout_date": null,
+          "current_price": 3568.0,
+          "current_volume": 637400.0,
+          "avg_volume20": 572080.0,
+          "required_volume_ratio": 1.5,
+          "required_volume": null,
           "breakout_volume_ratio": null,
           "distance_from_breakout": -5.68,
-          "reason": "直近6営業日に20日レンジ高値を明確に終値突破した形跡なし"
+          "reason": "現在値3568円。20日レンジ上限3783円、明確な終値ブレイク目安3802円。突破日の出来高は直前20日平均の1.5倍以上（目安）を確認。"
         },
         "signal_icons": [
           {
@@ -69574,7 +69694,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-04T00:18:59.675857+09:00",
+        "per_updated_at": "2026-10-04T08:41:03.811428+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -71686,10 +71806,16 @@
           "is_breakout": false,
           "confirmed": false,
           "breakout_level": 3144.0,
+          "breakout_trigger": 3159.72,
           "breakout_date": null,
+          "current_price": 2965.0,
+          "current_volume": 2145800.0,
+          "avg_volume20": 2621315.0,
+          "required_volume_ratio": 1.5,
+          "required_volume": null,
           "breakout_volume_ratio": null,
           "distance_from_breakout": -5.69,
-          "reason": "直近6営業日に20日レンジ高値を明確に終値突破した形跡なし"
+          "reason": "現在値2965円。20日レンジ上限3144円、明確な終値ブレイク目安3160円。突破日の出来高は直前20日平均の1.5倍以上（目安）を確認。"
         },
         "signal_icons": [
           {
@@ -73845,7 +73971,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-04T00:17:59.895028+09:00",
+        "per_updated_at": "2026-10-04T08:39:49.321444+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -75950,10 +76076,16 @@
           "is_breakout": false,
           "confirmed": false,
           "breakout_level": 514.0,
+          "breakout_trigger": 516.57,
           "breakout_date": null,
+          "current_price": 487.0,
+          "current_volume": 188200.0,
+          "avg_volume20": 72075.0,
+          "required_volume_ratio": 1.5,
+          "required_volume": null,
           "breakout_volume_ratio": null,
           "distance_from_breakout": -5.25,
-          "reason": "直近6営業日に20日レンジ高値を明確に終値突破した形跡なし"
+          "reason": "現在値487円。20日レンジ上限514円、明確な終値ブレイク目安517円。突破日の出来高は直前20日平均の1.5倍以上（目安）を確認。"
         },
         "signal_icons": [],
         "chart_history": [
@@ -78101,7 +78233,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": "Yahooから会社予想PER/EPSを取得できませんでした (timeseries: Yahoo forward P/E unavailable (https://query1.finance.yahoo.com: unavailable; https://query2.finance.yahoo.com: unavailable); https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized)",
-        "per_updated_at": "2026-10-04T00:19:04.869847+09:00",
+        "per_updated_at": "2026-10-04T08:41:11.450604+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -80203,10 +80335,16 @@
           "is_breakout": false,
           "confirmed": false,
           "breakout_level": 3595.0,
+          "breakout_trigger": 3612.97,
           "breakout_date": null,
+          "current_price": 3105.0,
+          "current_volume": 207100.0,
+          "avg_volume20": 145320.0,
+          "required_volume_ratio": 1.5,
+          "required_volume": null,
           "breakout_volume_ratio": null,
           "distance_from_breakout": -13.63,
-          "reason": "直近6営業日に20日レンジ高値を明確に終値突破した形跡なし"
+          "reason": "現在値3105円。20日レンジ上限3595円、明確な終値ブレイク目安3613円。突破日の出来高は直前20日平均の1.5倍以上（目安）を確認。"
         },
         "signal_icons": [
           {
@@ -82314,7 +82452,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-04T00:19:10.058222+09:00",
+        "per_updated_at": "2026-10-04T08:41:18.553681+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -84416,10 +84554,16 @@
           "is_breakout": false,
           "confirmed": false,
           "breakout_level": 8416.0,
+          "breakout_trigger": 8458.08,
           "breakout_date": null,
+          "current_price": 1567.0,
+          "current_volume": 1081200.0,
+          "avg_volume20": 364795.0,
+          "required_volume_ratio": 1.5,
+          "required_volume": null,
           "breakout_volume_ratio": null,
           "distance_from_breakout": -81.38,
-          "reason": "直近6営業日に20日レンジ高値を明確に終値突破した形跡なし"
+          "reason": "現在値1567円。20日レンジ上限8416円、明確な終値ブレイク目安8458円。突破日の出来高は直前20日平均の1.5倍以上（目安）を確認。"
         },
         "signal_icons": [
           {
@@ -86583,7 +86727,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-04T00:18:05.242602+09:00",
+        "per_updated_at": "2026-10-04T08:39:56.922150+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -88692,10 +88836,16 @@
           "is_breakout": false,
           "confirmed": false,
           "breakout_level": 21105.0,
+          "breakout_trigger": 21210.52,
           "breakout_date": null,
+          "current_price": 20585.0,
+          "current_volume": 1299200.0,
+          "avg_volume20": 1105555.0,
+          "required_volume_ratio": 1.5,
+          "required_volume": null,
           "breakout_volume_ratio": null,
           "distance_from_breakout": -2.46,
-          "reason": "直近6営業日に20日レンジ高値を明確に終値突破した形跡なし"
+          "reason": "現在値20585円。20日レンジ上限21105円、明確な終値ブレイク目安21211円。突破日の出来高は直前20日平均の1.5倍以上（目安）を確認。"
         },
         "signal_icons": [
           {
@@ -90866,7 +91016,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-04T00:18:52.243699+09:00",
+        "per_updated_at": "2026-10-04T08:40:54.628759+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -92968,10 +93118,16 @@
           "is_breakout": false,
           "confirmed": false,
           "breakout_level": 3269.0,
+          "breakout_trigger": 3285.34,
           "breakout_date": null,
+          "current_price": 2856.5,
+          "current_volume": 30938400.0,
+          "avg_volume20": 25635250.0,
+          "required_volume_ratio": 1.5,
+          "required_volume": null,
           "breakout_volume_ratio": null,
           "distance_from_breakout": -12.62,
-          "reason": "直近6営業日に20日レンジ高値を明確に終値突破した形跡なし"
+          "reason": "現在値2856円。20日レンジ上限3269円、明確な終値ブレイク目安3285円。突破日の出来高は直前20日平均の1.5倍以上（目安）を確認。"
         },
         "signal_icons": [
           {
@@ -95135,7 +95291,7 @@
         "valuation_source": "Yahoo!ファイナンス（参考指標）",
         "valuation_error": null,
         "per_forecast_error": null,
-        "per_updated_at": "2026-10-04T00:17:54.525014+09:00",
+        "per_updated_at": "2026-10-04T08:39:42.160788+09:00",
         "per_actual_attribution": {
           "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
           "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
