@@ -848,16 +848,15 @@ def monthly_closes(rows):
     return closes
 
 def monthly_macd_bottom_signal(monthly_vals, weekly_rsi):
-    """Strict multi-timeframe bottom clue: weekly RSI<=30 plus monthly MACD turn."""
+    """Bottom clue: expose monthly MACD state separately from the weekly RSI gate."""
     result = {
-        'active': False, 'state': 'データ不足', 'weekly_rsi_ok': False,
+        'active': False, 'state': 'データ不足', 'macd_active': False, 'weekly_rsi_ok': False,
         'monthly_points': len(monthly_vals), 'macd': None, 'signal': None,
-        'hist': None, 'prev_hist': None, 'prev2_hist': None, 'gc_gap': None, 'hist_change': None, 'hist_change_prev': None,
-        'reason': '週足RSIまたは月足MACDに必要な履歴が不足しています。'
+        'hist': None, 'prev_hist': None, 'prev2_hist': None, 'hist_change': None, 'hist_change_prev': None,
+        'reason': '月足MACDに必要な履歴が不足しています。'
     }
-    if weekly_rsi is None:
-        return result
-    result['weekly_rsi_ok'] = weekly_rsi <= 30
+    if weekly_rsi is not None:
+        result['weekly_rsi_ok'] = weekly_rsi <= 30
     if len(monthly_vals) < 30:
         result['reason'] = f'月足データが不足（{len(monthly_vals)}か月）。30か月以上を必要とします。'
         return result
@@ -865,25 +864,32 @@ def monthly_macd_bottom_signal(monthly_vals, weekly_rsi):
     if len(hist) < 3:
         return result
     h0, h1, h2 = hist[0], hist[1], hist[2]
-    gc_gap = max(float(sig[0]) - float(m[0]), 0.0)
-    result.update({'macd': m[0], 'signal': sig[0], 'hist': h0, 'prev_hist': h1, 'prev2_hist': h2, 'gc_gap': gc_gap, 'hist_change': h0 - h1, 'hist_change_prev': h1 - h2})
-    if not result['weekly_rsi_ok']:
-        result['state'] = '週足RSI条件未達'
-        result['reason'] = f'週足RSIが30以下ではありません（{weekly_rsi:.1f}）。'
-        return result
+    result.update({
+        'macd': m[0], 'signal': sig[0], 'hist': h0,
+        'prev_hist': h1, 'prev2_hist': h2,
+        'hist_change': h0 - h1, 'hist_change_prev': h1 - h2
+    })
     golden_cross = h0 >= 0 and h1 < 0
     pre_golden = h0 < 0 and h0 > h1 > h2
     if golden_cross:
-        result['active'] = True
+        result['macd_active'] = True
         result['state'] = '月足MACDゴールデンクロス'
-        result['reason'] = f'週足RSI {weekly_rsi:.1f}（30以下）＋月足MACDがゴールデンクロス。ヒストグラムは{h0:.3f}。'
     elif pre_golden:
-        result['active'] = True
+        result['macd_active'] = True
         result['state'] = '月足MACD GC手前・差分縮小'
-        result['reason'] = f'週足RSI {weekly_rsi:.1f}（30以下）＋月足MACDはGC前だが、ヒストグラムが{h2:.3f}→{h1:.3f}→{h0:.3f}と2か月連続で縮小。'
     else:
-        result['state'] = 'MACD条件未達'
-        result['reason'] = f'週足RSIは30以下だが、月足MACDのGCまたは差分縮小を確認できません。ヒストグラム={h0:.3f}。'
+        result['state'] = '月足MACD条件未達'
+
+    result['active'] = bool(result['weekly_rsi_ok'] and result['macd_active'])
+    if result['active']:
+        if golden_cross:
+            result['reason'] = f'週足RSI {weekly_rsi:.1f}（30以下）＋月足MACDがゴールデンクロス。'
+        else:
+            result['reason'] = f'週足RSI {weekly_rsi:.1f}（30以下）＋月足MACDはGC前でヒストグラムが2か月連続縮小。'
+    elif not result['weekly_rsi_ok']:
+        result['reason'] = f'月足MACDは「{result["state"]}」ですが、週足RSI条件（30以下）は未成立です。'
+    else:
+        result['reason'] = f"週足RSIは30以下ですが、月足MACDは「{result['state']}」です。"
     return result
 
 def breadth_points(b):
