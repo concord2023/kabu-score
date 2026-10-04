@@ -128,9 +128,14 @@ def classify_regime(rows, candle_signal=None, breakout_signal=None):
     # A stock may have a positive weekly bias while still consolidating below
     # a clear range ceiling.  Near the ceiling, the actionable state is
     # "breakout waiting", not an established uptrend BUY.
+    # Being close to the current range ceiling is itself a more specific
+    # state than a generic weekly-UP label.  Do not require breakout status
+    # to be 'なし': a previous failed/weak breakout can still leave the stock
+    # in a pre-breakout consolidation.
     near_breakout = (
-        not breakout_watch and bo.get('status') == 'なし'
-        and range_distance is not None and -3.0 <= range_distance < 0.5
+        not breakout_watch
+        and range_distance is not None
+        and -3.0 <= range_distance < 0.5
     )
     if breakout_watch:
         state = 'RANGE_BREAKOUT'
@@ -143,12 +148,25 @@ def classify_regime(rows, candle_signal=None, breakout_signal=None):
         reason = (f'レンジブレイク待ち。現在値は20日レンジ上限{range_high:.0f}円の{range_distance:+.1f}%で、明確な終値ブレイク目安は{range_trigger:.0f}円。'
                   '上昇トレンドBUYではなく、まずレンジ上限突破を確認する局面。')
     elif weekly_dir == 'UP':
+        # Weekly UP by itself is not enough to call a stock an established
+        # daily uptrend.  If price is still below the 75MA or the 25MA has not
+        # established itself above the 75MA, treat it as a consolidation /
+        # transition instead.  This prevents a base near a range ceiling from
+        # being promoted to an 'uptrend BUY' merely by a short 5-day high.
+        daily_uptrend_structure = (
+            vs75 is not None and vs75 > 0
+            and daily_ma25_slope5 is not None and daily_ma25_slope5 > 0
+            and daily_ma25 is not None and daily_ma75 is not None and daily_ma25 > daily_ma75
+        )
         if (vs20 is not None and vs20 < 0) or (ret5 is not None and ret5 < 0):
             state = 'UPTREND_PULLBACK'
             reason = '週足は上向き。日足は20日MA下/5日下落で押し目状態。'
+        elif not daily_uptrend_structure:
+            state = 'RANGE_TRANSITION'
+            reason = '週足は上向きでも、日足では25日MA・75日MAの上昇構造が未完成。レンジ上限突破を優先確認する局面。'
         else:
             state = 'UPTREND'
-            reason = '週足の方向が上向きで、日足も大きく崩れていない。'
+            reason = '週足・日足とも上昇構造が確認できる。'
     elif weekly_dir == 'DOWN':
         stabilized = (ret1 is not None and ret1 > 0 and ret5 is not None and ret5 >= -5 and
                       ((ret20 is not None and ret20 < 0) or (vs20 is not None and vs20 > 0)))
