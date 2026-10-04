@@ -1,12 +1,12 @@
 {
-  "updated_at": "2026-10-04T13:33:35.828983+09:00",
+  "updated_at": "2026-10-04T13:43:14.495021+09:00",
   "date": "2026-10-04",
   "title": "今日の注目5選",
   "status": "ok",
   "method": "同日公開の投資家話題・ニュース/開示・大量保有・カタリスト・アナリスト・テーマ・YouTubeを複数の検索角度から収集。投資家話題順位、情報源の種類、同日言及数、株価/出来高、具体的材料を組み合わせ、複数のルートのいずれかを満たす銘柄を最大5件表示する。無理に5件へ水増ししない。これはBUY判定ではない。",
   "source_policy": "各記事・動画へのリンクと発信元を保存。外部情報の注目度とkabu-scoreの総合BUY判定は別物として表示する。",
   "errors": [],
-  "candidate_pool": 78,
+  "candidate_pool": 79,
   "eligible_count": 13,
   "candidates": [
     {
@@ -104,7 +104,7 @@
         "ニュース",
         "開示"
       ],
-      "score": 33.7,
+      "score": 31.5,
       "kabu_score": null,
       "signal": null,
       "rsi14": null,
@@ -113,9 +113,9 @@
       "heat_score": 10.0,
       "selection_basis": [
         "4種類の情報源",
-        "同日12件の言及"
+        "同日11件の言及"
       ],
-      "reason": "4種類の情報源＋同日12件の言及（話題強度10.0）。",
+      "reason": "4種類の情報源＋同日11件の言及（話題強度10.0）。",
       "movement_type": "複数情報源で話題",
       "material_summary": "オープンAIの上場延期でソフトバンクGが急落、神戸物産は大幅高/日経平均続落【今日の注目株＆日本株市場見通し】「デイリーZAi」9月14日号(ダイヤモンド・ザイ) - Yahoo!ファイナンス",
       "explanation": {
@@ -124,22 +124,22 @@
         "material_category": "株価上昇・需給/値動き",
         "score_breakdown": {
           "source_types": 4,
-          "mentions": 12,
+          "mentions": 11,
           "investor_rank": null
         }
       },
       "research_memo": {
         "headline": "オープンAIの上場延期でソフトバンクGが急落、神戸物産は大幅高/日経平均続落【今日の注目株＆日本株市場見通し】「デイリーZAi」9月14日号(ダイヤモンド・ザイ) - Yahoo!ファイナンス",
-        "summary": "【話題の事実】情報源は4種類（YouTube・テーマ・ニュース・開示）。同日言及は12件。【材料】オープンAIの上場延期でソフトバンクGが急落、神戸物産は大幅高/日経平均続落【今日の注目株＆日本株市場見通し】「デイリーZAi」9月14日号(ダイヤモンド・ザイ) - Yahoo!ファイナンス / ソフトバンクG買い先行、住友電工・NECはメタと海底ケーブル/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月24日号（ダイヤモンド・ザイ） - Yahoo!ニュース / 今週は米ISM・雇用統計/ソフトバンクGが時価総額トップ！/日経平均最高値【今日の注目株＆日本株市場見通し】「デイリーZAi」6月1日号(ダイヤモンド・ザイ) - Yahoo!ファイナンス【値動き確認】日次株価データからの確認材料はありません。",
+        "summary": "【話題の事実】情報源は4種類（YouTube・テーマ・ニュース・開示）。同日言及は11件。【材料】オープンAIの上場延期でソフトバンクGが急落、神戸物産は大幅高/日経平均続落【今日の注目株＆日本株市場見通し】「デイリーZAi」9月14日号(ダイヤモンド・ザイ) - Yahoo!ファイナンス / ソフトバンクG買い先行、住友電工・NECはメタと海底ケーブル/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月24日号（ダイヤモンド・ザイ） - Yahoo!ニュース / 今週は米ISM・雇用統計/ソフトバンクGが時価総額トップ！/日経平均最高値【今日の注目株＆日本株市場見通し】「デイリーZAi」6月1日号(ダイヤモンド・ザイ) - Yahoo!ファイナンス【値動き確認】日次株価データからの確認材料はありません。",
         "why": "【選定理由】複数種類の情報源で同日に言及が重なったため、単一記事だけの話題ではないと判断して残しました。",
         "category": "株価上昇・需給/値動き",
         "evidence": [
           "情報源は4種類（YouTube・テーマ・ニュース・開示）",
-          "同日言及は12件"
+          "同日言及は11件"
         ],
         "check_point": "見出しだけでは因果関係を断定しません。決算短信・適時開示・原記事本文など、リンク先の一次情報を確認してください。",
         "source_count": 4,
-        "mention_count": 12,
+        "mention_count": 11,
         "sources": [
           "YouTube",
           "テーマ",
@@ -181,10 +181,10 @@
           "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9Eck1XWWEwSUc1MkFyOTRZMFVKSGFGSjV0RXZMU09MaXJOSG41YURGcUozWGtfcTVmaVZ4TEQycDNtOWFjamx0d3UtcmZmNGZaT1BLU1ZqZ2pNSjlkUmZj?oc=5"
         },
         {
-          "name": "大量保有・開示検索",
-          "type": "開示",
-          "title": "「ソフトバンク」ジーニーの全保有株を売却 LINEヤフーの保有割合も引き下げ 2024年8月の大量保有報告書 - M＆A Online",
-          "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE1sT2s3M0J5d0lQOVNRaGd4Nmdpd1VhOV9Wd0NVa1c2Y0FETlhSdlB5dWJNX1pycWFKRkNFREIwdEZLc1RSMHRKTGZ2Um1pRFdvY2I5S2dzbHg1TUdNUEtpcw?oc=5"
+          "name": "テーマ・業界検索",
+          "type": "テーマ",
+          "title": "「AIデータセンター」関連銘柄を紹介！ オープンAIがソフトバンクGやオラクルなどと提携して｢巨大AIデータセンター｣建設を発表するなど、世界中で需要拡大！ - ダイヤモンド・オンライン",
+          "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTFBxR1ZjdFBnRjctRnBUYWpKNFhHYTRZSUN2NE85eUtjcEZlakVhaTlhZzdqMUlvYkR3ZUR5RjQtMWNvX2JKX0Y4bVFiYjkzUEZOTFBV?oc=5"
         }
       ],
       "selection_eligible": true
@@ -255,83 +255,6 @@
           "type": "YouTube",
           "title": "【ライブ】日経平均株価反落/株式投資/最新情報/億り人が語る \"半導体・AI・不動産\"の勝ち筋/ビットコイン最高値/メタプラネット決算｜8月14日(木)〈Every Stock NEWS 矢野 愛実〉 - YouTube",
           "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE5rYnItcFZCUU1BSndRa1BiVENmM2xaQlFTS3Nlckh2VlRnMnRTVHAyVTNkNVJrdUtoa2NpQWtrRmxmM3FfUV9sM2lhV2lqOG9YM1JQUFp3?oc=5"
-        }
-      ],
-      "selection_eligible": true
-    },
-    {
-      "code": "485A",
-      "name": "パワーエックス",
-      "market": "グロース（内国株式）",
-      "industry": null,
-      "source_types": [
-        "YouTube",
-        "ニュース"
-      ],
-      "score": 9.0,
-      "kabu_score": 28,
-      "signal": "WATCH",
-      "rsi14": 49.5,
-      "change": 4.67,
-      "volume_ratio": 0.62,
-      "heat_score": 9.0,
-      "selection_basis": [
-        "2種類の情報源",
-        "同日3件の言及",
-        "前日比+4.67%"
-      ],
-      "reason": "2種類の情報源＋同日3件の言及＋前日比+4.67%（話題強度9.0）。",
-      "movement_type": "複数情報源で話題",
-      "material_summary": "(株)パワーエックス【485A】：株価・株式情報（夜間PTS含む） - Yahoo!ファイナンス",
-      "explanation": {
-        "why_selected": "2種類の情報源",
-        "what_is_happening": "(株)パワーエックス【485A】：株価・株式情報（夜間PTS含む） - Yahoo!ファイナンス",
-        "material_category": "投資家の話題・材料",
-        "score_breakdown": {
-          "source_types": 2,
-          "mentions": 3,
-          "investor_rank": null
-        }
-      },
-      "research_memo": {
-        "headline": "(株)パワーエックス【485A】：株価・株式情報（夜間PTS含む） - Yahoo!ファイナンス",
-        "summary": "【話題の事実】情報源は2種類（YouTube・ニュース）。同日言及は3件。【材料】(株)パワーエックス【485A】：株価・株式情報（夜間PTS含む） - Yahoo!ファイナンス / 【ライブ】日経平均株価大幅下落/エアウォーター 大幅高/パワーエックス 初の海外案件を受注/株式投資/最新情報｜6月23日(火)〈Every Stock NEWS〉 - YouTube / 【日本株の追い風 今後20年は続く】投資家人生に一度の大変革期／AI・半導体株に集中しすぎ／バーゲンセールの企業は？／パワーエックス、テンバガー理由／IPO改革で個人にチャンス到来／クロスオーバーとは - YouTube【値動き確認】株価は前日比+4.67%。出来高は平常比0.6倍。",
-        "why": "【選定理由】複数種類の情報源で同日に言及が重なったため、単一記事だけの話題ではないと判断して残しました。",
-        "category": "投資家の話題・材料",
-        "evidence": [
-          "情報源は2種類（YouTube・ニュース）",
-          "同日言及は3件",
-          "株価は前日比+4.67%",
-          "出来高は平常比0.6倍"
-        ],
-        "check_point": "見出しだけでは因果関係を断定しません。決算短信・適時開示・原記事本文など、リンク先の一次情報を確認してください。",
-        "source_count": 2,
-        "mention_count": 3,
-        "sources": [
-          "YouTube",
-          "ニュース"
-        ],
-        "detail": "(株)パワーエックス【485A】：株価・株式情報（夜間PTS含む） - Yahoo!ファイナンス / 【ライブ】日経平均株価大幅下落/エアウォーター 大幅高/パワーエックス 初の海外案件を受注/株式投資/最新情報｜6月23日(火)〈Every Stock NEWS〉 - YouTube / 【日本株の追い風 今後20年は続く】投資家人生に一度の大変革期／AI・半導体株に集中しすぎ／バーゲンセールの企業は？／パワーエックス、テンバガー理由／IPO改革で個人にチャンス到来／クロスオーバーとは - YouTube",
-        "heat_score": 9.0
-      },
-      "sources": [
-        {
-          "name": "ニュース・材料検索",
-          "type": "ニュース",
-          "title": "(株)パワーエックス【485A】：株価・株式情報（夜間PTS含む） - Yahoo!ファイナンス",
-          "url": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE1wYmNkNFVBRHc5RWpHSkFQS2hWaUZrSVduUVhLLWktYm5EaGNld3RFUURJbkpxM2NfUlBsN0RvLVp2NGZuYVE2bTRlY0N6cUszUmc?oc=5"
-        },
-        {
-          "name": "YouTube検索",
-          "type": "YouTube",
-          "title": "【ライブ】日経平均株価大幅下落/エアウォーター 大幅高/パワーエックス 初の海外案件を受注/株式投資/最新情報｜6月23日(火)〈Every Stock NEWS〉 - YouTube",
-          "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE1nUXJfbnZZQW5GcjBHb001ckdpX3A2SUNuUVhXQjJ6eFhoQjNWSFlNN0xqYWlMa1loS3pvT0FvbVhyUmNMSWw2WG9pZHVwMHY2ZWc1NGR3?oc=5"
-        },
-        {
-          "name": "YouTube検索",
-          "type": "YouTube",
-          "title": "【日本株の追い風 今後20年は続く】投資家人生に一度の大変革期／AI・半導体株に集中しすぎ／バーゲンセールの企業は？／パワーエックス、テンバガー理由／IPO改革で個人にチャンス到来／クロスオーバーとは - YouTube",
-          "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE00X0V0bkFIdzh3eHFzaHdwS2xhX214UVREOVFnVXlFVmZZeTVRamhQWmc5Y0VpUU9aTjQyS3IwcVFJNFhLb2puMGFLUjZIV0dYZlJzNVNn?oc=5"
         }
       ],
       "selection_eligible": true
@@ -418,6 +341,86 @@
           "type": "YouTube",
           "title": "【ライブ】日経平均株価 反発/フジクラ/アドバンテスト/SBG/株式投資/最新情報/日本株はどう動く/メガバンク 政策保有株売り出し進む｜11月25日(火)〈Every Stock NEWS矢野愛実〉 - YouTube",
           "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTFBsTHlxeXFWcUNUV1E0TVllU3BNZ3V0bkp0ZTZEWVZLQ3oxWnVReWRlQkpXa3ZmT0tRa21CVWJxVjV3SnNiR01xeGFXYXJ0ajV0U2JFYTZ3?oc=5"
+        }
+      ],
+      "selection_eligible": true
+    },
+    {
+      "code": "6954",
+      "name": "ファナック",
+      "market": "プライム（内国株式）",
+      "industry": null,
+      "source_types": [
+        "YouTube",
+        "ニュース"
+      ],
+      "score": 12.0,
+      "kabu_score": null,
+      "signal": null,
+      "rsi14": null,
+      "change": null,
+      "volume_ratio": null,
+      "heat_score": 8.0,
+      "selection_basis": [
+        "2種類の情報源",
+        "同日4件の言及"
+      ],
+      "reason": "2種類の情報源＋同日4件の言及（話題強度8.0）。",
+      "movement_type": "複数情報源で話題",
+      "material_summary": "イビデン・NEC急伸/決算序盤戦、ファナック・キーエンス速報/日経平均最高値【今日の注目株＆日本株市場見通し】「デイリーZAi」4月24日号 - ダイヤモンド・オンライン",
+      "explanation": {
+        "why_selected": "2種類の情報源",
+        "what_is_happening": "イビデン・NEC急伸/決算序盤戦、ファナック・キーエンス速報/日経平均最高値【今日の注目株＆日本株市場見通し】「デイリーZAi」4月24日号 - ダイヤモンド・オンライン",
+        "material_category": "決算・業績材料",
+        "score_breakdown": {
+          "source_types": 2,
+          "mentions": 4,
+          "investor_rank": null
+        }
+      },
+      "research_memo": {
+        "headline": "イビデン・NEC急伸/決算序盤戦、ファナック・キーエンス速報/日経平均最高値【今日の注目株＆日本株市場見通し】「デイリーZAi」4月24日号 - ダイヤモンド・オンライン",
+        "summary": "【話題の事実】情報源は2種類（YouTube・ニュース）。同日言及は4件。【材料】イビデン・NEC急伸/決算序盤戦、ファナック・キーエンス速報/日経平均最高値【今日の注目株＆日本株市場見通し】「デイリーZAi」4月24日号 - ダイヤモンド・オンライン / 【日本株】株価上昇に期待できる｢2026年の大本命株｣5銘柄！ フィジカルAIが話題の｢ファナック｣、今期は減益も来期は2ケタ増益予想の｢トヨタ自動車｣に注目！ - ダイヤモンド・オンライン / ファナックや安川電「産業用ロボット・自動化システム」関連銘柄/日経平均反落【今日の注目株＆日本株市場見通し】「デイリーZAi」6月4日号（ダイヤモンド・ザイ） - Yahoo!ニュース【値動き確認】日次株価データからの確認材料はありません。",
+        "why": "【選定理由】複数種類の情報源で同日に言及が重なったため、単一記事だけの話題ではないと判断して残しました。",
+        "category": "決算・業績材料",
+        "evidence": [
+          "情報源は2種類（YouTube・ニュース）",
+          "同日言及は4件"
+        ],
+        "check_point": "見出しだけでは因果関係を断定しません。決算短信・適時開示・原記事本文など、リンク先の一次情報を確認してください。",
+        "source_count": 2,
+        "mention_count": 4,
+        "sources": [
+          "YouTube",
+          "ニュース"
+        ],
+        "detail": "イビデン・NEC急伸/決算序盤戦、ファナック・キーエンス速報/日経平均最高値【今日の注目株＆日本株市場見通し】「デイリーZAi」4月24日号 - ダイヤモンド・オンライン / 【日本株】株価上昇に期待できる｢2026年の大本命株｣5銘柄！ フィジカルAIが話題の｢ファナック｣、今期は減益も来期は2ケタ増益予想の｢トヨタ自動車｣に注目！ - ダイヤモンド・オンライン / ファナックや安川電「産業用ロボット・自動化システム」関連銘柄/日経平均反落【今日の注目株＆日本株市場見通し】「デイリーZAi」6月4日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
+        "heat_score": 8.0
+      },
+      "sources": [
+        {
+          "name": "ニュース・材料検索",
+          "type": "ニュース",
+          "title": "イビデン・NEC急伸/決算序盤戦、ファナック・キーエンス速報/日経平均最高値【今日の注目株＆日本株市場見通し】「デイリーZAi」4月24日号 - ダイヤモンド・オンライン",
+          "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE1LTjN3dkhSWV9PUUM5TWVWQlJNbG9kcFY1TldRQlAza1NoNTE1QkdwRnY1aTVHU2huQ0dXOXRqbUFuZzZVNUZQdm1sTDByVmtySUdJ?oc=5"
+        },
+        {
+          "name": "ニュース・材料検索",
+          "type": "ニュース",
+          "title": "【日本株】株価上昇に期待できる｢2026年の大本命株｣5銘柄！ フィジカルAIが話題の｢ファナック｣、今期は減益も来期は2ケタ増益予想の｢トヨタ自動車｣に注目！ - ダイヤモンド・オンライン",
+          "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE5tczR2TW5xbzM4ckN6azNZOFNONWhRa1RFSjdOQk1iQjdHWTNXSjJobWZZN2dRd1pEcE9LdHh4NzhOcEFsc20zWXFQWmxEZnhRYm9n?oc=5"
+        },
+        {
+          "name": "ニュース・話題検索",
+          "type": "ニュース",
+          "title": "ファナックや安川電「産業用ロボット・自動化システム」関連銘柄/日経平均反落【今日の注目株＆日本株市場見通し】「デイリーZAi」6月4日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
+          "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE1OLVhlbmpRM2N5aWI3djhuRWFNZHdJaUkyV1ZvRmt0dHEzMDIyQl9zT3lEVExtY05wN3p6WGwzRkN2N0RrdWpRM0tHcWVIR0hWN19pY1hPeFdvZE15V0hpamlUTXkyRF9DTTd4WDhNeEx0ZGpSRkpyWUNJeHFzNGM?oc=5"
+        },
+        {
+          "name": "YouTube検索",
+          "type": "YouTube",
+          "title": "【8月3日(月)東京株式市場】日経平均株価は3日ぶり反落📉607円安／#協調介入 、市場は何を警戒？／#キオクシア 上昇、株主還元強化を好感／#ファナック 急落、市場予想届かず4カ月ぶり安値 - YouTube",
+          "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE9fek1DNnZNV0xiQl9FTkV2b09IdVBvNXlXNFNTakRubnZGbzZfdU9aRHdpQ3h2ZGYyaUNXZnJOdGRUTWgzQWhjaUdXZ2U3c2tnd0F5RmRR?oc=5"
         }
       ],
       "selection_eligible": true
