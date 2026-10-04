@@ -59,7 +59,7 @@ def weekly_metrics(rows):
     return result
 
 
-def classify_regime(rows, candle_signal=None):
+def classify_regime(rows, candle_signal=None, breakout_signal=None):
     wm = weekly_metrics(rows)
     vals = [_close(r) for r in rows]
     vals = [x for x in vals if x is not None]
@@ -108,7 +108,15 @@ def classify_regime(rows, candle_signal=None):
     else:
         weekly_dir = 'RANGE'
 
-    if weekly_dir == 'UP':
+    # A confirmed range breakout is a more specific current-state label than
+    # generic UPTREND/UPTREND_PULLBACK.  Keep the classification and the BUY
+    # route aligned: if the stock is being bought because it has just broken
+    # out of its range, the UI should say that explicitly.
+    bo = breakout_signal or {}
+    if bo.get('confirmed') and weekly_dir in ('UP', 'RANGE'):
+        state = 'RANGE_BREAKOUT'
+        reason = 'レンジ上限を確認付きでブレイク中。現在の買いシグナルは通常の上昇トレンドではなく、レンジブレイク・再上昇型。'
+    elif weekly_dir == 'UP':
         if (vs20 is not None and vs20 < 0) or (ret5 is not None and ret5 < 0):
             state = 'UPTREND_PULLBACK'
             reason = '週足は上向き。日足は20日MA下/5日下落で押し目状態。'
@@ -322,6 +330,7 @@ def decide(stock, regime):
         'DOWNTREND_REVERSAL_WAIT':'BOTTOM_REVERSAL',
         'DOWNTREND_REVERSAL_CONFIRMED':'BOTTOM_REVERSAL',
         'UPTREND_PULLBACK':'UPTREND_PULLBACK',
+        'RANGE_BREAKOUT':'RANGE_BREAKOUT',
         'UPTREND':'UPTREND',
         'RANGE_TRANSITION':'RANGE_TRANSITION',
         'DOWNTREND_CONTINUED':'DOWNTREND_CONTINUED',

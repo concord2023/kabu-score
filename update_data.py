@@ -2031,7 +2031,7 @@ def main():
                 s = calc(rows, breadth_cache, supply_info)
                 target_date = rows[0]['date']
 
-            regime = classify_regime(rows, s.get('candle_signal'))
+            regime = classify_regime(rows, s.get('candle_signal'), s.get('breakout_signal'))
             decision = decide(s, regime)
             s.update(regime)
             s.update(decision)
