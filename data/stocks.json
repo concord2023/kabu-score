@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-04T12:52:08.035876+09:00",
+  "updated_at": "2026-10-04T13:18:17.104750+09:00",
   "source": "IRBANK API + 豆腐ハードボイルド（騰落銘柄数）",
   "api_strategy": "price:800-row target/stock; weekly margin:1 endpoint/stock only when cache is stale; valuations:20 fiscal years/stock; Yahoo company forecast PER/EPS/stock; breadth:1/run; monthly MACD:1000-row target only for weekly-RSI<=30; quota preflight via /usage",
   "stocks": {
@@ -11,6 +11,8 @@
       "volume_ratio": 1.58,
       "volume_ratio_basis": "当日出来高 ÷ 直前20営業日の平均出来高",
       "volume_surge_threshold": 1.8,
+      "high5_prev": 5368.0,
+      "breakout5_prev": true,
       "ma5": 5215.6,
       "ma20": 5065.65,
       "ma25": 5130.4,
@@ -3937,23 +3939,49 @@
       "regime": "UPTREND",
       "regime_reason": "週足の方向が上向きで、日足も大きく崩れていない。",
       "signal": "WATCH",
-      "signal_reason": "上昇トレンド継続。新規買いは追いかけず、20日MAなどへの押し目を待つ。",
-      "missing_conditions": [],
+      "signal_reason": "上昇トレンド継続中。ただし追いかけ買いはせず、再上昇の6条件（週足上昇・25日MA上・25日MA上向き・5日高値更新・出来高1.2倍・RSI50〜70）が揃うまでWATCH。押し目になれば「上昇押し目」へ分類。",
+      "missing_conditions": [
+        "25日MAが上向き"
+      ],
       "condition_checks": [
         {
-          "label": "週足方向",
+          "label": "週足上昇トレンド",
           "ok": true,
           "value": "UP",
           "rule": "週足方向=UP"
         },
         {
-          "label": "押し目待ち",
+          "label": "25日MAより上",
           "ok": true,
-          "value": 10.51,
-          "rule": "20日MA付近への調整を待つ"
+          "value": 9.11,
+          "rule": "25日MA乖離>0%"
+        },
+        {
+          "label": "25日MAが上向き",
+          "ok": false,
+          "value": -0.14,
+          "rule": "25日MAの5日傾き>0%"
+        },
+        {
+          "label": "直近5営業日高値を更新",
+          "ok": true,
+          "value": 5368.0,
+          "rule": "現在終値>直前5営業日の高値"
+        },
+        {
+          "label": "出来高が平均超",
+          "ok": true,
+          "value": 1.58,
+          "rule": "当日出来高÷直前20日平均>=1.2倍"
+        },
+        {
+          "label": "RSIが健全な上昇域",
+          "ok": true,
+          "value": 52.9,
+          "rule": "RSI50以上70未満"
         }
       ],
-      "one_condition_away": false,
+      "one_condition_away": true,
       "signal_type": "UPTREND",
       "code": "5803",
       "name": "フジクラ",
@@ -4086,7 +4114,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T12:52:13.086238+09:00",
+      "per_updated_at": "2026-10-04T13:18:27.200341+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -4105,6 +4133,8 @@
       "volume_ratio": 0.9,
       "volume_ratio_basis": "当日出来高 ÷ 直前20営業日の平均出来高",
       "volume_surge_threshold": 1.8,
+      "high5_prev": 3787.0,
+      "breakout5_prev": false,
       "ma5": 3742.2,
       "ma20": 3739.9,
       "ma25": 3781.44,
@@ -8239,20 +8269,49 @@
       "regime": "UPTREND",
       "regime_reason": "週足の方向が上向きで、日足も大きく崩れていない。",
       "signal": "WATCH",
-      "signal_reason": "上昇トレンド継続。新規買いは追いかけず、20日MAなどへの押し目を待つ。",
-      "missing_conditions": [],
+      "signal_reason": "上昇トレンド継続中。ただし追いかけ買いはせず、再上昇の6条件（週足上昇・25日MA上・25日MA上向き・5日高値更新・出来高1.2倍・RSI50〜70）が揃うまでWATCH。押し目になれば「上昇押し目」へ分類。",
+      "missing_conditions": [
+        "25日MAより上",
+        "25日MAが上向き",
+        "直近5営業日高値を更新",
+        "出来高が平均超"
+      ],
       "condition_checks": [
         {
-          "label": "週足方向",
+          "label": "週足上昇トレンド",
           "ok": true,
           "value": "UP",
           "rule": "週足方向=UP"
         },
         {
-          "label": "押し目待ち",
+          "label": "25日MAより上",
+          "ok": false,
+          "value": -0.75,
+          "rule": "25日MA乖離>0%"
+        },
+        {
+          "label": "25日MAが上向き",
+          "ok": false,
+          "value": -0.23,
+          "rule": "25日MAの5日傾き>0%"
+        },
+        {
+          "label": "直近5営業日高値を更新",
+          "ok": false,
+          "value": 3787.0,
+          "rule": "現在終値>直前5営業日の高値"
+        },
+        {
+          "label": "出来高が平均超",
+          "ok": false,
+          "value": 0.9,
+          "rule": "当日出来高÷直前20日平均>=1.2倍"
+        },
+        {
+          "label": "RSIが健全な上昇域",
           "ok": true,
-          "value": 0.35,
-          "rule": "20日MA付近への調整を待つ"
+          "value": 60.8,
+          "rule": "RSI50以上70未満"
         }
       ],
       "one_condition_away": false,
@@ -8364,7 +8423,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T12:52:18.075299+09:00",
+      "per_updated_at": "2026-10-04T13:18:38.311976+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -8383,6 +8442,8 @@
       "volume_ratio": 0.92,
       "volume_ratio_basis": "当日出来高 ÷ 直前20営業日の平均出来高",
       "volume_surge_threshold": 1.8,
+      "high5_prev": 4820.0,
+      "breakout5_prev": true,
       "ma5": 4811.0,
       "ma20": 4750.1,
       "ma25": 4769.16,
@@ -12514,20 +12575,47 @@
       "regime": "UPTREND",
       "regime_reason": "週足の方向が上向きで、日足も大きく崩れていない。",
       "signal": "WATCH",
-      "signal_reason": "上昇トレンド継続。新規買いは追いかけず、20日MAなどへの押し目を待つ。",
-      "missing_conditions": [],
+      "signal_reason": "上昇トレンド継続中。ただし追いかけ買いはせず、再上昇の6条件（週足上昇・25日MA上・25日MA上向き・5日高値更新・出来高1.2倍・RSI50〜70）が揃うまでWATCH。押し目になれば「上昇押し目」へ分類。",
+      "missing_conditions": [
+        "出来高が平均超",
+        "RSIが健全な上昇域"
+      ],
       "condition_checks": [
         {
-          "label": "週足方向",
+          "label": "週足上昇トレンド",
           "ok": true,
           "value": "UP",
           "rule": "週足方向=UP"
         },
         {
-          "label": "押し目待ち",
+          "label": "25日MAより上",
           "ok": true,
-          "value": 3.43,
-          "rule": "20日MA付近への調整を待つ"
+          "value": 3.02,
+          "rule": "25日MA乖離>0%"
+        },
+        {
+          "label": "25日MAが上向き",
+          "ok": true,
+          "value": 0.47,
+          "rule": "25日MAの5日傾き>0%"
+        },
+        {
+          "label": "直近5営業日高値を更新",
+          "ok": true,
+          "value": 4820.0,
+          "rule": "現在終値>直前5営業日の高値"
+        },
+        {
+          "label": "出来高が平均超",
+          "ok": false,
+          "value": 0.92,
+          "rule": "当日出来高÷直前20日平均>=1.2倍"
+        },
+        {
+          "label": "RSIが健全な上昇域",
+          "ok": false,
+          "value": 71.5,
+          "rule": "RSI50以上70未満"
         }
       ],
       "one_condition_away": false,
@@ -12671,7 +12759,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T12:52:22.720966+09:00",
+      "per_updated_at": "2026-10-04T13:18:47.282792+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -12690,6 +12778,8 @@
       "volume_ratio": 1.15,
       "volume_ratio_basis": "当日出来高 ÷ 直前20営業日の平均出来高",
       "volume_surge_threshold": 1.8,
+      "high5_prev": 3200.0,
+      "breakout5_prev": false,
       "ma5": 3050.6,
       "ma20": 2910.47,
       "ma25": 2943.46,
@@ -17035,7 +17125,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T12:52:27.415034+09:00",
+      "per_updated_at": "2026-10-04T13:18:56.607379+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -17054,6 +17144,8 @@
       "volume_ratio": 1.04,
       "volume_ratio_basis": "当日出来高 ÷ 直前20営業日の平均出来高",
       "volume_surge_threshold": 1.8,
+      "high5_prev": 4779.0,
+      "breakout5_prev": true,
       "ma5": 4639.8,
       "ma20": 4486.05,
       "ma25": 4553.76,
@@ -21363,7 +21455,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T12:52:31.862229+09:00",
+      "per_updated_at": "2026-10-04T13:19:05.267985+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -21382,6 +21474,8 @@
       "volume_ratio": 1.14,
       "volume_ratio_basis": "当日出来高 ÷ 直前20営業日の平均出来高",
       "volume_surge_threshold": 1.8,
+      "high5_prev": 5536.0,
+      "breakout5_prev": false,
       "ma5": 5500.8,
       "ma20": 5380.85,
       "ma25": 5395.44,
@@ -25729,7 +25823,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T12:52:36.473249+09:00",
+      "per_updated_at": "2026-10-04T13:19:12.196134+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -25748,6 +25842,8 @@
       "volume_ratio": 0.86,
       "volume_ratio_basis": "当日出来高 ÷ 直前20営業日の平均出来高",
       "volume_surge_threshold": 1.8,
+      "high5_prev": 3721.0,
+      "breakout5_prev": false,
       "ma5": 3628.6,
       "ma20": 3662.95,
       "ma25": 3659.36,
@@ -30082,7 +30178,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T12:52:41.138241+09:00",
+      "per_updated_at": "2026-10-04T13:19:20.253119+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -30101,6 +30197,8 @@
       "volume_ratio": 1.21,
       "volume_ratio_basis": "当日出来高 ÷ 直前20営業日の平均出来高",
       "volume_surge_threshold": 1.8,
+      "high5_prev": 2989.5,
+      "breakout5_prev": false,
       "ma5": 2913.9,
       "ma20": 3002.03,
       "ma25": 3028.1,
@@ -34225,9 +34323,39 @@
       "regime": "DOWNTREND_CONTINUED",
       "regime_reason": "週足・日足とも弱く、まだ反転条件が整っていない。",
       "signal": "AVOID",
-      "signal_reason": "下降継続のため現時点では回避。",
-      "missing_conditions": [],
-      "condition_checks": [],
+      "signal_reason": "下降継続のため現時点では買い回避。BUY候補にするには、下げ止まり→20日MA回復→大底反転サイン→週足RSI35以下の確認が必要。",
+      "missing_conditions": [
+        "日足が下げ止まり",
+        "20日MAを回復",
+        "大底反転サイン",
+        "週足RSIが売られ過ぎ域"
+      ],
+      "condition_checks": [
+        {
+          "label": "日足が下げ止まり",
+          "ok": false,
+          "value": -2.34,
+          "rule": "当日プラス・5日騰落>=-5%・10日下落または20日MA上"
+        },
+        {
+          "label": "20日MAを回復",
+          "ok": false,
+          "value": -4.85,
+          "rule": "20日MA乖離>=0%"
+        },
+        {
+          "label": "大底反転サイン",
+          "ok": false,
+          "value": "なし",
+          "rule": "大底反転サインを確認"
+        },
+        {
+          "label": "週足RSIが売られ過ぎ域",
+          "ok": false,
+          "value": 55.3,
+          "rule": "週足RSI<=35"
+        }
+      ],
       "one_condition_away": false,
       "signal_type": "DOWNTREND_CONTINUED",
       "code": "7203",
@@ -34385,7 +34513,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T12:52:45.823338+09:00",
+      "per_updated_at": "2026-10-04T13:19:27.813818+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -34404,6 +34532,8 @@
       "volume_ratio": 0.82,
       "volume_ratio_basis": "当日出来高 ÷ 直前20営業日の平均出来高",
       "volume_surge_threshold": 1.8,
+      "high5_prev": 3067.0,
+      "breakout5_prev": false,
       "ma5": 2992.7,
       "ma20": 3037.32,
       "ma25": 3030.42,
@@ -38538,9 +38668,39 @@
       "regime": "DOWNTREND_CONTINUED",
       "regime_reason": "週足・日足とも弱く、まだ反転条件が整っていない。",
       "signal": "AVOID",
-      "signal_reason": "下降継続のため現時点では回避。",
-      "missing_conditions": [],
-      "condition_checks": [],
+      "signal_reason": "下降継続のため現時点では買い回避。BUY候補にするには、下げ止まり→20日MA回復→大底反転サイン→週足RSI35以下の確認が必要。",
+      "missing_conditions": [
+        "日足が下げ止まり",
+        "20日MAを回復",
+        "大底反転サイン",
+        "週足RSIが売られ過ぎ域"
+      ],
+      "condition_checks": [
+        {
+          "label": "日足が下げ止まり",
+          "ok": false,
+          "value": -0.57,
+          "rule": "当日プラス・5日騰落>=-5%・10日下落または20日MA上"
+        },
+        {
+          "label": "20日MAを回復",
+          "ok": false,
+          "value": -2.38,
+          "rule": "20日MA乖離>=0%"
+        },
+        {
+          "label": "大底反転サイン",
+          "ok": false,
+          "value": "ハンマー",
+          "rule": "大底反転サインを確認"
+        },
+        {
+          "label": "週足RSIが売られ過ぎ域",
+          "ok": false,
+          "value": 37.1,
+          "rule": "週足RSI<=35"
+        }
+      ],
       "one_condition_away": false,
       "signal_type": "DOWNTREND_CONTINUED",
       "code": "1802",
@@ -38690,7 +38850,7 @@
         "switch_date_basis": "直近の決算発表日"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T12:52:52.309202+09:00",
+      "per_updated_at": "2026-10-04T13:19:39.384721+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -38709,6 +38869,8 @@
       "volume_ratio": 2.96,
       "volume_ratio_basis": "当日出来高 ÷ 直前20営業日の平均出来高",
       "volume_surge_threshold": 1.8,
+      "high5_prev": 1644.8,
+      "breakout5_prev": false,
       "ma5": 1592.3,
       "ma20": 1611.88,
       "ma25": 1624.44,
@@ -42833,9 +42995,39 @@
       "regime": "DOWNTREND_CONTINUED",
       "regime_reason": "週足・日足とも弱く、まだ反転条件が整っていない。",
       "signal": "AVOID",
-      "signal_reason": "下降継続のため現時点では回避。",
-      "missing_conditions": [],
-      "condition_checks": [],
+      "signal_reason": "下降継続のため現時点では買い回避。BUY候補にするには、下げ止まり→20日MA回復→大底反転サイン→週足RSI35以下の確認が必要。",
+      "missing_conditions": [
+        "日足が下げ止まり",
+        "20日MAを回復",
+        "大底反転サイン",
+        "週足RSIが売られ過ぎ域"
+      ],
+      "condition_checks": [
+        {
+          "label": "日足が下げ止まり",
+          "ok": false,
+          "value": -1.54,
+          "rule": "当日プラス・5日騰落>=-5%・10日下落または20日MA上"
+        },
+        {
+          "label": "20日MAを回復",
+          "ok": false,
+          "value": -2.78,
+          "rule": "20日MA乖離>=0%"
+        },
+        {
+          "label": "大底反転サイン",
+          "ok": false,
+          "value": "なし",
+          "rule": "大底反転サインを確認"
+        },
+        {
+          "label": "週足RSIが売られ過ぎ域",
+          "ok": false,
+          "value": 37.7,
+          "rule": "週足RSI<=35"
+        }
+      ],
       "one_condition_away": false,
       "signal_type": "DOWNTREND_CONTINUED",
       "code": "9065",
@@ -42993,7 +43185,7 @@
         "switch_date_basis": "直近の決算発表日"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T12:52:58.553440+09:00",
+      "per_updated_at": "2026-10-04T13:19:49.721660+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -43012,6 +43204,8 @@
       "volume_ratio": 0.74,
       "volume_ratio_basis": "当日出来高 ÷ 直前20営業日の平均出来高",
       "volume_surge_threshold": 1.8,
+      "high5_prev": 1047.5,
+      "breakout5_prev": false,
       "ma5": 1019.8,
       "ma20": 1056.0,
       "ma25": 1073.04,
@@ -47300,7 +47494,7 @@
         "switch_date_basis": "直近の決算発表日"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T12:53:04.988665+09:00",
+      "per_updated_at": "2026-10-04T13:20:02.581046+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -47319,6 +47513,8 @@
       "volume_ratio": 1.87,
       "volume_ratio_basis": "当日出来高 ÷ 直前20営業日の平均出来高",
       "volume_surge_threshold": 1.8,
+      "high5_prev": 45710.0,
+      "breakout5_prev": true,
       "ma5": 42794.0,
       "ma20": 37571.0,
       "ma25": 36880.4,
@@ -51653,7 +51849,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T12:53:09.588818+09:00",
+      "per_updated_at": "2026-10-04T13:20:09.646849+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -51672,6 +51868,8 @@
       "volume_ratio": 0.62,
       "volume_ratio_basis": "当日出来高 ÷ 直前20営業日の平均出来高",
       "volume_surge_threshold": 1.8,
+      "high5_prev": 2118.0,
+      "breakout5_prev": true,
       "ma5": 2046.4,
       "ma20": 2053.7,
       "ma25": 2014.64,
@@ -54995,7 +55193,7 @@
         "switch_date_basis": "直近の決算発表日"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T12:53:14.918803+09:00",
+      "per_updated_at": "2026-10-04T13:20:20.359271+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -55014,6 +55212,8 @@
       "volume_ratio": 1.64,
       "volume_ratio_basis": "当日出来高 ÷ 直前20営業日の平均出来高",
       "volume_surge_threshold": 1.8,
+      "high5_prev": 6171.0,
+      "breakout5_prev": false,
       "ma5": 5924.4,
       "ma20": 6097.0,
       "ma25": 6138.92,
@@ -59349,7 +59549,7 @@
         "switch_date_basis": "直近の決算発表日"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T12:53:21.227587+09:00",
+      "per_updated_at": "2026-10-04T13:20:32.448396+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -59368,6 +59568,8 @@
       "volume_ratio": 0.63,
       "volume_ratio_basis": "当日出来高 ÷ 直前20営業日の平均出来高",
       "volume_surge_threshold": 1.8,
+      "high5_prev": 2226.0,
+      "breakout5_prev": false,
       "ma5": 2193.9,
       "ma20": 2252.6,
       "ma25": 2226.72,
@@ -63704,7 +63906,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T12:53:25.670848+09:00",
+      "per_updated_at": "2026-10-04T13:20:40.807224+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -63723,6 +63925,8 @@
       "volume_ratio": 0.81,
       "volume_ratio_basis": "当日出来高 ÷ 直前20営業日の平均出来高",
       "volume_surge_threshold": 1.8,
+      "high5_prev": 4859.0,
+      "breakout5_prev": false,
       "ma5": 4728.0,
       "ma20": 4892.45,
       "ma25": 4874.0,
@@ -68018,7 +68222,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T12:53:31.105312+09:00",
+      "per_updated_at": "2026-10-04T13:20:47.662877+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -68037,6 +68241,8 @@
       "volume_ratio": 0.98,
       "volume_ratio_basis": "当日出来高 ÷ 直前20営業日の平均出来高",
       "volume_surge_threshold": 1.8,
+      "high5_prev": 4588.0,
+      "breakout5_prev": false,
       "ma5": 4493.2,
       "ma20": 4338.65,
       "ma25": 4354.52,
@@ -72375,7 +72581,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T12:53:35.589682+09:00",
+      "per_updated_at": "2026-10-04T13:20:56.792902+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -72394,6 +72600,8 @@
       "volume_ratio": 1.35,
       "volume_ratio_basis": "当日出来高 ÷ 直前20営業日の平均出来高",
       "volume_surge_threshold": 1.8,
+      "high5_prev": 19100.0,
+      "breakout5_prev": true,
       "ma5": 18431.0,
       "ma20": 18126.41,
       "ma25": 17853.0,
@@ -76280,21 +76488,45 @@
       "weekly_direction": "UP",
       "regime": "UPTREND",
       "regime_reason": "週足の方向が上向きで、日足も大きく崩れていない。",
-      "signal": "WATCH",
-      "signal_reason": "上昇トレンド継続。新規買いは追いかけず、20日MAなどへの押し目を待つ。",
+      "signal": "BUY_CANDIDATE",
+      "signal_reason": "上昇トレンドの再上昇型。週足上昇、25日MA上・上向き、直近5営業日高値更新、出来高1.2倍以上、RSI50〜70の6条件が成立。",
       "missing_conditions": [],
       "condition_checks": [
         {
-          "label": "週足方向",
+          "label": "週足上昇トレンド",
           "ok": true,
           "value": "UP",
           "rule": "週足方向=UP"
         },
         {
-          "label": "押し目待ち",
+          "label": "25日MAより上",
           "ok": true,
-          "value": 6.47,
-          "rule": "20日MA付近への調整を待つ"
+          "value": 8.11,
+          "rule": "25日MA乖離>0%"
+        },
+        {
+          "label": "25日MAが上向き",
+          "ok": true,
+          "value": 1.29,
+          "rule": "25日MAの5日傾き>0%"
+        },
+        {
+          "label": "直近5営業日高値を更新",
+          "ok": true,
+          "value": 19100.0,
+          "rule": "現在終値>直前5営業日の高値"
+        },
+        {
+          "label": "出来高が平均超",
+          "ok": true,
+          "value": 1.35,
+          "rule": "当日出来高÷直前20日平均>=1.2倍"
+        },
+        {
+          "label": "RSIが健全な上昇域",
+          "ok": true,
+          "value": 51.8,
+          "rule": "RSI50以上70未満"
         }
       ],
       "one_condition_away": false,
@@ -76334,7 +76566,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T12:53:40.028390+09:00",
+      "per_updated_at": "2026-10-04T13:21:04.660900+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -76353,6 +76585,8 @@
       "volume_ratio": 0.92,
       "volume_ratio_basis": "当日出来高 ÷ 直前20営業日の平均出来高",
       "volume_surge_threshold": 1.8,
+      "high5_prev": 7640.0,
+      "breakout5_prev": false,
       "ma5": 7516.2,
       "ma20": 7351.9,
       "ma25": 7380.88,
@@ -80700,7 +80934,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T12:53:44.120858+09:00",
+      "per_updated_at": "2026-10-04T13:21:11.329704+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -80719,6 +80953,8 @@
       "volume_ratio": 1.18,
       "volume_ratio_basis": "当日出来高 ÷ 直前20営業日の平均出来高",
       "volume_surge_threshold": 1.8,
+      "high5_prev": 20985.0,
+      "breakout5_prev": false,
       "ma5": 20824.0,
       "ma20": 20721.5,
       "ma25": 20769.8,
@@ -84850,9 +85086,38 @@
       "regime": "DOWNTREND_CONTINUED",
       "regime_reason": "週足・日足とも弱く、まだ反転条件が整っていない。",
       "signal": "AVOID",
-      "signal_reason": "下降継続のため現時点では回避。",
-      "missing_conditions": [],
-      "condition_checks": [],
+      "signal_reason": "下降継続のため現時点では買い回避。BUY候補にするには、下げ止まり→20日MA回復→大底反転サイン→週足RSI35以下の確認が必要。",
+      "missing_conditions": [
+        "日足が下げ止まり",
+        "20日MAを回復",
+        "大底反転サイン"
+      ],
+      "condition_checks": [
+        {
+          "label": "日足が下げ止まり",
+          "ok": false,
+          "value": -1.91,
+          "rule": "当日プラス・5日騰落>=-5%・10日下落または20日MA上"
+        },
+        {
+          "label": "20日MAを回復",
+          "ok": false,
+          "value": -0.66,
+          "rule": "20日MA乖離>=0%"
+        },
+        {
+          "label": "大底反転サイン",
+          "ok": false,
+          "value": "なし",
+          "rule": "大底反転サインを確認"
+        },
+        {
+          "label": "週足RSIが売られ過ぎ域",
+          "ok": true,
+          "value": 28.2,
+          "rule": "週足RSI<=35"
+        }
+      ],
       "one_condition_away": false,
       "signal_type": "DOWNTREND_CONTINUED",
       "code": "6367",
@@ -85010,7 +85275,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T12:53:50.796121+09:00",
+      "per_updated_at": "2026-10-04T13:21:21.453130+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -85029,6 +85294,8 @@
       "volume_ratio": 1.11,
       "volume_ratio_basis": "当日出来高 ÷ 直前20営業日の平均出来高",
       "volume_surge_threshold": 1.8,
+      "high5_prev": 3668.0,
+      "breakout5_prev": false,
       "ma5": 3579.4,
       "ma20": 3664.9,
       "ma25": 3678.04,
@@ -89163,9 +89430,38 @@
       "regime": "DOWNTREND_CONTINUED",
       "regime_reason": "週足・日足とも弱く、まだ反転条件が整っていない。",
       "signal": "AVOID",
-      "signal_reason": "下降継続のため現時点では回避。",
-      "missing_conditions": [],
-      "condition_checks": [],
+      "signal_reason": "下降継続のため現時点では買い回避。BUY候補にするには、下げ止まり→20日MA回復→大底反転サイン→週足RSI35以下の確認が必要。",
+      "missing_conditions": [
+        "日足が下げ止まり",
+        "20日MAを回復",
+        "大底反転サイン"
+      ],
+      "condition_checks": [
+        {
+          "label": "日足が下げ止まり",
+          "ok": false,
+          "value": -0.14,
+          "rule": "当日プラス・5日騰落>=-5%・10日下落または20日MA上"
+        },
+        {
+          "label": "20日MAを回復",
+          "ok": false,
+          "value": -2.64,
+          "rule": "20日MA乖離>=0%"
+        },
+        {
+          "label": "大底反転サイン",
+          "ok": false,
+          "value": "ハンマー",
+          "rule": "大底反転サインを確認"
+        },
+        {
+          "label": "週足RSIが売られ過ぎ域",
+          "ok": true,
+          "value": 29.5,
+          "rule": "週足RSI<=35"
+        }
+      ],
       "one_condition_away": false,
       "signal_type": "DOWNTREND_CONTINUED",
       "code": "9989",
@@ -89323,7 +89619,7 @@
         "switch_date_basis": "直近の決算発表日"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T12:53:59.213031+09:00",
+      "per_updated_at": "2026-10-04T13:21:35.901239+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -89342,6 +89638,8 @@
       "volume_ratio": 2.61,
       "volume_ratio_basis": "当日出来高 ÷ 直前20営業日の平均出来高",
       "volume_surge_threshold": 1.8,
+      "high5_prev": 498.0,
+      "breakout5_prev": false,
       "ma5": 490.2,
       "ma20": 497.0,
       "ma25": 499.68,
@@ -93469,9 +93767,38 @@
       "regime": "DOWNTREND_CONTINUED",
       "regime_reason": "週足・日足とも弱く、まだ反転条件が整っていない。",
       "signal": "AVOID",
-      "signal_reason": "下降継続のため現時点では回避。",
-      "missing_conditions": [],
-      "condition_checks": [],
+      "signal_reason": "下降継続のため現時点では買い回避。BUY候補にするには、下げ止まり→20日MA回復→大底反転サイン→週足RSI35以下の確認が必要。",
+      "missing_conditions": [
+        "日足が下げ止まり",
+        "20日MAを回復",
+        "大底反転サイン"
+      ],
+      "condition_checks": [
+        {
+          "label": "日足が下げ止まり",
+          "ok": false,
+          "value": -0.61,
+          "rule": "当日プラス・5日騰落>=-5%・10日下落または20日MA上"
+        },
+        {
+          "label": "20日MAを回復",
+          "ok": false,
+          "value": -2.01,
+          "rule": "20日MA乖離>=0%"
+        },
+        {
+          "label": "大底反転サイン",
+          "ok": false,
+          "value": "ハンマー",
+          "rule": "大底反転サインを確認"
+        },
+        {
+          "label": "週足RSIが売られ過ぎ域",
+          "ok": true,
+          "value": 34.6,
+          "rule": "週足RSI<=35"
+        }
+      ],
       "one_condition_away": false,
       "signal_type": "DOWNTREND_CONTINUED",
       "code": "2329",
@@ -93621,7 +93948,7 @@
         "switch_date_basis": "取得できず"
       },
       "per_forecast_error": "Yahooから会社予想PER/EPSを取得できませんでした (timeseries: Yahoo forward P/E unavailable (https://query1.finance.yahoo.com: unavailable; https://query2.finance.yahoo.com: unavailable); https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized)",
-      "per_updated_at": "2026-10-04T12:54:05.728918+09:00",
+      "per_updated_at": "2026-10-04T13:21:46.609076+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -93640,6 +93967,8 @@
       "volume_ratio": 1.43,
       "volume_ratio_basis": "当日出来高 ÷ 直前20営業日の平均出来高",
       "volume_surge_threshold": 1.8,
+      "high5_prev": 3285.0,
+      "breakout5_prev": false,
       "ma5": 3157.0,
       "ma20": 3238.0,
       "ma25": 3327.8,
@@ -97764,9 +98093,38 @@
       "regime": "DOWNTREND_CONTINUED",
       "regime_reason": "週足・日足とも弱く、まだ反転条件が整っていない。",
       "signal": "AVOID",
-      "signal_reason": "下降継続のため現時点では回避。",
-      "missing_conditions": [],
-      "condition_checks": [],
+      "signal_reason": "下降継続のため現時点では買い回避。BUY候補にするには、下げ止まり→20日MA回復→大底反転サイン→週足RSI35以下の確認が必要。",
+      "missing_conditions": [
+        "日足が下げ止まり",
+        "20日MAを回復",
+        "大底反転サイン"
+      ],
+      "condition_checks": [
+        {
+          "label": "日足が下げ止まり",
+          "ok": false,
+          "value": -1.11,
+          "rule": "当日プラス・5日騰落>=-5%・10日下落または20日MA上"
+        },
+        {
+          "label": "20日MAを回復",
+          "ok": false,
+          "value": -4.11,
+          "rule": "20日MA乖離>=0%"
+        },
+        {
+          "label": "大底反転サイン",
+          "ok": false,
+          "value": "なし",
+          "rule": "大底反転サインを確認"
+        },
+        {
+          "label": "週足RSIが売られ過ぎ域",
+          "ok": true,
+          "value": 30.7,
+          "rule": "週足RSI<=35"
+        }
+      ],
       "one_condition_away": false,
       "signal_type": "DOWNTREND_CONTINUED",
       "code": "3465",
@@ -97868,7 +98226,7 @@
         "switch_date_basis": "直近の決算発表日"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T12:54:12.166814+09:00",
+      "per_updated_at": "2026-10-04T13:21:56.216976+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -97887,6 +98245,8 @@
       "volume_ratio": 1.16,
       "volume_ratio_basis": "当日出来高 ÷ 直前20営業日の平均出来高",
       "volume_surge_threshold": 1.8,
+      "high5_prev": 5980.0,
+      "breakout5_prev": false,
       "ma5": 5768.0,
       "ma20": 5920.0,
       "ma25": 5976.4,
@@ -102206,7 +102566,7 @@
         "switch_date_basis": "直近の決算発表日"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T12:54:18.569570+09:00",
+      "per_updated_at": "2026-10-04T13:22:06.319444+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -102481,7 +102841,7 @@
       "data_points": 434,
       "date": "2026-10-02",
       "regime": "UPTREND",
-      "signal": "WATCH",
+      "signal": "BUY_CANDIDATE",
       "relative_strength": 1.99,
       "supply_status": "重い",
       "per_actual_count": 2,
@@ -102585,16 +102945,16 @@
   "successful_stocks": 24,
   "failed_stocks": 0,
   "timing": {
-    "total_seconds": 132.2,
+    "total_seconds": 232.6,
     "api_requests": 75,
-    "rate_limit_wait_seconds": 16.9,
+    "rate_limit_wait_seconds": 13.0,
     "retry_count": 0,
-    "http_seconds": 51.8
+    "http_seconds": 77.7
   },
   "irbank_usage_at_start": {
     "limit": 4000,
-    "used": 433,
-    "remaining": 3567,
+    "used": 507,
+    "remaining": 3493,
     "resets_at": "2026-10-05T00:00:00+09:00"
   }
 }
