@@ -113,13 +113,20 @@ def classify_regime(rows, candle_signal=None, breakout_signal=None):
     # route aligned: if the stock is being bought because it has just broken
     # out of its range, the UI should say that explicitly.
     bo = breakout_signal or {}
-    if bo.get('confirmed'):
-        # A confirmed breakout is a specific current-state classification.
-        # It must take priority over the broader weekly direction, including
-        # UNKNOWN, otherwise a valid breakout can incorrectly fall through to
-        # 判定不能.
+    # A detected breakout is a more specific current-state classification
+    # than generic weekly UP/RANGE/UNKNOWN.  `confirmed` belongs to the BUY
+    # decision; classification should already say レンジブレイク when the
+    # price has actually broken the range and is still holding it, even if
+    # volume/MA/continuation conditions are not all satisfied yet.
+    # This prevents a real breakout from being hidden as 判定不能 or generic
+    # 上昇トレンド.
+    breakout_watch = bo.get('is_breakout') and bo.get('status') in ('レンジ抜け・再上昇', 'レンジ抜け候補')
+    if breakout_watch:
         state = 'RANGE_BREAKOUT'
-        reason = 'レンジ上限を確認付きでブレイク中。現在の買いシグナルは通常の上昇トレンドではなく、レンジブレイク・再上昇型。'
+        if bo.get('confirmed'):
+            reason = 'レンジ上限を確認付きでブレイク中。現在の買いシグナルは通常の上昇トレンドではなく、レンジブレイク・再上昇型。'
+        else:
+            reason = 'レンジ上限を上抜けて維持中。ただし出来高・20日MA・上昇継続などのBUY確認条件が未達のため、レンジブレイク監視中。'
     elif weekly_dir == 'UP':
         if (vs20 is not None and vs20 < 0) or (ret5 is not None and ret5 < 0):
             state = 'UPTREND_PULLBACK'
@@ -169,7 +176,7 @@ def decide(stock, regime):
     # reversal: a stock can be a valid buy after breaking out of a base even
     # when it is nowhere near a bottom.
     bo = stock.get('breakout_signal') or {}
-    if bo.get('confirmed') and regime.get('regime') not in ('UPTREND_PULLBACK',):
+    if (bo.get('confirmed') or regime.get('regime') == 'RANGE_BREAKOUT') and regime.get('regime') not in ('UPTREND_PULLBACK',):
         conds = [
             ('20日レンジ高値を突破', True, bo.get('breakout_level'), '直近5営業日で20日高値を終値突破'),
             ('突破日の出来高1.5倍以上', bool(bo.get('volume_ok')), bo.get('breakout_volume_ratio'), '突破日出来高比>=1.5'),
