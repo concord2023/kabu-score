@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-04T08:38:59.400952+09:00",
+  "updated_at": "2026-10-04T09:02:45.672564+09:00",
   "source": "IRBANK API + 豆腐ハードボイルド（騰落銘柄数）",
   "api_strategy": "price:800-row target/stock; weekly margin:1 endpoint/stock only when cache is stale; valuations:20 fiscal years/stock; Yahoo company forecast PER/EPS/stock; breadth:1/run; monthly MACD:1000-row target only for weekly-RSI<=30; quota preflight via /usage",
   "stocks": {
@@ -3954,6 +3954,7 @@
         }
       ],
       "one_condition_away": false,
+      "signal_type": "UPTREND",
       "code": "5803",
       "name": "フジクラ",
       "industry": null,
@@ -4085,7 +4086,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T08:39:04.334083+09:00",
+      "per_updated_at": "2026-10-04T09:02:49.278771+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -8255,6 +8256,7 @@
         }
       ],
       "one_condition_away": false,
+      "signal_type": "UPTREND",
       "code": "6758",
       "name": "ソニーグループ",
       "industry": null,
@@ -8362,7 +8364,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T08:39:10.042138+09:00",
+      "per_updated_at": "2026-10-04T09:02:54.108636+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -12529,6 +12531,7 @@
         }
       ],
       "one_condition_away": false,
+      "signal_type": "UPTREND",
       "code": "6701",
       "name": "NEC",
       "industry": null,
@@ -12668,7 +12671,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T08:39:16.942908+09:00",
+      "per_updated_at": "2026-10-04T09:02:58.794891+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -16884,6 +16887,7 @@
         }
       ],
       "one_condition_away": false,
+      "signal_type": "RANGE_BREAKOUT",
       "code": "6762",
       "name": "TDK",
       "industry": null,
@@ -17031,7 +17035,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T08:39:22.465889+09:00",
+      "per_updated_at": "2026-10-04T09:03:03.322410+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -21211,6 +21215,7 @@
         }
       ],
       "one_condition_away": false,
+      "signal_type": "BOTTOM_REVERSAL",
       "code": "6506",
       "name": "安川電機",
       "industry": null,
@@ -21358,7 +21363,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T08:39:27.506941+09:00",
+      "per_updated_at": "2026-10-04T09:03:07.987230+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -25519,46 +25524,64 @@
       "regime_reason": "週足は上向き。日足は20日MA下/5日下落で押し目状態。",
       "signal": "WATCH",
       "signal_reason": "上昇トレンドだが現在は押し目BUY水準ではない。20日MAだけでBUYにせず、まず25日MAを第1の押し目目安、75日MAを第2の深い押し目目安として待つ。",
-      "missing_conditions": [],
+      "missing_conditions": [
+        "25日MA付近まで調整",
+        "5日で3%以上調整",
+        "RSIが過熱していない"
+      ],
       "condition_checks": [
         {
-          "label": "週足上昇トレンド",
+          "label": "上昇トレンドの土台",
           "ok": true,
           "value": "UP",
-          "rule": "週足方向=UP"
+          "rule": "週足方向=UP",
+          "group": "通常の25日MA押し目"
         },
         {
-          "label": "25日MAまで調整",
+          "label": "25日MA付近まで調整",
           "ok": false,
           "value": 2.35,
-          "rule": "25日MA乖離が-4%〜+0.5%"
+          "rule": "25日MA乖離が-4%〜+0.5%",
+          "group": "通常の25日MA押し目"
         },
         {
-          "label": "5日でしっかり押す",
+          "label": "5日で3%以上調整",
           "ok": false,
           "value": -0.25,
-          "rule": "5日騰落率<=-3%"
+          "rule": "5日騰落率<=-3%",
+          "group": "通常の25日MA押し目"
         },
         {
           "label": "25日MAが上向き",
           "ok": true,
           "value": 0.94,
-          "rule": "25日MAの5日傾き>0%"
+          "rule": "25日MAの5日傾き>0%",
+          "group": "通常の25日MA押し目"
         },
         {
-          "label": "RSI65未満",
+          "label": "RSIが過熱していない",
           "ok": false,
           "value": 73.2,
-          "rule": "通常押し目はRSI<65"
+          "rule": "通常押し目はRSI<65",
+          "group": "通常の25日MA押し目"
         },
         {
-          "label": "75日MAまでの深押し",
+          "label": "75日MA付近まで深押し",
           "ok": false,
           "value": 7.67,
-          "rule": "75日MA±3%、20日騰落<=-5%、75日MA上向き"
+          "rule": "75日MA±3%、20日騰落<=-5%、75日MA上向き",
+          "group": "深い75日MA押し目"
+        },
+        {
+          "label": "深押し時のRSI",
+          "ok": false,
+          "value": 73.2,
+          "rule": "深い押し目はRSI<55",
+          "group": "深い75日MA押し目"
         }
       ],
       "one_condition_away": false,
+      "signal_type": "UPTREND_PULLBACK",
       "code": "6501",
       "name": "日立製作所",
       "industry": null,
@@ -25706,7 +25729,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T08:39:32.048273+09:00",
+      "per_updated_at": "2026-10-04T09:03:11.917896+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -29853,43 +29876,57 @@
       "missing_conditions": [],
       "condition_checks": [
         {
-          "label": "週足上昇トレンド",
+          "label": "上昇トレンドの土台",
           "ok": true,
           "value": "UP",
-          "rule": "週足方向=UP"
+          "rule": "週足方向=UP",
+          "group": "通常の25日MA押し目"
         },
         {
-          "label": "25日MAまで調整",
+          "label": "25日MA付近まで調整",
           "ok": true,
           "value": -3.15,
-          "rule": "25日MA乖離が-4%〜+0.5%"
+          "rule": "25日MA乖離が-4%〜+0.5%",
+          "group": "通常の25日MA押し目"
         },
         {
-          "label": "5日でしっかり押す",
+          "label": "5日で3%以上調整",
           "ok": true,
           "value": -4.58,
-          "rule": "5日騰落率<=-3%"
+          "rule": "5日騰落率<=-3%",
+          "group": "通常の25日MA押し目"
         },
         {
           "label": "25日MAが上向き",
           "ok": true,
           "value": 0.73,
-          "rule": "25日MAの5日傾き>0%"
+          "rule": "25日MAの5日傾き>0%",
+          "group": "通常の25日MA押し目"
         },
         {
-          "label": "RSI65未満",
+          "label": "RSIが過熱していない",
           "ok": true,
           "value": 46.5,
-          "rule": "通常押し目はRSI<65"
+          "rule": "通常押し目はRSI<65",
+          "group": "通常の25日MA押し目"
         },
         {
-          "label": "75日MAまでの深押し",
+          "label": "75日MA付近まで深押し",
           "ok": false,
           "value": 0.12,
-          "rule": "75日MA±3%、20日騰落<=-5%、75日MA上向き"
+          "rule": "75日MA±3%、20日騰落<=-5%、75日MA上向き",
+          "group": "深い75日MA押し目"
+        },
+        {
+          "label": "深押し時のRSI",
+          "ok": true,
+          "value": 46.5,
+          "rule": "深い押し目はRSI<55",
+          "group": "深い75日MA押し目"
         }
       ],
       "one_condition_away": false,
+      "signal_type": "UPTREND_PULLBACK",
       "code": "8306",
       "name": "三菱UFJフィナンシャル・グループ",
       "industry": null,
@@ -30045,7 +30082,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T08:39:37.140158+09:00",
+      "per_updated_at": "2026-10-04T09:03:16.183913+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -34192,6 +34229,7 @@
       "missing_conditions": [],
       "condition_checks": [],
       "one_condition_away": false,
+      "signal_type": "DOWNTREND_CONTINUED",
       "code": "7203",
       "name": "トヨタ自動車",
       "industry": null,
@@ -34347,7 +34385,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T08:39:42.160788+09:00",
+      "per_updated_at": "2026-10-04T09:03:20.914184+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -38504,6 +38542,7 @@
       "missing_conditions": [],
       "condition_checks": [],
       "one_condition_away": false,
+      "signal_type": "DOWNTREND_CONTINUED",
       "code": "1802",
       "name": "大林組",
       "industry": null,
@@ -38651,7 +38690,7 @@
         "switch_date_basis": "直近の決算発表日"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T08:39:49.321444+09:00",
+      "per_updated_at": "2026-10-04T09:03:26.578193+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -42798,6 +42837,7 @@
       "missing_conditions": [],
       "condition_checks": [],
       "one_condition_away": false,
+      "signal_type": "DOWNTREND_CONTINUED",
       "code": "9065",
       "name": "山九",
       "industry": null,
@@ -42953,7 +42993,7 @@
         "switch_date_basis": "直近の決算発表日"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T08:39:56.922150+09:00",
+      "per_updated_at": "2026-10-04T09:03:32.689669+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -47102,43 +47142,57 @@
       "missing_conditions": [],
       "condition_checks": [
         {
-          "label": "週足上昇トレンド",
+          "label": "上昇トレンドの土台",
           "ok": true,
           "value": "UP",
-          "rule": "週足方向=UP"
+          "rule": "週足方向=UP",
+          "group": "通常の25日MA押し目"
         },
         {
-          "label": "25日MAまで調整",
+          "label": "25日MA付近まで調整",
           "ok": false,
           "value": -5.04,
-          "rule": "25日MA乖離が-4%〜+0.5%"
+          "rule": "25日MA乖離が-4%〜+0.5%",
+          "group": "通常の25日MA押し目"
         },
         {
-          "label": "5日でしっかり押す",
+          "label": "5日で3%以上調整",
           "ok": false,
           "value": -2.72,
-          "rule": "5日騰落率<=-3%"
+          "rule": "5日騰落率<=-3%",
+          "group": "通常の25日MA押し目"
         },
         {
           "label": "25日MAが上向き",
           "ok": false,
           "value": -1.68,
-          "rule": "25日MAの5日傾き>0%"
+          "rule": "25日MAの5日傾き>0%",
+          "group": "通常の25日MA押し目"
         },
         {
-          "label": "RSI65未満",
+          "label": "RSIが過熱していない",
           "ok": true,
           "value": 49.7,
-          "rule": "通常押し目はRSI<65"
+          "rule": "通常押し目はRSI<65",
+          "group": "通常の25日MA押し目"
         },
         {
-          "label": "75日MAまでの深押し",
+          "label": "75日MA付近まで深押し",
           "ok": true,
           "value": -1.52,
-          "rule": "75日MA±3%、20日騰落<=-5%、75日MA上向き"
+          "rule": "75日MA±3%、20日騰落<=-5%、75日MA上向き",
+          "group": "深い75日MA押し目"
+        },
+        {
+          "label": "深押し時のRSI",
+          "ok": true,
+          "value": 49.7,
+          "rule": "深い押し目はRSI<55",
+          "group": "深い75日MA押し目"
         }
       ],
       "one_condition_away": false,
+      "signal_type": "UPTREND_PULLBACK",
       "code": "3923",
       "name": "ラクス",
       "industry": null,
@@ -47246,7 +47300,7 @@
         "switch_date_basis": "直近の決算発表日"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T08:40:04.278300+09:00",
+      "per_updated_at": "2026-10-04T09:03:38.466831+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -51459,6 +51513,7 @@
         }
       ],
       "one_condition_away": false,
+      "signal_type": "RANGE_BREAKOUT",
       "code": "6920",
       "name": "レーザーテック",
       "industry": null,
@@ -51598,7 +51653,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T08:40:10.546121+09:00",
+      "per_updated_at": "2026-10-04T09:03:42.867689+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -54921,6 +54976,7 @@
         }
       ],
       "one_condition_away": false,
+      "signal_type": "RANGE_TRANSITION",
       "code": "485A",
       "name": "パワーエックス",
       "industry": null,
@@ -54939,7 +54995,7 @@
         "switch_date_basis": "直近の決算発表日"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T08:40:16.947964+09:00",
+      "per_updated_at": "2026-10-04T09:03:47.130563+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -59137,6 +59193,7 @@
         }
       ],
       "one_condition_away": false,
+      "signal_type": "RANGE_TRANSITION",
       "code": "8591",
       "name": "オリックス",
       "industry": null,
@@ -59292,7 +59349,7 @@
         "switch_date_basis": "直近の決算発表日"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T08:40:24.732668+09:00",
+      "per_updated_at": "2026-10-04T09:03:53.740286+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -63436,46 +63493,62 @@
       "regime_reason": "週足は上向き。日足は20日MA下/5日下落で押し目状態。",
       "signal": "WATCH",
       "signal_reason": "押し目ゾーンには入っているがBUY条件未達。25日MA付近では5日3%以上の調整・25日MA上向き・RSIを確認。75日MA付近まで深く押した場合は、75日MA上向きと反転確認を重視する。当日の値動きはBUY条件に使わない。",
-      "missing_conditions": [],
+      "missing_conditions": [
+        "5日で3%以上調整"
+      ],
       "condition_checks": [
         {
-          "label": "週足上昇トレンド",
+          "label": "上昇トレンドの土台",
           "ok": true,
           "value": "UP",
-          "rule": "週足方向=UP"
+          "rule": "週足方向=UP",
+          "group": "通常の25日MA押し目"
         },
         {
-          "label": "25日MAまで調整",
+          "label": "25日MA付近まで調整",
           "ok": true,
           "value": -2.3,
-          "rule": "25日MA乖離が-4%〜+0.5%"
+          "rule": "25日MA乖離が-4%〜+0.5%",
+          "group": "通常の25日MA押し目"
         },
         {
-          "label": "5日でしっかり押す",
+          "label": "5日で3%以上調整",
           "ok": false,
           "value": -1.61,
-          "rule": "5日騰落率<=-3%"
+          "rule": "5日騰落率<=-3%",
+          "group": "通常の25日MA押し目"
         },
         {
           "label": "25日MAが上向き",
           "ok": true,
           "value": 1.22,
-          "rule": "25日MAの5日傾き>0%"
+          "rule": "25日MAの5日傾き>0%",
+          "group": "通常の25日MA押し目"
         },
         {
-          "label": "RSI65未満",
+          "label": "RSIが過熱していない",
           "ok": true,
           "value": 36.7,
-          "rule": "通常押し目はRSI<65"
+          "rule": "通常押し目はRSI<65",
+          "group": "通常の25日MA押し目"
         },
         {
-          "label": "75日MAまでの深押し",
+          "label": "75日MA付近まで深押し",
           "ok": false,
           "value": 6.6,
-          "rule": "75日MA±3%、20日騰落<=-5%、75日MA上向き"
+          "rule": "75日MA±3%、20日騰落<=-5%、75日MA上向き",
+          "group": "深い75日MA押し目"
+        },
+        {
+          "label": "深押し時のRSI",
+          "ok": true,
+          "value": 36.7,
+          "rule": "深い押し目はRSI<55",
+          "group": "深い75日MA押し目"
         }
       ],
-      "one_condition_away": false,
+      "one_condition_away": true,
+      "signal_type": "UPTREND_PULLBACK",
       "code": "8001",
       "name": "伊藤忠商事",
       "industry": null,
@@ -63631,7 +63704,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T08:40:29.267501+09:00",
+      "per_updated_at": "2026-10-04T09:03:57.999471+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -67797,6 +67870,7 @@
         }
       ],
       "one_condition_away": false,
+      "signal_type": "RANGE_TRANSITION",
       "code": "8058",
       "name": "三菱商事",
       "industry": null,
@@ -67944,7 +68018,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T08:40:33.798392+09:00",
+      "per_updated_at": "2026-10-04T09:04:02.291143+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -72112,46 +72186,64 @@
       "regime_reason": "週足は上向き。日足は20日MA下/5日下落で押し目状態。",
       "signal": "WATCH",
       "signal_reason": "上昇トレンドだが現在は押し目BUY水準ではない。20日MAだけでBUYにせず、まず25日MAを第1の押し目目安、75日MAを第2の深い押し目目安として待つ。 📈レンジ抜け候補：2026-09-25にレンジ高値を上抜け。突破後は水準を維持しているが、出来高/20MA/上昇継続/過熱度の確認待ち。",
-      "missing_conditions": [],
+      "missing_conditions": [
+        "25日MA付近まで調整",
+        "5日で3%以上調整",
+        "RSIが過熱していない"
+      ],
       "condition_checks": [
         {
-          "label": "週足上昇トレンド",
+          "label": "上昇トレンドの土台",
           "ok": true,
           "value": "UP",
-          "rule": "週足方向=UP"
+          "rule": "週足方向=UP",
+          "group": "通常の25日MA押し目"
         },
         {
-          "label": "25日MAまで調整",
+          "label": "25日MA付近まで調整",
           "ok": false,
           "value": 4.9,
-          "rule": "25日MA乖離が-4%〜+0.5%"
+          "rule": "25日MA乖離が-4%〜+0.5%",
+          "group": "通常の25日MA押し目"
         },
         {
-          "label": "5日でしっかり押す",
+          "label": "5日で3%以上調整",
           "ok": false,
           "value": -0.44,
-          "rule": "5日騰落率<=-3%"
+          "rule": "5日騰落率<=-3%",
+          "group": "通常の25日MA押し目"
         },
         {
           "label": "25日MAが上向き",
           "ok": true,
           "value": 0.8,
-          "rule": "25日MAの5日傾き>0%"
+          "rule": "25日MAの5日傾き>0%",
+          "group": "通常の25日MA押し目"
         },
         {
-          "label": "RSI65未満",
+          "label": "RSIが過熱していない",
           "ok": false,
           "value": 65.2,
-          "rule": "通常押し目はRSI<65"
+          "rule": "通常押し目はRSI<65",
+          "group": "通常の25日MA押し目"
         },
         {
-          "label": "75日MAまでの深押し",
+          "label": "75日MA付近まで深押し",
           "ok": false,
           "value": 5.67,
-          "rule": "75日MA±3%、20日騰落<=-5%、75日MA上向き"
+          "rule": "75日MA±3%、20日騰落<=-5%、75日MA上向き",
+          "group": "深い75日MA押し目"
+        },
+        {
+          "label": "深押し時のRSI",
+          "ok": false,
+          "value": 65.2,
+          "rule": "深い押し目はRSI<55",
+          "group": "深い75日MA押し目"
         }
       ],
       "one_condition_away": false,
+      "signal_type": "UPTREND_PULLBACK",
       "code": "6752",
       "name": "パナソニック ホールディングス",
       "industry": null,
@@ -72283,7 +72375,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T08:40:38.333753+09:00",
+      "per_updated_at": "2026-10-04T09:04:06.221774+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -76206,6 +76298,7 @@
         }
       ],
       "one_condition_away": false,
+      "signal_type": "UPTREND",
       "code": "285A",
       "name": "キオクシアホールディングス",
       "industry": null,
@@ -76241,7 +76334,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T08:40:42.852904+09:00",
+      "per_updated_at": "2026-10-04T09:04:10.100207+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -80395,46 +80488,63 @@
       "regime_reason": "週足は上向き。日足は20日MA下/5日下落で押し目状態。",
       "signal": "WATCH",
       "signal_reason": "上昇トレンドだが現在は押し目BUY水準ではない。20日MAだけでBUYにせず、まず25日MAを第1の押し目目安、75日MAを第2の深い押し目目安として待つ。",
-      "missing_conditions": [],
+      "missing_conditions": [
+        "25日MA付近まで調整",
+        "5日で3%以上調整"
+      ],
       "condition_checks": [
         {
-          "label": "週足上昇トレンド",
+          "label": "上昇トレンドの土台",
           "ok": true,
           "value": "UP",
-          "rule": "週足方向=UP"
+          "rule": "週足方向=UP",
+          "group": "通常の25日MA押し目"
         },
         {
-          "label": "25日MAまで調整",
+          "label": "25日MA付近まで調整",
           "ok": false,
           "value": 1.61,
-          "rule": "25日MA乖離が-4%〜+0.5%"
+          "rule": "25日MA乖離が-4%〜+0.5%",
+          "group": "通常の25日MA押し目"
         },
         {
-          "label": "5日でしっかり押す",
+          "label": "5日で3%以上調整",
           "ok": false,
           "value": -1.83,
-          "rule": "5日騰落率<=-3%"
+          "rule": "5日騰落率<=-3%",
+          "group": "通常の25日MA押し目"
         },
         {
           "label": "25日MAが上向き",
           "ok": true,
           "value": 0.99,
-          "rule": "25日MAの5日傾き>0%"
+          "rule": "25日MAの5日傾き>0%",
+          "group": "通常の25日MA押し目"
         },
         {
-          "label": "RSI65未満",
+          "label": "RSIが過熱していない",
           "ok": true,
           "value": 52.4,
-          "rule": "通常押し目はRSI<65"
+          "rule": "通常押し目はRSI<65",
+          "group": "通常の25日MA押し目"
         },
         {
-          "label": "75日MAまでの深押し",
+          "label": "75日MA付近まで深押し",
           "ok": false,
           "value": 7.6,
-          "rule": "75日MA±3%、20日騰落<=-5%、75日MA上向き"
+          "rule": "75日MA±3%、20日騰落<=-5%、75日MA上向き",
+          "group": "深い75日MA押し目"
+        },
+        {
+          "label": "深押し時のRSI",
+          "ok": true,
+          "value": 52.4,
+          "rule": "深い押し目はRSI<55",
+          "group": "深い75日MA押し目"
         }
       ],
       "one_condition_away": false,
+      "signal_type": "UPTREND_PULLBACK",
       "code": "6301",
       "name": "コマツ",
       "industry": null,
@@ -80590,7 +80700,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T08:40:47.395154+09:00",
+      "per_updated_at": "2026-10-04T09:04:14.342189+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -84744,6 +84854,7 @@
       "missing_conditions": [],
       "condition_checks": [],
       "one_condition_away": false,
+      "signal_type": "DOWNTREND_CONTINUED",
       "code": "6367",
       "name": "ダイキン工業",
       "industry": null,
@@ -84899,7 +85010,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T08:40:54.628759+09:00",
+      "per_updated_at": "2026-10-04T09:04:20.610211+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -89056,6 +89167,7 @@
       "missing_conditions": [],
       "condition_checks": [],
       "one_condition_away": false,
+      "signal_type": "DOWNTREND_CONTINUED",
       "code": "9989",
       "name": "サンドラッグ",
       "industry": "小売業",
@@ -89211,7 +89323,7 @@
         "switch_date_basis": "直近の決算発表日"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T08:41:03.811428+09:00",
+      "per_updated_at": "2026-10-04T09:04:28.537206+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -93361,6 +93473,7 @@
       "missing_conditions": [],
       "condition_checks": [],
       "one_condition_away": false,
+      "signal_type": "DOWNTREND_CONTINUED",
       "code": "2329",
       "name": "東北新社",
       "industry": "情報・通信業",
@@ -93508,7 +93621,7 @@
         "switch_date_basis": "取得できず"
       },
       "per_forecast_error": "Yahooから会社予想PER/EPSを取得できませんでした (timeseries: Yahoo forward P/E unavailable (https://query1.finance.yahoo.com: unavailable; https://query2.finance.yahoo.com: unavailable); https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized)",
-      "per_updated_at": "2026-10-04T08:41:11.450604+09:00",
+      "per_updated_at": "2026-10-04T09:04:34.387734+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -97655,6 +97768,7 @@
       "missing_conditions": [],
       "condition_checks": [],
       "one_condition_away": false,
+      "signal_type": "DOWNTREND_CONTINUED",
       "code": "3465",
       "name": "ケイアイスター不動産",
       "industry": "不動産業",
@@ -97754,7 +97868,7 @@
         "switch_date_basis": "直近の決算発表日"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T08:41:18.553681+09:00",
+      "per_updated_at": "2026-10-04T09:04:40.194761+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -98118,16 +98232,16 @@
   "successful_stocks": 23,
   "failed_stocks": 0,
   "timing": {
-    "total_seconds": 141.1,
+    "total_seconds": 115.9,
     "api_requests": 72,
-    "rate_limit_wait_seconds": 18.1,
+    "rate_limit_wait_seconds": 29.9,
     "retry_count": 0,
-    "http_seconds": 50.1
+    "http_seconds": 31.9
   },
   "irbank_usage_at_start": {
     "limit": 4000,
-    "used": 215,
-    "remaining": 3785,
+    "used": 286,
+    "remaining": 3714,
     "resets_at": "2026-10-05T00:00:00+09:00"
   }
 }
