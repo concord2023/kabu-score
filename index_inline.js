@@ -1,5 +1,5 @@
 
-const jp={UPTREND:'🟢 上昇トレンド',UPTREND_PULLBACK:'🟡 上昇・押し目',DOWNTREND_REVERSAL_WAIT:'🟠 下降・反転待ち',DOWNTREND_REVERSAL_CONFIRMED:'🟢 下降・反転確認',DOWNTREND_CONTINUED:'🔴 下降継続',RANGE_TRANSITION:'🟣 レンジ・転換',UNKNOWN:'⚪ 判定不能'};
+const jp={UPTREND:'🟢 上昇トレンド',UPTREND_PULLBACK:'🟡 上昇・押し目',DOWNTREND_REVERSAL_WAIT:'🟠 下降・反転待ち',DOWNTREND_REVERSAL_CONFIRMED:'🟢 下降・反転確認',DOWNTREND_CONTINUED:'🔴 下降継続',RANGE_BREAKOUT:'📈 レンジブレイク中・再上昇',RANGE_TRANSITION:'🟣 レンジ・転換',UNKNOWN:'⚪ 判定不能'};
 const sg={BUY_CANDIDATE:'BUY候補',WATCH:'WATCH',AVOID:'AVOID',INSUFFICIENT:'データ不足'};
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const fmtPrice=v=>{if(v==null||v==='')return '—';const n=Number(v);return Number.isFinite(n)?n.toLocaleString('ja-JP',{maximumFractionDigits:2}):String(v)};
