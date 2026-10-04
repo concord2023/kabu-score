@@ -63,6 +63,15 @@ for item in watch:
                      state_bonus.get(s.get('regime'), 9), -(rs if rs is not None else -999))
     })
 
+# Hard integrity check: every watchlist stock must remain in the public
+# ranking, even when its analysis failed.  A classification/data exception
+# must become INSUFFICIENT, never a disappearing row.
+watch_codes = {str((x.get('code') if isinstance(x, dict) else x)) for x in watch}
+item_codes = {str(x.get('code')) for x in items}
+missing_codes = sorted(watch_codes - item_codes)
+if missing_codes:
+    raise SystemExit('Ranking integrity failure: watchlist stocks missing from ranking: ' + ','.join(missing_codes))
+
 items.sort(key=lambda x: x['sort_key'])
 for i, x in enumerate(items, 1):
     x['rank'] = i
@@ -77,7 +86,10 @@ summary = {
     'today_message': '今日は買い候補なし' if not any(x['signal']=='BUY_CANDIDATE' for x in items) else '今日の買い候補あり'
 }
 
-out = {'updated_at': datetime.now(timezone(timedelta(hours=9))).isoformat(), 'summary': summary, 'ranking': items}
+out = {'updated_at': datetime.now(timezone(timedelta(hours=9))).isoformat(), 'summary': summary,
+       'integrity': {'watchlist_count': len(watch_codes), 'ranking_count': len(item_codes),
+                     'missing_codes': missing_codes, 'status': 'ok'},
+       'ranking': items}
 with open('data/decision_ranking.json','w',encoding='utf-8') as f:
     json.dump(out,f,ensure_ascii=False,indent=2)
 print(json.dumps(summary,ensure_ascii=False,indent=2))

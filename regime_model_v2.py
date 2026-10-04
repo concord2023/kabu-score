@@ -125,17 +125,52 @@ def classify_regime(rows, candle_signal=None, breakout_signal=None):
     range_trigger = _f(bo.get('breakout_trigger'))
     range_current = _f(bo.get('current_price'))
     range_distance = ((range_current / range_high) - 1) * 100 if range_current is not None and range_high not in (None, 0) else None
-    # A stock may have a positive weekly bias while still consolidating below
-    # a clear range ceiling.  Near the ceiling, the actionable state is
-    # "breakout waiting", not an established uptrend BUY.
-    # Being close to the current range ceiling is itself a more specific
-    # state than a generic weekly-UP label.  Do not require breakout status
-    # to be 'なし': a previous failed/weak breakout can still leave the stock
-    # in a pre-breakout consolidation.
+    # IMPORTANT: breakout_level may refer to a *past* breakout candidate.
+    # Never use that stale level by itself to reclassify an established
+    # uptrend.  Rebuild the current 20-session ceiling from today's rows.
+    # A range-transition label is only appropriate when the stock is actually
+    # near that current ceiling AND the daily trend structure is not already
+    # established.  This prevents the same historical level from making
+    # unrelated former-UPTREND stocks disappear from BUY/recommendation views.
+    current_highs = []
+    current_lows = []
+    for r in rows[1:21]:
+        h = _f(r.get('high'))
+        l = _f(r.get('low'))
+        c = _close(r)
+        if h is None: h = c
+        if l is None: l = c
+        if h is not None: current_highs.append(h)
+        if l is not None: current_lows.append(l)
+    current_range_high = max(current_highs) if len(current_highs) >= 20 else None
+    current_range_low = min(current_lows) if len(current_lows) >= 20 else None
+    current_range_width = (
+        (current_range_high / current_range_low - 1) * 100
+        if current_range_high is not None and current_range_low not in (None, 0)
+        else None
+    )
+    current_range_distance = (
+        (close / current_range_high - 1) * 100
+        if close is not None and current_range_high not in (None, 0)
+        else None
+    )
+    daily_uptrend_structure = (
+        vs75 is not None and vs75 > 0
+        and ma25_slope5 is not None and ma25_slope5 > 0
+        and daily_ma25 is not None and daily_ma75 is not None and daily_ma25 > daily_ma75
+    )
+    # A narrow-ish current range near its ceiling is a consolidation signal.
+    # A broad/established rising structure is left as UPTREND instead.
+    current_range_like = (
+        current_range_distance is not None
+        and -3.0 <= current_range_distance < 0.5
+        and current_range_width is not None
+        and current_range_width <= 15.0
+    )
     near_breakout = (
         not breakout_watch
-        and range_distance is not None
-        and -3.0 <= range_distance < 0.5
+        and current_range_like
+        and not daily_uptrend_structure
     )
     if breakout_watch:
         state = 'RANGE_BREAKOUT'
@@ -145,28 +180,20 @@ def classify_regime(rows, candle_signal=None, breakout_signal=None):
             reason = 'レンジ上限を上抜けて維持中。ただし出来高・20日MA・上昇継続などのBUY確認条件が未達のため、レンジブレイク監視中。'
     elif near_breakout:
         state = 'RANGE_TRANSITION'
-        reason = (f'レンジブレイク待ち。現在値は20日レンジ上限{range_high:.0f}円の{range_distance:+.1f}%で、明確な終値ブレイク目安は{range_trigger:.0f}円。'
+        trigger_text = f'{range_trigger:.0f}円' if range_trigger is not None else 'レンジ上限+0.5%'
+        level_text = f'{range_high:.0f}円' if range_high is not None else '現在の20日レンジ上限'
+        reason = (f'レンジブレイク待ち。現在値は{level_text}の{range_distance:+.1f}%で、明確な終値ブレイク目安は{trigger_text}。'
                   '上昇トレンドBUYではなく、まずレンジ上限突破を確認する局面。')
     elif weekly_dir == 'UP':
-        # Weekly UP by itself is not enough to call a stock an established
-        # daily uptrend.  If price is still below the 75MA or the 25MA has not
-        # established itself above the 75MA, treat it as a consolidation /
-        # transition instead.  This prevents a base near a range ceiling from
-        # being promoted to an 'uptrend BUY' merely by a short 5-day high.
-        daily_uptrend_structure = (
-            vs75 is not None and vs75 > 0
-            and daily_ma25_slope5 is not None and daily_ma25_slope5 > 0
-            and daily_ma25 is not None and daily_ma75 is not None and daily_ma25 > daily_ma75
-        )
+        # Do not demote every weekly-UP stock merely because one daily MA
+        # relationship is imperfect.  The specific RANGE_TRANSITION branch
+        # above is reserved for an actual current-range ceiling setup.
         if (vs20 is not None and vs20 < 0) or (ret5 is not None and ret5 < 0):
             state = 'UPTREND_PULLBACK'
             reason = '週足は上向き。日足は20日MA下/5日下落で押し目状態。'
-        elif not daily_uptrend_structure:
-            state = 'RANGE_TRANSITION'
-            reason = '週足は上向きでも、日足では25日MA・75日MAの上昇構造が未完成。レンジ上限突破を優先確認する局面。'
         else:
             state = 'UPTREND'
-            reason = '週足・日足とも上昇構造が確認できる。'
+            reason = '週足の方向が上向きで、現在のレンジ上限付近の転換条件には該当しない。'
     elif weekly_dir == 'DOWN':
         stabilized = (ret1 is not None and ret1 > 0 and ret5 is not None and ret5 >= -5 and
                       ((ret20 is not None and ret20 < 0) or (vs20 is not None and vs20 > 0)))

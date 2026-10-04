@@ -53,6 +53,11 @@ for p in ROOT.glob('*.py'): ast.parse(p.read_text(encoding='utf-8'))
 watch=json.loads((ROOT/'watchlist.json').read_text(encoding='utf-8'))['stocks']
 codes=[str(x.get('code','')).strip() for x in watch]
 assert_true(len(codes)==len(set(codes)), 'duplicate watchlist codes')
+# The ranking pipeline must preserve every analysis target.  A stock may be
+# INSUFFICIENT, but it must never silently disappear from the public ranking.
+rank_src=(ROOT/'rank_decisions.py').read_text(encoding='utf-8')
+assert_true('Ranking integrity failure' in rank_src and "missing_codes = sorted(watch_codes - item_codes)" in rank_src,
+            'ranking integrity guard is missing')
 assert_true('485A' in codes and any(x.get('name')=='パワーエックス' for x in watch), 'PowerX 485A missing')
 assert_true('285A' in codes and any(x.get('name')=='キオクシアホールディングス' for x in watch), 'Kioxia 285A missing')
 
