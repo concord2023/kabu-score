@@ -172,7 +172,7 @@ def decide(stock, regime):
         if candle.get('status') in ('大底反転サイン','反転サイン'):
             reason += f" 🕯️{candle.get('status')}"
         return {'signal':signal,'signal_reason':reason,'missing_conditions':[],
-                'condition_checks':checks,'one_condition_away':False}
+                'condition_checks':checks,'one_condition_away':False,'signal_type':'RANGE_BREAKOUT'}
 
     # 2) Very strict multi-timeframe bottom branch.
     # Weekly RSI<=30 is combined with either a monthly MACD golden cross or a
@@ -186,7 +186,7 @@ def decide(stock, regime):
         signal='BUY_CANDIDATE'
         reason='厳格な大底候補サイン。週足RSI30以下に加え、月足MACDがゴールデンクロス、またはGC手前でMACDとシグナルの差（ヒストグラム）が2か月連続で縮小。通常の押し目BUYとは別系統の長期底打ち候補として扱う。'
         return {'signal':signal,'signal_reason':reason,'missing_conditions':[],
-                'condition_checks':checks,'one_condition_away':False}
+                'condition_checks':checks,'one_condition_away':False,'signal_type':'MONTHLY_BOTTOM'}
 
     # 2) Bottom-reversal branch. Being positive on the day alone is NOT enough.
     if regime['regime'] in ('DOWNTREND_REVERSAL_WAIT','DOWNTREND_REVERSAL_CONFIRMED'):
@@ -227,23 +227,30 @@ def decide(stock, regime):
         primary_ok = near_25ma and actual_pullback and ma25_rising and rsi_primary_ok
         deep_ok = deep_75ma and rsi_deep_ok
         checks = [
-            {'label':'週足上昇トレンド','ok':regime.get('weekly_direction')=='UP','value':regime.get('weekly_direction'),'rule':'週足方向=UP'},
-            {'label':'25日MAまで調整','ok':near_25ma,'value':vs25,'rule':'25日MA乖離が-4%〜+0.5%'},
-            {'label':'5日でしっかり押す','ok':actual_pullback,'value':ret5,'rule':'5日騰落率<=-3%'},
-            {'label':'25日MAが上向き','ok':ma25_rising,'value':ma25_slope5,'rule':'25日MAの5日傾き>0%'},
-            {'label':'RSI65未満','ok':rsi_primary_ok,'value':rsi,'rule':'通常押し目はRSI<65'},
-            {'label':'75日MAまでの深押し','ok':deep_75ma,'value':vs75,'rule':'75日MA±3%、20日騰落<=-5%、75日MA上向き'},
+            {'label':'上昇トレンドの土台','ok':regime.get('weekly_direction')=='UP','value':regime.get('weekly_direction'),'rule':'週足方向=UP','group':'通常の25日MA押し目'},
+            {'label':'25日MA付近まで調整','ok':near_25ma,'value':vs25,'rule':'25日MA乖離が-4%〜+0.5%','group':'通常の25日MA押し目'},
+            {'label':'5日で3%以上調整','ok':actual_pullback,'value':ret5,'rule':'5日騰落率<=-3%','group':'通常の25日MA押し目'},
+            {'label':'25日MAが上向き','ok':ma25_rising,'value':ma25_slope5,'rule':'25日MAの5日傾き>0%','group':'通常の25日MA押し目'},
+            {'label':'RSIが過熱していない','ok':rsi_primary_ok,'value':rsi,'rule':'通常押し目はRSI<65','group':'通常の25日MA押し目'},
+            {'label':'75日MA付近まで深押し','ok':deep_75ma,'value':vs75,'rule':'75日MA±3%、20日騰落<=-5%、75日MA上向き','group':'深い75日MA押し目'},
+            {'label':'深押し時のRSI','ok':rsi_deep_ok,'value':rsi,'rule':'深い押し目はRSI<55','group':'深い75日MA押し目'},
         ]
+        primary_missing = [c['label'] for c in checks[:5] if not c['ok']]
+        deep_missing = [c['label'] for c in checks[5:] if not c['ok']]
         if primary_ok:
+            missing=[]
             signal='BUY_CANDIDATE'
             reason='上昇トレンドの押し目。20日MAではなく25日MAを主な押し目基準に変更し、25日MAの-4〜+0.5%以内、5日で3%以上調整、25日MA上向き、RSI65未満を確認。当日の値動きはBUY条件に使わない。'
         elif deep_ok:
+            missing=[]
             signal='BUY_CANDIDATE'
             reason='上昇トレンドの深い押し目。75日MA±3%まで調整し、20日で5%以上下落した一方、75日MAは上向きを維持。RSI55未満を確認。75日MA割れ・直近安値割れは損切り警戒。'
         elif near_25ma or deep_75ma:
+            missing = primary_missing
             signal='WATCH'
             reason='押し目ゾーンには入っているがBUY条件未達。25日MA付近では5日3%以上の調整・25日MA上向き・RSIを確認。75日MA付近まで深く押した場合は、75日MA上向きと反転確認を重視する。当日の値動きはBUY条件に使わない。'
         else:
+            missing = primary_missing
             signal='WATCH'
             reason='上昇トレンドだが現在は押し目BUY水準ではない。20日MAだけでBUYにせず、まず25日MAを第1の押し目目安、75日MAを第2の深い押し目目安として待つ。'
     elif regime['regime'] == 'UPTREND':
@@ -274,5 +281,14 @@ def decide(stock, regime):
         reason += f" 🕯️{candle.get('status')}：{candle.get('reason','')}"
     if bo.get('status') in ('レンジ抜け候補','ブレイク失敗警戒'):
         reason += f" 📈{bo.get('status')}：{bo.get('reason','')}"
+    signal_type = {
+        'DOWNTREND_REVERSAL_WAIT':'BOTTOM_REVERSAL',
+        'DOWNTREND_REVERSAL_CONFIRMED':'BOTTOM_REVERSAL',
+        'UPTREND_PULLBACK':'UPTREND_PULLBACK',
+        'UPTREND':'UPTREND',
+        'RANGE_TRANSITION':'RANGE_TRANSITION',
+        'DOWNTREND_CONTINUED':'DOWNTREND_CONTINUED',
+    }.get(regime.get('regime'), 'UNKNOWN')
     return {'signal':signal,'signal_reason':reason,'missing_conditions':missing,
-            'condition_checks':checks,'one_condition_away':len(missing)==1}
+            'condition_checks':checks,'one_condition_away':len(missing)==1,
+            'signal_type':signal_type}

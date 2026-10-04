@@ -60,7 +60,7 @@ def compact(stock, regime, decision, company):
         'monthly_macd_state', 'monthly_points', 'monthly_rsi_bottom_signal', 'volume_ratio',
         'ma20', 'ma25', 'ma75', 'ma200', 'daily_vs20', 'daily_ma20_slope5', 'weekly_direction',
         'weekly_points', 'candle_signal', 'breakout_signal', 'signal_icons', 'score', 'score_max',
-        'condition_checks', 'interpretation', 'attribution'
+        'condition_checks', 'signal_type', 'interpretation', 'attribution'
     )
     details = {k: stock.get(k) for k in keys if k in stock}
     details.update({
@@ -72,6 +72,7 @@ def compact(stock, regime, decision, company):
         'weekly_ma26_slope4w': regime.get('weekly_ma26_slope4w'),
         'signal_reason': decision.get('signal_reason'),
         'missing_conditions': decision.get('missing_conditions', []),
+        'signal_type': decision.get('signal_type'),
     })
     return {
         'code': str(company['code']),
