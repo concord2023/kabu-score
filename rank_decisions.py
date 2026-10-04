@@ -7,7 +7,7 @@ with open('watchlist.json', encoding='utf-8') as f:
     watch = json.load(f).get('stocks', [])
 
 priority = {'BUY_CANDIDATE':0,'WATCH':1,'INSUFFICIENT':2,'AVOID':3}
-state_bonus = {'DOWNTREND_REVERSAL_CONFIRMED':0,'UPTREND_PULLBACK':1,'DOWNTREND_REVERSAL_WAIT':2,'UPTREND':3,'RANGE_TRANSITION':4,'DOWNTREND_CONTINUED':5,'UNKNOWN':6}
+state_bonus = {'DOWNTREND_REVERSAL_CONFIRMED':0,'UPTREND_PULLBACK':1,'RANGE_BREAKOUT':2,'DOWNTREND_REVERSAL_WAIT':3,'UPTREND':4,'RANGE_TRANSITION':5,'DOWNTREND_CONTINUED':6,'UNKNOWN':7}
 items = []
 
 def pick_metrics(s):
@@ -38,11 +38,27 @@ for item in watch:
         continue
     sig = s.get('signal', 'INSUFFICIENT')
     rs = s.get('relative_strength')
+
+    # Keep the displayed regime synchronized with the actual buy-signal route.
+    # A previous failure mode left RANGE_BREAKOUT in signal_type while regime
+    # remained UNKNOWN, producing a misleading '判定不能' label in the UI.
+    # RANGE_BREAKOUT is the more specific current-state classification, so it
+    # must win over a stale/unknown generic regime when the breakout route is
+    # active.
+    regime = s.get('regime')
+    signal_type = s.get('signal_type')
+    bo = s.get('breakout_signal') or {}
+    breakout_active = bool(bo.get('is_breakout')) and bo.get('status') in ('レンジ抜け・再上昇', 'レンジ抜け候補')
+    if signal_type == 'RANGE_BREAKOUT' or breakout_active:
+        regime = 'RANGE_BREAKOUT'
+        if signal_type != 'RANGE_BREAKOUT':
+            signal_type = 'RANGE_BREAKOUT'
+
     items.append({
         'code': code, 'name': s.get('name', default_name), 'price': s.get('price'), 'change': s.get('change'),
-        'regime': s.get('regime'), 'regime_reason': s.get('regime_reason'), 'signal': sig,
+        'regime': regime, 'regime_reason': ('レンジブレイク中・再上昇型。' + (s.get('regime_reason') or '') if regime == 'RANGE_BREAKOUT' and s.get('regime') != 'RANGE_BREAKOUT' else s.get('regime_reason')), 'signal': sig,
         'signal_reason': s.get('signal_reason'), 'one_condition_away': s.get('one_condition_away', False),
-        'missing_conditions': s.get('missing_conditions', []), 'relative_strength': rs, 'score': s.get('score'), 'signal_icons': s.get('signal_icons', []), 'details': pick_metrics(s),
+        'missing_conditions': s.get('missing_conditions', []), 'relative_strength': rs, 'score': s.get('score'), 'signal_icons': s.get('signal_icons', []), 'signal_type': signal_type or s.get('signal_type'), 'details': pick_metrics(s),
         'sort_key': (priority.get(sig, 9), 0 if s.get('one_condition_away') else 1,
                      state_bonus.get(s.get('regime'), 9), -(rs if rs is not None else -999))
     })
