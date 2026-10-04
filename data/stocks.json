@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-04T18:07:47.482983+09:00",
+  "updated_at": "2026-10-04T21:01:11.096153+09:00",
   "source": "IRBANK API + 豆腐ハードボイルド（騰落銘柄数）",
   "api_strategy": "price:800-row target/stock; weekly margin:1 endpoint/stock only when cache is stale; valuations:20 fiscal years/stock; Yahoo company forecast PER/EPS/stock; breadth:1/run; monthly MACD:1000-row target only for weekly-RSI<=30; quota preflight via /usage",
   "stocks": {
@@ -3936,53 +3936,39 @@
       "daily_ret10": 18.0,
       "daily_ret20": 5.66,
       "weekly_direction": "UP",
-      "regime": "UPTREND",
-      "regime_reason": "週足の方向が上向きで、日足も大きく崩れていない。",
+      "regime": "RANGE_TRANSITION",
+      "regime_reason": "レンジブレイク待ち。現在値は20日レンジ上限5589円の+0.2%で、明確な終値ブレイク目安は5617円。上昇トレンドBUYではなく、まずレンジ上限突破を確認する局面。",
       "signal": "WATCH",
-      "signal_reason": "上昇トレンド継続中。ただし追いかけ買いはせず、再上昇の6条件（週足上昇・25日MA上・25日MA上向き・5日高値更新・出来高1.2倍・RSI50〜70）が揃うまでWATCH。押し目になれば「上昇押し目」へ分類。",
-      "missing_conditions": [
-        "25日MAが上向き"
-      ],
+      "signal_reason": "レンジブレイク待ち。現在値5598円 / 20日レンジ上限5589円 / 明確な終値ブレイク目安5617円。現在はレンジ上限まで+0.2%。まず終値でブレイク目安を超え、その後に出来高1.5倍・突破水準維持・20日MA上・5日騰落プラスを確認する。",
+      "missing_conditions": [],
       "condition_checks": [
         {
-          "label": "週足上昇トレンド",
+          "label": "レンジ上限に接近",
           "ok": true,
-          "value": "UP",
-          "rule": "週足方向=UP"
+          "value": 0.16103059581320522,
+          "rule": "20日レンジ上限から-2.0%以上"
         },
         {
-          "label": "25日MAより上",
-          "ok": true,
-          "value": 9.11,
-          "rule": "25日MA乖離>0%"
-        },
-        {
-          "label": "25日MAが上向き",
+          "label": "終値でブレイク目安を超える",
           "ok": false,
-          "value": -0.14,
-          "rule": "25日MAの5日傾き>0%"
+          "value": 5616.94,
+          "rule": "終値5617円以上"
         },
         {
-          "label": "直近5営業日高値を更新",
-          "ok": true,
-          "value": 5368.0,
-          "rule": "現在終値>直前5営業日の高値"
+          "label": "突破日の出来高1.5倍以上",
+          "ok": false,
+          "value": 1.5,
+          "rule": "突破日の出来高÷直前20日平均>=1.5倍"
         },
         {
-          "label": "出来高が平均超",
-          "ok": true,
-          "value": 1.58,
-          "rule": "当日出来高÷直前20日平均>=1.2倍"
-        },
-        {
-          "label": "RSIが健全な上昇域",
-          "ok": true,
-          "value": 52.9,
-          "rule": "RSI50以上70未満"
+          "label": "突破水準を維持",
+          "ok": false,
+          "value": null,
+          "rule": "ブレイク後もレンジ上限以上を維持"
         }
       ],
-      "one_condition_away": true,
-      "signal_type": "UPTREND",
+      "one_condition_away": false,
+      "signal_type": "RANGE_TRANSITION",
       "code": "5803",
       "name": "フジクラ",
       "industry": null,
@@ -4114,7 +4100,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T18:07:51.607082+09:00",
+      "per_updated_at": "2026-10-04T21:01:15.084750+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -8423,7 +8409,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T18:07:56.906165+09:00",
+      "per_updated_at": "2026-10-04T21:01:20.436890+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -12572,54 +12558,39 @@
       "daily_ret10": 2.46,
       "daily_ret20": -1.84,
       "weekly_direction": "UP",
-      "regime": "UPTREND",
-      "regime_reason": "週足の方向が上向きで、日足も大きく崩れていない。",
+      "regime": "RANGE_TRANSITION",
+      "regime_reason": "レンジブレイク待ち。現在値は20日レンジ上限5054円の-2.8%で、明確な終値ブレイク目安は5079円。上昇トレンドBUYではなく、まずレンジ上限突破を確認する局面。",
       "signal": "WATCH",
-      "signal_reason": "上昇トレンド継続中。ただし追いかけ買いはせず、再上昇の6条件（週足上昇・25日MA上・25日MA上向き・5日高値更新・出来高1.2倍・RSI50〜70）が揃うまでWATCH。押し目になれば「上昇押し目」へ分類。",
-      "missing_conditions": [
-        "出来高が平均超",
-        "RSIが健全な上昇域"
-      ],
+      "signal_reason": "レンジブレイク待ち。現在値4913円 / 20日レンジ上限5054円 / 明確な終値ブレイク目安5079円。現在はレンジ上限まで-2.8%。まず終値でブレイク目安を超え、その後に出来高1.5倍・突破水準維持・20日MA上・5日騰落プラスを確認する。",
+      "missing_conditions": [],
       "condition_checks": [
         {
-          "label": "週足上昇トレンド",
+          "label": "レンジ上限に接近",
           "ok": true,
-          "value": "UP",
-          "rule": "週足方向=UP"
+          "value": -2.789869410368029,
+          "rule": "20日レンジ上限から-2.0%以上"
         },
         {
-          "label": "25日MAより上",
-          "ok": true,
-          "value": 3.02,
-          "rule": "25日MA乖離>0%"
-        },
-        {
-          "label": "25日MAが上向き",
-          "ok": true,
-          "value": 0.47,
-          "rule": "25日MAの5日傾き>0%"
-        },
-        {
-          "label": "直近5営業日高値を更新",
-          "ok": true,
-          "value": 4820.0,
-          "rule": "現在終値>直前5営業日の高値"
-        },
-        {
-          "label": "出来高が平均超",
+          "label": "終値でブレイク目安を超える",
           "ok": false,
-          "value": 0.92,
-          "rule": "当日出来高÷直前20日平均>=1.2倍"
+          "value": 5079.27,
+          "rule": "終値5079円以上"
         },
         {
-          "label": "RSIが健全な上昇域",
+          "label": "突破日の出来高1.5倍以上",
           "ok": false,
-          "value": 71.5,
-          "rule": "RSI50以上70未満"
+          "value": 1.5,
+          "rule": "突破日の出来高÷直前20日平均>=1.5倍"
+        },
+        {
+          "label": "突破水準を維持",
+          "ok": false,
+          "value": null,
+          "rule": "ブレイク後もレンジ上限以上を維持"
         }
       ],
       "one_condition_away": false,
-      "signal_type": "UPTREND",
+      "signal_type": "RANGE_TRANSITION",
       "code": "6701",
       "name": "NEC",
       "industry": null,
@@ -12759,7 +12730,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T18:08:01.271788+09:00",
+      "per_updated_at": "2026-10-04T21:01:24.992839+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -17125,7 +17096,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T18:08:06.073554+09:00",
+      "per_updated_at": "2026-10-04T21:01:29.407432+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -21469,7 +21440,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T18:08:11.164868+09:00",
+      "per_updated_at": "2026-10-04T21:01:34.017008+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -25628,68 +25599,39 @@
       "daily_ret10": 5.77,
       "daily_ret20": -0.34,
       "weekly_direction": "UP",
-      "regime": "UPTREND_PULLBACK",
-      "regime_reason": "週足は上向き。日足は20日MA下/5日下落で押し目状態。",
+      "regime": "RANGE_TRANSITION",
+      "regime_reason": "レンジブレイク待ち。現在値は20日レンジ上限5621円の-1.8%で、明確な終値ブレイク目安は5649円。上昇トレンドBUYではなく、まずレンジ上限突破を確認する局面。",
       "signal": "WATCH",
-      "signal_reason": "上昇トレンドだが現在は押し目BUY水準ではない。20日MAだけでBUYにせず、まず25日MAを第1の押し目目安、75日MAを第2の深い押し目目安として待つ。",
-      "missing_conditions": [
-        "25日MA付近まで調整",
-        "5日で3%以上調整",
-        "RSIが過熱していない"
-      ],
+      "signal_reason": "レンジブレイク待ち。現在値5522円 / 20日レンジ上限5621円 / 明確な終値ブレイク目安5649円。現在はレンジ上限まで-1.8%。まず終値でブレイク目安を超え、その後に出来高1.5倍・突破水準維持・20日MA上・5日騰落プラスを確認する。",
+      "missing_conditions": [],
       "condition_checks": [
         {
-          "label": "上昇トレンドの土台",
+          "label": "レンジ上限に接近",
           "ok": true,
-          "value": "UP",
-          "rule": "週足方向=UP",
-          "group": "通常の25日MA押し目"
+          "value": -1.7612524461839585,
+          "rule": "20日レンジ上限から-2.0%以上"
         },
         {
-          "label": "25日MA付近まで調整",
+          "label": "終値でブレイク目安を超える",
           "ok": false,
-          "value": 2.35,
-          "rule": "25日MA乖離が-4%〜+0.5%",
-          "group": "通常の25日MA押し目"
+          "value": 5649.1,
+          "rule": "終値5649円以上"
         },
         {
-          "label": "5日で3%以上調整",
+          "label": "突破日の出来高1.5倍以上",
           "ok": false,
-          "value": -0.25,
-          "rule": "5日騰落率<=-3%",
-          "group": "通常の25日MA押し目"
+          "value": 1.5,
+          "rule": "突破日の出来高÷直前20日平均>=1.5倍"
         },
         {
-          "label": "25日MAが上向き",
-          "ok": true,
-          "value": 0.94,
-          "rule": "25日MAの5日傾き>0%",
-          "group": "通常の25日MA押し目"
-        },
-        {
-          "label": "RSIが過熱していない",
+          "label": "突破水準を維持",
           "ok": false,
-          "value": 73.2,
-          "rule": "通常押し目はRSI<65",
-          "group": "通常の25日MA押し目"
-        },
-        {
-          "label": "75日MA付近まで深押し",
-          "ok": false,
-          "value": 7.67,
-          "rule": "75日MA±3%、20日騰落<=-5%、75日MA上向き",
-          "group": "深い75日MA押し目"
-        },
-        {
-          "label": "深押し時のRSI",
-          "ok": false,
-          "value": 73.2,
-          "rule": "深い押し目はRSI<55",
-          "group": "深い75日MA押し目"
+          "value": null,
+          "rule": "ブレイク後もレンジ上限以上を維持"
         }
       ],
       "one_condition_away": false,
-      "signal_type": "UPTREND_PULLBACK",
+      "signal_type": "RANGE_TRANSITION",
       "code": "6501",
       "name": "日立製作所",
       "industry": null,
@@ -25837,7 +25779,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T18:08:15.574639+09:00",
+      "per_updated_at": "2026-10-04T21:01:38.612427+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -30192,7 +30134,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T18:08:20.426198+09:00",
+      "per_updated_at": "2026-10-04T21:01:43.690513+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -34527,7 +34469,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T18:08:25.642518+09:00",
+      "per_updated_at": "2026-10-04T21:01:48.784552+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -38864,7 +38806,7 @@
         "switch_date_basis": "直近の決算発表日"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T18:08:32.793116+09:00",
+      "per_updated_at": "2026-10-04T21:01:55.107477+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -43199,7 +43141,7 @@
         "switch_date_basis": "直近の決算発表日"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T18:08:39.307962+09:00",
+      "per_updated_at": "2026-10-04T21:02:01.819769+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -47508,7 +47450,7 @@
         "switch_date_basis": "直近の決算発表日"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T18:08:45.863878+09:00",
+      "per_updated_at": "2026-10-04T21:02:08.617009+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -51863,7 +51805,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T18:08:50.216815+09:00",
+      "per_updated_at": "2026-10-04T21:02:12.919905+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -55165,26 +55107,32 @@
       "regime": "RANGE_TRANSITION",
       "regime_reason": "週足の方向が上昇/下降に決め切れない。レンジ・転換途中。",
       "signal": "WATCH",
-      "signal_reason": "レンジ転換監視。上限ブレイクと出来高増加などを確認するまではBUYにしない。",
+      "signal_reason": "レンジブレイク待ち。現在値2128円 / 20日レンジ上限2443円 / 明確な終値ブレイク目安2455円。現在はレンジ上限まで-12.9%。まず終値でブレイク目安を超え、その後に出来高1.5倍・突破水準維持・20日MA上・5日騰落プラスを確認する。",
       "missing_conditions": [],
       "condition_checks": [
         {
-          "label": "週足方向",
-          "ok": true,
-          "value": "RANGE",
-          "rule": "週足がRANGE"
+          "label": "レンジ上限に接近",
+          "ok": false,
+          "value": -12.893982808022919,
+          "rule": "20日レンジ上限から-2.0%以上"
         },
         {
-          "label": "上限ブレイク",
+          "label": "終値でブレイク目安を超える",
           "ok": false,
           "value": 2455.21,
-          "rule": "終値2455.21円以上"
+          "rule": "終値2455円以上"
         },
         {
-          "label": "出来高増",
+          "label": "突破日の出来高1.5倍以上",
+          "ok": false,
+          "value": 1.5,
+          "rule": "突破日の出来高÷直前20日平均>=1.5倍"
+        },
+        {
+          "label": "突破水準を維持",
           "ok": false,
           "value": null,
-          "rule": "突破日の出来高None株以上（直前20日平均×1.5）"
+          "rule": "ブレイク後もレンジ上限以上を維持"
         }
       ],
       "one_condition_away": false,
@@ -55207,7 +55155,7 @@
         "switch_date_basis": "直近の決算発表日"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T18:08:55.831355+09:00",
+      "per_updated_at": "2026-10-04T21:02:19.401376+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -59384,26 +59332,32 @@
       "regime": "RANGE_TRANSITION",
       "regime_reason": "週足の方向が上昇/下降に決め切れない。レンジ・転換途中。",
       "signal": "WATCH",
-      "signal_reason": "レンジ転換監視。上限ブレイクと出来高増加などを確認するまではBUYにしない。",
+      "signal_reason": "レンジブレイク待ち。現在値5745円 / 20日レンジ上限6583円 / 明確な終値ブレイク目安6616円。現在はレンジ上限まで-12.7%。まず終値でブレイク目安を超え、その後に出来高1.5倍・突破水準維持・20日MA上・5日騰落プラスを確認する。",
       "missing_conditions": [],
       "condition_checks": [
         {
-          "label": "週足方向",
-          "ok": true,
-          "value": "RANGE",
-          "rule": "週足がRANGE"
+          "label": "レンジ上限に接近",
+          "ok": false,
+          "value": -12.729758468783226,
+          "rule": "20日レンジ上限から-2.0%以上"
         },
         {
-          "label": "上限ブレイク",
+          "label": "終値でブレイク目安を超える",
           "ok": false,
           "value": 6615.91,
-          "rule": "終値6615.91円以上"
+          "rule": "終値6616円以上"
         },
         {
-          "label": "出来高増",
+          "label": "突破日の出来高1.5倍以上",
+          "ok": false,
+          "value": 1.5,
+          "rule": "突破日の出来高÷直前20日平均>=1.5倍"
+        },
+        {
+          "label": "突破水準を維持",
           "ok": false,
           "value": null,
-          "rule": "突破日の出来高None株以上（直前20日平均×1.5）"
+          "rule": "ブレイク後もレンジ上限以上を維持"
         }
       ],
       "one_condition_away": false,
@@ -59563,7 +59517,7 @@
         "switch_date_basis": "直近の決算発表日"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T18:09:02.309068+09:00",
+      "per_updated_at": "2026-10-04T21:02:25.898006+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -63920,7 +63874,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T18:09:07.258857+09:00",
+      "per_updated_at": "2026-10-04T21:02:30.259006+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -68065,26 +68019,32 @@
       "regime": "RANGE_TRANSITION",
       "regime_reason": "週足の方向が上昇/下降に決め切れない。レンジ・転換途中。",
       "signal": "WATCH",
-      "signal_reason": "レンジ転換監視。上限ブレイクと出来高増加などを確認するまではBUYにしない。",
+      "signal_reason": "レンジブレイク待ち。現在値4694円 / 20日レンジ上限5123円 / 明確な終値ブレイク目安5149円。現在はレンジ上限まで-8.4%。まず終値でブレイク目安を超え、その後に出来高1.5倍・突破水準維持・20日MA上・5日騰落プラスを確認する。",
       "missing_conditions": [],
       "condition_checks": [
         {
-          "label": "週足方向",
-          "ok": true,
-          "value": "RANGE",
-          "rule": "週足がRANGE"
+          "label": "レンジ上限に接近",
+          "ok": false,
+          "value": -8.373999609603743,
+          "rule": "20日レンジ上限から-2.0%以上"
         },
         {
-          "label": "上限ブレイク",
+          "label": "終値でブレイク目安を超える",
           "ok": false,
           "value": 5148.61,
-          "rule": "終値5148.61円以上"
+          "rule": "終値5149円以上"
         },
         {
-          "label": "出来高増",
+          "label": "突破日の出来高1.5倍以上",
+          "ok": false,
+          "value": 1.5,
+          "rule": "突破日の出来高÷直前20日平均>=1.5倍"
+        },
+        {
+          "label": "突破水準を維持",
           "ok": false,
           "value": null,
-          "rule": "突破日の出来高None株以上（直前20日平均×1.5）"
+          "rule": "ブレイク後もレンジ上限以上を維持"
         }
       ],
       "one_condition_away": false,
@@ -68236,7 +68196,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T18:09:12.246532+09:00",
+      "per_updated_at": "2026-10-04T21:02:34.571020+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -72575,7 +72535,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T18:09:17.401913+09:00",
+      "per_updated_at": "2026-10-04T21:02:38.893638+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -76560,7 +76520,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T18:09:21.618341+09:00",
+      "per_updated_at": "2026-10-04T21:02:43.872161+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -80928,7 +80888,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T18:09:26.102679+09:00",
+      "per_updated_at": "2026-10-04T21:02:48.411306+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -85077,43 +85037,39 @@
       "daily_ret10": 0.83,
       "daily_ret20": -1.7,
       "weekly_direction": "DOWN",
-      "regime": "DOWNTREND_CONTINUED",
-      "regime_reason": "週足・日足とも弱く、まだ反転条件が整っていない。",
-      "signal": "AVOID",
-      "signal_reason": "下降継続のため現時点では買い回避。BUY候補にするには、下げ止まり→20日MA回復→大底反転サイン→週足RSI35以下の確認が必要。",
-      "missing_conditions": [
-        "日足が下げ止まり",
-        "20日MAを回復",
-        "大底反転サイン"
-      ],
+      "regime": "RANGE_TRANSITION",
+      "regime_reason": "レンジブレイク待ち。現在値は20日レンジ上限21105円の-2.5%で、明確な終値ブレイク目安は21211円。上昇トレンドBUYではなく、まずレンジ上限突破を確認する局面。",
+      "signal": "WATCH",
+      "signal_reason": "レンジブレイク待ち。現在値20585円 / 20日レンジ上限21105円 / 明確な終値ブレイク目安21211円。現在はレンジ上限まで-2.5%。まず終値でブレイク目安を超え、その後に出来高1.5倍・突破水準維持・20日MA上・5日騰落プラスを確認する。",
+      "missing_conditions": [],
       "condition_checks": [
         {
-          "label": "日足が下げ止まり",
-          "ok": false,
-          "value": -1.91,
-          "rule": "当日プラス・5日騰落>=-5%・10日下落または20日MA上"
-        },
-        {
-          "label": "20日MAを回復",
-          "ok": false,
-          "value": -0.66,
-          "rule": "20日MA乖離>=0%"
-        },
-        {
-          "label": "大底反転サイン",
-          "ok": false,
-          "value": "なし",
-          "rule": "大底反転サインを確認"
-        },
-        {
-          "label": "週足RSIが売られ過ぎ域",
+          "label": "レンジ上限に接近",
           "ok": true,
-          "value": 28.2,
-          "rule": "週足RSI<=35"
+          "value": -2.463871120587535,
+          "rule": "20日レンジ上限から-2.0%以上"
+        },
+        {
+          "label": "終値でブレイク目安を超える",
+          "ok": false,
+          "value": 21210.52,
+          "rule": "終値21211円以上"
+        },
+        {
+          "label": "突破日の出来高1.5倍以上",
+          "ok": false,
+          "value": 1.5,
+          "rule": "突破日の出来高÷直前20日平均>=1.5倍"
+        },
+        {
+          "label": "突破水準を維持",
+          "ok": false,
+          "value": null,
+          "rule": "ブレイク後もレンジ上限以上を維持"
         }
       ],
       "one_condition_away": false,
-      "signal_type": "DOWNTREND_CONTINUED",
+      "signal_type": "RANGE_TRANSITION",
       "code": "6367",
       "name": "ダイキン工業",
       "industry": null,
@@ -85269,7 +85225,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T18:09:33.336031+09:00",
+      "per_updated_at": "2026-10-04T21:02:54.986497+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -89613,7 +89569,7 @@
         "switch_date_basis": "直近の決算発表日"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T18:09:42.322409+09:00",
+      "per_updated_at": "2026-10-04T21:03:03.476770+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -93942,7 +93898,7 @@
         "switch_date_basis": "取得できず"
       },
       "per_forecast_error": "Yahooから会社予想PER/EPSを取得できませんでした (timeseries: Yahoo forward P/E unavailable (https://query1.finance.yahoo.com: unavailable; https://query2.finance.yahoo.com: unavailable); https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized)",
-      "per_updated_at": "2026-10-04T18:09:48.908552+09:00",
+      "per_updated_at": "2026-10-04T21:03:09.620945+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -98220,7 +98176,7 @@
         "switch_date_basis": "直近の決算発表日"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T18:09:55.613135+09:00",
+      "per_updated_at": "2026-10-04T21:03:15.803404+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -102389,26 +102345,32 @@
       "regime": "RANGE_TRANSITION",
       "regime_reason": "週足の方向が上昇/下降に決め切れない。レンジ・転換途中。",
       "signal": "WATCH",
-      "signal_reason": "レンジ転換監視。上限ブレイクと出来高増加などを確認するまではBUYにしない。",
+      "signal_reason": "レンジブレイク待ち。現在値5620円 / 20日レンジ上限6290円 / 明確な終値ブレイク目安6321円。現在はレンジ上限まで-10.7%。まず終値でブレイク目安を超え、その後に出来高1.5倍・突破水準維持・20日MA上・5日騰落プラスを確認する。",
       "missing_conditions": [],
       "condition_checks": [
         {
-          "label": "週足方向",
-          "ok": true,
-          "value": "RANGE",
-          "rule": "週足がRANGE"
+          "label": "レンジ上限に接近",
+          "ok": false,
+          "value": -10.651828298887123,
+          "rule": "20日レンジ上限から-2.0%以上"
         },
         {
-          "label": "上限ブレイク",
+          "label": "終値でブレイク目安を超える",
           "ok": false,
           "value": 6321.45,
-          "rule": "終値6321.45円以上"
+          "rule": "終値6321円以上"
         },
         {
-          "label": "出来高増",
+          "label": "突破日の出来高1.5倍以上",
+          "ok": false,
+          "value": 1.5,
+          "rule": "突破日の出来高÷直前20日平均>=1.5倍"
+        },
+        {
+          "label": "突破水準を維持",
           "ok": false,
           "value": null,
-          "rule": "突破日の出来高None株以上（直前20日平均×1.5）"
+          "rule": "ブレイク後もレンジ上限以上を維持"
         }
       ],
       "one_condition_away": false,
@@ -102560,7 +102522,7 @@
         "switch_date_basis": "直近の決算発表日"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-04T18:10:02.877926+09:00",
+      "per_updated_at": "2026-10-04T21:03:22.979915+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -102579,7 +102541,7 @@
       "rows_received": 500,
       "data_points": 500,
       "date": "2026-10-02",
-      "regime": "UPTREND",
+      "regime": "RANGE_TRANSITION",
       "signal": "WATCH",
       "relative_strength": 5.22,
       "supply_status": "重い",
@@ -102609,7 +102571,7 @@
       "rows_received": 1000,
       "data_points": 1000,
       "date": "2026-10-02",
-      "regime": "UPTREND",
+      "regime": "RANGE_TRANSITION",
       "signal": "WATCH",
       "relative_strength": 2.87,
       "supply_status": "重い",
@@ -102654,7 +102616,7 @@
       "rows_received": 1000,
       "data_points": 1000,
       "date": "2026-10-02",
-      "regime": "UPTREND_PULLBACK",
+      "regime": "RANGE_TRANSITION",
       "signal": "WATCH",
       "relative_strength": 1.16,
       "supply_status": "改善方向",
@@ -102864,8 +102826,8 @@
       "rows_received": 1000,
       "data_points": 1000,
       "date": "2026-10-02",
-      "regime": "DOWNTREND_CONTINUED",
-      "signal": "AVOID",
+      "regime": "RANGE_TRANSITION",
+      "signal": "WATCH",
       "relative_strength": -0.97,
       "supply_status": "重い",
       "per_actual_count": 17,
@@ -102939,16 +102901,16 @@
   "successful_stocks": 24,
   "failed_stocks": 0,
   "timing": {
-    "total_seconds": 137.2,
+    "total_seconds": 133.7,
     "api_requests": 75,
-    "rate_limit_wait_seconds": 17.9,
+    "rate_limit_wait_seconds": 23.8,
     "retry_count": 0,
-    "http_seconds": 48.8
+    "http_seconds": 39.9
   },
   "irbank_usage_at_start": {
     "limit": 4000,
-    "used": 1025,
-    "remaining": 2975,
+    "used": 1099,
+    "remaining": 2901,
     "resets_at": "2026-10-05T00:00:00+09:00"
   }
 }
