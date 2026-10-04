@@ -255,12 +255,33 @@ def decide(stock, regime):
             signal='WATCH'
             reason='上昇トレンドだが現在は押し目BUY水準ではない。20日MAだけでBUYにせず、まず25日MAを第1の押し目目安、75日MAを第2の深い押し目目安として待つ。'
     elif regime['regime'] == 'UPTREND':
-        signal='WATCH'
-        reason='上昇トレンド継続。新規買いは追いかけず、20日MAなどへの押し目を待つ。'
+        # Established uptrend: do not turn every strong stock into BUY.
+        # Require a fresh 5-session high with expanding volume while the
+        # medium-term trend remains healthy.
+        vs25 = _f(stock.get('vs25'))
+        ma25_slope5 = _f(regime.get('daily_ma25_slope5'))
+        rsi = _f(stock.get('rsi14'))
+        weekly_up = regime.get('weekly_direction') == 'UP'
+        above_25 = vs25 is not None and vs25 > 0
+        ma25_rising = ma25_slope5 is not None and ma25_slope5 > 0
+        momentum = bool(stock.get('breakout5_prev'))
+        volume_ok = _f(stock.get('volume_ratio')) is not None and _f(stock.get('volume_ratio')) >= 1.2
+        rsi_ok = rsi is not None and 50 <= rsi < 70
         checks=[
-            {'label':'週足方向','ok':regime.get('weekly_direction')=='UP','value':regime.get('weekly_direction'),'rule':'週足方向=UP'},
-            {'label':'押し目待ち','ok':True,'value':regime.get('daily_vs20'),'rule':'20日MA付近への調整を待つ'},
+            {'label':'週足上昇トレンド','ok':weekly_up,'value':regime.get('weekly_direction'),'rule':'週足方向=UP'},
+            {'label':'25日MAより上','ok':above_25,'value':vs25,'rule':'25日MA乖離>0%'},
+            {'label':'25日MAが上向き','ok':ma25_rising,'value':ma25_slope5,'rule':'25日MAの5日傾き>0%'},
+            {'label':'直近5営業日高値を更新','ok':momentum,'value':stock.get('high5_prev'),'rule':'現在終値>直前5営業日の高値'},
+            {'label':'出来高が平均超','ok':volume_ok,'value':stock.get('volume_ratio'),'rule':'当日出来高÷直前20日平均>=1.2倍'},
+            {'label':'RSIが健全な上昇域','ok':rsi_ok,'value':rsi,'rule':'RSI50以上70未満'},
         ]
+        missing=[c['label'] for c in checks if not c['ok']]
+        if not missing:
+            signal='BUY_CANDIDATE'
+            reason='上昇トレンドの再上昇型。週足上昇、25日MA上・上向き、直近5営業日高値更新、出来高1.2倍以上、RSI50〜70の6条件が成立。'
+        else:
+            signal='WATCH'
+            reason='上昇トレンド継続中。ただし追いかけ買いはせず、再上昇の6条件（週足上昇・25日MA上・25日MA上向き・5日高値更新・出来高1.2倍・RSI50〜70）が揃うまでWATCH。押し目になれば「上昇押し目」へ分類。'
     elif regime['regime'] == 'RANGE_TRANSITION':
         signal='WATCH'
         reason=(f"レンジ転換監視。現在値{bo.get('current_price'):.0f}円 / レンジ上限{bo.get('breakout_level'):.0f}円 / 明確なブレイク目安{bo.get('breakout_trigger'):.0f}円。"
@@ -273,7 +294,22 @@ def decide(stock, regime):
             {'label':'出来高増','ok':False,'value':bo.get('required_volume'),'rule':f"突破日の出来高{bo.get('required_volume')}株以上（直前20日平均×1.5）"},
         ]
     elif regime['regime'] == 'DOWNTREND_CONTINUED':
-        signal='AVOID'; reason='下降継続のため現時点では回避。'
+        candle = stock.get('candle_signal') or {}
+        weekly_rsi = _f(stock.get('rsi14_weekly'))
+        vs20 = _f(regime.get('daily_vs20'))
+        stabilized = ret1 is not None and ret1 > 0 and ret5 is not None and ret5 >= -5 and ((ret10 is not None and ret10 < 0) or (vs20 is not None and vs20 > 0))
+        ma20_recovered = vs20 is not None and vs20 >= 0
+        candle_ok = candle.get('status') == '大底反転サイン'
+        rsi_rebound = weekly_rsi is not None and weekly_rsi <= 35
+        checks=[
+            {'label':'日足が下げ止まり','ok':stabilized,'value':ret1,'rule':'当日プラス・5日騰落>=-5%・10日下落または20日MA上'},
+            {'label':'20日MAを回復','ok':ma20_recovered,'value':vs20,'rule':'20日MA乖離>=0%'},
+            {'label':'大底反転サイン','ok':candle_ok,'value':candle.get('status'),'rule':'大底反転サインを確認'},
+            {'label':'週足RSIが売られ過ぎ域','ok':rsi_rebound,'value':weekly_rsi,'rule':'週足RSI<=35'},
+        ]
+        signal='AVOID'
+        reason='下降継続のため現時点では買い回避。BUY候補にするには、下げ止まり→20日MA回復→大底反転サイン→週足RSI35以下の確認が必要。'
+        missing=[c['label'] for c in checks if not c['ok']]
     else:
         signal='INSUFFICIENT'; reason='データ不足。'
 

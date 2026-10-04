@@ -1495,6 +1495,10 @@ def calc(rows, breadth_info=None, supply_info=None):
         'volume_ratio': round(vr, 2) if vr is not None else None,
         'volume_ratio_basis': '当日出来高 ÷ 直前20営業日の平均出来高',
         'volume_surge_threshold': 1.8,
+        # Prior 5-session high is used for the explicit "uptrend continuation"
+        # buy trigger.  The current close is intentionally excluded.
+        'high5_prev': round(max(vals[1:6]), 2) if len(vals) >= 6 else None,
+        'breakout5_prev': bool(len(vals) >= 6 and close > max(vals[1:6])),
         'ma5': round(ma5, 2) if ma5 is not None else None,
         'ma20': round(ma20, 2) if ma20 is not None else None,
         'ma25': round(ma25, 2) if ma25 is not None else None,
