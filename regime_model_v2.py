@@ -174,13 +174,18 @@ def decide(stock, regime):
             ('5日騰落率がプラス', bool(bo.get('trend_ok')), bo.get('ret5'), '5日騰落率>0%'),
         ]
         checks = [{'label':a,'ok':bool(b),'value':c,'rule':d} for a,b,c,d in conds]
-        signal='BUY_CANDIDATE'
-        reason='レンジ抜け・再上昇型の暫定買い候補。突破日の出来高増加、突破水準維持、20日MA上、短期上昇を確認。'
+        missing = [c['label'] for c in checks if not c['ok']]
+        if not missing:
+            signal='BUY_CANDIDATE'
+            reason='レンジブレイク中・再上昇型。レンジ高値突破、突破日の出来高1.5倍以上、突破水準維持、20日MA上、5日騰落率プラスの5条件がすべて成立。'
+        else:
+            signal='WATCH'
+            reason='レンジブレイク中だが、買い条件未達。レンジ高値突破後の出来高・突破水準維持・20日MA上・短期上昇をすべて確認してからBUY候補。'
         candle=stock.get('candle_signal') or {}
         if candle.get('status') in ('大底反転サイン','反転サイン'):
             reason += f" 🕯️{candle.get('status')}"
-        return {'signal':signal,'signal_reason':reason,'missing_conditions':[],
-                'condition_checks':checks,'one_condition_away':False,'signal_type':'RANGE_BREAKOUT'}
+        return {'signal':signal,'signal_reason':reason,'missing_conditions':missing,
+                'condition_checks':checks,'one_condition_away':len(missing)==1,'signal_type':'RANGE_BREAKOUT'}
 
     # 2) Very strict multi-timeframe bottom branch.
     # Weekly RSI<=30 is combined with either a monthly MACD golden cross or a
