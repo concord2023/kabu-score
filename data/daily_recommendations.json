@@ -1,13 +1,13 @@
 {
-  "updated_at": "2026-10-04T14:05:36.220002+09:00",
+  "updated_at": "2026-10-04T14:14:32.594850+09:00",
   "date": "2026-10-04",
   "title": "今日の注目5選",
   "status": "ok",
   "method": "同日公開の投資家話題・ニュース/開示・大量保有・カタリスト・アナリスト・テーマ・YouTubeを複数の検索角度から収集。投資家話題順位、情報源の種類、同日言及数、株価/出来高、具体的材料を組み合わせ、複数のルートのいずれかを満たす銘柄を最大5件表示する。無理に5件へ水増ししない。これはBUY判定ではない。",
   "source_policy": "各記事・動画へのリンクと発信元を保存。外部情報の注目度とkabu-scoreの総合BUY判定は別物として表示する。",
   "errors": [],
-  "candidate_pool": 78,
-  "eligible_count": 12,
+  "candidate_pool": 79,
+  "eligible_count": 13,
   "candidates": [
     {
       "code": "7203",
@@ -177,7 +177,7 @@
         {
           "name": "大量保有・開示検索",
           "type": "開示",
-          "title": "ソフトバンクがベクターの保有割合を半分以下に 2022年12月の大量保有報告書 - M＆A Online",
+          "title": "ソフトバンクがベクターの保有割合を半分以下に 2022年12月の大量保有報告書 - maonline.jp",
           "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9Eck1XWWEwSUc1MkFyOTRZMFVKSGFGSjV0RXZMU09MaXJOSG41YURGcUozWGtfcTVmaVZ4TEQycDNtOWFjamx0d3UtcmZmNGZaT1BLU1ZqZ2pNSjlkUmZj?oc=5"
         },
         {
@@ -190,71 +190,78 @@
       "selection_eligible": true
     },
     {
-      "code": "3350",
-      "name": "メタプラネット",
-      "market": "スタンダード（内国株式）",
+      "code": "485A",
+      "name": "パワーエックス",
+      "market": "グロース（内国株式）",
       "industry": null,
       "source_types": [
         "YouTube",
-        "investor"
+        "ニュース"
       ],
-      "score": 11.9,
-      "kabu_score": null,
-      "signal": null,
-      "rsi14": null,
-      "change": null,
-      "volume_ratio": null,
+      "score": 9.0,
+      "kabu_score": 28,
+      "signal": "WATCH",
+      "rsi14": 49.5,
+      "change": 4.67,
+      "volume_ratio": 0.62,
       "heat_score": 9.0,
       "selection_basis": [
-        "投資家話題5位以内",
         "2種類の情報源",
-        "同日2件の言及"
+        "同日3件の言及",
+        "前日比+4.67%"
       ],
-      "reason": "投資家話題5位以内＋2種類の情報源＋同日2件の言及（話題強度9.0）。",
+      "reason": "2種類の情報源＋同日3件の言及＋前日比+4.67%（話題強度9.0）。",
       "movement_type": "複数情報源で話題",
-      "material_summary": "＜＜ 前日へ 2026/10/04 投資家の話題まとめ 話題の銘柄 本日話題になっている日本株のランキングです。 1位 (28) キオクシアホールディングス(285A) Y K 掲 2位 (18) くら寿司(2695) Y K 掲 3位 (16) クリップコーポレーション(4705) Y K 掲 4位 (14) イオン(8267) Y K 掲 5位 (13) ザインエレクトロニクス(6769) Y K 掲 6位 (12) メタプラネット(3350) Y K 掲 7位 (11) 楽天グループ(4755) Y K 掲 8位 (10) ワールド(3612) Y K 掲 9位 (9) 共和電業(6853) Y K 掲 10位 (8) インターネットインフィニティー(6545) Y K 掲 (adsbygoogle = window.adsbygoogle || []).push({}); 今日の話題 投資家の間で話題になった銘柄やWEB",
+      "material_summary": "(株)パワーエックス【485A】：株価・株式情報（夜間PTS含む） - Yahoo!ファイナンス",
       "explanation": {
-        "why_selected": "投資家話題ランキング5位＋2種類の情報源",
-        "what_is_happening": "＜＜ 前日へ 2026/10/04 投資家の話題まとめ 話題の銘柄 本日話題になっている日本株のランキングです。 1位 (28) キオクシアホールディングス(285A) Y K 掲 2位 (18) くら寿司(2695) Y K 掲 3位 (16) クリップコーポレーション(4705) Y K 掲 4位 (14) イオン(8267) Y K 掲 5位 (13) ザインエレクトロニクス(6769) Y K 掲 6位 (12) メタプラネット(3350) Y K 掲 7位 (11) 楽天グループ(4755) Y K 掲 8位 (10) ワールド(3612) Y K 掲 9位 (9) 共和電業(6853) Y K 掲 10位 (8) インターネットインフィニティー(6545) Y K 掲 (adsbygoogle = window.adsbygoogle || []).push({}); 今日の話題 投資家の間で話題になった銘柄やWEB",
+        "why_selected": "2種類の情報源",
+        "what_is_happening": "(株)パワーエックス【485A】：株価・株式情報（夜間PTS含む） - Yahoo!ファイナンス",
         "material_category": "投資家の話題・材料",
         "score_breakdown": {
           "source_types": 2,
-          "mentions": 2,
-          "investor_rank": 5
+          "mentions": 3,
+          "investor_rank": null
         }
       },
       "research_memo": {
-        "headline": "＜＜ 前日へ 2026/10/04 投資家の話題まとめ 話題の銘柄 本日話題になっている日本株のランキングです。 1位 (28) キオクシアホールディングス(285A) Y K 掲 2位 (18) くら寿司(2695) Y K 掲 3位 (16) クリップコーポレーション(4705) Y K 掲 4位 (14) イオン(8267) Y K 掲 5位 (13) ザインエレクトロニクス(6769) Y K 掲 6位 (12) メタプラネット(3350) Y K 掲 7位 (11) 楽天グループ(4755) Y K 掲 8位 (10) ワールド(3612) Y K 掲 9位 (9) 共和電業(6853) Y K 掲 10位 (8) インターネットインフィニティー(6545) Y K 掲 (adsbygoogle = window.adsbygoogle || []).push({}); 今日の話題 投資家の間で話題になった銘柄やWEB",
-        "summary": "【話題の事実】投資家話題ランキングは5位。情報源は2種類（YouTube・投資家話題）。同日言及は2件。【材料】＜＜ 前日へ 2026/10/04 投資家の話題まとめ 話題の銘柄 本日話題になっている日本株のランキングです。 1位 (28) キオクシアホールディングス(285A) Y K 掲 2位 (18) くら寿司(2695) Y K 掲 3位 (16) クリップコーポレーション(4705) Y K 掲 4位 (14) イオン(8267) Y K 掲 5位 (13) ザインエレクトロニクス(6769) Y K 掲 6位 (12) メタプラネット(3350) Y K 掲 7位 (11) 楽天グループ(4755) Y K 掲 8位 (10) ワールド(3612) Y K 掲 9位 (9) 共和電業(6853) Y K 掲 10位 (8) インターネットインフィニティー(6545) Y K 掲 (adsbygoogle = window.adsbygoogle || []).push({}); 今日の話題 投資家の間で話題になった銘柄やWEB / 【ライブ】日経平均株価反落/株式投資/最新情報/億り人が語る \"半導体・AI・不動産\"の勝ち筋/ビットコイン最高値/メタプラネット決算｜8月14日(木)〈Every Stock NEWS 矢野 愛実〉 - YouTube【値動き確認】日次株価データからの確認材料はありません。",
-        "why": "【選定理由】投資家話題の上位に入り、上記の情報量・材料・値動きの確認がそろったため、当日の注目候補として残しました。",
+        "headline": "(株)パワーエックス【485A】：株価・株式情報（夜間PTS含む） - Yahoo!ファイナンス",
+        "summary": "【話題の事実】情報源は2種類（YouTube・ニュース）。同日言及は3件。【材料】(株)パワーエックス【485A】：株価・株式情報（夜間PTS含む） - Yahoo!ファイナンス / 【ライブ】日経平均株価大幅下落/エアウォーター 大幅高/パワーエックス 初の海外案件を受注/株式投資/最新情報｜6月23日(火)〈Every Stock NEWS〉 - YouTube / 【日本株の追い風 今後20年は続く】投資家人生に一度の大変革期／AI・半導体株に集中しすぎ／バーゲンセールの企業は？／パワーエックス、テンバガー理由／IPO改革で個人にチャンス到来／クロスオーバーとは - YouTube【値動き確認】株価は前日比+4.67%。出来高は平常比0.6倍。",
+        "why": "【選定理由】複数種類の情報源で同日に言及が重なったため、単一記事だけの話題ではないと判断して残しました。",
         "category": "投資家の話題・材料",
         "evidence": [
-          "投資家話題ランキングは5位",
-          "情報源は2種類（YouTube・投資家話題）",
-          "同日言及は2件"
+          "情報源は2種類（YouTube・ニュース）",
+          "同日言及は3件",
+          "株価は前日比+4.67%",
+          "出来高は平常比0.6倍"
         ],
         "check_point": "見出しだけでは因果関係を断定しません。決算短信・適時開示・原記事本文など、リンク先の一次情報を確認してください。",
         "source_count": 2,
-        "mention_count": 2,
+        "mention_count": 3,
         "sources": [
           "YouTube",
-          "投資家話題"
+          "ニュース"
         ],
-        "detail": "＜＜ 前日へ 2026/10/04 投資家の話題まとめ 話題の銘柄 本日話題になっている日本株のランキングです。 1位 (28) キオクシアホールディングス(285A) Y K 掲 2位 (18) くら寿司(2695) Y K 掲 3位 (16) クリップコーポレーション(4705) Y K 掲 4位 (14) イオン(8267) Y K 掲 5位 (13) ザインエレクトロニクス(6769) Y K 掲 6位 (12) メタプラネット(3350) Y K 掲 7位 (11) 楽天グループ(4755) Y K 掲 8位 (10) ワールド(3612) Y K 掲 9位 (9) 共和電業(6853) Y K 掲 10位 (8) インターネットインフィニティー(6545) Y K 掲 (adsbygoogle = window.adsbygoogle || []).push({}); 今日の話題 投資家の間で話題になった銘柄やWEB / 【ライブ】日経平均株価反落/株式投資/最新情報/億り人が語る \"半導体・AI・不動産\"の勝ち筋/ビットコイン最高値/メタプラネット決算｜8月14日(木)〈Every Stock NEWS 矢野 愛実〉 - YouTube",
+        "detail": "(株)パワーエックス【485A】：株価・株式情報（夜間PTS含む） - Yahoo!ファイナンス / 【ライブ】日経平均株価大幅下落/エアウォーター 大幅高/パワーエックス 初の海外案件を受注/株式投資/最新情報｜6月23日(火)〈Every Stock NEWS〉 - YouTube / 【日本株の追い風 今後20年は続く】投資家人生に一度の大変革期／AI・半導体株に集中しすぎ／バーゲンセールの企業は？／パワーエックス、テンバガー理由／IPO改革で個人にチャンス到来／クロスオーバーとは - YouTube",
         "heat_score": 9.0
       },
       "sources": [
         {
-          "name": "チャートなび",
-          "type": "investor",
-          "title": "＜＜ 前日へ 2026/10/04 投資家の話題まとめ 話題の銘柄 本日話題になっている日本株のランキングです。 1位 (28) キオクシアホールディングス(285A) Y K 掲 2位 (18) くら寿司(2695) Y K 掲 3位 (16) クリップコーポレーション(4705) Y K 掲 4位 (14) イオン(8267) Y K 掲 5位 (13) ザインエレクトロニクス(6769) Y K 掲 6位 (12) メタプラネット(3350) Y K 掲 7位 (11) 楽天グループ(4755) Y K 掲 8位 (10) ワールド(3612) Y K 掲 9位 (9) 共和電業(6853) Y K 掲 10位 (8) インターネットインフィニティー(6545) Y K 掲 (adsbygoogle = window.adsbygoogle || []).push({}); 今日の話題 投資家の間で話題になった銘柄やWEB",
-          "url": "https://chartnavi.com/scan/wadai/date/_20261004/"
+          "name": "ニュース・材料検索",
+          "type": "ニュース",
+          "title": "(株)パワーエックス【485A】：株価・株式情報（夜間PTS含む） - Yahoo!ファイナンス",
+          "url": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE1wYmNkNFVBRHc5RWpHSkFQS2hWaUZrSVduUVhLLWktYm5EaGNld3RFUURJbkpxM2NfUlBsN0RvLVp2NGZuYVE2bTRlY0N6cUszUmc?oc=5"
         },
         {
           "name": "YouTube検索",
           "type": "YouTube",
-          "title": "【ライブ】日経平均株価反落/株式投資/最新情報/億り人が語る \"半導体・AI・不動産\"の勝ち筋/ビットコイン最高値/メタプラネット決算｜8月14日(木)〈Every Stock NEWS 矢野 愛実〉 - YouTube",
-          "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE5rYnItcFZCUU1BSndRa1BiVENmM2xaQlFTS3Nlckh2VlRnMnRTVHAyVTNkNVJrdUtoa2NpQWtrRmxmM3FfUV9sM2lhV2lqOG9YM1JQUFp3?oc=5"
+          "title": "【ライブ】日経平均株価大幅下落/エアウォーター 大幅高/パワーエックス 初の海外案件を受注/株式投資/最新情報｜6月23日(火)〈Every Stock NEWS〉 - YouTube",
+          "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE1nUXJfbnZZQW5GcjBHb001ckdpX3A2SUNuUVhXQjJ6eFhoQjNWSFlNN0xqYWlMa1loS3pvT0FvbVhyUmNMSWw2WG9pZHVwMHY2ZWc1NGR3?oc=5"
+        },
+        {
+          "name": "YouTube検索",
+          "type": "YouTube",
+          "title": "【日本株の追い風 今後20年は続く】投資家人生に一度の大変革期／AI・半導体株に集中しすぎ／バーゲンセールの企業は？／パワーエックス、テンバガー理由／IPO改革で個人にチャンス到来／クロスオーバーとは - YouTube",
+          "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE00X0V0bkFIdzh3eHFzaHdwS2xhX214UVREOVFnVXlFVmZZeTVRamhQWmc5Y0VpUU9aTjQyS3IwcVFJNFhLb2puMGFLUjZIV0dYZlJzNVNn?oc=5"
         }
       ],
       "selection_eligible": true
