@@ -157,7 +157,7 @@ def decide(stock, regime):
     # reversal: a stock can be a valid buy after breaking out of a base even
     # when it is nowhere near a bottom.
     bo = stock.get('breakout_signal') or {}
-    if bo.get('confirmed'):
+    if bo.get('confirmed') and regime.get('regime') not in ('UPTREND_PULLBACK',):
         conds = [
             ('20日レンジ高値を突破', True, bo.get('breakout_level'), '直近5営業日で20日高値を終値突破'),
             ('突破日の出来高1.5倍以上', bool(bo.get('volume_ok')), bo.get('breakout_volume_ratio'), '突破日出来高比>=1.5'),
@@ -222,10 +222,11 @@ def decide(stock, regime):
         deep_75ma = (vs75 is not None and -3.0 <= vs75 <= 3.0 and
                      ret20 is not None and ret20 <= -5.0 and
                      ma75_slope20 is not None and ma75_slope20 > 0)
-        rsi_primary_ok = rsi is None or rsi < 65
-        rsi_deep_ok = rsi is None or rsi < 55
-        primary_ok = near_25ma and actual_pullback and ma25_rising and rsi_primary_ok
-        deep_ok = deep_75ma and rsi_deep_ok
+        weekly_up = regime.get('weekly_direction') == 'UP'
+        rsi_primary_ok = rsi is not None and rsi < 65
+        rsi_deep_ok = rsi is not None and rsi < 55
+        primary_ok = weekly_up and near_25ma and actual_pullback and ma25_rising and rsi_primary_ok
+        deep_ok = weekly_up and deep_75ma and rsi_deep_ok
         checks = [
             {'label':'上昇トレンドの土台','ok':regime.get('weekly_direction')=='UP','value':regime.get('weekly_direction'),'rule':'週足方向=UP','group':'通常の25日MA押し目'},
             {'label':'25日MA付近まで調整','ok':near_25ma,'value':vs25,'rule':'25日MA乖離が-4%〜+0.5%','group':'通常の25日MA押し目'},
@@ -240,15 +241,15 @@ def decide(stock, regime):
         if primary_ok:
             missing=[]
             signal='BUY_CANDIDATE'
-            reason='上昇トレンドの押し目。20日MAではなく25日MAを主な押し目基準に変更し、25日MAの-4〜+0.5%以内、5日で3%以上調整、25日MA上向き、RSI65未満を確認。当日の値動きはBUY条件に使わない。'
+            reason='上昇押し目の通常ルート。週足が上昇方向で、25日MA付近、5日で3%以上調整、25日MA上向き、RSI65未満の5条件がすべて成立。当日の値動きはBUY条件に使わない。'
         elif deep_ok:
             missing=[]
             signal='BUY_CANDIDATE'
-            reason='上昇トレンドの深い押し目。75日MA±3%まで調整し、20日で5%以上下落した一方、75日MAは上向きを維持。RSI55未満を確認。75日MA割れ・直近安値割れは損切り警戒。'
+            reason='上昇押し目の深押しルート。週足が上昇方向で、75日MA付近まで調整、20日で5%以上下落、75日MA上向き、RSI55未満の条件がすべて成立。75日MA割れ・直近安値割れは損切り警戒。'
         elif near_25ma or deep_75ma:
-            missing = primary_missing
+            missing = primary_missing if near_25ma else deep_missing
             signal='WATCH'
-            reason='押し目ゾーンには入っているがBUY条件未達。25日MA付近では5日3%以上の調整・25日MA上向き・RSIを確認。75日MA付近まで深く押した場合は、75日MA上向きと反転確認を重視する。当日の値動きはBUY条件に使わない。'
+            reason='押し目ゾーンには入っているがBUY条件未達。通常ルートは5条件、深押しルートは3条件をすべて確認してからBUY候補にします。当日の値動きだけではBUYにしません。'
         else:
             missing = primary_missing
             signal='WATCH'

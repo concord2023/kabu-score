@@ -98,6 +98,57 @@ reg=classify_regime(down, cs['candle_signal'])
 dec=decide(cs, reg)
 assert_true(dec['signal'] in {'WATCH','AVOID','INSUFFICIENT','BUY_CANDIDATE'}, 'decision must be valid enum')
 
+# 5b. Pullback BUY must require every required condition in its selected route.
+# In particular, weekly direction and RSI are not optional merely because the
+# stock was classified as UPTREND_PULLBACK.
+pullback_stock = {
+    'vs25': -1.0, 'vs75': -20.0, 'ret5': -4.0, 'ret20': -8.0,
+    'rsi14': 60.0,
+}
+pullback_regime = {
+    'regime': 'UPTREND_PULLBACK', 'weekly_direction': 'DOWN',
+    'daily_ma25_slope5': 0.5, 'daily_ma75_slope20': 0.5,
+}
+pd = decide(pullback_stock, pullback_regime)
+assert_true(pd['signal'] == 'WATCH', 'pullback must not BUY when weekly direction is not UP')
+assert_true(any(c['label'] == '上昇トレンドの土台' and not c['ok'] for c in pd['condition_checks']),
+            'weekly-direction failure must be visible in pullback checks')
+
+pullback_stock['rsi14'] = None
+pullback_regime['weekly_direction'] = 'UP'
+pd2 = decide(pullback_stock, pullback_regime)
+assert_true(pd2['signal'] == 'WATCH', 'pullback must not BUY when required RSI is missing')
+assert_true(any(c['label'] == 'RSIが過熱していない' and not c['ok'] for c in pd2['condition_checks']),
+            'missing RSI must be shown as unmet')
+
+# 5c. An independent breakout confirmation must not override the selected
+# UPTREND_PULLBACK route.  The displayed pullback conditions and aggregate
+# BUY status must describe the same signal family.
+breakout_pullback_stock = {
+    'vs25': -5.04, 'vs75': -1.0, 'ret5': -2.72, 'ret20': -4.0,
+    'rsi14': 60.0,
+    'breakout_signal': {
+        'confirmed': True, 'volume_ok': True, 'held': True, 'ma20_ok': True,
+        'trend_ok': True, 'breakout_level': 100, 'breakout_volume_ratio': 2.0,
+        'distance_from_breakout': 1.0, 'ret5': 2.0,
+    },
+}
+breakout_pullback_regime = {
+    'regime': 'UPTREND_PULLBACK', 'weekly_direction': 'UP',
+    'daily_ma25_slope5': -1.68, 'daily_ma75_slope20': 0.5,
+}
+pd3 = decide(breakout_pullback_stock, breakout_pullback_regime)
+assert_true(pd3['signal'] == 'WATCH',
+            'breakout confirmation must not override unmet UPTREND_PULLBACK conditions')
+assert_true(pd3.get('signal_type') == 'UPTREND_PULLBACK',
+            'selected signal family must remain UPTREND_PULLBACK')
+assert_true(any(c['label'] == '25日MA付近まで調整' and not c['ok'] for c in pd3['condition_checks']),
+            '25MA pullback failure must remain visible when breakout is independently confirmed')
+assert_true(any(c['label'] == '5日で3%以上調整' and not c['ok'] for c in pd3['condition_checks']),
+            '5-day pullback failure must remain visible when breakout is independently confirmed')
+assert_true(any(c['label'] == '25日MAが上向き' and not c['ok'] for c in pd3['condition_checks']),
+            '25MA slope failure must remain visible when breakout is independently confirmed')
+
 # 6. HTML JS syntax is checked separately in CI when Node is available.
 for p in ROOT.glob('*.html'):
     text=p.read_text(encoding='utf-8')
