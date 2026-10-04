@@ -58,5 +58,5 @@ document.getElementById('rows').innerHTML=a.map(x=>{const d=x.details||{},s=d.su
 }
 
 fetch('./data/decision_ranking.json?'+Date.now()).then(r=>{if(!r.ok)throw Error('日次ランキングがありません');return r.json()}).then(render).catch(e=>{document.getElementById('summary').textContent='日次データ待ち';document.getElementById('note').innerHTML='<div class="error">'+esc(e.message)+'<br>GitHub Actionsがデータを生成しているか確認してください。</div>';document.getElementById('rows').innerHTML='';});
-if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js?ver=20261003-chart-readability').catch(()=>{});
+if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js?ver=20261004-regime-breakout-priority').catch(()=>{});
 </script></body></html>
