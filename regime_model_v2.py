@@ -113,7 +113,11 @@ def classify_regime(rows, candle_signal=None, breakout_signal=None):
     # route aligned: if the stock is being bought because it has just broken
     # out of its range, the UI should say that explicitly.
     bo = breakout_signal or {}
-    if bo.get('confirmed') and weekly_dir in ('UP', 'RANGE'):
+    if bo.get('confirmed'):
+        # A confirmed breakout is a specific current-state classification.
+        # It must take priority over the broader weekly direction, including
+        # UNKNOWN, otherwise a valid breakout can incorrectly fall through to
+        # 判定不能.
         state = 'RANGE_BREAKOUT'
         reason = 'レンジ上限を確認付きでブレイク中。現在の買いシグナルは通常の上昇トレンドではなく、レンジブレイク・再上昇型。'
     elif weekly_dir == 'UP':
