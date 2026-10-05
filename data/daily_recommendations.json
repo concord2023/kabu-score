@@ -1,12 +1,12 @@
 {
-  "updated_at": "2026-10-05T21:40:23.967802+09:00",
+  "updated_at": "2026-10-05T21:49:58.659173+09:00",
   "date": "2026-10-05",
   "title": "今日の注目5選",
   "status": "ok",
   "method": "同日公開の投資家話題・ニュース/開示・大量保有・カタリスト・アナリスト・テーマ・YouTubeを複数の検索角度から収集。投資家話題順位、情報源の種類、同日言及数、株価/出来高、具体的材料を組み合わせ、複数のルートのいずれかを満たす銘柄を最大5件表示する。無理に5件へ水増ししない。これはBUY判定ではない。",
   "source_policy": "各記事・動画へのリンクと発信元を保存。外部情報の注目度とkabu-scoreの総合BUY判定は別物として表示する。",
   "errors": [],
-  "candidate_pool": 83,
+  "candidate_pool": 81,
   "eligible_count": 14,
   "candidates": [
     {
@@ -87,7 +87,7 @@
         {
           "name": "ニュース・話題検索",
           "type": "ニュース",
-          "title": "金利低下でアドバンテストなど半導体株急伸、霞ヶ関Cは上方修正/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月18日号（ダイヤモンド・ザイ） - news.yahoo.co.jp",
+          "title": "金利低下でアドバンテストなど半導体株急伸、霞ヶ関Cは上方修正/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月18日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
           "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE5GYUNBUGIzV2liM21LbnBqNF9TUDlQcjMzT29GWlcyX0FqZlc3Q0p4cC1Da3FRaWFtbHBkYnJWUmJVYlg5ZmwwSy1QRndhNXQ3X2RKSVpibWEwcE1wM1V3ZE9OWl8xdHVnd05EY2RibVhBdEZ0RmFKeExab0xNRUk?oc=5"
         },
         {
@@ -142,7 +142,7 @@
       },
       "research_memo": {
         "headline": "オープンAIの上場延期でソフトバンクGが急落、神戸物産は大幅高/日経平均続落【今日の注目株＆日本株市場見通し】「デイリーZAi」9月14日号(ダイヤモンド・ザイ) - Yahoo!ファイナンス",
-        "summary": "【話題の事実】情報源は4種類（YouTube・テーマ・ニュース・開示）。同日言及は11件。【材料】オープンAIの上場延期でソフトバンクGが急落、神戸物産は大幅高/日経平均続落【今日の注目株＆日本株市場見通し】「デイリーZAi」9月14日号(ダイヤモンド・ザイ) - Yahoo!ファイナンス / ソフトバンクG買い先行、住友電工・NECはメタと海底ケーブル/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月24日号（ダイヤモンド・ザイ） - news.yahoo.co.jp / ソフトバンクG株価急落 「オープンAIがIPO延期検討」と伝わる - 日本経済新聞【値動き確認】日次株価データからの確認材料はありません。",
+        "summary": "【話題の事実】情報源は4種類（YouTube・テーマ・ニュース・開示）。同日言及は11件。【材料】オープンAIの上場延期でソフトバンクGが急落、神戸物産は大幅高/日経平均続落【今日の注目株＆日本株市場見通し】「デイリーZAi」9月14日号(ダイヤモンド・ザイ) - Yahoo!ファイナンス / ソフトバンクG買い先行、住友電工・NECはメタと海底ケーブル/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月24日号（ダイヤモンド・ザイ） - Yahoo!ニュース / ソフトバンクG株価急落 「オープンAIがIPO延期検討」と伝わる - nikkei.com【値動き確認】日次株価データからの確認材料はありません。",
         "why": "【選定理由】複数種類の情報源で同日に言及が重なったため、単一記事だけの話題ではないと判断して残しました。",
         "category": "株価上昇・需給/値動き",
         "evidence": [
@@ -158,7 +158,7 @@
           "ニュース",
           "開示"
         ],
-        "detail": "オープンAIの上場延期でソフトバンクGが急落、神戸物産は大幅高/日経平均続落【今日の注目株＆日本株市場見通し】「デイリーZAi」9月14日号(ダイヤモンド・ザイ) - Yahoo!ファイナンス / ソフトバンクG買い先行、住友電工・NECはメタと海底ケーブル/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月24日号（ダイヤモンド・ザイ） - news.yahoo.co.jp / ソフトバンクG株価急落 「オープンAIがIPO延期検討」と伝わる - 日本経済新聞",
+        "detail": "オープンAIの上場延期でソフトバンクGが急落、神戸物産は大幅高/日経平均続落【今日の注目株＆日本株市場見通し】「デイリーZAi」9月14日号(ダイヤモンド・ザイ) - Yahoo!ファイナンス / ソフトバンクG買い先行、住友電工・NECはメタと海底ケーブル/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月24日号（ダイヤモンド・ザイ） - Yahoo!ニュース / ソフトバンクG株価急落 「オープンAIがIPO延期検討」と伝わる - nikkei.com",
         "heat_score": 10.0
       },
       "sources": [
@@ -171,13 +171,13 @@
         {
           "name": "ニュース・話題検索",
           "type": "ニュース",
-          "title": "ソフトバンクG買い先行、住友電工・NECはメタと海底ケーブル/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月24日号（ダイヤモンド・ザイ） - news.yahoo.co.jp",
+          "title": "ソフトバンクG買い先行、住友電工・NECはメタと海底ケーブル/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月24日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
           "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE5ob0trUkc1ZThBQ25zcURRcGtkNHJ4bTlLbmdpeW9JZUtjWXVXWVhScmg0cU9VSE04aVFwV0lpUmFwRTBqdzB0SkxfWER4YXkxb1F2bVdzSWFMeXF4dm9VUFJldm5FcWtBaU9OdjY0OUVFS2R0ZGhIakNmbkxVcDA?oc=5"
         },
         {
           "name": "ニュース・話題検索",
           "type": "ニュース",
-          "title": "ソフトバンクG株価急落 「オープンAIがIPO延期検討」と伝わる - 日本経済新聞",
+          "title": "ソフトバンクG株価急落 「オープンAIがIPO延期検討」と伝わる - nikkei.com",
           "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE1MSXBwcVhESlZOMW9aUDhUMnpxMVpSVE5Mc2l3WGNMSUh5SktNTDAxeWtLSHY3WHNtNGJES0NBRnVKaTYxNDlpT043c3NzOWV5RG1nN1pyQ1oyWGlpWTIydml1TlhCZjlGMHZDWQ?oc=5"
         },
         {
@@ -294,7 +294,7 @@
         "YouTube",
         "ニュース"
       ],
-      "score": 14.5,
+      "score": 17.0,
       "kabu_score": null,
       "signal": null,
       "rsi14": null,
@@ -303,9 +303,9 @@
       "heat_score": 8.0,
       "selection_basis": [
         "2種類の情報源",
-        "同日5件の言及"
+        "同日6件の言及"
       ],
-      "reason": "2種類の情報源＋同日5件の言及（話題強度8.0）。",
+      "reason": "2種類の情報源＋同日6件の言及（話題強度8.0）。",
       "movement_type": "複数情報源で話題",
       "material_summary": "今週は大型テック決算＆中銀ウィーク/ファナックなどFA株が急伸/日経平均最高値【今日の注目株＆日本株市場見通し】「デイリーZAi」4月27日号 - ダイヤモンド・オンライン",
       "explanation": {
@@ -314,27 +314,27 @@
         "material_category": "決算・業績材料",
         "score_breakdown": {
           "source_types": 2,
-          "mentions": 5,
+          "mentions": 6,
           "investor_rank": null
         }
       },
       "research_memo": {
         "headline": "今週は大型テック決算＆中銀ウィーク/ファナックなどFA株が急伸/日経平均最高値【今日の注目株＆日本株市場見通し】「デイリーZAi」4月27日号 - ダイヤモンド・オンライン",
-        "summary": "【話題の事実】情報源は2種類（YouTube・ニュース）。同日言及は5件。【材料】今週は大型テック決算＆中銀ウィーク/ファナックなどFA株が急伸/日経平均最高値【今日の注目株＆日本株市場見通し】「デイリーZAi」4月27日号 - ダイヤモンド・オンライン / イビデン・NEC急伸/決算序盤戦、ファナック・キーエンス速報/日経平均最高値【今日の注目株＆日本株市場見通し】「デイリーZAi」4月24日号 - ダイヤモンド・オンライン / 【日本株】株価上昇に期待できる｢2026年の大本命株｣5銘柄！ フィジカルAIが話題の｢ファナック｣、今期は減益も来期は2ケタ増益予想の｢トヨタ自動車｣に注目！ - ダイヤモンド・オンライン【値動き確認】日次株価データからの確認材料はありません。",
+        "summary": "【話題の事実】情報源は2種類（YouTube・ニュース）。同日言及は6件。【材料】今週は大型テック決算＆中銀ウィーク/ファナックなどFA株が急伸/日経平均最高値【今日の注目株＆日本株市場見通し】「デイリーZAi」4月27日号 - ダイヤモンド・オンライン / 今週は決算本格化、ファナックや米インテル、注目株はFA関連/日経平均反発【今日の注目株＆日本株市場見通し】「デイリーZAi」4月20日号 - ダイヤモンド・オンライン / イビデン・NEC急伸/決算序盤戦、ファナック・キーエンス速報/日経平均最高値【今日の注目株＆日本株市場見通し】「デイリーZAi」4月24日号 - ダイヤモンド・オンライン【値動き確認】日次株価データからの確認材料はありません。",
         "why": "【選定理由】複数種類の情報源で同日に言及が重なったため、単一記事だけの話題ではないと判断して残しました。",
         "category": "決算・業績材料",
         "evidence": [
           "情報源は2種類（YouTube・ニュース）",
-          "同日言及は5件"
+          "同日言及は6件"
         ],
         "check_point": "見出しだけでは因果関係を断定しません。決算短信・適時開示・原記事本文など、リンク先の一次情報を確認してください。",
         "source_count": 2,
-        "mention_count": 5,
+        "mention_count": 6,
         "sources": [
           "YouTube",
           "ニュース"
         ],
-        "detail": "今週は大型テック決算＆中銀ウィーク/ファナックなどFA株が急伸/日経平均最高値【今日の注目株＆日本株市場見通し】「デイリーZAi」4月27日号 - ダイヤモンド・オンライン / イビデン・NEC急伸/決算序盤戦、ファナック・キーエンス速報/日経平均最高値【今日の注目株＆日本株市場見通し】「デイリーZAi」4月24日号 - ダイヤモンド・オンライン / 【日本株】株価上昇に期待できる｢2026年の大本命株｣5銘柄！ フィジカルAIが話題の｢ファナック｣、今期は減益も来期は2ケタ増益予想の｢トヨタ自動車｣に注目！ - ダイヤモンド・オンライン",
+        "detail": "今週は大型テック決算＆中銀ウィーク/ファナックなどFA株が急伸/日経平均最高値【今日の注目株＆日本株市場見通し】「デイリーZAi」4月27日号 - ダイヤモンド・オンライン / 今週は決算本格化、ファナックや米インテル、注目株はFA関連/日経平均反発【今日の注目株＆日本株市場見通し】「デイリーZAi」4月20日号 - ダイヤモンド・オンライン / イビデン・NEC急伸/決算序盤戦、ファナック・キーエンス速報/日経平均最高値【今日の注目株＆日本株市場見通し】「デイリーZAi」4月24日号 - ダイヤモンド・オンライン",
         "heat_score": 8.0
       },
       "sources": [
@@ -343,6 +343,12 @@
           "type": "ニュース",
           "title": "今週は大型テック決算＆中銀ウィーク/ファナックなどFA株が急伸/日経平均最高値【今日の注目株＆日本株市場見通し】「デイリーZAi」4月27日号 - ダイヤモンド・オンライン",
           "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTFBLLTlIVWhTbHZPbXQzS2I3UXZSc1hTblhQZ3ZJSDVxTW1FM0dwVE1OXzZNVURhZ01RbjhYOTFGUi1oVURzSFZZLXV4M1RlZ2Y2Rld3?oc=5"
+        },
+        {
+          "name": "ニュース・材料検索",
+          "type": "ニュース",
+          "title": "今週は決算本格化、ファナックや米インテル、注目株はFA関連/日経平均反発【今日の注目株＆日本株市場見通し】「デイリーZAi」4月20日号 - ダイヤモンド・オンライン",
+          "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE9NbXNYdjdQNzNEcU1OSDJFQ1B5RjlXYmQxdnBGYVVfcjdpcXJ5d3dFUW90VXU4R2owZ2xURFp1TW1hYlhiUWRRVWd2QmtsMG9sVU1v?oc=5"
         },
         {
           "name": "ニュース・材料検索",
@@ -359,7 +365,7 @@
         {
           "name": "ニュース・話題検索",
           "type": "ニュース",
-          "title": "ファナックや安川電「産業用ロボット・自動化システム」関連銘柄/日経平均反落【今日の注目株＆日本株市場見通し】「デイリーZAi」6月4日号（ダイヤモンド・ザイ） - news.yahoo.co.jp",
+          "title": "ファナックや安川電「産業用ロボット・自動化システム」関連銘柄/日経平均反落【今日の注目株＆日本株市場見通し】「デイリーZAi」6月4日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
           "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE1OLVhlbmpRM2N5aWI3djhuRWFNZHdJaUkyV1ZvRmt0dHEzMDIyQl9zT3lEVExtY05wN3p6WGwzRkN2N0RrdWpRM0tHcWVIR0hWN19pY1hPeFdvZE15V0hpamlUTXkyRF9DTTd4WDhNeEx0ZGpSRkpyWUNJeHFzNGM?oc=5"
         },
         {
@@ -393,10 +399,10 @@
       ],
       "reason": "2種類の情報源＋同日3件の言及（話題強度7.0）。",
       "movement_type": "複数情報源で話題",
-      "material_summary": "小林製薬に買収提案、日本オラクル好決算、カバー上方修正も急落/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月25日号（ダイヤモンド・ザイ） - news.yahoo.co.jp",
+      "material_summary": "小林製薬に買収提案、日本オラクル好決算、カバー上方修正も急落/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月25日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
       "explanation": {
         "why_selected": "2種類の情報源",
-        "what_is_happening": "小林製薬に買収提案、日本オラクル好決算、カバー上方修正も急落/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月25日号（ダイヤモンド・ザイ） - news.yahoo.co.jp",
+        "what_is_happening": "小林製薬に買収提案、日本オラクル好決算、カバー上方修正も急落/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月25日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
         "material_category": "株価上昇・需給/値動き",
         "score_breakdown": {
           "source_types": 2,
@@ -405,8 +411,8 @@
         }
       },
       "research_memo": {
-        "headline": "小林製薬に買収提案、日本オラクル好決算、カバー上方修正も急落/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月25日号（ダイヤモンド・ザイ） - news.yahoo.co.jp",
-        "summary": "【話題の事実】情報源は2種類（YouTube・ニュース）。同日言及は3件。【材料】小林製薬に買収提案、日本オラクル好決算、カバー上方修正も急落/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月25日号（ダイヤモンド・ザイ） - news.yahoo.co.jp / 【ライブ】東京海上HDと米バークシャーと提携/日経平均株価 続く乱高下/日本板硝子 株式の非公開化を検討/日本オラクル決算など/株式投資/最新情報｜3月24日(火)〈Every Stock NEWS〉 - YouTube【値動き確認】日次株価データからの確認材料はありません。",
+        "headline": "小林製薬に買収提案、日本オラクル好決算、カバー上方修正も急落/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月25日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
+        "summary": "【話題の事実】情報源は2種類（YouTube・ニュース）。同日言及は3件。【材料】小林製薬に買収提案、日本オラクル好決算、カバー上方修正も急落/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月25日号（ダイヤモンド・ザイ） - Yahoo!ニュース / 【ライブ】東京海上HDと米バークシャーと提携/日経平均株価 続く乱高下/日本板硝子 株式の非公開化を検討/日本オラクル決算など/株式投資/最新情報｜3月24日(火)〈Every Stock NEWS〉 - YouTube【値動き確認】日次株価データからの確認材料はありません。",
         "why": "【選定理由】複数種類の情報源で同日に言及が重なったため、単一記事だけの話題ではないと判断して残しました。",
         "category": "株価上昇・需給/値動き",
         "evidence": [
@@ -420,20 +426,20 @@
           "YouTube",
           "ニュース"
         ],
-        "detail": "小林製薬に買収提案、日本オラクル好決算、カバー上方修正も急落/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月25日号（ダイヤモンド・ザイ） - news.yahoo.co.jp / 【ライブ】東京海上HDと米バークシャーと提携/日経平均株価 続く乱高下/日本板硝子 株式の非公開化を検討/日本オラクル決算など/株式投資/最新情報｜3月24日(火)〈Every Stock NEWS〉 - YouTube",
+        "detail": "小林製薬に買収提案、日本オラクル好決算、カバー上方修正も急落/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月25日号（ダイヤモンド・ザイ） - Yahoo!ニュース / 【ライブ】東京海上HDと米バークシャーと提携/日経平均株価 続く乱高下/日本板硝子 株式の非公開化を検討/日本オラクル決算など/株式投資/最新情報｜3月24日(火)〈Every Stock NEWS〉 - YouTube",
         "heat_score": 7.0
       },
       "sources": [
         {
           "name": "ニュース・材料検索",
           "type": "ニュース",
-          "title": "小林製薬に買収提案、日本オラクル好決算、カバー上方修正も急落/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月25日号（ダイヤモンド・ザイ） - news.yahoo.co.jp",
+          "title": "小林製薬に買収提案、日本オラクル好決算、カバー上方修正も急落/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月25日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
           "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE81VlFSemZlcENkMExadmlMTUx1YnIyMDNGU1VOaklxNHRaWm5rcDJTWnItUWw3UVFEcGlxYjBQM05OX1RnVFJmeF9ELUcyMkNVZDRWakNfaDE0cWVkYnRWc1E3ZGlpQmd4NjBfZmU2WFN3UENGcFcyX3d1VmtfUWc?oc=5"
         },
         {
           "name": "ニュース・話題検索",
           "type": "ニュース",
-          "title": "小林製薬に買収提案、日本オラクル好決算、カバー上方修正も急落/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月25日号（ダイヤモンド・ザイ） - news.yahoo.co.jp",
+          "title": "小林製薬に買収提案、日本オラクル好決算、カバー上方修正も急落/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月25日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
           "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE81VlFSemZlcENkMExadmlMTUx1YnIyMDNGU1VOaklxNHRaWm5rcDJTWnItUWw3UVFEcGlxYjBQM05OX1RnVFJmeF9ELUcyMkNVZDRWakNfaDE0cWVkYnRWc1E3ZGlpQmd4NjBfZmU2WFN3UENGcFcyX3d1VmtfUWc?oc=5"
         },
         {
