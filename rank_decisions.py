@@ -17,7 +17,7 @@ def pick_metrics(s):
         'weekly_ma26','weekly_ma52','weekly_vs13','weekly_vs26','weekly_vs52',
         'weekly_ma13_slope4w','monthly_ma6','monthly_ma12','monthly_ma18','weekly_ma26_slope4w','daily_vs20','daily_ma20_slope5','supply','supply_status',
         'supply_reason','nikkei_change','relative_strength','breadth','daily_vs25','daily_vs75','daily_ma25_slope5','daily_ma75_slope20','score','score_breakdown',
-        'condition_checks','signal_type','candle_signal','breakout_signal','signal_icons','chart_history','per_history','per_5y_avg','per_forecast','pbr','dividend_yield','valuation_source','valuation_error','per_forecast_error','per_updated_at','per_actual_count','per_forecast_eps','per_forecast_pe','per_actual_attribution','chart_history_weekly','chart_history_monthly','interpretation','attribution','high20','low20','high60','low60','weekly_direction','weekly_points','daily_ret1','daily_ret5','daily_ret10','daily_ret20'
+        'condition_checks','signal_type','buy_stage','buy_proximity','candle_signal','breakout_signal','signal_icons','chart_history','per_history','per_5y_avg','per_forecast','pbr','dividend_yield','valuation_source','valuation_error','per_forecast_error','per_updated_at','per_actual_count','per_forecast_eps','per_forecast_pe','per_actual_attribution','chart_history_weekly','chart_history_monthly','interpretation','attribution','high20','low20','high60','low60','weekly_direction','weekly_points','daily_ret1','daily_ret5','daily_ret10','daily_ret20'
     ]
     return {k:s.get(k) for k in keys if k in s}
 
@@ -32,7 +32,7 @@ for item in watch:
             'code': code, 'name': s.get('name', default_name), 'price': None, 'change': None,
             'regime': 'UNKNOWN', 'regime_reason': s.get('error') or '日次データを取得できませんでした。',
             'signal': 'INSUFFICIENT', 'signal_reason': 'データ取得失敗。次回更新で再試行します。',
-            'one_condition_away': False, 'missing_conditions': [], 'relative_strength': None,
+            'one_condition_away': False, 'buy_stage': 'WATCH', 'buy_proximity': 0.0, 'missing_conditions': [], 'relative_strength': None,
             'score': None, 'details': {}, 'sort_key': (2, 9, 9, 999)
         })
         continue
@@ -57,10 +57,10 @@ for item in watch:
     items.append({
         'code': code, 'name': s.get('name', default_name), 'price': s.get('price'), 'change': s.get('change'),
         'regime': regime, 'regime_reason': ('レンジブレイク中・再上昇型。' + (s.get('regime_reason') or '') if regime == 'RANGE_BREAKOUT' and s.get('regime') != 'RANGE_BREAKOUT' else s.get('regime_reason')), 'signal': sig,
-        'signal_reason': s.get('signal_reason'), 'one_condition_away': s.get('one_condition_away', False),
+        'signal_reason': s.get('signal_reason'), 'one_condition_away': False, 'buy_stage': s.get('buy_stage', 'BUY' if sig == 'BUY_CANDIDATE' else 'WATCH'), 'buy_proximity': s.get('buy_proximity'),
         'missing_conditions': s.get('missing_conditions', []), 'relative_strength': rs, 'score': s.get('score'), 'signal_icons': s.get('signal_icons', []), 'signal_type': signal_type or s.get('signal_type'), 'details': pick_metrics(s),
-        'sort_key': (priority.get(sig, 9), 0 if s.get('one_condition_away') else 1,
-                     state_bonus.get(s.get('regime'), 9), -(rs if rs is not None else -999))
+        'sort_key': (priority.get(sig, 9), 0 if s.get('buy_stage') == 'BUY' else 1 if s.get('buy_stage') == 'BUY接近' else 2,
+                     state_bonus.get(regime, 9), -(rs if rs is not None else -999))
     })
 
 # Hard integrity check: every watchlist stock must remain in the public

@@ -125,52 +125,17 @@ def classify_regime(rows, candle_signal=None, breakout_signal=None):
     range_trigger = _f(bo.get('breakout_trigger'))
     range_current = _f(bo.get('current_price'))
     range_distance = ((range_current / range_high) - 1) * 100 if range_current is not None and range_high not in (None, 0) else None
-    # IMPORTANT: breakout_level may refer to a *past* breakout candidate.
-    # Never use that stale level by itself to reclassify an established
-    # uptrend.  Rebuild the current 20-session ceiling from today's rows.
-    # A range-transition label is only appropriate when the stock is actually
-    # near that current ceiling AND the daily trend structure is not already
-    # established.  This prevents the same historical level from making
-    # unrelated former-UPTREND stocks disappear from BUY/recommendation views.
-    current_highs = []
-    current_lows = []
-    for r in rows[1:21]:
-        h = _f(r.get('high'))
-        l = _f(r.get('low'))
-        c = _close(r)
-        if h is None: h = c
-        if l is None: l = c
-        if h is not None: current_highs.append(h)
-        if l is not None: current_lows.append(l)
-    current_range_high = max(current_highs) if len(current_highs) >= 20 else None
-    current_range_low = min(current_lows) if len(current_lows) >= 20 else None
-    current_range_width = (
-        (current_range_high / current_range_low - 1) * 100
-        if current_range_high is not None and current_range_low not in (None, 0)
-        else None
-    )
-    current_range_distance = (
-        (close / current_range_high - 1) * 100
-        if close is not None and current_range_high not in (None, 0)
-        else None
-    )
-    daily_uptrend_structure = (
-        vs75 is not None and vs75 > 0
-        and ma25_slope5 is not None and ma25_slope5 > 0
-        and daily_ma25 is not None and daily_ma75 is not None and daily_ma25 > daily_ma75
-    )
-    # A narrow-ish current range near its ceiling is a consolidation signal.
-    # A broad/established rising structure is left as UPTREND instead.
-    current_range_like = (
-        current_range_distance is not None
-        and -3.0 <= current_range_distance < 0.5
-        and current_range_width is not None
-        and current_range_width <= 15.0
-    )
+    # A stock may have a positive weekly bias while still consolidating below
+    # a clear range ceiling.  Near the ceiling, the actionable state is
+    # "breakout waiting", not an established uptrend BUY.
+    # Being close to the current range ceiling is itself a more specific
+    # state than a generic weekly-UP label.  Do not require breakout status
+    # to be 'なし': a previous failed/weak breakout can still leave the stock
+    # in a pre-breakout consolidation.
     near_breakout = (
         not breakout_watch
-        and current_range_like
-        and not daily_uptrend_structure
+        and range_distance is not None
+        and -3.0 <= range_distance < 0.5
     )
     if breakout_watch:
         state = 'RANGE_BREAKOUT'
@@ -180,20 +145,28 @@ def classify_regime(rows, candle_signal=None, breakout_signal=None):
             reason = 'レンジ上限を上抜けて維持中。ただし出来高・20日MA・上昇継続などのBUY確認条件が未達のため、レンジブレイク監視中。'
     elif near_breakout:
         state = 'RANGE_TRANSITION'
-        trigger_text = f'{range_trigger:.0f}円' if range_trigger is not None else 'レンジ上限+0.5%'
-        level_text = f'{range_high:.0f}円' if range_high is not None else '現在の20日レンジ上限'
-        reason = (f'レンジブレイク待ち。現在値は{level_text}の{range_distance:+.1f}%で、明確な終値ブレイク目安は{trigger_text}。'
+        reason = (f'レンジブレイク待ち。現在値は20日レンジ上限{range_high:.0f}円の{range_distance:+.1f}%で、明確な終値ブレイク目安は{range_trigger:.0f}円。'
                   '上昇トレンドBUYではなく、まずレンジ上限突破を確認する局面。')
     elif weekly_dir == 'UP':
-        # Do not demote every weekly-UP stock merely because one daily MA
-        # relationship is imperfect.  The specific RANGE_TRANSITION branch
-        # above is reserved for an actual current-range ceiling setup.
+        # Weekly UP by itself is not enough to call a stock an established
+        # daily uptrend.  If price is still below the 75MA or the 25MA has not
+        # established itself above the 75MA, treat it as a consolidation /
+        # transition instead.  This prevents a base near a range ceiling from
+        # being promoted to an 'uptrend BUY' merely by a short 5-day high.
+        daily_uptrend_structure = (
+            vs75 is not None and vs75 > 0
+            and daily_ma25_slope5 is not None and daily_ma25_slope5 > 0
+            and daily_ma25 is not None and daily_ma75 is not None and daily_ma25 > daily_ma75
+        )
         if (vs20 is not None and vs20 < 0) or (ret5 is not None and ret5 < 0):
             state = 'UPTREND_PULLBACK'
             reason = '週足は上向き。日足は20日MA下/5日下落で押し目状態。'
+        elif not daily_uptrend_structure:
+            state = 'RANGE_TRANSITION'
+            reason = '週足は上向きでも、日足では25日MA・75日MAの上昇構造が未完成。レンジ上限突破を優先確認する局面。'
         else:
             state = 'UPTREND'
-            reason = '週足の方向が上向きで、現在のレンジ上限付近の転換条件には該当しない。'
+            reason = '週足・日足とも上昇構造が確認できる。'
     elif weekly_dir == 'DOWN':
         stabilized = (ret1 is not None and ret1 > 0 and ret5 is not None and ret5 >= -5 and
                       ((ret20 is not None and ret20 < 0) or (vs20 is not None and vs20 > 0)))
@@ -227,6 +200,51 @@ def classify_regime(rows, candle_signal=None, breakout_signal=None):
             'weekly_direction': weekly_dir, 'regime': state, 'regime_reason': reason}
 
 
+
+def _buy_proximity(checks, signal, eligible=True):
+    """Classify how close a non-BUY setup is to its own BUY conditions.
+
+    This is deliberately not an ``N-1`` rule.  Conditions have different
+    importance, and a setup is only called BUY接近 when at least 75% of the
+    weighted conditions are satisfied.  Hard/structural conditions carry more
+    weight than descriptive ones.
+    """
+    if signal == 'BUY_CANDIDATE':
+        return 'BUY', 1.0
+    if signal in ('AVOID', 'INSUFFICIENT') or not eligible or not checks:
+        return ('AVOID' if signal == 'AVOID' else 'WATCH'), 0.0
+    total = 0.0
+    done = 0.0
+    for c in checks:
+        label = str(c.get('label') or '')
+        # Structural entry conditions get double weight.
+        weight = 2.0 if any(k in label for k in (
+            '上昇トレンドの土台','週足上昇トレンド','レンジ高値','終値でブレイク',
+            '25日MA付近','75日MA付近','大底反転サイン','20日MAを回復')) else 1.0
+        total += weight
+        if c.get('ok'):
+            done += weight
+    ratio = done / total if total else 0.0
+    # Avoid labelling a setup "close" when only one easy condition happens to
+    # be true.  The threshold is intentionally looser than an N-1 rule.
+    stage = 'BUY接近' if ratio >= 0.75 and done >= 2.0 else 'WATCH'
+    return stage, ratio
+
+
+def _decision_result(signal, reason, missing, checks, signal_type, eligible=True):
+    stage, proximity = _buy_proximity(checks, signal, eligible=eligible)
+    return {
+        'signal': signal,
+        'signal_reason': reason,
+        'missing_conditions': missing,
+        'condition_checks': checks,
+        'one_condition_away': False,
+        'buy_stage': stage,
+        'buy_proximity': round(proximity, 2),
+        'signal_type': signal_type,
+    }
+
+
 def decide(stock, regime):
     vs75 = _f(stock.get('vs75')); ret1 = _f(stock.get('change')); ret5 = _f(stock.get('ret5')); ret10 = _f(stock.get('ret10'))
     missing = []
@@ -255,8 +273,7 @@ def decide(stock, regime):
         candle=stock.get('candle_signal') or {}
         if candle.get('status') in ('大底反転サイン','反転サイン'):
             reason += f" 🕯️{candle.get('status')}"
-        return {'signal':signal,'signal_reason':reason,'missing_conditions':missing,
-                'condition_checks':checks,'one_condition_away':len(missing)==1,'signal_type':'RANGE_BREAKOUT'}
+        return _decision_result(signal, reason, missing, checks, 'RANGE_BREAKOUT')
 
     # 2) Very strict multi-timeframe bottom branch.
     # Weekly RSI<=30 is combined with either a monthly MACD golden cross or a
@@ -269,8 +286,7 @@ def decide(stock, regime):
         ]
         signal='BUY_CANDIDATE'
         reason='厳格な大底候補サイン。週足RSI30以下に加え、月足MACDがゴールデンクロス、またはGC手前でMACDとシグナルの差（ヒストグラム）が2か月連続で縮小。通常の押し目BUYとは別系統の長期底打ち候補として扱う。'
-        return {'signal':signal,'signal_reason':reason,'missing_conditions':[],
-                'condition_checks':checks,'one_condition_away':False,'signal_type':'MONTHLY_BOTTOM'}
+        return _decision_result(signal, reason, [], checks, 'MONTHLY_BOTTOM')
 
     # 2) Bottom-reversal branch. Being positive on the day alone is NOT enough.
     if regime['regime'] in ('DOWNTREND_REVERSAL_WAIT','DOWNTREND_REVERSAL_CONFIRMED'):
@@ -417,6 +433,4 @@ def decide(stock, regime):
         'RANGE_TRANSITION':'RANGE_TRANSITION',
         'DOWNTREND_CONTINUED':'DOWNTREND_CONTINUED',
     }.get(regime.get('regime'), 'UNKNOWN')
-    return {'signal':signal,'signal_reason':reason,'missing_conditions':missing,
-            'condition_checks':checks,'one_condition_away':len(missing)==1,
-            'signal_type':signal_type}
+    return _decision_result(signal, reason, missing, checks, signal_type, eligible=regime.get('regime') not in ('DOWNTREND_CONTINUED', 'INSUFFICIENT'))
