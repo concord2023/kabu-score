@@ -44,6 +44,51 @@ def _pct(a, b):
     return (a / b - 1) * 100 if a is not None and b not in (None, 0) else None
 
 
+def _pullback_support(rows, breakout_signal=None):
+    """Find the nearest meaningful support below the current close.
+
+    This is intentionally conservative: use recent swing lows and, when the
+    current price is still above it, a recent breakout/range level.  A moving
+    average is handled separately by the 75MA condition.  The goal is not to
+    predict an exact bottom, but to avoid treating a deep pullback as a BUY
+    after the stock has already broken an obvious nearby floor.
+    """
+    vals = []
+    for r in rows or []:
+        c = _close(r)
+        lo = _f(r.get('low'))
+        if c is not None and lo is not None:
+            vals.append((r.get('date'), c, lo))
+    if not vals:
+        return {'level': None, 'kind': None, 'broken': False, 'near': False}
+    close = vals[0][1]
+    candidates = []
+    # Local swing lows from roughly the last three months.  Rows are newest
+    # first, so a swing low needs two sessions on each side.
+    max_i = min(len(vals) - 3, 60)
+    for i in range(2, max_i + 1):
+        lo = vals[i][2]
+        if lo <= vals[i-1][2] and lo <= vals[i+1][2] and lo <= vals[i-2][2] and lo <= vals[i+2][2]:
+            if lo <= close * 1.02:
+                candidates.append((lo, f"直近安値({vals[i][0] or '—'})"))
+    bo = breakout_signal or {}
+    level = _f(bo.get('breakout_level'))
+    if level is not None and level <= close * 1.02:
+        candidates.append((level, '直近レンジ上限・ブレイク水準'))
+    if not candidates:
+        return {'level': None, 'kind': None, 'broken': False, 'near': False}
+    # Highest support below the current price is the closest meaningful floor.
+    below = [x for x in candidates if x[0] <= close]
+    chosen = max(below, key=lambda x: x[0]) if below else min(candidates, key=lambda x: abs(x[0] - close))
+    support = chosen[0]
+    prev_close = vals[1][1] if len(vals) > 1 else None
+    # A single intraday/wick break is not enough.  Treat a close ~1% below the
+    # level, or two consecutive closes below it, as a meaningful break.
+    broken = close < support * 0.99 or (prev_close is not None and prev_close < support and close < support)
+    near = abs(close / support - 1) <= 0.02 if support else False
+    return {'level': support, 'kind': chosen[1], 'broken': broken, 'near': near}
+
+
 def weekly_metrics(rows):
     ws = _weekly_closes(rows)
     vals = [x['close'] for x in ws]
@@ -325,9 +370,12 @@ def decide(stock, regime):
         near_25ma = vs25 is not None and -4.0 <= vs25 <= 0.5
         actual_pullback = ret5 is not None and ret5 <= -3.0
         ma25_rising = ma25_slope5 is not None and ma25_slope5 > 0
-        deep_75ma = (vs75 is not None and -3.0 <= vs75 <= 3.0 and
+        support = _pullback_support(stock.get('_rows') or [], stock.get('breakout_signal'))
+        near_75ma = vs75 is not None and -5.0 <= vs75 <= 3.0
+        deep_75ma = (near_75ma and
                      ret20 is not None and ret20 <= -5.0 and
-                     ma75_slope20 is not None and ma75_slope20 > 0)
+                     ma75_slope20 is not None and ma75_slope20 > 0 and
+                     not support.get('broken'))
         weekly_up = regime.get('weekly_direction') == 'UP'
         rsi_primary_ok = rsi is not None and rsi < 65
         rsi_deep_ok = rsi is not None and rsi < 55
@@ -339,7 +387,8 @@ def decide(stock, regime):
             {'label':'5日で3%以上調整','ok':actual_pullback,'value':ret5,'rule':'5日騰落率<=-3%','group':'通常の25日MA押し目'},
             {'label':'25日MAが上向き','ok':ma25_rising,'value':ma25_slope5,'rule':'25日MAの5日傾き>0%','group':'通常の25日MA押し目'},
             {'label':'RSIが過熱していない','ok':rsi_primary_ok,'value':rsi,'rule':'通常押し目はRSI<65','group':'通常の25日MA押し目'},
-            {'label':'75日MA付近まで深押し','ok':deep_75ma,'value':vs75,'rule':'75日MA±3%、20日騰落<=-5%、75日MA上向き','group':'深い75日MA押し目'},
+            {'label':'75日MA付近まで深押し','ok':deep_75ma,'value':vs75,'rule':'75日MAから-5%〜+3%、20日騰落<=-5%、75日MA上向き、節目割れなし','group':'深い75日MA押し目'},
+            {'label':'直近の節目を維持','ok':not support.get('broken'),'value':support.get('level'),'rule':f"{support.get('kind') or '直近安値'}を終値で明確に割っていない" ,'group':'深い75日MA押し目'},
             {'label':'深押し時のRSI','ok':rsi_deep_ok,'value':rsi,'rule':'深い押し目はRSI<55','group':'深い75日MA押し目'},
         ]
         primary_missing = [c['label'] for c in checks[:5] if not c['ok']]
@@ -351,7 +400,7 @@ def decide(stock, regime):
         elif deep_ok:
             missing=[]
             signal='BUY_CANDIDATE'
-            reason='上昇押し目の深押しルート。週足が上昇方向で、75日MA付近まで調整、20日で5%以上下落、75日MA上向き、RSI55未満の条件がすべて成立。75日MA割れ・直近安値割れは損切り警戒。'
+            reason='上昇押し目の深押しルート。25日MAの乖離下限は適用せず、75日MA付近までの調整を第2押し目として判定。週足上昇、20日で5%以上下落、75日MA上向き、直近の節目を維持、RSI55未満を確認。節目を明確に割る場合は反転ではなくトレンド傷みを優先警戒。'
         elif near_25ma or deep_75ma:
             missing = primary_missing if near_25ma else deep_missing
             signal='WATCH'

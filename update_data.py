@@ -2043,7 +2043,14 @@ def main():
                 target_date = rows[0]['date']
 
             regime = classify_regime(rows, s.get('candle_signal'), s.get('breakout_signal'))
-            decision = decide(s, regime)
+            # The decision model uses recent lows/support levels to distinguish
+            # a healthy deep pullback from a broken trend. Keep raw rows internal
+            # to the decision step only; never serialize them into stocks.json.
+            s['_rows'] = rows
+            try:
+                decision = decide(s, regime)
+            finally:
+                s.pop('_rows', None)
             s.update(regime)
             s.update(decision)
             try:

@@ -172,6 +172,30 @@ assert_true(any(c['label'] == '5日で3%以上調整' and not c['ok'] for c in p
 assert_true(any(c['label'] == '25日MAが上向き' and not c['ok'] for c in pd3['condition_checks']),
             '25MA slope failure must remain visible when breakout is independently confirmed')
 
+# Deep 75MA pullback must be a separate route: the 25MA -4% lower bound
+# must not block it, while a broken recent support must block BUY.
+deep_rows = []
+for i in range(100):
+    c = 100.0 + i * 0.12
+    if i == 10: c = 95.0
+    deep_rows.append({'date': f'2026-09-{20-i%20:02d}', 'close': c, 'adj_close': c, 'low': c-0.5, 'high': c+0.5})
+deep_stock = {'vs25': -8.0, 'vs75': -2.0, 'ret20': -7.0, 'ret5': -4.0, 'rsi14': 50.0, '_rows': deep_rows, 'breakout_signal': {}}
+deep_regime = {'regime': 'UPTREND_PULLBACK', 'weekly_direction': 'UP', 'daily_ma25_slope5': 1.0, 'daily_ma75_slope20': 1.0}
+deep = decide(deep_stock, deep_regime)
+assert_true(deep['signal'] == 'BUY_CANDIDATE', '75MA deep-pullback route must not inherit the 25MA -4% lower bound')
+assert_true(any(c['label'] == '直近の節目を維持' and c['ok'] for c in deep['condition_checks']), 'deep pullback must expose a recent support condition')
+
+broken_rows = [dict(r) for r in deep_rows]
+broken_rows[0]['close'] = 93.0
+broken_rows[0]['adj_close'] = 93.0
+broken_stock = dict(deep_stock, _rows=broken_rows)
+broken = decide(broken_stock, deep_regime)
+assert_true(broken['signal'] != 'BUY_CANDIDATE', 'support break must prevent deep-pullback BUY')
+
+# The detailed buy-condition box should not repeat the same signal_reason.
+detail=(ROOT/'detail.html').read_text(encoding='utf-8')
+assert_true('🎯 買いサイン条件</div>'+"'+signalProgress(x)+'"+'</div>' in detail, 'detail buy-condition box must avoid duplicated signal explanation')
+
 # 6. HTML JS syntax is checked separately in CI when Node is available.
 for p in ROOT.glob('*.html'):
     text=p.read_text(encoding='utf-8')
