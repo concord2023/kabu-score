@@ -72,6 +72,14 @@ assert_true(s['diagnostic']['ma200_ready'], '200MA should be ready')
 assert_true(s['diagnostic']['weekly_rsi_ready'], 'weekly RSI should be ready')
 assert_true(all(k in s for k in ('weekly_ma5','monthly_ma6','monthly_ma12','monthly_ma18')), 'weekly/monthly MA fields must be present')
 assert_true(s['weekly_ma5'] is not None, '5-week MA should be available')
+
+# Partial weekly evidence must not collapse a normal stock into UNKNOWN merely
+# because fewer than four weekly direction features are available.  UNKNOWN is
+# reserved for the genuine no-direction-evidence case (n == 0).
+partial = r[:120]
+partial_regime = classify_regime(partial)
+assert_true(partial_regime.get('weekly_points', 0) > 0, 'partial weekly history should exist')
+assert_true(partial_regime.get('weekly_direction') != 'UNKNOWN', 'partial weekly evidence must still classify UP/DOWN/RANGE')
 long=rows(800,'up')
 slong=ud.calc(long, breadth_info={}, supply_info=None)
 assert_true(all(slong.get(k) is not None for k in ('monthly_ma6','monthly_ma12','monthly_ma18')), '6/12/18-month MAs should be available with the normal 800-session history')

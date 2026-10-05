@@ -99,7 +99,13 @@ def classify_regime(rows, candle_signal=None, breakout_signal=None):
     if wm['weekly_ma26'] is not None and wm['weekly_ma52'] is not None:
         features.append('MA26>MA52'); up += wm['weekly_ma26'] > wm['weekly_ma52']; down += wm['weekly_ma26'] < wm['weekly_ma52']
     n = len(features)
-    if n < 4:
+    # 判定不能は「データが少し足りない」ことではなく、優先判定を
+    # 通しても方向性を分類できない場合だけに限定する。
+    # 週足指標が4つ未満でも、利用できる指標に明確な上下があれば
+    # その方向を採用し、上下が拮抗/中立ならレンジ・転換にする。
+    # これにより、正常な株価履歴を持つ銘柄が UNKNOWN -> 判定不能に
+    # 落ちて、一覧の指標まで空に見える回帰を防ぐ。
+    if n == 0:
         weekly_dir = 'UNKNOWN'
     elif up / n >= 0.70 and up > down:
         weekly_dir = 'UP'
@@ -155,7 +161,7 @@ def classify_regime(rows, candle_signal=None, breakout_signal=None):
         # being promoted to an 'uptrend BUY' merely by a short 5-day high.
         daily_uptrend_structure = (
             vs75 is not None and vs75 > 0
-            and daily_ma25_slope5 is not None and daily_ma25_slope5 > 0
+            and ma25_slope5 is not None and ma25_slope5 > 0
             and daily_ma25 is not None and daily_ma75 is not None and daily_ma25 > daily_ma75
         )
         if (vs20 is not None and vs20 < 0) or (ret5 is not None and ret5 < 0):
