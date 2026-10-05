@@ -1937,6 +1937,17 @@ def load_cached_supply(code, max_age_days=10, reference_date=None):
 
 
 def main():
+    # Keep the previous successful per-stock analysis available as a safety net.
+    # A transient fetch failure must never be converted into the legitimate
+    # classification state UNKNOWN/判定不能.  If a stock cannot be refreshed,
+    # retain its last complete classification and mark it stale instead.
+    previous_stocks = {}
+    try:
+        with open('data/stocks.json', encoding='utf-8') as f:
+            previous_stocks = (json.load(f).get('stocks') or {})
+    except (FileNotFoundError, json.JSONDecodeError, TypeError):
+        previous_stocks = {}
+
     # Market breadth is fetched once. Failure is non-fatal because market context is
     # never used as a hard buy veto.
     breadth_cache = None
@@ -2077,8 +2088,32 @@ def main():
                 'per_error': s.get('per_forecast_error'),
             })
         except Exception as e:
-            out['stocks'][code] = {'code': code, 'name': name, 'industry': industry, 'error': str(e)}
-            out['diagnostics'].append({'code': code, 'status': 'error', 'error': str(e)})
+            # Do not turn an ordinary refresh failure into 判定不能.  判定不能 is
+            # reserved for a successfully calculated stock whose directional
+            # classification remains UNKNOWN after all priority rules are applied.
+            # When yesterday/previous-run data exists, keep that complete analysis
+            # visible and explicitly mark it as stale so the row does not disappear
+            # or change meaning merely because one external request failed.
+            previous = previous_stocks.get(code) or {}
+            if previous.get('price') is not None and previous.get('regime') is not None:
+                stale = dict(previous)
+                stale['data_stale'] = True
+                stale['data_error'] = str(e)
+                stale['updated_at'] = out['updated_at']
+                out['stocks'][code] = stale
+                out['diagnostics'].append({
+                    'code': code, 'status': 'stale', 'error': str(e),
+                    'previous_date': previous.get('date'),
+                    'regime': previous.get('regime'), 'signal': previous.get('signal'),
+                })
+            else:
+                # No prior complete analysis exists: this is a genuine data error,
+                # not a directional classification. Keep the explicit error state.
+                out['stocks'][code] = {
+                    'code': code, 'name': name, 'industry': industry,
+                    'error': str(e), 'data_stale': False
+                }
+                out['diagnostics'].append({'code': code, 'status': 'error', 'error': str(e)})
         print(f'Daily progress: {idx}/{len(watch)} {code} requests={_request_count} elapsed={time.monotonic()-run_started:.1f}s')
 
     out['breadth_status'] = 'ok' if breadth_cache else 'unavailable'

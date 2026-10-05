@@ -103,6 +103,16 @@ reg=classify_regime(down, cs['candle_signal'])
 dec=decide(cs, reg)
 assert_true(dec['signal'] in {'WATCH','AVOID','INSUFFICIENT','BUY_CANDIDATE'}, 'decision must be valid enum')
 
+# Classification contract: a stock with sufficient price history and no strong
+# directional bias is RANGE_TRANSITION, not UNKNOWN/判定不能. UNKNOWN is reserved
+# for genuinely insufficient weekly directional data.
+flat=rows(260,'flat')
+flat_reg=classify_regime(flat, None)
+assert_true(flat_reg['regime'] == 'RANGE_TRANSITION', 'direction-neutral stock must be RANGE_TRANSITION, not 判定不能')
+unknown=rows(10,'flat')
+unknown_reg=classify_regime(unknown, None)
+assert_true(unknown_reg['regime'] == 'UNKNOWN', 'truly insufficient directional history must remain UNKNOWN')
+
 # 5b. Pullback BUY must require every required condition in its selected route.
 # In particular, weekly direction and RSI are not optional merely because the
 # stock was classified as UPTREND_PULLBACK.
@@ -191,7 +201,7 @@ upd=(ROOT/'update_data.py').read_text(encoding='utf-8')
 assert_true('MAX_API_REQUESTS = 3999' in upd, 'IRBANK absolute request ceiling missing')
 assert_true('worst_case_requests' in upd and 'minimum_needed = max(10, worst_case_requests)' in upd, 'IRBANK preflight worst-case budget missing')
 sw=(ROOT/'sw.js').read_text(encoding='utf-8')
-assert_true('kabu-score-v44-buy-classification-css-fix' in sw, 'service worker cache must be bumped for the realtime/chart-hover UI change')
+assert_true('kabu-score-v44-classification-fix' in sw, 'service worker cache must be bumped for the realtime/chart-hover UI change')
 
 assert_true('Calculate period indicators from the full available monthly history' in (ROOT/'update_data.py').read_text(encoding='utf-8'), 'monthly indicators must be calculated before presentation trimming')
 html=(ROOT/'detail.html').read_text(encoding='utf-8')
@@ -220,6 +230,18 @@ assert_true('<td><div class="buy-type' in idx_text and '<td class="direction-tot
 assert_true('directionText(x.regime)' in idx_text and '<td>${deviationPairHtml(d.vs25,d.weekly_vs26)}</td>' in idx_text, 'main table row content order missing')
 assert_true('signalTypeLabel(x)' in idx_text and 'buyStageLabel(x)' in idx_text, 'main table must distinguish BUY classification from total BUY stage')
 assert_true('BUY接近' in idx_text and 'あと1条件' not in idx_text, 'BUY接近 display must replace the old strict one-condition label')
+
+# Classification contract: enough history with no strong directional bias is
+# RANGE_TRANSITION; UNKNOWN/判定不能 is reserved for insufficient direction data.
+flat=rows(260,'flat')
+flat_reg=classify_regime(flat, None)
+assert_true(flat_reg['regime'] == 'RANGE_TRANSITION', 'direction-neutral stock must be RANGE_TRANSITION, not 判定不能')
+unknown=rows(10,'flat')
+unknown_reg=classify_regime(unknown, None)
+assert_true(unknown_reg['regime'] == 'UNKNOWN', 'insufficient directional history must remain UNKNOWN')
+
+ud_src=(ROOT/'update_data.py').read_text(encoding='utf-8')
+assert_true('previous_stocks' in ud_src and "status': 'stale'" in ud_src, 'refresh failure fallback missing')
 rm=(ROOT/'regime_model_v2.py').read_text(encoding='utf-8')
 assert_true('def _buy_proximity' in rm and 'ratio >= 0.75' in rm, 'BUY接近 must use weighted proximity, not N-1 only')
 assert_true("'buy_stage'" in rm and "'buy_proximity'" in rm, 'decision must expose BUY stage/proximity')
@@ -242,7 +264,7 @@ assert_true("if(a<10)return 'neutral'" in inline and "if(a<20)return 'strong '" 
 assert_true('deviation-detail' in detail and "if(a<20)return 'strong '" in detail and "return 'invert '" in detail, 'detail deviation styling must match the main table')
 assert_true('chartHover(timeframe,index,event)' in detail and 'hoverTargets' in detail and 'chart-hover-wrap' in detail, 'technical charts must provide cursor hover values')
 assert_true("const tip=document.getElementById('chart-hover-wrap')" in detail and "function hideChartHover(){const tip=document.getElementById('chart-hover-wrap')" in detail, 'chart tooltip must show/hide the visible wrapper element')
-assert_true('kabu-score-v44-buy-classification-css-fix' in sw, 'service worker cache must be bumped for realtime/chart-hover UI change')
+assert_true('kabu-score-v44-classification-fix' in sw, 'service worker cache must be bumped for realtime/chart-hover UI change')
 assert_true('bbSigmaMetric' in detail and 'position_sigma' in (ROOT/'update_data.py').read_text(encoding='utf-8'), 'BB sigma position display missing')
 assert_true('BB位置' in detail and '±1.5σ以上は色付き太字' not in detail and '±2σ以上は反転表示' not in detail, 'BB sigma explanatory text should be hidden')
 assert_true('出来高比＝当日出来高 ÷ 直前20営業日の平均出来高' in detail, 'volume surge definition missing')
