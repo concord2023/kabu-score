@@ -22,9 +22,39 @@ const cls=v=>v==null?'':Number(v)>0?'ok':Number(v)<0?'bad':'';
 const deviationClass=v=>{if(v==null||!Number.isFinite(Number(v)))return 'neutral';const n=Number(v),a=Math.abs(n);if(a<10)return 'neutral';if(a<20)return 'strong '+(n>0?'pos':'neg');return 'invert '+(n>0?'pos':'neg');};
 const deviationHtml=v=>{if(v==null||!Number.isFinite(Number(v)))return '<span class="deviation neutral">—</span>';const n=Number(v);return `<span class="deviation ${deviationClass(n)}">${n>0?'+':''}${n.toFixed(1)}%</span>`;};
 const deviationPairHtml=(daily,weekly)=>`<div class="deviation-pair"><div><span class="deviation-label">日足</span>${deviationHtml(daily)}</div><div><span class="deviation-label">週足</span>${deviationHtml(weekly)}</div></div>`;
-const REALTIME_STORAGE_KEY='kabuScoreRealtimeQuotes';
+const REALTIME_STORAGE_KEY='kabuScoreRealtimeQuotesV2';
+const REALTIME_STORAGE_KEY_LEGACY='kabuScoreRealtimeQuotes';
 function marketDay(v){if(!v)return null;const m=String(v).match(/(\d{4}-\d{2}-\d{2})/);return m?m[1]:null;}
-function applyRealtimeToRows(){let saved=null;try{saved=JSON.parse(localStorage.getItem(REALTIME_STORAGE_KEY)||'null')}catch(_e){}if(!saved||typeof saved!=='object')return 0;const dailyDay=marketDay(window.__rankingUpdatedAt);const quotes=saved.quotes||{};let applied=0;document.querySelectorAll('[data-live-code]').forEach(row=>{const code=String(row.dataset.liveCode||'');const q=quotes[code]||quotes[`${code}.T`];if(!q)return;const qDay=marketDay(q.market_time)||marketDay(saved.market_day);if(dailyDay&&qDay&&qDay<dailyDay)return;if(dailyDay&&!qDay)return;const p=row.querySelector('.live-price'),c=row.querySelector('.live-change'),t=row.querySelector('.live-time');if(p)p.textContent=fmtPrice(q.price);if(c){c.textContent=pct(q.change_pct);c.className=`quote-change live-change ${changeClass(q.change_pct)}`;}if(t)t.textContent=q.market_time?`更新 ${String(q.market_time).replace('T',' ').slice(0,16)}`:'更新時刻不明';row.classList.add('live-updated');applied++;});if(applied){const st=document.getElementById('realtimeStatus');if(st)st.textContent=`保存済みリアルタイム値 ${applied}銘柄`;}return applied;}
+function readRealtimeSaved(){
+  const keys=[REALTIME_STORAGE_KEY,REALTIME_STORAGE_KEY_LEGACY];
+  for(const storage of [localStorage,sessionStorage]) for(const key of keys){
+    try{const v=JSON.parse(storage.getItem(key)||'null');if(v&&typeof v==='object'&&v.quotes&&Object.keys(v.quotes).length)return v;}catch(_e){}
+  }
+  return null;
+}
+function saveRealtimeSaved(saved){
+  for(const storage of [localStorage,sessionStorage]) for(const key of [REALTIME_STORAGE_KEY,REALTIME_STORAGE_KEY_LEGACY]){
+    try{storage.setItem(key,JSON.stringify(saved));}catch(_e){}
+  }
+}
+function applyRealtimeToRows(){
+  const saved=readRealtimeSaved(); if(!saved)return 0;
+  const dailyDay=marketDay(window.__rankingUpdatedAt); const quotes=saved.quotes||{}; let applied=0;
+  document.querySelectorAll('[data-live-code]').forEach(row=>{
+    const code=String(row.dataset.liveCode||''); const q=quotes[code]||quotes[`${code}.T`]; if(!q)return;
+    const qDay=marketDay(q.market_time)||marketDay(saved.market_day);
+    if(dailyDay&&qDay&&qDay<dailyDay)return; if(dailyDay&&!qDay)return;
+    const p=row.querySelector('.live-price'),c=row.querySelector('.live-change'),t=row.querySelector('.live-time');
+    if(p)p.textContent=fmtPrice(q.price);
+    if(c){c.textContent=pct(q.change_pct);c.className=`quote-change live-change ${changeClass(q.change_pct)}`;}
+    if(t)t.textContent=q.market_time?`更新 ${String(q.market_time).replace('T',' ').slice(0,16)}`:'更新時刻不明';
+    row.classList.add('live-updated'); applied++;
+  });
+  if(applied){const st=document.getElementById('realtimeStatus');if(st)st.textContent=`保存済みリアルタイム値 ${applied}銘柄`;}
+  return applied;
+}
+window.kabuScoreApplyRealtime=applyRealtimeToRows;
+
 const rsiClass=v=>{if(v==null||!Number.isFinite(Number(v)))return '';const n=Number(v);if(n<=30)return 'extreme-low';if(n>=70)return 'extreme-high';if(n<=40)return 'mild-low';if(n>=60)return 'mild-high';return '';};
 const rsiHtml=v=>v==null||!Number.isFinite(Number(v))?'—':`<span class="rsi-value ${rsiClass(v)}">${Number(v).toFixed(1)}</span>`;
 let allRanking=[];let companyMaster=[];
@@ -54,7 +84,8 @@ showSelected(null);
 loadCompanyMaster();
 function renderDailyAttention(d){const st=document.getElementById('dailyAttentionStatus'),root=document.getElementById('dailyAttentionRows');if(!st||!root)return;if(!d||d.status==='no_data'||!(d.candidates||[]).length){st.textContent=d?.errors?.length?'本日の外部情報を取得できませんでした。次回更新で再試行します。':'本日の注目データはまだありません。';root.innerHTML='<div class="section-note">Daily stock update後に自動生成されます。</div>';return;}st.textContent=`最終更新 ${formatUpdateTime(d.updated_at)}｜${d.candidates?.length||0}銘柄${d.status==='insufficient_heat'?'（基準未達は除外）':''}`;root.innerHTML=(d.candidates||[]).slice(0,5).map((x,i)=>{const sig=x.signal?((sg&&sg[x.signal])||x.signal):'—';const sources=(x.sources||[]).slice(0,3).map(v=>`<a href="${esc(v.url||'#')}" target="_blank" rel="noopener">${esc(v.name||v.type||'情報源')}</a>`).join('・');const memo=x.research_memo||{};return `<details class="search-result" style="margin:7px 0;padding:9px 10px;border:1px solid #edf0f2;border-radius:11px;background:#fbfcfd"><summary style="cursor:pointer;list-style:none"><strong>${i+1}. ${esc(x.name||x.code)}</strong>（${esc(x.code)}） <span class="muted">${esc(x.movement_type||'話題集中')}</span></summary><div class="search-result-meta" style="margin-top:7px"><strong>調査メモ：</strong>${esc(memo.summary||x.reason||'当日の外部情報で話題化')}<br><strong>なぜ選定：</strong>${esc(memo.why||x.explanation?.why_selected||'当日の話題化')}<br><strong>③ 材料分類：</strong>${esc(memo.category||x.explanation?.material_category||'投資家の話題・材料')}<br><strong>④ 確認ポイント：</strong>${esc(memo.check_point||'情報源本文で確認してください。')}<br><span class="muted">話題強度 ${esc(m.heat_score??x.heat_score??'—')}｜注目度 ${Number(x.score||0).toFixed(1)}｜情報源 ${esc((x.source_types||[]).join('・')||'—')}｜同日言及 ${esc(memo.mention_count??x.sources?.length??0)}件｜kabu-score ${esc(x.kabu_score??'—')} / ${esc(sig)}</span>${sources?'<br>'+sources:''}</div></details>`}).join('');}
 fetch('./data/daily_recommendations.json?'+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(renderDailyAttention).catch(()=>renderDailyAttention(null));
-fetch('./data/decision_ranking.json?'+Date.now()).then(r=>{if(!r.ok)throw Error('日次ランキングがありません');return r.json()}).then(render).catch(e=>{document.getElementById('summary').textContent='日次データ待ち';document.getElementById('note').innerHTML='<div class="error">'+esc(e.message)+'</div>'});window.addEventListener('pageshow',()=>{setTimeout(applyRealtimeToRows,0);});
-document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')setTimeout(applyRealtimeToRows,0);});
+fetch('./data/decision_ranking.json?'+Date.now()).then(r=>{if(!r.ok)throw Error('日次ランキングがありません');return r.json()}).then(render).catch(e=>{document.getElementById('summary').textContent='日次データ待ち';document.getElementById('note').innerHTML='<div class="error">'+esc(e.message)+'</div>'});window.addEventListener('pageshow',()=>{setTimeout(applyRealtimeToRows,0);setTimeout(applyRealtimeToRows,250);setTimeout(applyRealtimeToRows,1000);});
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){setTimeout(applyRealtimeToRows,0);setTimeout(applyRealtimeToRows,250);}});
+window.addEventListener('storage',e=>{if(e.key===REALTIME_STORAGE_KEY||e.key===REALTIME_STORAGE_KEY_LEGACY)setTimeout(applyRealtimeToRows,0);});
 
 </script><script src="./realtime_quotes.js"></script></body></html>
