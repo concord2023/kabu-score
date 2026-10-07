@@ -9,6 +9,35 @@
   const pct=v=>v==null||!Number.isFinite(Number(v))?'—':`${Number(v)>=0?'+':''}${Number(v).toFixed(2)}%`;
   const cls=v=>{const n=Number(v);if(!Number.isFinite(n))return 'zero';const s=n>0?'pos':n<0?'neg':'zero';const a=Math.abs(n);return s+(a>=10?' extreme':a>=5?' strong':'');};
   function updateStatus(text,kind){const el=document.getElementById('realtimeStatus');if(!el)return;el.textContent=text;el.className='realtime-status '+(kind||'');}
+  function saveSnapshotForRestore(payload,dailyDay){
+    const quotes=payload?.quotes||{};
+    const savedQuotes={};
+    for(const [code,q] of Object.entries(quotes)){
+      const qDay=q?.market_time?new Date(q.market_time).toLocaleDateString('en-CA',{timeZone:'Asia/Tokyo'}):payload?.market_date||null;
+      if(dailyDay&&qDay&&qDay<dailyDay)continue;
+      if(dailyDay&&!qDay)continue;
+      if(q?.price!=null)savedQuotes[code.replace(/\.T$/,'')]={...q};
+    }
+    if(!Object.keys(savedQuotes).length)return 0;
+    const saved={saved_at:new Date().toISOString(),market_day:payload.market_date||dailyDay,quotes:savedQuotes,source:payload.source||'realtime snapshot',snapshot_updated_at:payload.updated_at||null};
+    for(const storage of [localStorage,sessionStorage]) for(const key of ['kabuScoreRealtimeQuotesV2','kabuScoreRealtimeQuotes']){
+      try{storage.setItem(key,JSON.stringify(saved));}catch(_e){}
+    }
+    return Object.keys(savedQuotes).length;
+  }
+  async function restoreSnapshot(){
+    try{
+      let ranking=null;
+      const rr=await fetch('./data/decision_ranking.json?restore='+Date.now(),{cache:'no-store'});
+      if(rr.ok)ranking=await rr.json();
+      const dailyDay=ranking?.updated_at?String(ranking.updated_at).slice(0,10):null;
+      const r=await fetch('./data/realtime_quotes.json?restore='+Date.now(),{cache:'no-store'});
+      if(!r.ok)return;
+      const payload=await r.json();
+      const n=saveSnapshotForRestore(payload,dailyDay);
+      if(n&&typeof window.kabuScoreApplyRealtime==='function')window.kabuScoreApplyRealtime();
+    }catch(_e){}
+  }
   async function refresh(){
     const btn=document.getElementById('realtimeRefresh');
     const rows=[...document.querySelectorAll('[data-live-code]')];
@@ -89,11 +118,7 @@
         applied++;
       });
       if(applied){
-        const savedQuotes={};
-        rows.forEach(row=>{const code=String(row.dataset.liveCode||'');const q=quotes[code]||quotes[`${code}.T`];if(q){const qDay=q.market_time?new Date(q.market_time).toLocaleDateString('en-CA',{timeZone:'Asia/Tokyo'}):null;if(!dailyDay||qDay===dailyDay)savedQuotes[code]={...q,market_time:q.market_time};}});
-        try{const saved={saved_at:new Date().toISOString(),market_day:dailyDay,quotes:savedQuotes};
-        for(const storage of [localStorage,sessionStorage]) for(const key of ['kabuScoreRealtimeQuotesV2','kabuScoreRealtimeQuotes']){try{storage.setItem(key,JSON.stringify(saved));}catch(_e){}}
-        if(typeof window.kabuScoreApplyRealtime==='function') window.kabuScoreApplyRealtime();}catch(_e){}
+        try{saveSnapshotForRestore(payload,dailyDay);if(typeof window.kabuScoreApplyRealtime==='function') window.kabuScoreApplyRealtime();}catch(_e){}
       }
       if(!applied){
         updateStatus(`古い株価スナップショットは適用せず、日次データ ${dailyDay||'—'} を維持しました。`,'warn');
@@ -109,5 +134,7 @@
     }catch(e){updateStatus(`取得できませんでした：${e.message}`,'error');}
     finally{btn.disabled=false;btn.textContent='↻ リアルタイム株価を取得';}
   }
-  window.addEventListener('load',()=>{const btn=document.getElementById('realtimeRefresh');if(btn)btn.addEventListener('click',refresh);});
+  window.addEventListener('load',()=>{const btn=document.getElementById('realtimeRefresh');if(btn)btn.addEventListener('click',refresh);restoreSnapshot();});
+  window.addEventListener('pageshow',()=>{setTimeout(restoreSnapshot,0);setTimeout(restoreSnapshot,500);});
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){setTimeout(restoreSnapshot,0);setTimeout(restoreSnapshot,500);}});
 })();
