@@ -1,7 +1,8 @@
 name: Daily stock update
 on:
   schedule:
-    - cron: '10 22 * * 1-5'
+    - cron: '10 17 * * 1-5'
+      timezone: 'Asia/Tokyo'
   workflow_dispatch:
     inputs:
       add_stock:
@@ -35,8 +36,8 @@ jobs:
       - name: Remove legacy daily updater files
         run: |
           # Older repository versions may still contain the legacy updater.
-          # Remove it before validation so Daily stock update can self-clean
-          # the repository on its first successful run.
+          # Remove it before validation so the 17:10 JST workflow is the only
+          # scheduled Daily stock updater.
           rm -f scripts/update_data.py .github/workflows/update.yml
       - name: Validate release before API calls
         run: python validate_release.py
@@ -58,6 +59,9 @@ jobs:
           ADD_STOCK_QUERY: ${{ github.event_name == 'issues' && steps.issue_request.outputs.action == 'add' && steps.issue_request.outputs.query || inputs.add_stock }}
           DELETE_STOCK_QUERY: ${{ github.event_name == 'issues' && steps.issue_request.outputs.action == 'delete' && steps.issue_request.outputs.query || inputs.delete_stock }}
         run: python run_daily.py
+      # Realtime quotes are updated by the dedicated Realtime quote snapshot workflow.
+      # Do not overwrite that snapshot during the 07:10 JST daily analysis, when the
+      # market is closed and Yahoo may only expose the previous session's close.
       - name: Save daily analysis immediately
         if: ${{ steps.daily_analysis.outcome == 'success' }}
         run: |
@@ -67,7 +71,7 @@ jobs:
           # daily run. Stage the existing generated data without naming an
           # optional file explicitly, so a normal run cannot fail with
           # 'pathspec ... did not match any files'.
-          git add watchlist.json data/
+          git add -A
           git diff --cached --quiet || git commit -m 'Update daily stock decisions'
           git push
       - name: Close completed stock change request

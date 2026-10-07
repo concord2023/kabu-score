@@ -9,6 +9,8 @@ on:
       timezone: 'Asia/Tokyo'
     - cron: '0 17 * * 1-5'
       timezone: 'Asia/Tokyo'
+    - cron: '10 17 * * 1-5'
+      timezone: 'Asia/Tokyo'
 
 permissions:
   contents: write
