@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-10-07T17:11:16.797158+09:00",
-  "market_date": "2026-10-07",
+  "updated_at": "2026-10-08T09:19:05.584015+09:00",
+  "market_date": "2026-10-08",
   "source": "Yahoo Finance chart API",
   "source_host": "https://query1.finance.yahoo.com",
   "count": 24,
@@ -12,7 +12,7 @@
       "previous_close": 5855.0,
       "change": -155.0,
       "change_pct": -2.6473,
-      "market_time": "2026-10-07T15:30:00+09:00",
+      "market_time": "2026-10-08T09:04:01+09:00",
       "quote_type": "yahoo_chart"
     },
     "6758": {
@@ -21,7 +21,7 @@
       "previous_close": 3768.0,
       "change": -25.0,
       "change_pct": -0.6635,
-      "market_time": "2026-10-07T15:30:00+09:00",
+      "market_time": "2026-10-08T09:04:01+09:00",
       "quote_type": "yahoo_chart"
     },
     "6701": {
@@ -30,7 +30,7 @@
       "previous_close": 4927.0,
       "change": 123.0,
       "change_pct": 2.4964,
-      "market_time": "2026-10-07T15:30:00+09:00",
+      "market_time": "2026-10-08T09:04:00+09:00",
       "quote_type": "yahoo_chart"
     },
     "6762": {
@@ -39,7 +39,7 @@
       "previous_close": 3628.0,
       "change": -98.0,
       "change_pct": -2.7012,
-      "market_time": "2026-10-07T15:30:00+09:00",
+      "market_time": "2026-10-08T09:04:02+09:00",
       "quote_type": "yahoo_chart"
     },
     "6506": {
@@ -48,7 +48,7 @@
       "previous_close": 4936.0,
       "change": 10.0,
       "change_pct": 0.2026,
-      "market_time": "2026-10-07T15:30:00+09:00",
+      "market_time": "2026-10-08T09:04:00+09:00",
       "quote_type": "yahoo_chart"
     },
     "6501": {
@@ -57,7 +57,7 @@
       "previous_close": 5660.0,
       "change": -11.0,
       "change_pct": -0.1943,
-      "market_time": "2026-10-07T15:30:00+09:00",
+      "market_time": "2026-10-08T09:04:02+09:00",
       "quote_type": "yahoo_chart"
     },
     "8306": {
@@ -66,7 +66,7 @@
       "previous_close": 3671.0,
       "change": -49.0,
       "change_pct": -1.3348,
-      "market_time": "2026-10-07T15:30:00+09:00",
+      "market_time": "2026-10-08T09:04:01+09:00",
       "quote_type": "yahoo_chart"
     },
     "7203": {
@@ -75,7 +75,7 @@
       "previous_close": 2930.5,
       "change": -30.0,
       "change_pct": -1.0237,
-      "market_time": "2026-10-07T15:30:00+09:00",
+      "market_time": "2026-10-08T09:04:02+09:00",
       "quote_type": "yahoo_chart"
     },
     "1802": {
@@ -84,7 +84,7 @@
       "previous_close": 2935.0,
       "change": -6.0,
       "change_pct": -0.2044,
-      "market_time": "2026-10-07T15:30:00+09:00",
+      "market_time": "2026-10-08T09:04:02+09:00",
       "quote_type": "yahoo_chart"
     },
     "9065": {
@@ -93,7 +93,7 @@
       "previous_close": 1586.5,
       "change": -4.5,
       "change_pct": -0.2836,
-      "market_time": "2026-10-07T15:30:00+09:00",
+      "market_time": "2026-10-08T09:03:09+09:00",
       "quote_type": "yahoo_chart"
     },
     "3923": {
@@ -102,7 +102,7 @@
       "previous_close": 1047.0,
       "change": 18.5,
       "change_pct": 1.767,
-      "market_time": "2026-10-07T15:30:00+09:00",
+      "market_time": "2026-10-08T09:04:02+09:00",
       "quote_type": "yahoo_chart"
     },
     "6920": {
@@ -111,7 +111,7 @@
       "previous_close": 46550.0,
       "change": 150.0,
       "change_pct": 0.3222,
-      "market_time": "2026-10-07T15:30:00+09:00",
+      "market_time": "2026-10-08T09:04:02+09:00",
       "quote_type": "yahoo_chart"
     },
     "485A": {
@@ -120,7 +120,7 @@
       "previous_close": 2171.0,
       "change": -3.0,
       "change_pct": -0.1382,
-      "market_time": "2026-10-07T15:30:00+09:00",
+      "market_time": "2026-10-08T09:04:02+09:00",
       "quote_type": "yahoo_chart"
     },
     "8591": {
@@ -129,7 +129,7 @@
       "previous_close": 5870.0,
       "change": 7.0,
       "change_pct": 0.1193,
-      "market_time": "2026-10-07T15:30:00+09:00",
+      "market_time": "2026-10-08T09:04:03+09:00",
       "quote_type": "yahoo_chart"
     },
     "8001": {
@@ -138,7 +138,7 @@
       "previous_close": 2183.0,
       "change": -21.5,
       "change_pct": -0.9849,
-      "market_time": "2026-10-07T15:30:00+09:00",
+      "market_time": "2026-10-08T09:04:03+09:00",
       "quote_type": "yahoo_chart"
     },
     "8058": {
@@ -147,7 +147,7 @@
       "previous_close": 4713.0,
       "change": -37.0,
       "change_pct": -0.7851,
-      "market_time": "2026-10-07T15:30:00+09:00",
+      "market_time": "2026-10-08T09:04:02+09:00",
       "quote_type": "yahoo_chart"
     },
     "6752": {
@@ -156,7 +156,7 @@
       "previous_close": 4769.0,
       "change": -101.0,
       "change_pct": -2.1178,
-      "market_time": "2026-10-07T15:30:00+09:00",
+      "market_time": "2026-10-08T09:04:02+09:00",
       "quote_type": "yahoo_chart"
     },
     "285A": {
@@ -165,7 +165,7 @@
       "previous_close": 18735.0,
       "change": -835.0,
       "change_pct": -4.4569,
-      "market_time": "2026-10-07T15:30:00+09:00",
+      "market_time": "2026-10-08T09:04:03+09:00",
       "quote_type": "yahoo_chart"
     },
     "6301": {
@@ -183,7 +183,7 @@
       "previous_close": 20885.0,
       "change": 185.0,
       "change_pct": 0.8858,
-      "market_time": "2026-10-07T15:30:00+09:00",
+      "market_time": "2026-10-08T09:04:02+09:00",
       "quote_type": "yahoo_chart"
     },
     "9989": {
@@ -192,7 +192,7 @@
       "previous_close": 3540.0,
       "change": -3.0,
       "change_pct": -0.0847,
-      "market_time": "2026-10-07T15:30:00+09:00",
+      "market_time": "2026-10-08T09:04:03+09:00",
       "quote_type": "yahoo_chart"
     },
     "2329": {
@@ -201,7 +201,7 @@
       "previous_close": 475.0,
       "change": -2.0,
       "change_pct": -0.4211,
-      "market_time": "2026-10-07T15:30:00+09:00",
+      "market_time": "2026-10-08T09:03:56+09:00",
       "quote_type": "yahoo_chart"
     },
     "3465": {
@@ -210,7 +210,7 @@
       "previous_close": 3130.0,
       "change": -10.0,
       "change_pct": -0.3195,
-      "market_time": "2026-10-07T15:30:00+09:00",
+      "market_time": "2026-10-08T09:01:56+09:00",
       "quote_type": "yahoo_chart"
     },
     "7278": {
@@ -219,7 +219,7 @@
       "previous_close": 5750.0,
       "change": 30.0,
       "change_pct": 0.5217,
-      "market_time": "2026-10-07T15:30:00+09:00",
+      "market_time": "2026-10-08T09:03:40+09:00",
       "quote_type": "yahoo_chart"
     }
   },
