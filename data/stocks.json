@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-09T17:23:56.543818+09:00",
+  "updated_at": "2026-10-12T17:26:31.884814+09:00",
   "source": "IRBANK API + 豆腐ハードボイルド（騰落銘柄数）",
   "api_strategy": "price:800-row target/stock; weekly margin:1 endpoint/stock only when cache is stale; valuations:20 fiscal years/stock; Yahoo company forecast PER/EPS/stock; breadth:1/run; monthly MACD:1000-row target only for weekly-RSI<=30; quota preflight via /usage",
   "stocks": {
@@ -81,7 +81,7 @@
       "monthly_macd_hist": null,
       "monthly_macd_state": "データ不足",
       "monthly_points": 26,
-      "score": 9,
+      "score": 33,
       "score_max": 100,
       "data_points": 500,
       "rows_received": 500,
@@ -3863,21 +3863,21 @@
         "monthly_ma18_ready": true
       },
       "breadth": {
-        "6d": null,
-        "10d": null,
-        "15d": null,
-        "25d": null
+        "6d": 89.63,
+        "10d": 82.39,
+        "15d": 93.08,
+        "25d": 95.36
       },
-      "breadth_points": 0,
+      "breadth_points": 24,
       "breadth_breakdown": {
-        "6d": 0,
-        "10d": 0,
-        "15d": 0,
-        "25d": 0
+        "6d": 6,
+        "10d": 6,
+        "15d": 2,
+        "25d": 10
       },
-      "nikkei_change": null,
-      "nikkei_value": null,
-      "relative_strength": null,
+      "nikkei_change": -0.02,
+      "nikkei_value": 69030.92,
+      "relative_strength": -1.78,
       "supply": {
         "date": "2026-10-02",
         "status": "改善方向",
@@ -3924,11 +3924,11 @@
         "vs20": 0,
         "rsi14": 0,
         "vs75": 0,
-        "breadth": 0,
+        "breadth": 24,
         "relative_strength": 0,
         "supply": 6
       },
-      "breadth_source": null,
+      "breadth_source": "https://tofuhardboiled.com/updownratio/",
       "breadth_error": null,
       "weekly_date": "2026-10-09",
       "weekly_points": 108,
@@ -4152,7 +4152,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-09T17:24:01.294175+09:00",
+      "per_updated_at": "2026-10-12T17:26:35.897034+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -4241,7 +4241,7 @@
       "monthly_macd_hist": -40.79,
       "monthly_macd_state": "月足MACD GC手前・差分縮小",
       "monthly_points": 50,
-      "score": 5,
+      "score": 29,
       "score_max": 100,
       "data_points": 1000,
       "rows_received": 1000,
@@ -8206,21 +8206,21 @@
         "monthly_ma18_ready": true
       },
       "breadth": {
-        "6d": null,
-        "10d": null,
-        "15d": null,
-        "25d": null
+        "6d": 89.63,
+        "10d": 82.39,
+        "15d": 93.08,
+        "25d": 95.36
       },
-      "breadth_points": 0,
+      "breadth_points": 24,
       "breadth_breakdown": {
-        "6d": 0,
-        "10d": 0,
-        "15d": 0,
-        "25d": 0
+        "6d": 6,
+        "10d": 6,
+        "15d": 2,
+        "25d": 10
       },
-      "nikkei_change": null,
-      "nikkei_value": null,
-      "relative_strength": null,
+      "nikkei_change": -0.02,
+      "nikkei_value": 69030.92,
+      "relative_strength": 2.93,
       "supply": {
         "date": "2026-10-02",
         "status": "重い",
@@ -8267,11 +8267,11 @@
         "vs20": 0,
         "rsi14": 0,
         "vs75": 0,
-        "breadth": 0,
+        "breadth": 24,
         "relative_strength": 0,
         "supply": 5
       },
-      "breadth_source": null,
+      "breadth_source": "https://tofuhardboiled.com/updownratio/",
       "breadth_error": null,
       "weekly_date": "2026-10-09",
       "weekly_points": 214,
@@ -8436,7 +8436,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-09T17:24:06.643438+09:00",
+      "per_updated_at": "2026-10-12T17:26:40.713923+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -8525,7 +8525,7 @@
       "monthly_macd_hist": -55.303,
       "monthly_macd_state": "月足MACD GC手前・差分縮小",
       "monthly_points": 50,
-      "score": 11,
+      "score": 35,
       "score_max": 100,
       "data_points": 1000,
       "rows_received": 1000,
@@ -12528,21 +12528,21 @@
         "monthly_ma18_ready": true
       },
       "breadth": {
-        "6d": null,
-        "10d": null,
-        "15d": null,
-        "25d": null
+        "6d": 89.63,
+        "10d": 82.39,
+        "15d": 93.08,
+        "25d": 95.36
       },
-      "breadth_points": 0,
+      "breadth_points": 24,
       "breadth_breakdown": {
-        "6d": 0,
-        "10d": 0,
-        "15d": 0,
-        "25d": 0
+        "6d": 6,
+        "10d": 6,
+        "15d": 2,
+        "25d": 10
       },
-      "nikkei_change": null,
-      "nikkei_value": null,
-      "relative_strength": null,
+      "nikkei_change": -0.02,
+      "nikkei_value": 69030.92,
+      "relative_strength": 3.07,
       "supply": {
         "date": "2026-10-02",
         "status": "重い",
@@ -12589,11 +12589,11 @@
         "vs20": 0,
         "rsi14": 0,
         "vs75": 0,
-        "breadth": 0,
+        "breadth": 24,
         "relative_strength": 0,
         "supply": 5
       },
-      "breadth_source": null,
+      "breadth_source": "https://tofuhardboiled.com/updownratio/",
       "breadth_error": null,
       "weekly_date": "2026-10-09",
       "weekly_points": 214,
@@ -12798,7 +12798,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-09T17:24:11.503862+09:00",
+      "per_updated_at": "2026-10-12T17:26:45.324433+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -12887,7 +12887,7 @@
       "monthly_macd_hist": 52.94,
       "monthly_macd_state": "月足MACD条件未達",
       "monthly_points": 50,
-      "score": 14,
+      "score": 41,
       "score_max": 100,
       "data_points": 1000,
       "rows_received": 1000,
@@ -16859,21 +16859,21 @@
         "monthly_ma18_ready": true
       },
       "breadth": {
-        "6d": null,
-        "10d": null,
-        "15d": null,
-        "25d": null
+        "6d": 89.63,
+        "10d": 82.39,
+        "15d": 93.08,
+        "25d": 95.36
       },
-      "breadth_points": 0,
+      "breadth_points": 24,
       "breadth_breakdown": {
-        "6d": 0,
-        "10d": 0,
-        "15d": 0,
-        "25d": 0
+        "6d": 6,
+        "10d": 6,
+        "15d": 2,
+        "25d": 10
       },
-      "nikkei_change": null,
-      "nikkei_value": null,
-      "relative_strength": null,
+      "nikkei_change": -0.02,
+      "nikkei_value": 69030.92,
+      "relative_strength": -2.52,
       "supply": {
         "date": "2026-10-02",
         "status": "重い",
@@ -16913,18 +16913,18 @@
         "net_change_direction": "改善",
         "credit_ratio_level": 10.820941487021557
       },
-      "relative_points": 0,
+      "relative_points": 3,
       "score_breakdown": {
         "daily_drop": 6,
         "volume": 3,
         "vs20": 0,
         "rsi14": 0,
         "vs75": 0,
-        "breadth": 0,
-        "relative_strength": 0,
+        "breadth": 24,
+        "relative_strength": 3,
         "supply": 5
       },
-      "breadth_source": null,
+      "breadth_source": "https://tofuhardboiled.com/updownratio/",
       "breadth_error": null,
       "weekly_date": "2026-10-09",
       "weekly_points": 214,
@@ -17129,7 +17129,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-09T17:24:16.699814+09:00",
+      "per_updated_at": "2026-10-12T17:26:49.969069+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -17218,7 +17218,7 @@
       "monthly_macd_hist": 47.96,
       "monthly_macd_state": "月足MACD条件未達",
       "monthly_points": 50,
-      "score": 18,
+      "score": 42,
       "score_max": 100,
       "data_points": 1000,
       "rows_received": 1000,
@@ -21211,21 +21211,21 @@
         "monthly_ma18_ready": true
       },
       "breadth": {
-        "6d": null,
-        "10d": null,
-        "15d": null,
-        "25d": null
+        "6d": 89.63,
+        "10d": 82.39,
+        "15d": 93.08,
+        "25d": 95.36
       },
-      "breadth_points": 0,
+      "breadth_points": 24,
       "breadth_breakdown": {
-        "6d": 0,
-        "10d": 0,
-        "15d": 0,
-        "25d": 0
+        "6d": 6,
+        "10d": 6,
+        "15d": 2,
+        "25d": 10
       },
-      "nikkei_change": null,
-      "nikkei_value": null,
-      "relative_strength": null,
+      "nikkei_change": -0.02,
+      "nikkei_value": 69030.92,
+      "relative_strength": -0.11,
       "supply": {
         "date": "2026-10-02",
         "status": "重い",
@@ -21272,11 +21272,11 @@
         "vs20": 0,
         "rsi14": 0,
         "vs75": 10,
-        "breadth": 0,
+        "breadth": 24,
         "relative_strength": 0,
         "supply": 5
       },
-      "breadth_source": null,
+      "breadth_source": "https://tofuhardboiled.com/updownratio/",
       "breadth_error": null,
       "weekly_date": "2026-10-09",
       "weekly_points": 214,
@@ -21490,7 +21490,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-09T17:24:23.593769+09:00",
+      "per_updated_at": "2026-10-12T17:26:56.513061+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -21579,7 +21579,7 @@
       "monthly_macd_hist": 1.921,
       "monthly_macd_state": "月足MACDゴールデンクロス",
       "monthly_points": 50,
-      "score": 1,
+      "score": 25,
       "score_max": 100,
       "data_points": 1000,
       "rows_received": 1000,
@@ -25554,21 +25554,21 @@
         "monthly_ma18_ready": true
       },
       "breadth": {
-        "6d": null,
-        "10d": null,
-        "15d": null,
-        "25d": null
+        "6d": 89.63,
+        "10d": 82.39,
+        "15d": 93.08,
+        "25d": 95.36
       },
-      "breadth_points": 0,
+      "breadth_points": 24,
       "breadth_breakdown": {
-        "6d": 0,
-        "10d": 0,
-        "15d": 0,
-        "25d": 0
+        "6d": 6,
+        "10d": 6,
+        "15d": 2,
+        "25d": 10
       },
-      "nikkei_change": null,
-      "nikkei_value": null,
-      "relative_strength": null,
+      "nikkei_change": -0.02,
+      "nikkei_value": 69030.92,
+      "relative_strength": 1.31,
       "supply": {
         "date": "2026-10-02",
         "status": "重い",
@@ -25615,11 +25615,11 @@
         "vs20": 0,
         "rsi14": 0,
         "vs75": 0,
-        "breadth": 0,
+        "breadth": 24,
         "relative_strength": 0,
         "supply": 1
       },
-      "breadth_source": null,
+      "breadth_source": "https://tofuhardboiled.com/updownratio/",
       "breadth_error": null,
       "weekly_date": "2026-10-09",
       "weekly_points": 214,
@@ -25824,7 +25824,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-09T17:24:27.975930+09:00",
+      "per_updated_at": "2026-10-12T17:27:00.609861+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -25913,7 +25913,7 @@
       "monthly_macd_hist": 72.957,
       "monthly_macd_state": "月足MACD条件未達",
       "monthly_points": 50,
-      "score": 12,
+      "score": 36,
       "score_max": 100,
       "data_points": 1000,
       "rows_received": 1000,
@@ -29878,21 +29878,21 @@
         "monthly_ma18_ready": true
       },
       "breadth": {
-        "6d": null,
-        "10d": null,
-        "15d": null,
-        "25d": null
+        "6d": 89.63,
+        "10d": 82.39,
+        "15d": 93.08,
+        "25d": 95.36
       },
-      "breadth_points": 0,
+      "breadth_points": 24,
       "breadth_breakdown": {
-        "6d": 0,
-        "10d": 0,
-        "15d": 0,
-        "25d": 0
+        "6d": 6,
+        "10d": 6,
+        "15d": 2,
+        "25d": 10
       },
-      "nikkei_change": null,
-      "nikkei_value": null,
-      "relative_strength": null,
+      "nikkei_change": -0.02,
+      "nikkei_value": 69030.92,
+      "relative_strength": -1.18,
       "supply": {
         "date": "2026-10-02",
         "status": "重い",
@@ -29939,11 +29939,11 @@
         "vs20": 3,
         "rsi14": 2,
         "vs75": 4,
-        "breadth": 0,
+        "breadth": 24,
         "relative_strength": 0,
         "supply": 0
       },
-      "breadth_source": null,
+      "breadth_source": "https://tofuhardboiled.com/updownratio/",
       "breadth_error": null,
       "weekly_date": "2026-10-09",
       "weekly_points": 214,
@@ -30188,7 +30188,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-09T17:24:33.128370+09:00",
+      "per_updated_at": "2026-10-12T17:27:05.088397+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -30277,7 +30277,7 @@
       "monthly_macd_hist": -44.692,
       "monthly_macd_state": "月足MACD条件未達",
       "monthly_points": 50,
-      "score": 6,
+      "score": 30,
       "score_max": 100,
       "data_points": 1000,
       "rows_received": 1000,
@@ -34234,21 +34234,21 @@
         "monthly_ma18_ready": true
       },
       "breadth": {
-        "6d": null,
-        "10d": null,
-        "15d": null,
-        "25d": null
+        "6d": 89.63,
+        "10d": 82.39,
+        "15d": 93.08,
+        "25d": 95.36
       },
-      "breadth_points": 0,
+      "breadth_points": 24,
       "breadth_breakdown": {
-        "6d": 0,
-        "10d": 0,
-        "15d": 0,
-        "25d": 0
+        "6d": 6,
+        "10d": 6,
+        "15d": 2,
+        "25d": 10
       },
-      "nikkei_change": null,
-      "nikkei_value": null,
-      "relative_strength": null,
+      "nikkei_change": -0.02,
+      "nikkei_value": 69030.92,
+      "relative_strength": 0.31,
       "supply": {
         "date": "2026-10-02",
         "status": "重い",
@@ -34295,11 +34295,11 @@
         "vs20": 0,
         "rsi14": 2,
         "vs75": 4,
-        "breadth": 0,
+        "breadth": 24,
         "relative_strength": 0,
         "supply": 0
       },
-      "breadth_source": null,
+      "breadth_source": "https://tofuhardboiled.com/updownratio/",
       "breadth_error": null,
       "weekly_date": "2026-10-09",
       "weekly_points": 214,
@@ -34508,7 +34508,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-09T17:24:37.957791+09:00",
+      "per_updated_at": "2026-10-12T17:27:09.625042+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -34597,7 +34597,7 @@
       "monthly_macd_hist": -92.065,
       "monthly_macd_state": "月足MACD条件未達",
       "monthly_points": 50,
-      "score": 25,
+      "score": 49,
       "score_max": 100,
       "data_points": 1000,
       "rows_received": 1000,
@@ -38586,21 +38586,21 @@
         "monthly_ma18_ready": true
       },
       "breadth": {
-        "6d": null,
-        "10d": null,
-        "15d": null,
-        "25d": null
+        "6d": 89.63,
+        "10d": 82.39,
+        "15d": 93.08,
+        "25d": 95.36
       },
-      "breadth_points": 0,
+      "breadth_points": 24,
       "breadth_breakdown": {
-        "6d": 0,
-        "10d": 0,
-        "15d": 0,
-        "25d": 0
+        "6d": 6,
+        "10d": 6,
+        "15d": 2,
+        "25d": 10
       },
-      "nikkei_change": null,
-      "nikkei_value": null,
-      "relative_strength": null,
+      "nikkei_change": -0.02,
+      "nikkei_value": 69030.92,
+      "relative_strength": 0.11,
       "supply": {
         "date": "2026-10-02",
         "status": "重い",
@@ -38647,11 +38647,11 @@
         "vs20": 6,
         "rsi14": 8,
         "vs75": 7,
-        "breadth": 0,
+        "breadth": 24,
         "relative_strength": 0,
         "supply": 1
       },
-      "breadth_source": null,
+      "breadth_source": "https://tofuhardboiled.com/updownratio/",
       "breadth_error": null,
       "weekly_date": "2026-10-09",
       "weekly_points": 214,
@@ -38850,7 +38850,7 @@
         "switch_date_basis": "直近の決算発表日"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-09T17:24:47.118208+09:00",
+      "per_updated_at": "2026-10-12T17:27:17.881707+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -38939,7 +38939,7 @@
       "monthly_macd_hist": -35.397,
       "monthly_macd_state": "月足MACD条件未達",
       "monthly_points": 50,
-      "score": 13,
+      "score": 37,
       "score_max": 100,
       "data_points": 1000,
       "rows_received": 1000,
@@ -42914,21 +42914,21 @@
         "monthly_ma18_ready": true
       },
       "breadth": {
-        "6d": null,
-        "10d": null,
-        "15d": null,
-        "25d": null
+        "6d": 89.63,
+        "10d": 82.39,
+        "15d": 93.08,
+        "25d": 95.36
       },
-      "breadth_points": 0,
+      "breadth_points": 24,
       "breadth_breakdown": {
-        "6d": 0,
-        "10d": 0,
-        "15d": 0,
-        "25d": 0
+        "6d": 6,
+        "10d": 6,
+        "15d": 2,
+        "25d": 10
       },
-      "nikkei_change": null,
-      "nikkei_value": null,
-      "relative_strength": null,
+      "nikkei_change": -0.02,
+      "nikkei_value": 69030.92,
+      "relative_strength": 0.08,
       "supply": {
         "date": "2026-10-02",
         "status": "重い",
@@ -42975,11 +42975,11 @@
         "vs20": 0,
         "rsi14": 0,
         "vs75": 7,
-        "breadth": 0,
+        "breadth": 24,
         "relative_strength": 0,
         "supply": 0
       },
-      "breadth_source": null,
+      "breadth_source": "https://tofuhardboiled.com/updownratio/",
       "breadth_error": null,
       "weekly_date": "2026-10-09",
       "weekly_points": 214,
@@ -43186,7 +43186,7 @@
         "switch_date_basis": "直近の決算発表日"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-09T17:24:53.991416+09:00",
+      "per_updated_at": "2026-10-12T17:27:23.988903+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -43275,7 +43275,7 @@
       "monthly_macd_hist": 4.466,
       "monthly_macd_state": "月足MACDゴールデンクロス",
       "monthly_points": 50,
-      "score": 7,
+      "score": 31,
       "score_max": 100,
       "data_points": 1000,
       "rows_received": 1000,
@@ -47254,21 +47254,21 @@
         "monthly_ma18_ready": true
       },
       "breadth": {
-        "6d": null,
-        "10d": null,
-        "15d": null,
-        "25d": null
+        "6d": 89.63,
+        "10d": 82.39,
+        "15d": 93.08,
+        "25d": 95.36
       },
-      "breadth_points": 0,
+      "breadth_points": 24,
       "breadth_breakdown": {
-        "6d": 0,
-        "10d": 0,
-        "15d": 0,
-        "25d": 0
+        "6d": 6,
+        "10d": 6,
+        "15d": 2,
+        "25d": 10
       },
-      "nikkei_change": null,
-      "nikkei_value": null,
-      "relative_strength": null,
+      "nikkei_change": -0.02,
+      "nikkei_value": 69030.92,
+      "relative_strength": 4.68,
       "supply": {
         "date": "2026-10-02",
         "status": "重い",
@@ -47315,11 +47315,11 @@
         "vs20": 0,
         "rsi14": 0,
         "vs75": 0,
-        "breadth": 0,
+        "breadth": 24,
         "relative_strength": 0,
         "supply": 1
       },
-      "breadth_source": null,
+      "breadth_source": "https://tofuhardboiled.com/updownratio/",
       "breadth_error": null,
       "weekly_date": "2026-10-09",
       "weekly_points": 214,
@@ -47492,7 +47492,7 @@
         "switch_date_basis": "直近の決算発表日"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-09T17:25:00.651265+09:00",
+      "per_updated_at": "2026-10-12T17:27:30.203848+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -47581,7 +47581,7 @@
       "monthly_macd_hist": 1605.504,
       "monthly_macd_state": "月足MACD条件未達",
       "monthly_points": 50,
-      "score": 13,
+      "score": 37,
       "score_max": 100,
       "data_points": 1000,
       "rows_received": 1000,
@@ -51560,21 +51560,21 @@
         "monthly_ma18_ready": true
       },
       "breadth": {
-        "6d": null,
-        "10d": null,
-        "15d": null,
-        "25d": null
+        "6d": 89.63,
+        "10d": 82.39,
+        "15d": 93.08,
+        "25d": 95.36
       },
-      "breadth_points": 0,
+      "breadth_points": 24,
       "breadth_breakdown": {
-        "6d": 0,
-        "10d": 0,
-        "15d": 0,
-        "25d": 0
+        "6d": 6,
+        "10d": 6,
+        "15d": 2,
+        "25d": 10
       },
-      "nikkei_change": null,
-      "nikkei_value": null,
-      "relative_strength": null,
+      "nikkei_change": -0.02,
+      "nikkei_value": 69030.92,
+      "relative_strength": 4.2,
       "supply": {
         "date": "2026-10-02",
         "status": "軽い",
@@ -51621,11 +51621,11 @@
         "vs20": 0,
         "rsi14": 0,
         "vs75": 0,
-        "breadth": 0,
+        "breadth": 24,
         "relative_strength": 0,
         "supply": 10
       },
-      "breadth_source": null,
+      "breadth_source": "https://tofuhardboiled.com/updownratio/",
       "breadth_error": null,
       "weekly_date": "2026-10-09",
       "weekly_points": 214,
@@ -51822,7 +51822,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-09T17:25:05.513509+09:00",
+      "per_updated_at": "2026-10-12T17:27:34.526079+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -51911,7 +51911,7 @@
       "monthly_macd_hist": null,
       "monthly_macd_state": "データ不足",
       "monthly_points": 11,
-      "score": 6,
+      "score": 30,
       "score_max": 100,
       "data_points": 195,
       "rows_received": 195,
@@ -55053,21 +55053,21 @@
         "monthly_ma18_ready": false
       },
       "breadth": {
-        "6d": null,
-        "10d": null,
-        "15d": null,
-        "25d": null
+        "6d": 89.63,
+        "10d": 82.39,
+        "15d": 93.08,
+        "25d": 95.36
       },
-      "breadth_points": 0,
+      "breadth_points": 24,
       "breadth_breakdown": {
-        "6d": 0,
-        "10d": 0,
-        "15d": 0,
-        "25d": 0
+        "6d": 6,
+        "10d": 6,
+        "15d": 2,
+        "25d": 10
       },
-      "nikkei_change": null,
-      "nikkei_value": null,
-      "relative_strength": null,
+      "nikkei_change": -0.02,
+      "nikkei_value": 69030.92,
+      "relative_strength": -0.33,
       "supply": {
         "date": "2026-10-02",
         "status": "重い",
@@ -55114,11 +55114,11 @@
         "vs20": 6,
         "rsi14": 0,
         "vs75": 0,
-        "breadth": 0,
+        "breadth": 24,
         "relative_strength": 0,
         "supply": 0
       },
-      "breadth_source": null,
+      "breadth_source": "https://tofuhardboiled.com/updownratio/",
       "breadth_error": null,
       "weekly_date": "2026-10-09",
       "weekly_points": 43,
@@ -55194,7 +55194,7 @@
         "switch_date_basis": "直近の決算発表日"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-09T17:25:12.267721+09:00",
+      "per_updated_at": "2026-10-12T17:27:39.613270+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -55283,7 +55283,7 @@
       "monthly_macd_hist": 106.943,
       "monthly_macd_state": "月足MACD条件未達",
       "monthly_points": 50,
-      "score": 15,
+      "score": 39,
       "score_max": 100,
       "data_points": 1000,
       "rows_received": 1000,
@@ -59240,21 +59240,21 @@
         "monthly_ma18_ready": true
       },
       "breadth": {
-        "6d": null,
-        "10d": null,
-        "15d": null,
-        "25d": null
+        "6d": 89.63,
+        "10d": 82.39,
+        "15d": 93.08,
+        "25d": 95.36
       },
-      "breadth_points": 0,
+      "breadth_points": 24,
       "breadth_breakdown": {
-        "6d": 0,
-        "10d": 0,
-        "15d": 0,
-        "25d": 0
+        "6d": 6,
+        "10d": 6,
+        "15d": 2,
+        "25d": 10
       },
-      "nikkei_change": null,
-      "nikkei_value": null,
-      "relative_strength": null,
+      "nikkei_change": -0.02,
+      "nikkei_value": 69030.92,
+      "relative_strength": 0.35,
       "supply": {
         "date": "2026-10-02",
         "status": "重い",
@@ -59301,11 +59301,11 @@
         "vs20": 3,
         "rsi14": 5,
         "vs75": 7,
-        "breadth": 0,
+        "breadth": 24,
         "relative_strength": 0,
         "supply": 0
       },
-      "breadth_source": null,
+      "breadth_source": "https://tofuhardboiled.com/updownratio/",
       "breadth_error": null,
       "weekly_date": "2026-10-09",
       "weekly_points": 214,
@@ -59518,7 +59518,7 @@
         "switch_date_basis": "直近の決算発表日"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-09T17:25:18.901234+09:00",
+      "per_updated_at": "2026-10-12T17:27:45.100185+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -59607,7 +59607,7 @@
       "monthly_macd_hist": 7.472,
       "monthly_macd_state": "月足MACD条件未達",
       "monthly_points": 50,
-      "score": 8,
+      "score": 32,
       "score_max": 100,
       "data_points": 1000,
       "rows_received": 1000,
@@ -63582,21 +63582,21 @@
         "monthly_ma18_ready": true
       },
       "breadth": {
-        "6d": null,
-        "10d": null,
-        "15d": null,
-        "25d": null
+        "6d": 89.63,
+        "10d": 82.39,
+        "15d": 93.08,
+        "25d": 95.36
       },
-      "breadth_points": 0,
+      "breadth_points": 24,
       "breadth_breakdown": {
-        "6d": 0,
-        "10d": 0,
-        "15d": 0,
-        "25d": 0
+        "6d": 6,
+        "10d": 6,
+        "15d": 2,
+        "25d": 10
       },
-      "nikkei_change": null,
-      "nikkei_value": null,
-      "relative_strength": null,
+      "nikkei_change": -0.02,
+      "nikkei_value": 69030.92,
+      "relative_strength": 0.79,
       "supply": {
         "date": "2026-10-02",
         "status": "重い",
@@ -63643,11 +63643,11 @@
         "vs20": 3,
         "rsi14": 5,
         "vs75": 0,
-        "breadth": 0,
+        "breadth": 24,
         "relative_strength": 0,
         "supply": 0
       },
-      "breadth_source": null,
+      "breadth_source": "https://tofuhardboiled.com/updownratio/",
       "breadth_error": null,
       "weekly_date": "2026-10-09",
       "weekly_points": 214,
@@ -63894,7 +63894,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-09T17:25:23.899329+09:00",
+      "per_updated_at": "2026-10-12T17:27:49.097744+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -63983,7 +63983,7 @@
       "monthly_macd_hist": 4.572,
       "monthly_macd_state": "月足MACD条件未達",
       "monthly_points": 50,
-      "score": 16,
+      "score": 40,
       "score_max": 100,
       "data_points": 1000,
       "rows_received": 1000,
@@ -67948,21 +67948,21 @@
         "monthly_ma18_ready": true
       },
       "breadth": {
-        "6d": null,
-        "10d": null,
-        "15d": null,
-        "25d": null
+        "6d": 89.63,
+        "10d": 82.39,
+        "15d": 93.08,
+        "25d": 95.36
       },
-      "breadth_points": 0,
+      "breadth_points": 24,
       "breadth_breakdown": {
-        "6d": 0,
-        "10d": 0,
-        "15d": 0,
-        "25d": 0
+        "6d": 6,
+        "10d": 6,
+        "15d": 2,
+        "25d": 10
       },
-      "nikkei_change": null,
-      "nikkei_value": null,
-      "relative_strength": null,
+      "nikkei_change": -0.02,
+      "nikkei_value": 69030.92,
+      "relative_strength": 0.15,
       "supply": {
         "date": "2026-10-02",
         "status": "重い",
@@ -68009,11 +68009,11 @@
         "vs20": 3,
         "rsi14": 8,
         "vs75": 4,
-        "breadth": 0,
+        "breadth": 24,
         "relative_strength": 0,
         "supply": 1
       },
-      "breadth_source": null,
+      "breadth_source": "https://tofuhardboiled.com/updownratio/",
       "breadth_error": null,
       "weekly_date": "2026-10-09",
       "weekly_points": 214,
@@ -68218,7 +68218,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-09T17:25:28.410363+09:00",
+      "per_updated_at": "2026-10-12T17:27:53.285018+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -68307,7 +68307,7 @@
       "monthly_macd_hist": 231.022,
       "monthly_macd_state": "月足MACD条件未達",
       "monthly_points": 50,
-      "score": 3,
+      "score": 27,
       "score_max": 100,
       "data_points": 1000,
       "rows_received": 1000,
@@ -72271,21 +72271,21 @@
         "monthly_ma18_ready": true
       },
       "breadth": {
-        "6d": null,
-        "10d": null,
-        "15d": null,
-        "25d": null
+        "6d": 89.63,
+        "10d": 82.39,
+        "15d": 93.08,
+        "25d": 95.36
       },
-      "breadth_points": 0,
+      "breadth_points": 24,
       "breadth_breakdown": {
-        "6d": 0,
-        "10d": 0,
-        "15d": 0,
-        "25d": 0
+        "6d": 6,
+        "10d": 6,
+        "15d": 2,
+        "25d": 10
       },
-      "nikkei_change": null,
-      "nikkei_value": null,
-      "relative_strength": null,
+      "nikkei_change": -0.02,
+      "nikkei_value": 69030.92,
+      "relative_strength": -0.91,
       "supply": {
         "date": "2026-10-02",
         "status": "重い",
@@ -72332,11 +72332,11 @@
         "vs20": 0,
         "rsi14": 0,
         "vs75": 0,
-        "breadth": 0,
+        "breadth": 24,
         "relative_strength": 0,
         "supply": 3
       },
-      "breadth_source": null,
+      "breadth_source": "https://tofuhardboiled.com/updownratio/",
       "breadth_error": null,
       "weekly_date": "2026-10-09",
       "weekly_points": 214,
@@ -72560,7 +72560,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-09T17:25:33.834529+09:00",
+      "per_updated_at": "2026-10-12T17:27:57.696984+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -72649,7 +72649,7 @@
       "monthly_macd_hist": null,
       "monthly_macd_state": "データ不足",
       "monthly_points": 23,
-      "score": 24,
+      "score": 51,
       "score_max": 100,
       "data_points": 439,
       "rows_received": 439,
@@ -76374,21 +76374,21 @@
         "monthly_ma18_ready": true
       },
       "breadth": {
-        "6d": null,
-        "10d": null,
-        "15d": null,
-        "25d": null
+        "6d": 89.63,
+        "10d": 82.39,
+        "15d": 93.08,
+        "25d": 95.36
       },
-      "breadth_points": 0,
+      "breadth_points": 24,
       "breadth_breakdown": {
-        "6d": 0,
-        "10d": 0,
-        "15d": 0,
-        "25d": 0
+        "6d": 6,
+        "10d": 6,
+        "15d": 2,
+        "25d": 10
       },
-      "nikkei_change": null,
-      "nikkei_value": null,
-      "relative_strength": null,
+      "nikkei_change": -0.02,
+      "nikkei_value": 69030.92,
+      "relative_strength": -2.19,
       "supply": {
         "date": "2026-10-02",
         "status": "重い",
@@ -76428,18 +76428,18 @@
         "net_change_direction": "改善",
         "credit_ratio_level": 16.098334562677124
       },
-      "relative_points": 0,
+      "relative_points": 3,
       "score_breakdown": {
         "daily_drop": 6,
         "volume": 0,
         "vs20": 3,
         "rsi14": 0,
         "vs75": 10,
-        "breadth": 0,
-        "relative_strength": 0,
+        "breadth": 24,
+        "relative_strength": 3,
         "supply": 5
       },
-      "breadth_source": null,
+      "breadth_source": "https://tofuhardboiled.com/updownratio/",
       "breadth_error": null,
       "weekly_date": "2026-10-09",
       "weekly_points": 95,
@@ -76532,7 +76532,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-09T17:25:38.347396+09:00",
+      "per_updated_at": "2026-10-12T17:28:01.725890+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -76621,7 +76621,7 @@
       "monthly_macd_hist": 135.428,
       "monthly_macd_state": "月足MACD条件未達",
       "monthly_points": 50,
-      "score": 6,
+      "score": 30,
       "score_max": 100,
       "data_points": 1000,
       "rows_received": 1000,
@@ -80578,21 +80578,21 @@
         "monthly_ma18_ready": true
       },
       "breadth": {
-        "6d": null,
-        "10d": null,
-        "15d": null,
-        "25d": null
+        "6d": 89.63,
+        "10d": 82.39,
+        "15d": 93.08,
+        "25d": 95.36
       },
-      "breadth_points": 0,
+      "breadth_points": 24,
       "breadth_breakdown": {
-        "6d": 0,
-        "10d": 0,
-        "15d": 0,
-        "25d": 0
+        "6d": 6,
+        "10d": 6,
+        "15d": 2,
+        "25d": 10
       },
-      "nikkei_change": null,
-      "nikkei_value": null,
-      "relative_strength": null,
+      "nikkei_change": -0.02,
+      "nikkei_value": 69030.92,
+      "relative_strength": -1.32,
       "supply": {
         "date": "2026-10-02",
         "status": "重い",
@@ -80639,11 +80639,11 @@
         "vs20": 0,
         "rsi14": 0,
         "vs75": 0,
-        "breadth": 0,
+        "breadth": 24,
         "relative_strength": 0,
         "supply": 3
       },
-      "breadth_source": null,
+      "breadth_source": "https://tofuhardboiled.com/updownratio/",
       "breadth_error": null,
       "weekly_date": "2026-10-09",
       "weekly_points": 214,
@@ -80890,7 +80890,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-09T17:25:42.881628+09:00",
+      "per_updated_at": "2026-10-12T17:28:05.799614+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -80979,7 +80979,7 @@
       "monthly_macd_hist": 344.159,
       "monthly_macd_state": "月足MACD条件未達",
       "monthly_points": 50,
-      "score": 7,
+      "score": 31,
       "score_max": 100,
       "data_points": 1000,
       "rows_received": 1000,
@@ -84968,21 +84968,21 @@
         "monthly_ma18_ready": true
       },
       "breadth": {
-        "6d": null,
-        "10d": null,
-        "15d": null,
-        "25d": null
+        "6d": 89.63,
+        "10d": 82.39,
+        "15d": 93.08,
+        "25d": 95.36
       },
-      "breadth_points": 0,
+      "breadth_points": 24,
       "breadth_breakdown": {
-        "6d": 0,
-        "10d": 0,
-        "15d": 0,
-        "25d": 0
+        "6d": 6,
+        "10d": 6,
+        "15d": 2,
+        "25d": 10
       },
-      "nikkei_change": null,
-      "nikkei_value": null,
-      "relative_strength": null,
+      "nikkei_change": -0.02,
+      "nikkei_value": 69030.92,
+      "relative_strength": 0.88,
       "supply": {
         "date": "2026-10-02",
         "status": "重い",
@@ -85029,11 +85029,11 @@
         "vs20": 0,
         "rsi14": 0,
         "vs75": 7,
-        "breadth": 0,
+        "breadth": 24,
         "relative_strength": 0,
         "supply": 0
       },
-      "breadth_source": null,
+      "breadth_source": "https://tofuhardboiled.com/updownratio/",
       "breadth_error": null,
       "weekly_date": "2026-10-09",
       "weekly_points": 214,
@@ -85246,7 +85246,7 @@
         "switch_date_basis": "Yahoo fundamentals-timeseries"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-09T17:25:49.561248+09:00",
+      "per_updated_at": "2026-10-12T17:28:12.462966+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -85335,7 +85335,7 @@
       "monthly_macd_hist": -79.026,
       "monthly_macd_state": "月足MACD条件未達",
       "monthly_points": 50,
-      "score": 18,
+      "score": 42,
       "score_max": 100,
       "data_points": 1000,
       "rows_received": 1000,
@@ -89317,21 +89317,21 @@
         "monthly_ma18_ready": true
       },
       "breadth": {
-        "6d": null,
-        "10d": null,
-        "15d": null,
-        "25d": null
+        "6d": 89.63,
+        "10d": 82.39,
+        "15d": 93.08,
+        "25d": 95.36
       },
-      "breadth_points": 0,
+      "breadth_points": 24,
       "breadth_breakdown": {
-        "6d": 0,
-        "10d": 0,
-        "15d": 0,
-        "25d": 0
+        "6d": 6,
+        "10d": 6,
+        "15d": 2,
+        "25d": 10
       },
-      "nikkei_change": null,
-      "nikkei_value": null,
-      "relative_strength": null,
+      "nikkei_change": -0.02,
+      "nikkei_value": 69030.92,
+      "relative_strength": -0.79,
       "supply": {
         "date": "2026-10-02",
         "status": "重い",
@@ -89378,11 +89378,11 @@
         "vs20": 0,
         "rsi14": 8,
         "vs75": 7,
-        "breadth": 0,
+        "breadth": 24,
         "relative_strength": 0,
         "supply": 0
       },
-      "breadth_source": null,
+      "breadth_source": "https://tofuhardboiled.com/updownratio/",
       "breadth_error": null,
       "weekly_date": "2026-10-09",
       "weekly_points": 214,
@@ -89599,7 +89599,7 @@
         "switch_date_basis": "直近の決算発表日"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-09T17:25:58.060040+09:00",
+      "per_updated_at": "2026-10-12T17:28:20.534885+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -89688,7 +89688,7 @@
       "monthly_macd_hist": -26.337,
       "monthly_macd_state": "月足MACD条件未達",
       "monthly_points": 50,
-      "score": 25,
+      "score": 49,
       "score_max": 100,
       "data_points": 1000,
       "rows_received": 1000,
@@ -93678,21 +93678,21 @@
         "monthly_ma18_ready": true
       },
       "breadth": {
-        "6d": null,
-        "10d": null,
-        "15d": null,
-        "25d": null
+        "6d": 89.63,
+        "10d": 82.39,
+        "15d": 93.08,
+        "25d": 95.36
       },
-      "breadth_points": 0,
+      "breadth_points": 24,
       "breadth_breakdown": {
-        "6d": 0,
-        "10d": 0,
-        "15d": 0,
-        "25d": 0
+        "6d": 6,
+        "10d": 6,
+        "15d": 2,
+        "25d": 10
       },
-      "nikkei_change": null,
-      "nikkei_value": null,
-      "relative_strength": null,
+      "nikkei_change": -0.02,
+      "nikkei_value": 69030.92,
+      "relative_strength": 0.87,
       "supply": {
         "date": "2026-10-02",
         "status": "データ不足",
@@ -93740,11 +93740,11 @@
         "vs20": 3,
         "rsi14": 10,
         "vs75": 7,
-        "breadth": 0,
+        "breadth": 24,
         "relative_strength": 0,
         "supply": 5
       },
-      "breadth_source": null,
+      "breadth_source": "https://tofuhardboiled.com/updownratio/",
       "breadth_error": null,
       "weekly_date": "2026-10-09",
       "weekly_points": 214,
@@ -93943,7 +93943,7 @@
         "switch_date_basis": "取得できず"
       },
       "per_forecast_error": "Yahooから会社予想PER/EPSを取得できませんでした (timeseries: Yahoo forward P/E unavailable (https://query1.finance.yahoo.com: unavailable; https://query2.finance.yahoo.com: unavailable); https://query1.finance.yahoo.com: HTTP Error 401: Unauthorized; https://query2.finance.yahoo.com: HTTP Error 401: Unauthorized)",
-      "per_updated_at": "2026-10-09T17:26:04.497429+09:00",
+      "per_updated_at": "2026-10-12T17:28:27.311372+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -94032,7 +94032,7 @@
       "monthly_macd_hist": -19.308,
       "monthly_macd_state": "月足MACD条件未達",
       "monthly_points": 50,
-      "score": 19,
+      "score": 43,
       "score_max": 100,
       "data_points": 1000,
       "rows_received": 1000,
@@ -97989,21 +97989,21 @@
         "monthly_ma18_ready": true
       },
       "breadth": {
-        "6d": null,
-        "10d": null,
-        "15d": null,
-        "25d": null
+        "6d": 89.63,
+        "10d": 82.39,
+        "15d": 93.08,
+        "25d": 95.36
       },
-      "breadth_points": 0,
+      "breadth_points": 24,
       "breadth_breakdown": {
-        "6d": 0,
-        "10d": 0,
-        "15d": 0,
-        "25d": 0
+        "6d": 6,
+        "10d": 6,
+        "15d": 2,
+        "25d": 10
       },
-      "nikkei_change": null,
-      "nikkei_value": null,
-      "relative_strength": null,
+      "nikkei_change": -0.02,
+      "nikkei_value": 69030.92,
+      "relative_strength": -0.63,
       "supply": {
         "date": "2026-10-02",
         "status": "重い",
@@ -98050,11 +98050,11 @@
         "vs20": 3,
         "rsi14": 5,
         "vs75": 10,
-        "breadth": 0,
+        "breadth": 24,
         "relative_strength": 0,
         "supply": 1
       },
-      "breadth_source": null,
+      "breadth_source": "https://tofuhardboiled.com/updownratio/",
       "breadth_error": null,
       "weekly_date": "2026-10-09",
       "weekly_points": 214,
@@ -98215,7 +98215,7 @@
         "switch_date_basis": "直近の決算発表日"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-09T17:26:12.070637+09:00",
+      "per_updated_at": "2026-10-12T17:28:33.531698+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -98304,7 +98304,7 @@
       "monthly_macd_hist": -72.592,
       "monthly_macd_state": "月足MACD条件未達",
       "monthly_points": 50,
-      "score": 4,
+      "score": 28,
       "score_max": 100,
       "data_points": 1000,
       "rows_received": 1000,
@@ -102261,21 +102261,21 @@
         "monthly_ma18_ready": true
       },
       "breadth": {
-        "6d": null,
-        "10d": null,
-        "15d": null,
-        "25d": null
+        "6d": 89.63,
+        "10d": 82.39,
+        "15d": 93.08,
+        "25d": 95.36
       },
-      "breadth_points": 0,
+      "breadth_points": 24,
       "breadth_breakdown": {
-        "6d": 0,
-        "10d": 0,
-        "15d": 0,
-        "25d": 0
+        "6d": 6,
+        "10d": 6,
+        "15d": 2,
+        "25d": 10
       },
-      "nikkei_change": null,
-      "nikkei_value": null,
-      "relative_strength": null,
+      "nikkei_change": -0.02,
+      "nikkei_value": 69030.92,
+      "relative_strength": -0.15,
       "supply": {
         "date": "2026-10-02",
         "status": "重い",
@@ -102322,11 +102322,11 @@
         "vs20": 0,
         "rsi14": 0,
         "vs75": 4,
-        "breadth": 0,
+        "breadth": 24,
         "relative_strength": 0,
         "supply": 0
       },
-      "breadth_source": null,
+      "breadth_source": "https://tofuhardboiled.com/updownratio/",
       "breadth_error": null,
       "weekly_date": "2026-10-09",
       "weekly_points": 214,
@@ -102531,7 +102531,7 @@
         "switch_date_basis": "直近の決算発表日"
       },
       "per_forecast_error": null,
-      "per_updated_at": "2026-10-09T17:26:18.354937+09:00",
+      "per_updated_at": "2026-10-12T17:28:39.696844+09:00",
       "per_actual_attribution": {
         "source_label": "金融庁 EDINET / TDnet / JPX 東京証券取引所",
         "license_note": "EDINET 由来データは金融庁 EDINET、TDnet 由来データは JPX TDnet、株価・時価総額など株価由来データは JPX 東京証券取引所を出典とし、加工は IRBANK が実施。再配信時は出典の明示が必要。",
@@ -102552,7 +102552,7 @@
       "date": "2026-10-09",
       "regime": "UPTREND_PULLBACK",
       "signal": "WATCH",
-      "relative_strength": null,
+      "relative_strength": -1.78,
       "supply_status": "改善方向",
       "per_actual_count": 14,
       "per_forecast_eps": null,
@@ -102567,7 +102567,7 @@
       "date": "2026-10-09",
       "regime": "RANGE_TRANSITION",
       "signal": "WATCH",
-      "relative_strength": null,
+      "relative_strength": 2.93,
       "supply_status": "重い",
       "per_actual_count": 11,
       "per_forecast_eps": null,
@@ -102582,7 +102582,7 @@
       "date": "2026-10-09",
       "regime": "RANGE_BREAKOUT",
       "signal": "WATCH",
-      "relative_strength": null,
+      "relative_strength": 3.07,
       "supply_status": "重い",
       "per_actual_count": 15,
       "per_forecast_eps": null,
@@ -102597,7 +102597,7 @@
       "date": "2026-10-09",
       "regime": "RANGE_TRANSITION",
       "signal": "WATCH",
-      "relative_strength": null,
+      "relative_strength": -2.52,
       "supply_status": "重い",
       "per_actual_count": 16,
       "per_forecast_eps": null,
@@ -102612,7 +102612,7 @@
       "date": "2026-10-09",
       "regime": "RANGE_BREAKOUT",
       "signal": "WATCH",
-      "relative_strength": null,
+      "relative_strength": -0.11,
       "supply_status": "重い",
       "per_actual_count": 16,
       "per_forecast_eps": null,
@@ -102627,7 +102627,7 @@
       "date": "2026-10-09",
       "regime": "RANGE_TRANSITION",
       "signal": "WATCH",
-      "relative_strength": null,
+      "relative_strength": 1.31,
       "supply_status": "重い",
       "per_actual_count": 16,
       "per_forecast_eps": null,
@@ -102642,7 +102642,7 @@
       "date": "2026-10-09",
       "regime": "UPTREND_PULLBACK",
       "signal": "BUY_CANDIDATE",
-      "relative_strength": null,
+      "relative_strength": -1.18,
       "supply_status": "重い",
       "per_actual_count": 17,
       "per_forecast_eps": null,
@@ -102657,7 +102657,7 @@
       "date": "2026-10-09",
       "regime": "DOWNTREND_REVERSAL_WAIT",
       "signal": "WATCH",
-      "relative_strength": null,
+      "relative_strength": 0.31,
       "supply_status": "重い",
       "per_actual_count": 17,
       "per_forecast_eps": null,
@@ -102672,7 +102672,7 @@
       "date": "2026-10-09",
       "regime": "DOWNTREND_REVERSAL_WAIT",
       "signal": "WATCH",
-      "relative_strength": null,
+      "relative_strength": 0.11,
       "supply_status": "重い",
       "per_actual_count": 16,
       "per_forecast_eps": 228.39,
@@ -102687,7 +102687,7 @@
       "date": "2026-10-09",
       "regime": "DOWNTREND_REVERSAL_WAIT",
       "signal": "WATCH",
-      "relative_strength": null,
+      "relative_strength": 0.08,
       "supply_status": "重い",
       "per_actual_count": 17,
       "per_forecast_eps": 131.66,
@@ -102702,7 +102702,7 @@
       "date": "2026-10-09",
       "regime": "RANGE_BREAKOUT",
       "signal": "WATCH",
-      "relative_strength": null,
+      "relative_strength": 4.68,
       "supply_status": "重い",
       "per_actual_count": 11,
       "per_forecast_eps": 71.16,
@@ -102717,7 +102717,7 @@
       "date": "2026-10-09",
       "regime": "RANGE_TRANSITION",
       "signal": "WATCH",
-      "relative_strength": null,
+      "relative_strength": 4.2,
       "supply_status": "軽い",
       "per_actual_count": 15,
       "per_forecast_eps": null,
@@ -102732,7 +102732,7 @@
       "date": "2026-10-09",
       "regime": "RANGE_TRANSITION",
       "signal": "WATCH",
-      "relative_strength": null,
+      "relative_strength": -0.33,
       "supply_status": "重い",
       "per_actual_count": 0,
       "per_forecast_eps": 8.8,
@@ -102747,7 +102747,7 @@
       "date": "2026-10-09",
       "regime": "RANGE_TRANSITION",
       "signal": "WATCH",
-      "relative_strength": null,
+      "relative_strength": 0.35,
       "supply_status": "重い",
       "per_actual_count": 17,
       "per_forecast_eps": 483.4,
@@ -102762,7 +102762,7 @@
       "date": "2026-10-09",
       "regime": "UPTREND_PULLBACK",
       "signal": "WATCH",
-      "relative_strength": null,
+      "relative_strength": 0.79,
       "supply_status": "重い",
       "per_actual_count": 17,
       "per_forecast_eps": null,
@@ -102777,7 +102777,7 @@
       "date": "2026-10-09",
       "regime": "RANGE_TRANSITION",
       "signal": "WATCH",
-      "relative_strength": null,
+      "relative_strength": 0.15,
       "supply_status": "重い",
       "per_actual_count": 16,
       "per_forecast_eps": null,
@@ -102792,7 +102792,7 @@
       "date": "2026-10-09",
       "regime": "UPTREND_PULLBACK",
       "signal": "WATCH",
-      "relative_strength": null,
+      "relative_strength": -0.91,
       "supply_status": "重い",
       "per_actual_count": 14,
       "per_forecast_eps": null,
@@ -102807,7 +102807,7 @@
       "date": "2026-10-09",
       "regime": "RANGE_TRANSITION",
       "signal": "WATCH",
-      "relative_strength": null,
+      "relative_strength": -2.19,
       "supply_status": "重い",
       "per_actual_count": 2,
       "per_forecast_eps": null,
@@ -102822,7 +102822,7 @@
       "date": "2026-10-09",
       "regime": "UPTREND_PULLBACK",
       "signal": "WATCH",
-      "relative_strength": null,
+      "relative_strength": -1.32,
       "supply_status": "重い",
       "per_actual_count": 17,
       "per_forecast_eps": null,
@@ -102837,7 +102837,7 @@
       "date": "2026-10-09",
       "regime": "RANGE_TRANSITION",
       "signal": "WATCH",
-      "relative_strength": null,
+      "relative_strength": 0.88,
       "supply_status": "重い",
       "per_actual_count": 17,
       "per_forecast_eps": null,
@@ -102852,7 +102852,7 @@
       "date": "2026-10-09",
       "regime": "DOWNTREND_CONTINUED",
       "signal": "AVOID",
-      "relative_strength": null,
+      "relative_strength": -0.79,
       "supply_status": "重い",
       "per_actual_count": 17,
       "per_forecast_eps": 274.83,
@@ -102867,7 +102867,7 @@
       "date": "2026-10-09",
       "regime": "DOWNTREND_REVERSAL_WAIT",
       "signal": "WATCH",
-      "relative_strength": null,
+      "relative_strength": 0.87,
       "supply_status": "データ不足",
       "per_actual_count": 16,
       "per_forecast_eps": null,
@@ -102882,7 +102882,7 @@
       "date": "2026-10-09",
       "regime": "DOWNTREND_CONTINUED",
       "signal": "AVOID",
-      "relative_strength": null,
+      "relative_strength": -0.63,
       "supply_status": "重い",
       "per_actual_count": 10,
       "per_forecast_eps": 621.66,
@@ -102897,7 +102897,7 @@
       "date": "2026-10-09",
       "regime": "RANGE_TRANSITION",
       "signal": "WATCH",
-      "relative_strength": null,
+      "relative_strength": -0.15,
       "supply_status": "重い",
       "per_actual_count": 16,
       "per_forecast_eps": 384.62,
@@ -102905,21 +102905,21 @@
       "per_error": null
     }
   ],
-  "breadth_status": "unavailable",
-  "breadth_error": "Breadth source has no row for 2026-10-09",
+  "breadth_status": "ok",
+  "breadth_error": null,
   "successful_stocks": 24,
   "failed_stocks": 0,
   "timing": {
-    "total_seconds": 143.5,
+    "total_seconds": 129.3,
     "api_requests": 79,
-    "rate_limit_wait_seconds": 21.6,
+    "rate_limit_wait_seconds": 24.3,
     "retry_count": 0,
-    "http_seconds": 52.1
+    "http_seconds": 47.9
   },
   "irbank_usage_at_start": {
     "limit": 4000,
     "used": 0,
     "remaining": 4000,
-    "resets_at": "2026-10-10T00:00:00+09:00"
+    "resets_at": "2026-10-13T00:00:00+09:00"
   }
 }
