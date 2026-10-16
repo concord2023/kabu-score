@@ -38,6 +38,40 @@
       if(n&&typeof window.kabuScoreApplyRealtime==='function')window.kabuScoreApplyRealtime();
     }catch(_e){}
   }
+  async function fetchLiveQuotes(codes){
+    const symbols=codes.map(c=>c.endsWith('.T')?c:`${c}.T`).join(',');
+    const url='https://query1.finance.yahoo.com/v7/finance/spark?'+new URLSearchParams({symbols,range:'1d',interval:'1m',indicators:'close',includeTimestamps:'false',includePrePost:'false',corsDomain:'finance.yahoo.com'});
+    const response=await fetch(url,{cache:'no-store',mode:'cors'});
+    if(!response.ok)throw new Error(`Yahoo Finance HTTP ${response.status}`);
+    const data=await response.json();
+    const out={};
+    for(const item of (data?.spark?.result||[])){
+      const meta=(item?.response||[])[0]?.meta||{};
+      const symbol=meta.symbol||item.symbol;
+      const price=Number(meta.regularMarketPrice);
+      if(!symbol||!Number.isFinite(price)||price<=0)continue;
+      const prev=Number(meta.previousClose??meta.chartPreviousClose);
+      const change=Number.isFinite(prev)&&prev>0?price-prev:null;
+      const stamp=Number(meta.regularMarketTime);
+      out[String(symbol).replace(/\.T$/,'')]={price,change,change_pct:change!=null&&prev>0?change/prev*100:null,previous_close:Number.isFinite(prev)?prev:null,market_time:stamp?new Date(stamp*1000).toISOString():null,quote_type:'yahoo_browser_live'};
+    }
+    if(!Object.keys(out).length)throw new Error('Yahoo Financeから有効な株価が返りませんでした');
+    return out;
+  }
+  function applyQuoteMap(rows,quotes){
+    let applied=0;
+    rows.forEach(row=>{
+      const code=String(row.dataset.liveCode||'').trim();
+      const q=quotes[code]||quotes[`${code}.T`];
+      if(!q||q.price==null)return;
+      const p=row.querySelector('.live-price'),c=row.querySelector('.live-change'),t=row.querySelector('.live-time');
+      if(p)p.textContent=fmt(q.price);
+      if(c){c.textContent=pct(q.change_pct);c.className=`quote-change live-change ${cls(q.change_pct)}`;}
+      if(t)t.textContent=q.market_time?`更新 ${new Date(q.market_time).toLocaleString('ja-JP',{timeZone:'Asia/Tokyo',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false})}`:'更新時刻不明';
+      row.classList.add('live-updated');applied++;
+    });
+    return applied;
+  }
   async function refresh(){
     const btn=document.getElementById('realtimeRefresh');
     const rows=[...document.querySelectorAll('[data-live-code]')];
@@ -46,6 +80,25 @@
     btn.disabled=true; btn.textContent='取得中…';
     const started=performance.now();
     try{
+      // First try a genuinely fresh browser request. The previous implementation
+      // only re-read the static GitHub Actions snapshot, so pressing the button
+      // could never cause a new quote to be fetched.
+      try{
+        const liveQuotes=await fetchLiveQuotes(codes);
+        const appliedLive=applyQuoteMap(rows,liveQuotes);
+        if(appliedLive){
+          try{
+            const saved={saved_at:new Date().toISOString(),market_day:new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Tokyo'}),quotes:liveQuotes,source:'Yahoo Finance browser live'};
+            for(const storage of [localStorage,sessionStorage])for(const key of ['kabuScoreRealtimeQuotesV2','kabuScoreRealtimeQuotes'])try{storage.setItem(key,JSON.stringify(saved));}catch(_e){}
+          }catch(_e){}
+          const sec=((performance.now()-started)/1000).toFixed(2);
+          updateStatus(`ライブ取得 ${appliedLive}/${codes.length}銘柄｜${sec}秒｜Yahoo Finance｜日次スコアは変更しません`,'ok');
+          return;
+        }
+      }catch(liveError){
+        updateStatus(`直接取得に失敗。保存済みデータを確認中（${liveError.message}）`,'warn');
+      }
+      // Fallback to the static snapshot only after trying a fresh live request.
       // The quote snapshot is supplementary data. Never let an older snapshot
       // overwrite a newer Daily stock update. This was the cause of the
       // 9/25 "time travel" regression after pressing the button.
@@ -127,9 +180,9 @@
       const sec=((performance.now()-started)/1000).toFixed(2);
       const stamp=payload.updated_at?String(payload.updated_at).replace('T',' ').slice(0,16):'時刻不明';
       if(payload.fallback||snapshotStale||usedFallback){
-        updateStatus(`リアルタイム未取得｜日次データ ${applied}/${codes.length}銘柄を維持｜${stamp}`,'warn');
+        updateStatus(`ライブ取得失敗｜日次データ ${applied}/${codes.length}銘柄を表示（リアルタイム値ではありません）｜スナップショット ${stamp}`,'warn');
       }else{
-        updateStatus(`取得 ${applied}/${codes.length}銘柄｜${sec}秒｜サーバー更新 ${stamp}｜日次スコアは変更しません`,'ok');
+        updateStatus(`ライブ取得失敗｜保存済みスナップショット ${applied}/${codes.length}銘柄｜更新 ${stamp}｜リアルタイム値ではありません` ,'ok');
       }
     }catch(e){updateStatus(`取得できませんでした：${e.message}`,'error');}
     finally{btn.disabled=false;btn.textContent='↻ リアルタイム株価を取得';}
