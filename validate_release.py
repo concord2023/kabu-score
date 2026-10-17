@@ -192,9 +192,12 @@ broken_stock = dict(deep_stock, _rows=broken_rows)
 broken = decide(broken_stock, deep_regime)
 assert_true(broken['signal'] != 'BUY_CANDIDATE', 'support break must prevent deep-pullback BUY')
 
-# The detailed buy-condition box should not repeat the same signal_reason.
+# Buy-condition explanations must be rendered once per page, not repeated inside details().
 detail=(ROOT/'detail.html').read_text(encoding='utf-8')
-assert_true('🎯 買いサイン条件</div>'+"'+signalProgress(x)+'"+'</div>' in detail, 'detail buy-condition box must avoid duplicated signal explanation')
+dashboard=(ROOT/'dashboard.html').read_text(encoding='utf-8')
+assert_true(detail.count('🎯 買いサイン条件') == 1, 'detail page must render buy-condition explanation exactly once')
+assert_true(dashboard.count('🎯 買いサイン条件') == 1, 'dashboard must render buy-condition explanation exactly once')
+assert_true('🎯 買いサイン条件</div>'+"'+signalProgress(x)+'"+'</div>' in detail, 'detail buy-condition box missing')
 
 # 6. HTML JS syntax is checked separately in CI when Node is available.
 for p in ROOT.glob('*.html'):
@@ -233,7 +236,7 @@ upd=(ROOT/'update_data.py').read_text(encoding='utf-8')
 assert_true('MAX_API_REQUESTS = 3999' in upd, 'IRBANK absolute request ceiling missing')
 assert_true('worst_case_requests' in upd and 'minimum_needed = max(10, worst_case_requests)' in upd, 'IRBANK preflight worst-case budget missing')
 sw=(ROOT/'sw.js').read_text(encoding='utf-8')
-assert_true('kabu-score-v47-live-realtime-button' in sw, 'service worker cache must be bumped for the realtime/chart-hover UI change')
+assert_true('kabu-score-v48-jst-quote-refresh' in sw, 'service worker cache must be bumped for the JST/realtime refresh fix')
 
 assert_true('Calculate period indicators from the full available monthly history' in (ROOT/'update_data.py').read_text(encoding='utf-8'), 'monthly indicators must be calculated before presentation trimming')
 html=(ROOT/'detail.html').read_text(encoding='utf-8')
@@ -250,8 +253,17 @@ assert_true("return data.actual.map" in detail and "return [...actual,...make(da
 rd=(ROOT/'rank_decisions.py').read_text(encoding='utf-8')
 assert_true("'chart_history_weekly'" in rd and "'chart_history_monthly'" in rd, 'weekly/monthly chart histories must survive ranking output')
 assert_true((ROOT/'realtime_quotes_update.py').exists(), 'server-side realtime quote updater missing')
+rt_updater=(ROOT/'realtime_quotes_update.py').read_text(encoding='utf-8')
+assert_true('JST=timezone(timedelta(hours=9))' in rt_updater and 'now=datetime.now(JST)' in rt_updater and "'updated_at':now.isoformat()" in rt_updater, 'realtime snapshot timestamp must be written with JST offset')
 assert_true((ROOT/'.github/workflows/realtime-quotes.yml').exists(), 'realtime quote workflow missing')
 assert_true('data/realtime_quotes.json' in (ROOT/'realtime_quotes.js').read_text(encoding='utf-8') and 'fetchLiveQuotes(codes)' in (ROOT/'realtime_quotes.js').read_text(encoding='utf-8'), 'realtime button must try a fresh Yahoo Finance request before static fallback')
+assert_true('raw.githubusercontent.com/concord2023/kabu-score/main/data/realtime_quotes.json' in (ROOT/'realtime_quotes.js').read_text(encoding='utf-8'), 'realtime button must bypass stale GitHub Pages cache via the latest repository snapshot')
+assert_true('saveSnapshotForRestore({...payload,quotes},dailyDay)' in (ROOT/'realtime_quotes.js').read_text(encoding='utf-8'), 'combined live/snapshot quotes must persist after navigation')
+assert_true('setTimeout(()=>controller.abort(),8000)' in (ROOT/'realtime_quotes.js').read_text(encoding='utf-8'), 'Yahoo browser request must time out rather than leave the button stuck')
+assert_true('const updated=formatUpdateTime(d.updated_at)' in (ROOT/'index.html').read_text(encoding='utf-8'), 'main page update timestamp must be displayed in JST')
+for page in ['dashboard.html','recommendations.html','daily_recommendations.html','signals.html','bottom.html']:
+    page_text=(ROOT/page).read_text(encoding='utf-8')
+    assert_true('timeZone:\'Asia/Tokyo\'' in page_text and 'formatUpdateTime(d.updated_at)' in page_text, f'{page} update timestamp must be displayed in JST')
 inline=(ROOT/'index_inline.js').read_text(encoding='utf-8')
 idx_text=(ROOT/'index.html').read_text(encoding='utf-8')
 assert_true('const pbr=Number(d.pbr)' in idx_text and 'const div=Number(d.dividend_yield)' in idx_text, 'PBR/dividend values must be rendered in the main table')
@@ -299,7 +311,7 @@ assert_true("if(a<10)return 'neutral'" in inline and "if(a<20)return 'strong '" 
 assert_true('deviation-detail' in detail and "if(a<20)return 'strong '" in detail and "return 'invert '" in detail, 'detail deviation styling must match the main table')
 assert_true('chartHover(timeframe,index,event)' in detail and 'hoverTargets' in detail and 'chart-hover-wrap' in detail, 'technical charts must provide cursor hover values')
 assert_true("const tip=document.getElementById('chart-hover-wrap')" in detail and "function hideChartHover(){const tip=document.getElementById('chart-hover-wrap')" in detail, 'chart tooltip must show/hide the visible wrapper element')
-assert_true('kabu-score-v47-live-realtime-button' in sw, 'service worker cache must be bumped for realtime/chart-hover UI change')
+assert_true('kabu-score-v48-jst-quote-refresh' in sw, 'service worker cache must be bumped for realtime/JST UI change')
 assert_true('bbSigmaMetric' in detail and 'position_sigma' in (ROOT/'update_data.py').read_text(encoding='utf-8'), 'BB sigma position display missing')
 assert_true('BB位置' in detail and '±1.5σ以上は色付き太字' not in detail and '±2σ以上は反転表示' not in detail, 'BB sigma explanatory text should be hidden')
 assert_true('出来高比＝当日出来高 ÷ 直前20営業日の平均出来高' in detail, 'volume surge definition missing')
