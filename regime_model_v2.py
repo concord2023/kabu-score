@@ -193,7 +193,7 @@ def classify_regime(rows, candle_signal=None, breakout_signal=None):
         if bo.get('confirmed'):
             reason = 'レンジ上限を確認付きでブレイク中。現在の買いシグナルは通常の上昇トレンドではなく、レンジブレイク・再上昇型。'
         else:
-            reason = 'レンジ上限を上抜けて維持中。ただし出来高・20日MA・上昇継続などのBUY確認条件が未達のため、レンジブレイク監視中。'
+            reason = 'レンジ上限を上抜けて維持中。20日MA・上昇継続・過熱度などの価格条件を確認中。出来高増加は信頼度の参考材料で、必須条件ではない。'
     elif near_breakout:
         state = 'RANGE_TRANSITION'
         reason = (f'レンジブレイク待ち。現在値は20日レンジ上限{range_high:.0f}円の{range_distance:+.1f}%で、明確な終値ブレイク目安は{range_trigger:.0f}円。'
@@ -307,20 +307,20 @@ def decide(stock, regime):
     bo = stock.get('breakout_signal') or {}
     if (bo.get('confirmed') or regime.get('regime') == 'RANGE_BREAKOUT') and regime.get('regime') not in ('UPTREND_PULLBACK',):
         conds = [
-            ('20日レンジ高値を突破', True, bo.get('breakout_level'), '直近5営業日で20日高値を終値突破'),
-            ('突破日の出来高1.5倍以上', bool(bo.get('volume_ok')), bo.get('breakout_volume_ratio'), '突破日出来高比>=1.5'),
+            ('20日レンジ高値を突破', True, bo.get('breakout_level'), '直近20日レンジ高値を終値で突破'),
             ('現在も突破水準を維持', bool(bo.get('held')), bo.get('distance_from_breakout'), '突破水準を維持'),
             ('20日MAより上', bool(bo.get('ma20_ok')), stock.get('vs20'), '現在値>20日MA'),
             ('5日騰落率がプラス', bool(bo.get('trend_ok')), bo.get('ret5'), '5日騰落率>0%'),
+            ('ブレイク水準から過熱していない', bool(bo.get('extension_ok')), bo.get('distance_from_breakout'), 'ブレイク水準から+15%以内'),
         ]
         checks = [{'label':a,'ok':bool(b),'value':c,'rule':d} for a,b,c,d in conds]
         missing = [c['label'] for c in checks if not c['ok']]
         if not missing:
             signal='BUY_CANDIDATE'
-            reason='レンジブレイク中・再上昇型。レンジ高値突破、突破日の出来高1.5倍以上、突破水準維持、20日MA上、5日騰落率プラスの5条件がすべて成立。'
+            reason='レンジブレイク中・再上昇型。レンジ高値突破、突破水準維持、20日MA上、5日騰落率プラス、過熱していないことを確認。出来高増加は信頼度の参考材料で、必須条件ではない。' + (f" 突破日の出来高は平均の{bo.get('breakout_volume_ratio'):.1f}倍。" if _f(bo.get('breakout_volume_ratio')) is not None else '')
         else:
             signal='WATCH'
-            reason='レンジブレイク中だが、買い条件未達。レンジ高値突破後の出来高・突破水準維持・20日MA上・短期上昇をすべて確認してからBUY候補。'
+            reason='レンジブレイク中だが、買い条件未達。突破水準維持・20日MA上・短期上昇・過熱していないことを確認してからBUY候補。出来高増加は参考材料で必須ではない。'
         candle=stock.get('candle_signal') or {}
         if candle.get('status') in ('大底反転サイン','反転サイン'):
             reason += f" 🕯️{candle.get('status')}"
@@ -445,13 +445,12 @@ def decide(stock, regime):
         distance = ((current / level) - 1) * 100 if current is not None and level not in (None, 0) else None
         if current is not None and level is not None and trigger is not None:
             reason = (f'レンジブレイク待ち。現在値{current:.0f}円 / 20日レンジ上限{level:.0f}円 / 明確な終値ブレイク目安{trigger:.0f}円。'
-                      f'現在はレンジ上限まで{distance:+.1f}%。まず終値でブレイク目安を超え、その後に出来高1.5倍・突破水準維持・20日MA上・5日騰落プラスを確認する。')
+                      f'現在はレンジ上限まで{distance:+.1f}%。まず終値でブレイク目安を超え、その後に突破水準維持・20日MA上・5日騰落プラスを確認する。出来高増加は信頼度をみる参考材料で、必須条件ではない。')
         else:
-            reason='レンジ・転換監視。上限ブレイクと出来高増加などを確認するまではBUYにしない。'
+            reason='レンジ・転換監視。終値での上限ブレイクと突破水準維持などの価格条件を確認する。出来高増加は参考材料で、必須条件ではない。'
         checks=[
             {'label':'レンジ上限に接近','ok':distance is not None and distance >= -3.0,'value':distance,'rule':'20日レンジ上限から-2.0%以上'},
             {'label':'終値でブレイク目安を超える','ok':False,'value':trigger,'rule':f'終値{trigger:.0f}円以上' if trigger is not None else 'レンジ上限+0.5%を終値突破'},
-            {'label':'突破日の出来高1.5倍以上','ok':False,'value':bo.get('required_volume_ratio',1.5),'rule':'突破日の出来高÷直前20日平均>=1.5倍'},
             {'label':'突破水準を維持','ok':False,'value':bo.get('held'),'rule':'ブレイク後もレンジ上限以上を維持'},
         ]
     elif regime['regime'] == 'DOWNTREND_CONTINUED':

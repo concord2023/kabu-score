@@ -196,8 +196,36 @@ assert_true(broken['signal'] != 'BUY_CANDIDATE', 'support break must prevent dee
 detail=(ROOT/'detail.html').read_text(encoding='utf-8')
 dashboard=(ROOT/'dashboard.html').read_text(encoding='utf-8')
 assert_true(detail.count('🎯 買いサイン条件') == 1, 'detail page must render buy-condition explanation exactly once')
+assert_true(detail.count('function signalProgress(x)') == 1 and detail.count('signalProgress(x)') == 2, 'detail must invoke the buy-condition renderer once')
+assert_true('レンジ抜けシグナルなし' not in detail, 'breakout explanation must not be repeated in expandable details')
+assert_true('const seen=new Set()' in detail and 'const seen=new Set()' in dashboard, 'buy-condition renderer must deduplicate repeated condition rows')
+assert_true('出来高増加は信頼度の参考材料で、必須条件ではない' in (ROOT/'regime_model_v2.py').read_text(encoding='utf-8'), 'range breakout must not require elevated volume')
+assert_true('出来高増加は信頼度の参考材料で必須条件ではありません' in (ROOT/'signals.html').read_text(encoding='utf-8'), 'signals legend must clarify volume is optional')
 assert_true(dashboard.count('🎯 買いサイン条件') == 1, 'dashboard must render buy-condition explanation exactly once')
+assert_true(dashboard.count('function signalProgress(x)') == 1 and dashboard.count('signalProgress(x)') == 2, 'dashboard must invoke the buy-condition renderer once')
+assert_true('レンジ抜けシグナルなし' not in dashboard, 'dashboard breakout explanation must not be repeated in expandable details')
 assert_true('🎯 買いサイン条件</div>'+"'+signalProgress(x)+'"+'</div>' in detail, 'detail buy-condition box missing')
+
+# Range breakout is a price-action classification. Elevated volume increases
+# confidence/strength but must not be a mandatory confirmation gate.
+from update_data import breakout_signal
+synthetic_rows = []
+for i in range(25):
+    if i == 0:
+        close, high, volume = 102.0, 103.0, 1000
+    elif i == 1:
+        close, high, volume = 101.0, 102.0, 1000
+    else:
+        close, high, volume = 98.0 + (0.05 * (20-i)), 100.0, 1000
+    synthetic_rows.append({'date': f'2026-10-{17-i:02d}', 'close': close, 'adj_close': close, 'high': high, 'volume': volume})
+bo_no_volume = breakout_signal(synthetic_rows)
+assert_true(bo_no_volume.get('confirmed') is True, 'price breakout should confirm without elevated volume')
+assert_true(bo_no_volume.get('volume_ok') is False, 'synthetic breakout should explicitly show volume is not elevated')
+from regime_model_v2 import decide
+no_volume_stock = {'breakout_signal': {'confirmed': True, 'volume_ok': False, 'held': True, 'ma20_ok': True, 'trend_ok': True, 'extension_ok': True, 'breakout_level': 100, 'breakout_volume_ratio': 1.0, 'distance_from_breakout': 2.0, 'ret5': 2.0}, 'vs20': 2.0, 'ret5': 2.0}
+no_volume_result = decide(no_volume_stock, {'regime': 'RANGE_BREAKOUT'})
+assert_true(no_volume_result.get('signal') == 'BUY_CANDIDATE', 'range breakout route must not require elevated volume')
+assert_true(all(c['label'] != '突破日の出来高1.5倍以上' for c in no_volume_result.get('condition_checks', [])), 'volume must not appear as a mandatory breakout condition')
 
 # 6. HTML JS syntax is checked separately in CI when Node is available.
 for p in ROOT.glob('*.html'):
@@ -236,7 +264,7 @@ upd=(ROOT/'update_data.py').read_text(encoding='utf-8')
 assert_true('MAX_API_REQUESTS = 3999' in upd, 'IRBANK absolute request ceiling missing')
 assert_true('worst_case_requests' in upd and 'minimum_needed = max(10, worst_case_requests)' in upd, 'IRBANK preflight worst-case budget missing')
 sw=(ROOT/'sw.js').read_text(encoding='utf-8')
-assert_true('kabu-score-v48-jst-quote-refresh' in sw, 'service worker cache must be bumped for the JST/realtime refresh fix')
+assert_true('kabu-score-v50-dedup-price-breakout' in sw, 'service worker cache must be bumped to force clients to load the duplicate-display fix')
 
 assert_true('Calculate period indicators from the full available monthly history' in (ROOT/'update_data.py').read_text(encoding='utf-8'), 'monthly indicators must be calculated before presentation trimming')
 html=(ROOT/'detail.html').read_text(encoding='utf-8')
@@ -311,7 +339,7 @@ assert_true("if(a<10)return 'neutral'" in inline and "if(a<20)return 'strong '" 
 assert_true('deviation-detail' in detail and "if(a<20)return 'strong '" in detail and "return 'invert '" in detail, 'detail deviation styling must match the main table')
 assert_true('chartHover(timeframe,index,event)' in detail and 'hoverTargets' in detail and 'chart-hover-wrap' in detail, 'technical charts must provide cursor hover values')
 assert_true("const tip=document.getElementById('chart-hover-wrap')" in detail and "function hideChartHover(){const tip=document.getElementById('chart-hover-wrap')" in detail, 'chart tooltip must show/hide the visible wrapper element')
-assert_true('kabu-score-v48-jst-quote-refresh' in sw, 'service worker cache must be bumped for realtime/JST UI change')
+assert_true('kabu-score-v50-dedup-price-breakout' in sw, 'service worker cache must be bumped for realtime/JST UI change')
 assert_true('bbSigmaMetric' in detail and 'position_sigma' in (ROOT/'update_data.py').read_text(encoding='utf-8'), 'BB sigma position display missing')
 assert_true('BB位置' in detail and '±1.5σ以上は色付き太字' not in detail and '±2σ以上は反転表示' not in detail, 'BB sigma explanatory text should be hidden')
 assert_true('出来高比＝当日出来高 ÷ 直前20営業日の平均出来高' in detail, 'volume surge definition missing')

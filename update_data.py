@@ -1087,13 +1087,13 @@ def candle_reversal_signals(rows):
     }
 
 def breakout_signal(rows):
-    """Detect a recent range breakout with price/volume confirmation.
+    """Detect a recent range breakout primarily from price action.
 
     A breakout is different from a bottom reversal. We use the *intraday high*
-    of the prior 20 sessions as the range ceiling, then require a closing
-    breakout, strong breakout-day volume, and continued holding above that
-    level. This catches bases that start a new up-leg instead of waiting for a
-    bottom pattern.
+    of the prior 20 sessions as the range ceiling, then look for a closing
+    breakout and continued holding above that level. Breakout-day volume is a
+    useful strength clue, but is NOT a mandatory condition: a valid price
+    breakout can occur without unusually high volume.
     """
     def n(v):
         try:
@@ -1132,9 +1132,9 @@ def breakout_signal(rows):
             'breakout_level':round(current_range_high,2),'breakout_trigger':round(current_range_high*1.005,2),'breakout_date':None,
             'current_price':round(current,2),'current_volume':round(vols[0],0) if vols and vols[0] is not None else None,
             'avg_volume20':round(sum([v for v in vols[1:21] if v is not None and v>0])/len([v for v in vols[1:21] if v is not None and v>0]),0) if any(v is not None and v>0 for v in vols[1:21]) else None,
-            'required_volume_ratio':1.5,'required_volume':None,
+            'volume_reference_ratio':1.5,'volume_reference':None,
             'breakout_volume_ratio':None,'distance_from_breakout':round((current/current_range_high-1)*100,2),
-            'reason':f'現在値{current:.0f}円。20日レンジ上限{current_range_high:.0f}円、明確な終値ブレイク目安{current_range_high*1.005:.0f}円。突破日の出来高は直前20日平均の1.5倍以上（目安）を確認。' 
+            'reason':f'現在値{current:.0f}円。20日レンジ上限{current_range_high:.0f}円、明確な終値ブレイク目安{current_range_high*1.005:.0f}円。出来高増加はブレイクの信頼度をみる参考材料で、必須条件ではありません。' 
         }
 
     b=candidates[0]
@@ -1145,11 +1145,14 @@ def breakout_signal(rows):
     trend_ok=ret5 is not None and ret5>0
     dist=(current/b['level']-1)*100
     extension_ok=dist <= 15
-    confirmed=held and volume_ok and ma_ok and trend_ok and extension_ok
+    confirmed=held and ma_ok and trend_ok and extension_ok
     if confirmed:
         status='レンジ抜け・再上昇'
-        strength='強'
-        reason=f"{b['date']}に20日レンジ高値{b['level']:.0f}円を終値で上抜け。突破日の出来高比{b['volume_ratio']:.1f}倍、現在も突破水準を維持。"
+        strength='強' if volume_ok else '中'
+        volume_note=(f"突破日の出来高は直前20日平均の{b['volume_ratio']:.1f}倍" if b['volume_ratio'] is not None else '突破日の出来高は未確認')
+        if not volume_ok:
+            volume_note += '（出来高増加なしでも価格条件を満たすためブレイク判定）'
+        reason=f"{b['date']}に20日レンジ高値{b['level']:.0f}円を終値で上抜け。{volume_note}。現在も突破水準を維持。"
     elif held:
         status='レンジ抜け候補'
         strength='中'
@@ -1163,8 +1166,8 @@ def breakout_signal(rows):
         'breakout_level':round(b['level'],2),'breakout_trigger':round(b['level']*1.005,2),'breakout_date':b['date'],
         'current_price':round(current,2),'current_volume':round(vols[0],0) if vols and vols[0] is not None else None,
         'avg_volume20':round(sum([v for v in vols[1:21] if v is not None and v>0])/len([v for v in vols[1:21] if v is not None and v>0]),0) if any(v is not None and v>0 for v in vols[1:21]) else None,
-        'required_volume_ratio':1.5,
-        'required_volume':round((sum([v for v in vols[1:21] if v is not None and v>0])/len([v for v in vols[1:21] if v is not None and v>0]))*1.5,0) if any(v is not None and v>0 for v in vols[1:21]) else None,
+        'volume_reference_ratio':1.5,
+        'volume_reference':round((sum([v for v in vols[1:21] if v is not None and v>0])/len([v for v in vols[1:21] if v is not None and v>0]))*1.5,0) if any(v is not None and v>0 for v in vols[1:21]) else None,
         'breakout_volume_ratio':round(b['volume_ratio'],2) if b['volume_ratio'] is not None else None,
         'distance_from_breakout':round(dist,2),'held':held,'volume_ok':volume_ok,
         'ma20_ok':ma_ok,'trend_ok':trend_ok,'extension_ok':extension_ok,
