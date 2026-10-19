@@ -1,5 +1,6 @@
 {
-  "updated_at": "2026-10-19T18:19:29.260814+09:00",
+  "updated_at": "2026-10-19T23:28:06.120663+09:00",
+  "last_attempt_at": "2026-10-19T23:28:06.120663+09:00",
   "market_date": "2026-10-19",
   "source": "Yahoo Finance chart API",
   "source_host": "https://query1.finance.yahoo.com",
