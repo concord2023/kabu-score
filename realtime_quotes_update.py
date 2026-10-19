@@ -1,5 +1,6 @@
 """Create a static quote snapshot for the GitHub Pages UI."""
 import json, urllib.parse, urllib.request
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 OUT=Path('data/realtime_quotes.json'); UA='Mozilla/5.0 (compatible; kabu-score realtime updater)'; JST=timezone(timedelta(hours=9))
@@ -63,19 +64,36 @@ def parse_chart(payload):
     return out
 
 def fetch_chart(codes):
-    errors=[]; out={}; used_host=None
-    for code in codes:
-        got=False
-        for host in ('https://query1.finance.yahoo.com','https://query2.finance.yahoo.com'):
+    """Fetch missing symbols concurrently so a failed batch cannot stall the
+    five-minute snapshot workflow for many minutes. Each host attempt is capped
+    at five seconds; at most eight symbols are processed concurrently.
+    """
+    hosts=('https://query1.finance.yahoo.com','https://query2.finance.yahoo.com')
+    def one(code):
+        local_errors=[]
+        for host in hosts:
             url=host+'/v8/finance/chart/'+urllib.parse.quote(code+'.T')+'?'+urllib.parse.urlencode({'range':'1d','interval':'1m','includePrePost':'false','events':'div,splits'})
             try:
-                result=parse_chart(fetch_json(url))
+                result=parse_chart(fetch_json(url, timeout=5))
                 if result:
-                    out.update(result); used_host=used_host or host; got=True; break
-                errors.append(code+' '+host+': empty')
-            except Exception as e: errors.append(code+' '+host+': '+str(e))
-        if not got: errors.append(code+': no usable chart quote')
-    return out,used_host,errors
+                    return code, result, host, local_errors
+                local_errors.append(code+' '+host+': empty')
+            except Exception as e:
+                local_errors.append(code+' '+host+': '+str(e))
+        local_errors.append(code+': no usable chart quote')
+        return code, {}, None, local_errors
+
+    out={}; errors=[]; used_host=None
+    if not codes:
+        return out, used_host, errors
+    with ThreadPoolExecutor(max_workers=min(8, len(codes))) as pool:
+        futures=[pool.submit(one, code) for code in codes]
+        for future in as_completed(futures):
+            _code, result, host, local_errors = future.result()
+            out.update(result)
+            used_host=used_host or host
+            errors.extend(local_errors)
+    return out, used_host, errors
 
 def fallback_from_stocks(codes):
     try: data=json.loads(Path('data/stocks.json').read_text(encoding='utf-8'))
@@ -183,7 +201,7 @@ def main():
     elif fallback and not source.startswith('現在表示中'):
         source += ' + 現在表示中のDaily stock update（不足/古い値を補完）'
 
-    payload={'updated_at':now.isoformat(),'market_date':market_date,'source':source,'source_host':host,
+    payload={'updated_at':now.isoformat(),'last_attempt_at':now.isoformat(),'market_date':market_date,'source':source,'source_host':host,
              'count':len(valid_quotes),'requested':len(codes),'quotes':valid_quotes,'fallback':fallback,
              'rejected_old_quotes':rejected,'errors':errors,
              'note':'Yahoo取得値は銘柄ごとに市場日を検証。Daily stock updateより古い値は公開せず、同日の日次値で補完します。'}

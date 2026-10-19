@@ -44,6 +44,7 @@ async function run(mode) {
   context.window.kabuScoreApplyRealtime();
   if (status.textContent !== finalStatus) throw new Error(`status overwritten: ${finalStatus} -> ${status.textContent}`);
   if (mode==='success' && (!finalStatus.includes('取得 1/1') || cells['.live-price'].textContent!=='123')) throw new Error('success scenario failed: '+finalStatus);
+  if (mode==='success' && !finalStatus.includes('スナップショットが古い')) throw new Error('stale snapshot must be flagged clearly: '+finalStatus);
   if (mode==='fail' && !finalStatus.includes('リアルタイム取得失敗')) throw new Error('failure scenario failed: '+finalStatus);
   return finalStatus;
 }

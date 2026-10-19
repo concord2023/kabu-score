@@ -183,10 +183,13 @@
       const elapsed = ((performance.now() - started) / 1000).toFixed(1);
       const requested = Number(payload.requested) || codes.length;
       const fallback = Boolean(payload.fallback) || actualCount < requested || applied < codes.length;
+      const ageMinutes = payload.updated_at ? Math.max(0, Math.floor((Date.now() - new Date(payload.updated_at).getTime()) / 60000)) : null;
+      const stale = ageMinutes == null || !Number.isFinite(ageMinutes) || ageMinutes >= 10;
+      const freshness = stale ? `｜⚠ スナップショットが古い（${ageMinutes == null || !Number.isFinite(ageMinutes) ? '更新時刻不明' : `${ageMinutes}分前`}）` : `｜${ageMinutes}分前`;
       if (applied > 0) {
-        updateStatus(`${fallback ? '一部取得' : '取得'} ${applied}/${codes.length}銘柄｜サーバー更新 ${stamp}（日本時間）｜${elapsed}秒${fallback ? '｜未取得分は日次データ' : ''}`, fallback ? 'warn' : 'ok');
+        updateStatus(`${fallback ? '一部取得' : '取得'} ${applied}/${codes.length}銘柄｜サーバー更新 ${stamp}（日本時間）${freshness}｜${elapsed}秒${fallback ? '｜未取得分は日次データ' : ''}`, stale ? 'error' : fallback ? 'warn' : 'ok');
       } else {
-        updateStatus(`リアルタイム値なし｜日次データを維持｜スナップショット更新 ${stamp}（日本時間）｜Yahoo取得 ${actualCount}/${requested}`, 'warn');
+        updateStatus(`リアルタイム値なし｜日次データを維持｜スナップショット更新 ${stamp}（日本時間）｜Yahoo取得 ${actualCount}/${requested}${freshness}`, 'warn');
       }
     } catch (e) {
       updateStatus(`取得できませんでした：${e?.message || e}`, 'error');

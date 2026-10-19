@@ -88,4 +88,4 @@ fetch('./data/decision_ranking.json?'+Date.now()).then(r=>{if(!r.ok)throw Error(
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){setTimeout(applyRealtimeToRows,0);setTimeout(applyRealtimeToRows,250);}});
 window.addEventListener('storage',e=>{if(e.key===REALTIME_STORAGE_KEY||e.key===REALTIME_STORAGE_KEY_LEGACY)setTimeout(applyRealtimeToRows,0);});
 
-</script><script src="./realtime_quotes.js?v=20261019-statusfix"></script></body></html>
+</script><script src="./realtime_quotes.js?v=20261019-quote-staleness"></script></body></html>
