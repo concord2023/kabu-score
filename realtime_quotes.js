@@ -1,209 +1,219 @@
-/* Refresh quotes: try Yahoo directly, then the newest repository snapshot.
- * GitHub Pages is static, so the button cannot start Actions without a token.
- * The scheduled workflow refreshes the public snapshot every five minutes.
+/*
+ * Stable quote refresh for GitHub Pages.
+ *
+ * The previously reliable design is server-side GitHub Actions -> Yahoo Finance
+ * -> data/realtime_quotes.json.  GitHub Pages cannot reliably call Yahoo from
+ * the browser because the request may be blocked by CORS.  The button therefore
+ * fetches the newest published snapshot, validates its market date against the
+ * current daily ranking, and never presents daily fallback values as live quotes.
  */
-(function(){
-  const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-  const fmt=v=>v==null||!Number.isFinite(Number(v))?'—':Number(v).toLocaleString('ja-JP',{maximumFractionDigits:2});
-  const pct=v=>v==null||!Number.isFinite(Number(v))?'—':`${Number(v)>=0?'+':''}${Number(v).toFixed(2)}%`;
-  const cls=v=>{const n=Number(v);if(!Number.isFinite(n))return 'zero';const s=n>0?'pos':n<0?'neg':'zero';const a=Math.abs(n);return s+(a>=10?' extreme':a>=5?' strong':'');};
-  function updateStatus(text,kind){const el=document.getElementById('realtimeStatus');if(!el)return;el.textContent=text;el.className='realtime-status '+(kind||'');}
-  function formatJst(value){if(!value)return '時刻不明';if(/^\d{4}-\d{2}-\d{2}$/.test(String(value)))return String(value)+'（時刻なし）';const d=new Date(value);if(Number.isNaN(d.getTime()))return String(value).replace('T',' ').slice(0,16);return d.toLocaleString('ja-JP',{timeZone:'Asia/Tokyo',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false});}
-  async function fetchLatestSnapshot(){
-    const urls=[
-      'https://raw.githubusercontent.com/concord2023/kabu-score/main/data/realtime_quotes.json?ts='+Date.now(),
-      './data/realtime_quotes.json?ts='+Date.now()
-    ];
-    const errors=[];
-    for(const url of urls){try{const r=await fetch(url,{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);const d=await r.json();if(d&&d.quotes&&typeof d.quotes==='object')return d;throw new Error('株価データ形式が不正です');}catch(e){errors.push(e.message);}}
-    throw new Error(errors.join(' / ')||'スナップショットを取得できません');
+(function () {
+  'use strict';
+
+  const RAW_SNAPSHOT = 'https://raw.githubusercontent.com/concord2023/kabu-score/main/data/realtime_quotes.json';
+  const STORAGE_KEYS = ['kabuScoreRealtimeQuotesV2', 'kabuScoreRealtimeQuotes'];
+  const fmt = v => v == null || !Number.isFinite(Number(v)) ? '—' : Number(v).toLocaleString('ja-JP', { maximumFractionDigits: 2 });
+  const pct = v => v == null || !Number.isFinite(Number(v)) ? '—' : `${Number(v) >= 0 ? '+' : ''}${Number(v).toFixed(2)}%`;
+  const cls = v => {
+    const n = Number(v);
+    if (!Number.isFinite(n)) return 'zero';
+    const s = n > 0 ? 'pos' : n < 0 ? 'neg' : 'zero';
+    const a = Math.abs(n);
+    return s + (a >= 10 ? ' extreme' : a >= 5 ? ' strong' : '');
+  };
+  const jstDay = value => {
+    if (!value) return null;
+    const s = String(value);
+    if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+    const d = new Date(value);
+    if (Number.isNaN(d.getTime())) return null;
+    const parts = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'Asia/Tokyo', year: 'numeric', month: '2-digit', day: '2-digit'
+    }).formatToParts(d);
+    const p = Object.fromEntries(parts.map(x => [x.type, x.value]));
+    return `${p.year}-${p.month}-${p.day}`;
+  };
+  const formatJst = value => {
+    if (!value) return '時刻不明';
+    if (/^\d{4}-\d{2}-\d{2}$/.test(String(value))) return `${value}（時刻なし）`;
+    const d = new Date(value);
+    if (Number.isNaN(d.getTime())) return String(value).replace('T', ' ').slice(0, 16);
+    return d.toLocaleString('ja-JP', {
+      timeZone: 'Asia/Tokyo', year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit', hour12: false
+    });
+  };
+
+  function updateStatus(text, kind) {
+    const el = document.getElementById('realtimeStatus');
+    if (!el) return;
+    el.textContent = text;
+    el.className = 'realtime-status ' + (kind || '');
+    // Mark the button's final result as authoritative. The inline page script
+    // also applies saved quotes and used to overwrite this message immediately.
+    el.dataset.statusOwner = 'realtime-button';
+    el.dataset.statusUpdatedAt = String(Date.now());
   }
-  function saveSnapshotForRestore(payload,dailyDay){
-    const quotes=payload?.quotes||{};
-    const savedQuotes={};
-    for(const [code,q] of Object.entries(quotes)){
-      const qDay=q?.market_time?new Date(q.market_time).toLocaleDateString('en-CA',{timeZone:'Asia/Tokyo'}):payload?.market_date||null;
-      if(dailyDay&&qDay&&qDay<dailyDay)continue;
-      if(dailyDay&&!qDay)continue;
-      if(q?.price!=null)savedQuotes[code.replace(/\.T$/,'')]={...q};
+
+  async function fetchJson(url) {
+    const r = await fetch(url, { cache: 'no-store' });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return r.json();
+  }
+
+  async function fetchRanking() {
+    try {
+      const d = await fetchJson('./data/decision_ranking.json?ts=' + Date.now());
+      return d && Array.isArray(d.ranking) ? d : null;
+    } catch (_) {
+      return null;
     }
-    if(!Object.keys(savedQuotes).length)return 0;
-    const saved={saved_at:new Date().toISOString(),market_day:payload.market_date||dailyDay,quotes:savedQuotes,source:payload.source||'realtime snapshot',snapshot_updated_at:payload.updated_at||null};
-    for(const storage of [localStorage,sessionStorage]) for(const key of ['kabuScoreRealtimeQuotesV2','kabuScoreRealtimeQuotes']){
-      try{storage.setItem(key,JSON.stringify(saved));}catch(_e){}
+  }
+
+  async function fetchSnapshot() {
+    const errors = [];
+    for (const url of [RAW_SNAPSHOT + '?ts=' + Date.now(), './data/realtime_quotes.json?ts=' + Date.now()]) {
+      try {
+        const d = await fetchJson(url);
+        if (d && d.quotes && typeof d.quotes === 'object') return d;
+        throw new Error('株価データ形式が不正です');
+      } catch (e) {
+        errors.push(`${e.message}`);
+      }
     }
-    return Object.keys(savedQuotes).length;
+    throw new Error(errors.join(' / ') || '最新スナップショットを取得できません');
   }
-  async function restoreSnapshot(){
-    try{
-      let ranking=null;
-      const rr=await fetch('./data/decision_ranking.json?restore='+Date.now(),{cache:'no-store'});
-      if(rr.ok)ranking=await rr.json();
-      const dailyDay=ranking?.updated_at?String(ranking.updated_at).slice(0,10):null;
-      const r=await fetch('./data/realtime_quotes.json?restore='+Date.now(),{cache:'no-store'});
-      if(!r.ok)return;
-      const payload=await r.json();
-      const n=saveSnapshotForRestore(payload,dailyDay);
-      if(n&&typeof window.kabuScoreApplyRealtime==='function')window.kabuScoreApplyRealtime();
-    }catch(_e){}
+
+  function dailyQuoteFor(code, ranking) {
+    const row = (ranking?.ranking || []).find(x => String(x.code) === String(code));
+    if (!row) return null;
+    const d = row.details || {};
+    const price = d.price ?? row.price;
+    if (price == null) return null;
+    const change = d.change ?? row.change ?? null;
+    return {
+      price, change, change_pct: d.change_pct ?? row.change_pct ?? change,
+      market_time: d.date || row.date || ranking.updated_at,
+      quote_type: 'daily_ranking_fallback'
+    };
   }
-  async function fetchLiveQuotes(codes){
-    const symbols=codes.map(c=>c.endsWith('.T')?c:`${c}.T`).join(',');
-    const url='https://query1.finance.yahoo.com/v7/finance/spark?'+new URLSearchParams({symbols,range:'1d',interval:'1m',indicators:'close',includeTimestamps:'false',includePrePost:'false',corsDomain:'finance.yahoo.com'});
-    const controller=new AbortController();
-    const timeout=setTimeout(()=>controller.abort(),8000);
-    let response;
-    try{response=await fetch(url,{cache:'no-store',mode:'cors',signal:controller.signal});}
-    finally{clearTimeout(timeout);}
-    if(!response.ok)throw new Error(`Yahoo Finance HTTP ${response.status}`);
-    const data=await response.json();
-    const out={};
-    for(const item of (data?.spark?.result||[])){
-      const meta=(item?.response||[])[0]?.meta||{};
-      const symbol=meta.symbol||item.symbol;
-      const price=Number(meta.regularMarketPrice);
-      if(!symbol||!Number.isFinite(price)||price<=0)continue;
-      const prev=Number(meta.previousClose??meta.chartPreviousClose);
-      const change=Number.isFinite(prev)&&prev>0?price-prev:null;
-      const stamp=Number(meta.regularMarketTime);
-      out[String(symbol).replace(/\.T$/,'')]={price,change,change_pct:change!=null&&prev>0?change/prev*100:null,previous_close:Number.isFinite(prev)?prev:null,market_time:stamp?new Date(stamp*1000).toISOString():null,quote_type:'yahoo_browser_live'};
+
+  function isActualQuote(q) {
+    const type = String(q?.quote_type || '').toLowerCase();
+    return q?.price != null && !type.includes('fallback') && (type === 'yahoo' || type.includes('yahoo_'));
+  }
+
+  function storeQuotes(quotes, marketDay, payload) {
+    const actual = {};
+    for (const [rawCode, q] of Object.entries(quotes || {})) {
+      if (!isActualQuote(q)) continue;
+      const qDay = jstDay(q.market_time) || jstDay(payload?.market_date);
+      if (marketDay && (!qDay || qDay < marketDay)) continue;
+      actual[String(rawCode).replace(/\.T$/, '')] = { ...q };
     }
-    if(!Object.keys(out).length)throw new Error('Yahoo Financeから有効な株価が返りませんでした');
-    return out;
+    const saved = {
+      saved_at: new Date().toISOString(), market_day: marketDay || payload?.market_date || null,
+      quotes: actual, source: payload?.source || 'GitHub Actions quote snapshot',
+      snapshot_updated_at: payload?.updated_at || null
+    };
+    for (const storage of [localStorage, sessionStorage]) {
+      for (const key of STORAGE_KEYS) {
+        try { storage.setItem(key, JSON.stringify(saved)); } catch (_) { /* storage can be disabled */ }
+      }
+    }
+    return Object.keys(actual).length;
   }
-  function applyQuoteMap(rows,quotes){
-    let applied=0;
-    rows.forEach(row=>{
-      const code=String(row.dataset.liveCode||'').trim();
-      const q=quotes[code]||quotes[`${code}.T`];
-      if(!q||q.price==null)return;
-      const p=row.querySelector('.live-price'),c=row.querySelector('.live-change'),t=row.querySelector('.live-time');
-      if(p)p.textContent=fmt(q.price);
-      if(c){c.textContent=pct(q.change_pct);c.className=`quote-change live-change ${cls(q.change_pct)}`;}
-      if(t)t.textContent=`更新 ${formatJst(q.market_time)}`;
-      row.classList.add('live-updated');applied++;
+
+  function applyActualQuotes(rows, payload, dailyDay) {
+    const quotes = payload?.quotes || {};
+    let applied = 0;
+    rows.forEach(row => {
+      const code = String(row.dataset.liveCode || '').trim();
+      const q = quotes[code] || quotes[`${code}.T`];
+      if (!isActualQuote(q)) return;
+      const qDay = jstDay(q.market_time) || jstDay(payload?.market_date);
+      // Never allow a quote from an older market day to replace today's ranking.
+      if (dailyDay && (!qDay || qDay < dailyDay)) return;
+      const p = row.querySelector('.live-price');
+      const c = row.querySelector('.live-change');
+      const t = row.querySelector('.live-time');
+      if (p) p.textContent = fmt(q.price);
+      if (c) { c.textContent = pct(q.change_pct); c.className = `quote-change live-change ${cls(q.change_pct)}`; }
+      if (t) t.textContent = `更新 ${formatJst(q.market_time)}`;
+      row.classList.add('live-updated');
+      applied++;
     });
     return applied;
   }
-  async function refresh(){
-    const btn=document.getElementById('realtimeRefresh');
-    const rows=[...document.querySelectorAll('[data-live-code]')];
-    const codes=[...new Set(rows.map(x=>String(x.dataset.liveCode||'').trim()).filter(Boolean))];
-    if(!codes.length){updateStatus('表示銘柄がありません。','warn');return;}
-    btn.disabled=true; btn.textContent='取得中…';
-    const started=performance.now();
-    let directQuotes={};
-    try{
-      // Try a genuinely fresh browser request first, but never let a blocked
-      // Yahoo/CORS request hang the button: it is capped at eight seconds.
-      // If it fails, use the newest public repository snapshot instead.
-      try{
-        directQuotes=await fetchLiveQuotes(codes);
-        const appliedLive=applyQuoteMap(rows,directQuotes);
-        if(appliedLive){
-          try{
-            const saved={saved_at:new Date().toISOString(),market_day:new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Tokyo'}),quotes:directQuotes,source:'Yahoo Finance browser live'};
-            for(const storage of [localStorage,sessionStorage])for(const key of ['kabuScoreRealtimeQuotesV2','kabuScoreRealtimeQuotes'])try{storage.setItem(key,JSON.stringify(saved));}catch(_e){}
-          }catch(_e){}
-          const sec=((performance.now()-started)/1000).toFixed(2);
-          updateStatus(`ライブ取得 ${appliedLive}/${codes.length}銘柄｜${sec}秒｜Yahoo Finance｜日次スコアは変更しません`,'ok');
-          if(appliedLive===codes.length)return;
-          updateStatus(`Yahoo Financeから一部のみ取得（${appliedLive}/${codes.length}）。残りを最新スナップショットで補完します。`,'warn');
-        }
-      }catch(liveError){
-        updateStatus(`直接取得に失敗。保存済みデータを確認中（${liveError.message}）`,'warn');
-      }
-      // Fallback to the static snapshot only after trying a fresh live request.
-      // The quote snapshot is supplementary data. Never let an older snapshot
-      // overwrite a newer Daily stock update. This was the cause of the
-      // 9/25 "time travel" regression after pressing the button.
-      let ranking=null;
-      try{
-        const rr=await fetch('./data/decision_ranking.json?ts='+Date.now(),{cache:'no-store'});
-        if(rr.ok) ranking=await rr.json();
-      }catch(_e){}
-      const dailyDays=(ranking?.ranking||[]).map(x=>(x?.details?.date||x?.date||'').slice(0,10)).filter(Boolean);
-      // decision_ranking.updated_at is the authoritative date when individual
-      // rows do not carry a date. Never let a quote from an older market day
-      // replace the currently published Daily stock update.
-      const rankingUpdatedDay=ranking?.updated_at?String(ranking.updated_at).slice(0,10):null;
-      const dailyDay=dailyDays.length?dailyDays.sort().slice(-1)[0]:rankingUpdatedDay;
 
-      let payload=null;
-      try{payload=await fetchLatestSnapshot();}catch(snapshotError){updateStatus(`最新スナップショット取得失敗：${snapshotError.message}`,'warn');}
+  async function refresh() {
+    const btn = document.getElementById('realtimeRefresh');
+    const rows = [...document.querySelectorAll('[data-live-code]')];
+    const codes = [...new Set(rows.map(x => String(x.dataset.liveCode || '').trim()).filter(Boolean))];
+    if (!codes.length) { updateStatus('表示銘柄がありません。', 'warn'); return; }
+    if (btn) { btn.disabled = true; btn.textContent = '取得中…'; }
+    const started = performance.now();
+    try {
+      const ranking = await fetchRanking();
+      const rowDays = (ranking?.ranking || []).map(x => jstDay(x?.details?.date || x?.date)).filter(Boolean).sort();
+      const dailyDay = rowDays.length ? rowDays[rowDays.length - 1] : jstDay(ranking?.updated_at);
+      let payload = null;
+      let snapshotError = null;
+      try { payload = await fetchSnapshot(); } catch (e) { snapshotError = e; }
 
-      const payloadDay=payload?.market_date?String(payload.market_date).slice(0,10):(
-        Object.values(payload?.quotes||{}).map(q=>q?.market_time?String(q.market_time).slice(0,10):'').filter(Boolean).sort().slice(-1)[0]||null
-      );
-      const snapshotStale=!!(dailyDay&&payloadDay&&payloadDay<dailyDay);
-      const rankingRows=ranking?.ranking||[];
-
-      // If the snapshot is missing or stale, use the SAME daily ranking that
-      // drives the page, not data/stocks.json. This keeps the date consistent.
-      if(!payload || snapshotStale){
-        const quotes={};
-        for(const code of codes){
-          const x=rankingRows.find(v=>String(v.code)===code);
-          const d=x?.details||{};
-          if(x&&d.price!=null) quotes[code]={price:d.price,change:d.change,change_pct:d.change,market_time:d.date||x.date||ranking.updated_at,quote_type:'daily_ranking_fallback'};
-        }
-        if(Object.keys(quotes).length){
-          payload={updated_at:ranking.updated_at,quotes,fallback:true,stale_snapshot:snapshotStale,source:'現在表示中のDaily stock update',errors:payload?.errors||[]};
-        }
-      }
-      if(!payload&&Object.keys(directQuotes).length){payload={updated_at:new Date().toISOString(),quotes:directQuotes,source:'Yahoo Finance browser live',fallback:false};}
-      if(!payload)throw new Error('株価データを読み込めませんでした');
-
-      // Direct quotes take priority; the repository snapshot fills any gaps.
-      const quotes={...(payload?.quotes||{}),...directQuotes};
-      let ok=0, applied=0, usedFallback=false;
-      rows.forEach(row=>{
-        const code=String(row.dataset.liveCode||'').trim();
-        const q=quotes[`${code}.T`]||quotes[code];
-        if(!q)return;
-        ok++;
-        // Never apply a quote whose own timestamp predates the daily data.
-        const qStamp=q.market_time?new Date(q.market_time):null;
-        const qDay=qStamp&&!Number.isNaN(qStamp.getTime())?qStamp.toLocaleDateString('en-CA',{timeZone:'Asia/Tokyo'}):null;
-        let use=q;
-        if(dailyDay&&(!qDay || qDay<dailyDay)){
-          const daily=rankingRows.find(v=>String(v.code)===code);
-          const dd=daily?.details||{};
-          if(daily&&dd.price!=null){
-            use={price:dd.price,change:dd.change,change_pct:dd.change_pct,market_time:dd.date||daily.date||ranking?.updated_at,quote_type:'daily_ranking_fallback'};
-            usedFallback=true;
-          }else{
-            // Do not show an unverified old quote. Keep the row unchanged.
-            return;
-          }
-        }
-        const p=row.querySelector('.live-price'),c=row.querySelector('.live-change'),t=row.querySelector('.live-time');
-        if(p)p.textContent=fmt(use.price);
-        if(c){c.textContent=pct(use.change_pct);c.className=`quote-change live-change ${cls(use.change_pct)}`;}
-        if(t)t.textContent=`更新 ${formatJst(use.market_time)}`;
-        row.classList.add('live-updated');
-        applied++;
-      });
-      if(applied){
-        try{saveSnapshotForRestore({...payload,quotes},dailyDay);if(typeof window.kabuScoreApplyRealtime==='function') window.kabuScoreApplyRealtime();}catch(_e){}
-      }
-      if(!applied){
-        updateStatus(`古い株価スナップショットは適用せず、日次データ ${dailyDay||'—'} を維持しました。`,'warn');
+      if (!payload) {
+        if (!ranking) throw snapshotError || new Error('株価データも日次データも取得できませんでした');
+        updateStatus(`リアルタイム取得失敗｜日次データを維持（${dailyDay || '日付不明'}）｜${snapshotError?.message || 'スナップショットなし'}`, 'error');
         return;
       }
-      const sec=((performance.now()-started)/1000).toFixed(2);
-      const stamp=formatJst(payload.updated_at);
-      if(payload.fallback||snapshotStale||usedFallback){
-        updateStatus(`日次データ ${applied}/${codes.length}銘柄を表示（リアルタイム値ではありません）｜スナップショット更新 ${stamp}`,'warn');
-      }else if(Object.keys(directQuotes).length){
-        updateStatus(`一部ライブ取得＋最新スナップショット ${applied}/${codes.length}銘柄｜スナップショット更新 ${stamp}`,'ok');
-      }else{
-        updateStatus(`最新スナップショット ${applied}/${codes.length}銘柄｜更新 ${stamp}｜リアルタイム値ではありません`,'warn');
+
+      const payloadDay = jstDay(payload.market_date) || Object.values(payload.quotes || {})
+        .map(q => jstDay(q?.market_time)).filter(Boolean).sort().slice(-1)[0] || null;
+      if (dailyDay && payloadDay && payloadDay < dailyDay) {
+        updateStatus(`古い株価スナップショットのため適用しません｜日次データ ${dailyDay} を維持｜スナップショット ${payloadDay}`, 'warn');
+        return;
       }
-    }catch(e){updateStatus(`取得できませんでした：${e.message}`,'error');}
-    finally{btn.disabled=false;btn.textContent='↻ リアルタイム株価を取得';}
+
+      const applied = applyActualQuotes(rows, payload, dailyDay);
+      storeQuotes(payload.quotes, dailyDay, payload);
+      if (applied && typeof window.kabuScoreApplyRealtime === 'function') window.kabuScoreApplyRealtime();
+
+      const actualCount = Object.values(payload.quotes || {}).filter(isActualQuote).length;
+      const stamp = formatJst(payload.updated_at);
+      const elapsed = ((performance.now() - started) / 1000).toFixed(1);
+      const requested = Number(payload.requested) || codes.length;
+      const fallback = Boolean(payload.fallback) || actualCount < requested || applied < codes.length;
+      if (applied > 0) {
+        updateStatus(`${fallback ? '一部取得' : '取得'} ${applied}/${codes.length}銘柄｜サーバー更新 ${stamp}（日本時間）｜${elapsed}秒${fallback ? '｜未取得分は日次データ' : ''}`, fallback ? 'warn' : 'ok');
+      } else {
+        updateStatus(`リアルタイム値なし｜日次データを維持｜スナップショット更新 ${stamp}（日本時間）｜Yahoo取得 ${actualCount}/${requested}`, 'warn');
+      }
+    } catch (e) {
+      updateStatus(`取得できませんでした：${e?.message || e}`, 'error');
+    } finally {
+      if (btn) { btn.disabled = false; btn.textContent = '↻ リアルタイム株価を取得'; }
+    }
   }
-  window.addEventListener('load',()=>{const btn=document.getElementById('realtimeRefresh');if(btn)btn.addEventListener('click',refresh);restoreSnapshot();});
-  window.addEventListener('pageshow',()=>{setTimeout(restoreSnapshot,0);setTimeout(restoreSnapshot,500);});
-  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){setTimeout(restoreSnapshot,0);setTimeout(restoreSnapshot,500);}});
+
+  async function restoreSnapshot() {
+    // Restore values after a tab switch without touching the status message.
+    try {
+      const ranking = await fetchRanking();
+      const dailyDay = jstDay(ranking?.updated_at);
+      const payload = await fetchSnapshot();
+      if (dailyDay && jstDay(payload.market_date) && jstDay(payload.market_date) < dailyDay) return;
+      storeQuotes(payload.quotes, dailyDay, payload);
+      if (typeof window.kabuScoreApplyRealtime === 'function') window.kabuScoreApplyRealtime();
+    } catch (_) { /* keep current table and status if network is unavailable */ }
+  }
+
+  window.addEventListener('load', () => {
+    const btn = document.getElementById('realtimeRefresh');
+    if (btn) btn.addEventListener('click', refresh);
+    restoreSnapshot();
+  });
+  window.addEventListener('pageshow', () => { if (!document.getElementById('realtimeStatus')?.dataset.statusOwner) restoreSnapshot(); });
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && !document.getElementById('realtimeStatus')?.dataset.statusOwner) restoreSnapshot();
+  });
 })();

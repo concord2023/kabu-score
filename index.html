@@ -50,7 +50,7 @@ function applyRealtimeToRows(){
     if(t)t.textContent=q.market_time?`更新 ${String(q.market_time).replace('T',' ').slice(0,16)}`:'更新時刻不明';
     row.classList.add('live-updated'); applied++;
   });
-  if(applied){const st=document.getElementById('realtimeStatus');if(st)st.textContent=`保存済みリアルタイム値 ${applied}銘柄`;}
+  if(applied){const st=document.getElementById('realtimeStatus');if(st&&!st.dataset.statusOwner)st.textContent=`保存済みリアルタイム値 ${applied}銘柄`;}
   return applied;
 }
 window.kabuScoreApplyRealtime=applyRealtimeToRows;
@@ -88,4 +88,4 @@ fetch('./data/decision_ranking.json?'+Date.now()).then(r=>{if(!r.ok)throw Error(
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){setTimeout(applyRealtimeToRows,0);setTimeout(applyRealtimeToRows,250);}});
 window.addEventListener('storage',e=>{if(e.key===REALTIME_STORAGE_KEY||e.key===REALTIME_STORAGE_KEY_LEGACY)setTimeout(applyRealtimeToRows,0);});
 
-</script><script src="./realtime_quotes.js"></script></body></html>
+</script><script src="./realtime_quotes.js?v=20261019-statusfix"></script></body></html>

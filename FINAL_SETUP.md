@@ -49,3 +49,11 @@ The Daily stock update workflow runs only the watchlist analysis. The all-listed
 
 - Main index.html now renders 今日の注目5選 directly from data/daily_recommendations.json; daily_recommendations.html remains the detail page.
 - Realtime quote refresh uses Yahoo spark first and Yahoo chart fallback through two CORS relays; a single relay outage no longer makes the button fail immediately.
+
+## 2026-10-19 リアルタイム取得ステータス修正
+
+- GitHub Pages のブラウザーから Yahoo Finance へ直接アクセスする方式は、CORS 制限で失敗しやすいため、以前の安定していた方式に戻しました。GitHub Actions が約5分ごとに生成する `data/realtime_quotes.json` を、ボタンから最新取得します。
+- `raw.githubusercontent.com` の最新スナップショットを先に確認し、取得できない場合は Pages 側の JSON を確認します。
+- スナップショットが日次ランキングより古い場合は適用せず、日次データを維持します。日次フォールバックをリアルタイム値と誤表示しません。
+- ボタンの最終結果を `realtimeStatus` に保持し、ページ内の保存値復元処理がエラー表示を上書きしないようにしました。Service Worker キャッシュとスクリプト URL も更新しています。
+- `test_realtime_status.js` は成功時・取得失敗時の表示保持を模擬検証します。実際の Yahoo Finance / GitHub Actions の通信成功まではローカル環境から保証できません。
