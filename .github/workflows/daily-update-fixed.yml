@@ -1,0 +1,117 @@
+name: Daily stock update
+on:
+  schedule:
+    # Primary run: weekdays at 17:10 Japan time.
+    - cron: '10 17 * * 1-5'
+      timezone: 'Asia/Tokyo'
+    # Backup run: retry at 17:40 if the primary scheduled event was missed.
+    - cron: '40 17 * * 1-5'
+      timezone: 'Asia/Tokyo'
+  workflow_dispatch:
+    inputs:
+      add_stock:
+        description: 'Add stock (optional: company name or security code, e.g. ローツェ or 6323).'
+        required: false
+        type: string
+      delete_stock:
+        description: 'Delete stock from the analysis watchlist (optional: security code, e.g. 6323).'
+        required: false
+        type: string
+  issues:
+    types: [opened]
+permissions:
+  contents: write
+  issues: write
+concurrency:
+  group: kabu-score-repo-write
+  cancel-in-progress: false
+jobs:
+  update:
+    if: ${{ github.event_name != 'issues' || (github.event.issue.user.login == github.repository_owner && (startsWith(github.event.issue.title, '[株スコア追加]') || startsWith(github.event.issue.title, '[株スコア削除]'))) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Skip backup if today's 17:10 run already updated data
+        id: schedule_guard
+        if: ${{ github.event_name == 'schedule' && github.event.schedule == '40 17 * * 1-5' }}
+        run: |
+          python - <<'PYCODE'
+          import json, os
+          from datetime import datetime, time
+          from pathlib import Path
+          from zoneinfo import ZoneInfo
+          tz = ZoneInfo('Asia/Tokyo')
+          now = datetime.now(tz)
+          updated = None
+          try:
+              data = json.loads(Path('data/decision_ranking.json').read_text(encoding='utf-8'))
+              raw = data.get('updated_at')
+              if raw:
+                  updated = datetime.fromisoformat(raw.replace('Z', '+00:00'))
+                  if updated.tzinfo is None:
+                      updated = updated.replace(tzinfo=tz)
+                  updated = updated.astimezone(tz)
+          except Exception as exc:
+              print(f'Could not read prior update timestamp; backup will run: {exc}')
+          skip = bool(updated and updated.date() == now.date() and updated.time().replace(tzinfo=None) >= time(17, 10))
+          print(f'Current JST: {now.isoformat()}')
+          print(f'Last ranking update: {updated.isoformat() if updated else "unknown"}')
+          print(f'Skip backup: {skip}')
+          with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as f:
+              f.write(f'skip={str(skip).lower()}\n')
+          PYCODE
+      - name: Remove legacy daily updater files
+        if: ${{ steps.schedule_guard.outputs.skip != 'true' }}
+        run: |
+          # Older repository versions may still contain the legacy updater.
+          # Remove it before validation so this workflow is the only
+          # scheduled Daily stock updater (17:40 is a guarded fallback).
+          rm -f scripts/update_data.py .github/workflows/update.yml
+      - name: Validate release before API calls
+        if: ${{ steps.schedule_guard.outputs.skip != 'true' }}
+        run: python validate_release.py
+      - name: Install company-master dependency (only when adding a stock)
+        if: ${{ steps.schedule_guard.outputs.skip != 'true' && ((github.event_name == 'issues' && startsWith(github.event.issue.title, '[株スコア追加]')) || inputs.add_stock != '') }}
+        run: python -m pip install openpyxl
+      - name: Refresh listed-company master (only when adding a stock)
+        if: ${{ steps.schedule_guard.outputs.skip != 'true' && ((github.event_name == 'issues' && startsWith(github.event.issue.title, '[株スコア追加]')) || inputs.add_stock != '') }}
+        continue-on-error: true
+        run: python update_company_master.py
+      - name: Validate stock change request
+        if: ${{ steps.schedule_guard.outputs.skip != 'true' && github.event_name == 'issues' }}
+        id: issue_request
+        run: python stock_change_from_issue.py
+      - name: Run daily analysis
+        if: ${{ steps.schedule_guard.outputs.skip != 'true' }}
+        id: daily_analysis
+        env:
+          IRBANK_API_KEY: ${{ secrets.IRBANK_API_KEY }}
+          ADD_STOCK_QUERY: ${{ github.event_name == 'issues' && steps.issue_request.outputs.action == 'add' && steps.issue_request.outputs.query || inputs.add_stock }}
+          DELETE_STOCK_QUERY: ${{ github.event_name == 'issues' && steps.issue_request.outputs.action == 'delete' && steps.issue_request.outputs.query || inputs.delete_stock }}
+        run: python run_daily.py
+      # Realtime quotes are updated by the dedicated Realtime quote snapshot workflow.
+      # Do not overwrite that snapshot during the 17:10 JST daily analysis, when the
+      # market is closed and Yahoo may only expose the previous session's close.
+      - name: Save daily analysis immediately
+        if: ${{ steps.schedule_guard.outputs.skip != 'true' && steps.daily_analysis.outcome == 'success' }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          # data/ may not contain watchlist_exclusions.json on an ordinary
+          # daily run. Stage the existing generated data without naming an
+          # optional file explicitly, so a normal run cannot fail with
+          # 'pathspec ... did not match any files'.
+          git add -A
+          git diff --cached --quiet || git commit -m 'Update daily stock decisions'
+          git push
+      - name: Close completed stock change request
+        if: ${{ steps.daily_analysis.outcome == 'success' && github.event_name == 'issues' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh issue close "${{ github.event.issue.number }}" --repo "${{ github.repository }}" --comment "銘柄の追加・削除と初回分析が完了しました。"
