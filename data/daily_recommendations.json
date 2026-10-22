@@ -1,183 +1,432 @@
 {
-  "updated_at": "2026-09-26T00:00:00+09:00",
-  "date": "2026-09-26",
+  "updated_at": "2026-10-22T12:58:30.846833+09:00",
+  "date": "2026-10-22",
   "title": "今日の注目5選",
   "status": "ok",
-  "method": "2026/09/26のチャートなび「投資家の話題まとめ」を初期表示として保存。Daily stock updateでニュース・アナリスト・YouTube等の同日情報を追加収集し、通常版に更新します。これはBUY判定ではない。",
-  "source_policy": "外部情報の注目度とkabu-scoreの総合BUY判定は別物として表示する。",
-  "errors": [
-    "初期表示はチャートなびの当日話題ランキング。Daily stock update実行時に追加ソースを再収集します。"
-  ],
+  "method": "同日公開の投資家話題・ニュース/開示・大量保有・カタリスト・アナリスト・テーマ・YouTubeを複数の検索角度から収集。投資家話題順位、情報源の種類、同日言及数、株価/出来高、具体的材料を組み合わせ、複数のルートのいずれかを満たす銘柄を最大5件表示する。無理に5件へ水増ししない。これはBUY判定ではない。",
+  "source_policy": "各記事・動画へのリンクと発信元を保存。外部情報の注目度とkabu-scoreの総合BUY判定は別物として表示する。",
+  "errors": [],
+  "candidate_pool": 90,
+  "eligible_count": 9,
   "candidates": [
     {
-      "code": "285A",
-      "name": "キオクシアホールディングス",
-      "market": null,
+      "code": "6857",
+      "name": "アドバンテスト",
+      "market": "プライム（内国株式）",
       "industry": null,
       "source_types": [
-        "investor"
+        "YouTube",
+        "investor",
+        "アナリスト",
+        "ニュース"
       ],
-      "score": 122,
+      "score": 26.4,
       "kabu_score": null,
       "signal": null,
       "rsi14": null,
       "change": null,
-      "reason": "キオクシア、需給悪化懸念と市場の熱狂",
-      "sources": [
-        {
-          "name": "チャートなび",
-          "type": "investor",
-          "title": "キオクシア、需給悪化懸念と市場の熱狂",
-          "url": "https://chartnavi.com/scan/wadai/date/_20260926/"
-        }
+      "volume_ratio": null,
+      "heat_score": 14.0,
+      "selection_basis": [
+        "投資家話題5位以内",
+        "4種類の情報源",
+        "同日6件の言及"
       ],
+      "reason": "投資家話題5位以内＋4種類の情報源＋同日6件の言及（話題強度14.0）。",
+      "movement_type": "複数情報源で話題",
+      "material_summary": "量子計算機暗号（PQC）の流れ 高市首相がPHP重大脆弱性対応を呼びかけ サイバーセキュリティ関連株への注目) 4位 (41) ソフトバンクグループ(9984) Y K 掲 AIコメント ソフトバンクG、AIリスクと株価の攻防(AI負債リスクに身構えるCDS スペースX好決算や韓国株高で安心感 ソフトバンクG、伸びたのに結局伸びきらない) 5位 (40) テリロジーホールディングス(5133) Y K 掲 6位 (36) アドバンテスト(6857) Y K 掲 AIコメント アドテスト、AI需要追い風で株価急騰か(METAやLAM RESEARCHの決算好調 韓国半導体株急反発が追い風 AI・半導体需要の旺盛さ) 7位 (32) 太陽誘電(6976) Y K 掲 8位 (32) イビデン(4062) Y K 掲 9位 (31) 東京エレクトロン(8035) Y K 掲 10位 (30) アクリート(4395) Y K 掲 AIコ",
       "explanation": {
-        "why_selected": "投資家話題ランキング1位＋当日の話題化",
-        "what_is_happening": "キオクシア、需給悪化懸念と市場の熱狂",
-        "material_category": "需給材料",
-        "score_breakdown": {
-          "source_types": 1,
-          "mentions": 1,
-          "investor_rank": 1
-        }
-      },
-      "movement_type": "需給材料"
-    },
-    {
-      "code": "627A",
-      "name": "ａｋｉｐｐａ",
-      "market": null,
-      "industry": null,
-      "source_types": [
-        "investor"
-      ],
-      "score": 121,
-      "kabu_score": null,
-      "signal": null,
-      "rsi14": null,
-      "change": null,
-      "reason": "アキッパ2日連続Ｓ高！投資家熱狂",
-      "sources": [
-        {
-          "name": "チャートなび",
-          "type": "investor",
-          "title": "アキッパ2日連続Ｓ高！投資家熱狂",
-          "url": "https://chartnavi.com/scan/wadai/date/_20260926/"
-        }
-      ],
-      "explanation": {
-        "why_selected": "投資家話題ランキング2位＋当日の話題化",
-        "what_is_happening": "アキッパ2日連続Ｓ高！投資家熱狂",
+        "why_selected": "投資家話題ランキング5位＋4種類の情報源",
+        "what_is_happening": "量子計算機暗号（PQC）の流れ 高市首相がPHP重大脆弱性対応を呼びかけ サイバーセキュリティ関連株への注目) 4位 (41) ソフトバンクグループ(9984) Y K 掲 AIコメント ソフトバンクG、AIリスクと株価の攻防(AI負債リスクに身構えるCDS スペースX好決算や韓国株高で安心感 ソフトバンクG、伸びたのに結局伸びきらない) 5位 (40) テリロジーホールディングス(5133) Y K 掲 6位 (36) アドバンテスト(6857) Y K 掲 AIコメント アドテスト、AI需要追い風で株価急騰か(METAやLAM RESEARCHの決算好調 韓国半導体株急反発が追い風 AI・半導体需要の旺盛さ) 7位 (32) 太陽誘電(6976) Y K 掲 8位 (32) イビデン(4062) Y K 掲 9位 (31) 東京エレクトロン(8035) Y K 掲 10位 (30) アクリート(4395) Y K 掲 AIコ",
         "material_category": "株価上昇・需給/値動き",
         "score_breakdown": {
-          "source_types": 1,
-          "mentions": 1,
-          "investor_rank": 2
+          "source_types": 4,
+          "mentions": 6,
+          "investor_rank": 5
         }
       },
-      "movement_type": "株価上昇・需給/値動き"
-    },
-    {
-      "code": "4062",
-      "name": "イビデン",
-      "market": null,
-      "industry": null,
-      "source_types": [
-        "investor"
-      ],
-      "score": 86,
-      "kabu_score": null,
-      "signal": null,
-      "rsi14": null,
-      "change": null,
-      "reason": "イビデン、NVIDIA CEO発言で話題騒然",
+      "research_memo": {
+        "headline": "量子計算機暗号（PQC）の流れ 高市首相がPHP重大脆弱性対応を呼びかけ サイバーセキュリティ関連株への注目) 4位 (41) ソフトバンクグループ(9984) Y K 掲 AIコメント ソフトバンクG、AIリスクと株価の攻防(AI負債リスクに身構えるCDS スペースX好決算や韓国株高で安心感 ソフトバンクG、伸びたのに結局伸びきらない) 5位 (40) テリロジーホールディングス(5133) Y K 掲 6位 (36) アドバンテスト(6857) Y K 掲 AIコメント アドテスト、AI需要追い風で株価急騰か(METAやLAM RESEARCHの決算好調 韓国半導体株急反発が追い風 AI・半導体需要の旺盛さ) 7位 (32) 太陽誘電(6976) Y K 掲 8位 (32) イビデン(4062) Y K 掲 9位 (31) 東京エレクトロン(8035) Y K 掲 10位 (30) アクリート(4395) Y K 掲 AIコ",
+        "summary": "【話題の事実】投資家話題ランキングは5位。情報源は4種類（YouTube・投資家話題・アナリスト・ニュース）。同日言及は6件。【材料】量子計算機暗号（PQC）の流れ 高市首相がPHP重大脆弱性対応を呼びかけ サイバーセキュリティ関連株への注目) 4位 (41) ソフトバンクグループ(9984) Y K 掲 AIコメント ソフトバンクG、AIリスクと株価の攻防(AI負債リスクに身構えるCDS スペースX好決算や韓国株高で安心感 ソフトバンクG、伸びたのに結局伸びきらない) 5位 (40) テリロジーホールディングス(5133) Y K 掲 6位 (36) アドバンテスト(6857) Y K 掲 AIコメント アドテスト、AI需要追い風で株価急騰か(METAやLAM RESEARCHの決算好調 韓国半導体株急反発が追い風 AI・半導体需要の旺盛さ) 7位 (32) 太陽誘電(6976) Y K 掲 8位 (32) イビデン(4062) Y K 掲 9位 (31) 東京エレクトロン(8035) Y K 掲 10位 (30) アクリート(4395) Y K 掲 AIコ / 来週（8/31～9/4）の日経平均株価の予想レンジは、6万4000～6万9000円！ 米･長期金利の動向や、キオクシア、アドバンテストなど半導体株の動向に注目！ - ダイヤモンド・オンライン / 日経平均6万円でも恩恵なし…なぜ？ 対策は/アドバンテスト急落/日経平均反落【今日の注目株＆日本株市場見通し】「デイリーZAi」4月28日号 - ダイヤモンド・オンライン【値動き確認】日次株価データからの確認材料はありません。",
+        "why": "【選定理由】投資家話題の上位に入り、上記の情報量・材料・値動きの確認がそろったため、当日の注目候補として残しました。",
+        "category": "株価上昇・需給/値動き",
+        "evidence": [
+          "投資家話題ランキングは5位",
+          "情報源は4種類（YouTube・投資家話題・アナリスト・ニュース）",
+          "同日言及は6件"
+        ],
+        "check_point": "見出しだけでは因果関係を断定しません。決算短信・適時開示・原記事本文など、リンク先の一次情報を確認してください。",
+        "source_count": 4,
+        "mention_count": 6,
+        "sources": [
+          "YouTube",
+          "投資家話題",
+          "アナリスト",
+          "ニュース"
+        ],
+        "detail": "量子計算機暗号（PQC）の流れ 高市首相がPHP重大脆弱性対応を呼びかけ サイバーセキュリティ関連株への注目) 4位 (41) ソフトバンクグループ(9984) Y K 掲 AIコメント ソフトバンクG、AIリスクと株価の攻防(AI負債リスクに身構えるCDS スペースX好決算や韓国株高で安心感 ソフトバンクG、伸びたのに結局伸びきらない) 5位 (40) テリロジーホールディングス(5133) Y K 掲 6位 (36) アドバンテスト(6857) Y K 掲 AIコメント アドテスト、AI需要追い風で株価急騰か(METAやLAM RESEARCHの決算好調 韓国半導体株急反発が追い風 AI・半導体需要の旺盛さ) 7位 (32) 太陽誘電(6976) Y K 掲 8位 (32) イビデン(4062) Y K 掲 9位 (31) 東京エレクトロン(8035) Y K 掲 10位 (30) アクリート(4395) Y K 掲 AIコ / 来週（8/31～9/4）の日経平均株価の予想レンジは、6万4000～6万9000円！ 米･長期金利の動向や、キオクシア、アドバンテストなど半導体株の動向に注目！ - ダイヤモンド・オンライン / 日経平均6万円でも恩恵なし…なぜ？ 対策は/アドバンテスト急落/日経平均反落【今日の注目株＆日本株市場見通し】「デイリーZAi」4月28日号 - ダイヤモンド・オンライン",
+        "heat_score": 14.0
+      },
       "sources": [
         {
           "name": "チャートなび",
           "type": "investor",
-          "title": "イビデン、NVIDIA CEO発言で話題騒然",
-          "url": "https://chartnavi.com/scan/wadai/date/_20260926/"
+          "title": "量子計算機暗号（PQC）の流れ 高市首相がPHP重大脆弱性対応を呼びかけ サイバーセキュリティ関連株への注目) 4位 (41) ソフトバンクグループ(9984) Y K 掲 AIコメント ソフトバンクG、AIリスクと株価の攻防(AI負債リスクに身構えるCDS スペースX好決算や韓国株高で安心感 ソフトバンクG、伸びたのに結局伸びきらない) 5位 (40) テリロジーホールディングス(5133) Y K 掲 6位 (36) アドバンテスト(6857) Y K 掲 AIコメント アドテスト、AI需要追い風で株価急騰か(METAやLAM RESEARCHの決算好調 韓国半導体株急反発が追い風 AI・半導体需要の旺盛さ) 7位 (32) 太陽誘電(6976) Y K 掲 8位 (32) イビデン(4062) Y K 掲 9位 (31) 東京エレクトロン(8035) Y K 掲 10位 (30) アクリート(4395) Y K 掲 AIコ",
+          "url": "https://chartnavi.com/scan/wadai/date/_20261022/"
+        },
+        {
+          "name": "ニュース・材料検索",
+          "type": "ニュース",
+          "title": "来週（8/31～9/4）の日経平均株価の予想レンジは、6万4000～6万9000円！ 米･長期金利の動向や、キオクシア、アドバンテストなど半導体株の動向に注目！ - ダイヤモンド・オンライン",
+          "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE5xTTJ4RHpnSzVySDlFamlwck40SHBTUDlJNE5FQWFkRk1Tb2NuYUFLUGlQdHpxZEEwMmNYVzRVdVpFbDVLS0tsMWJINnNoeTh3NEZJ?oc=5"
+        },
+        {
+          "name": "ニュース・話題検索",
+          "type": "ニュース",
+          "title": "日経平均6万円でも恩恵なし…なぜ？ 対策は/アドバンテスト急落/日経平均反落【今日の注目株＆日本株市場見通し】「デイリーZAi」4月28日号 - ダイヤモンド・オンライン",
+          "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE13bzR0WkxGVlFoVVNsazRFOGVvZ3BQblhxc2lVZkRPVDExelhpSTVnNkJlUVR3di1LaGRMSjdKM1B1eXdFRERyQjZaS1ZIRHFKWVJj?oc=5"
+        },
+        {
+          "name": "ニュース・話題検索",
+          "type": "ニュース",
+          "title": "金利低下でアドバンテストなど半導体株急伸、霞ヶ関Cは上方修正/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月18日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
+          "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE5GYUNBUGIzV2liM21LbnBqNF9TUDlQcjMzT29GWlcyX0FqZlc3Q0p4cC1Da3FRaWFtbHBkYnJWUmJVYlg5ZmwwSy1QRndhNXQ3X2RKSVpibWEwcE1wM1V3ZE9OWl8xdHVnd05EY2RibVhBdEZ0RmFKeExab0xNRUk?oc=5"
+        },
+        {
+          "name": "アナリスト・レポート検索",
+          "type": "アナリスト",
+          "title": "決算レポート：アドバンテスト（会社側は2026年3月期業績予想を上方修正した） - トウシル",
+          "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE9wVlJfMnlQR1I1WnRxUEhSdFlhVzlUSWcwaTF3a3ZWR3dsdm1EeTh0SzMyLTdZQkJHcXo1UUc3cTdMb0ROcDdOVFpsODI4dFg4UE1jaWotMjYyUQ?oc=5"
+        },
+        {
+          "name": "YouTube検索",
+          "type": "YouTube",
+          "title": "【10月19日(月)東京株式市場】日経平均株価は反落📉407円安／アドバンテストやキオクシアなど下げ渋り／米株先物が上昇、相場を支えた「4つの理由」／金利低下で小型株・REITに追い風か？ - YouTube",
+          "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE1kaFJLUnQxQmt5UWhOUjhFejB1WEMtRy1GYWZmWnpoN3Y5SU5mOGMxMlo0ekRuc2FNSUpXMTl1TFh2ZEVYaUJiMzRxSmFOS0czRmtSSHRn?oc=5"
         }
       ],
-      "explanation": {
-        "why_selected": "投資家話題ランキング3位＋当日の話題化",
-        "what_is_happening": "イビデン、NVIDIA CEO発言で話題騒然",
-        "material_category": "AI・半導体/データセンターテーマ",
-        "score_breakdown": {
-          "source_types": 1,
-          "mentions": 1,
-          "investor_rank": 3
-        }
-      },
-      "movement_type": "AI・半導体/データセンターテーマ"
+      "selection_eligible": true
     },
     {
       "code": "9984",
       "name": "ソフトバンクグループ",
-      "market": null,
+      "market": "プライム（内国株式）",
       "industry": null,
       "source_types": [
-        "investor"
+        "investor",
+        "ニュース"
       ],
-      "score": 84,
+      "score": 13.2,
       "kabu_score": null,
       "signal": null,
       "rsi14": null,
       "change": null,
-      "reason": "ソフトバンクG、データセンター懸念で株価反落",
+      "volume_ratio": null,
+      "heat_score": 11.0,
+      "selection_basis": [
+        "投資家話題3位以内",
+        "2種類の情報源",
+        "同日2件の言及"
+      ],
+      "reason": "投資家話題3位以内＋2種類の情報源＋同日2件の言及（話題強度11.0）。",
+      "movement_type": "複数情報源で話題",
+      "material_summary": "ウインテスト(6721) Y K 掲 AIコメント ウインテスト、Ｓ高連発で投資家熱狂！(海外大手半導体企業とNDA締結 本人確認ツール500社導入 会社が活発にIRを出すように) 3位 (43) サイバートラスト(4498) Y K 掲 AIコメント サイバートラスト、PQC関連でS高(耐量子計算機暗号（PQC）の流れ 高市首相がPHP重大脆弱性対応を呼びかけ サイバーセキュリティ関連株への注目) 4位 (41) ソフトバンクグループ(9984) Y K 掲 AIコメント ソフトバンクG、AIリスクと株価の攻防(AI負債リスクに身構えるCDS スペースX好決算や韓国株高で安心感 ソフトバンクG、伸びたのに結局伸びきらない) 5位 (40) テリロジーホールディングス(5133) Y K 掲 6位 (36) アドバンテスト(6857) Y K 掲 AIコメント アドテスト、AI需要追い風で株価急騰か(METAやLAM RESEA",
+      "explanation": {
+        "why_selected": "投資家話題ランキング3位＋2種類の情報源",
+        "what_is_happening": "ウインテスト(6721) Y K 掲 AIコメント ウインテスト、Ｓ高連発で投資家熱狂！(海外大手半導体企業とNDA締結 本人確認ツール500社導入 会社が活発にIRを出すように) 3位 (43) サイバートラスト(4498) Y K 掲 AIコメント サイバートラスト、PQC関連でS高(耐量子計算機暗号（PQC）の流れ 高市首相がPHP重大脆弱性対応を呼びかけ サイバーセキュリティ関連株への注目) 4位 (41) ソフトバンクグループ(9984) Y K 掲 AIコメント ソフトバンクG、AIリスクと株価の攻防(AI負債リスクに身構えるCDS スペースX好決算や韓国株高で安心感 ソフトバンクG、伸びたのに結局伸びきらない) 5位 (40) テリロジーホールディングス(5133) Y K 掲 6位 (36) アドバンテスト(6857) Y K 掲 AIコメント アドテスト、AI需要追い風で株価急騰か(METAやLAM RESEA",
+        "material_category": "株価上昇・需給/値動き",
+        "score_breakdown": {
+          "source_types": 2,
+          "mentions": 2,
+          "investor_rank": 3
+        }
+      },
+      "research_memo": {
+        "headline": "ウインテスト(6721) Y K 掲 AIコメント ウインテスト、Ｓ高連発で投資家熱狂！(海外大手半導体企業とNDA締結 本人確認ツール500社導入 会社が活発にIRを出すように) 3位 (43) サイバートラスト(4498) Y K 掲 AIコメント サイバートラスト、PQC関連でS高(耐量子計算機暗号（PQC）の流れ 高市首相がPHP重大脆弱性対応を呼びかけ サイバーセキュリティ関連株への注目) 4位 (41) ソフトバンクグループ(9984) Y K 掲 AIコメント ソフトバンクG、AIリスクと株価の攻防(AI負債リスクに身構えるCDS スペースX好決算や韓国株高で安心感 ソフトバンクG、伸びたのに結局伸びきらない) 5位 (40) テリロジーホールディングス(5133) Y K 掲 6位 (36) アドバンテスト(6857) Y K 掲 AIコメント アドテスト、AI需要追い風で株価急騰か(METAやLAM RESEA",
+        "summary": "【話題の事実】投資家話題ランキングは3位。情報源は2種類（投資家話題・ニュース）。同日言及は2件。【材料】ウインテスト(6721) Y K 掲 AIコメント ウインテスト、Ｓ高連発で投資家熱狂！(海外大手半導体企業とNDA締結 本人確認ツール500社導入 会社が活発にIRを出すように) 3位 (43) サイバートラスト(4498) Y K 掲 AIコメント サイバートラスト、PQC関連でS高(耐量子計算機暗号（PQC）の流れ 高市首相がPHP重大脆弱性対応を呼びかけ サイバーセキュリティ関連株への注目) 4位 (41) ソフトバンクグループ(9984) Y K 掲 AIコメント ソフトバンクG、AIリスクと株価の攻防(AI負債リスクに身構えるCDS スペースX好決算や韓国株高で安心感 ソフトバンクG、伸びたのに結局伸びきらない) 5位 (40) テリロジーホールディングス(5133) Y K 掲 6位 (36) アドバンテスト(6857) Y K 掲 AIコメント アドテスト、AI需要追い風で株価急騰か(METAやLAM RESEA / 円高でセリアや神戸物産が急伸、金利低下でソフトバンクグループも/日経平均反発【今日の注目株＆日本株市場見通し】「デイリーZAi」9月4日号（ダイヤモンド・ザイ） - Yahoo!ニュース【値動き確認】日次株価データからの確認材料はありません。",
+        "why": "【選定理由】投資家話題の上位に入り、上記の情報量・材料・値動きの確認がそろったため、当日の注目候補として残しました。",
+        "category": "株価上昇・需給/値動き",
+        "evidence": [
+          "投資家話題ランキングは3位",
+          "情報源は2種類（投資家話題・ニュース）",
+          "同日言及は2件"
+        ],
+        "check_point": "見出しだけでは因果関係を断定しません。決算短信・適時開示・原記事本文など、リンク先の一次情報を確認してください。",
+        "source_count": 2,
+        "mention_count": 2,
+        "sources": [
+          "投資家話題",
+          "ニュース"
+        ],
+        "detail": "ウインテスト(6721) Y K 掲 AIコメント ウインテスト、Ｓ高連発で投資家熱狂！(海外大手半導体企業とNDA締結 本人確認ツール500社導入 会社が活発にIRを出すように) 3位 (43) サイバートラスト(4498) Y K 掲 AIコメント サイバートラスト、PQC関連でS高(耐量子計算機暗号（PQC）の流れ 高市首相がPHP重大脆弱性対応を呼びかけ サイバーセキュリティ関連株への注目) 4位 (41) ソフトバンクグループ(9984) Y K 掲 AIコメント ソフトバンクG、AIリスクと株価の攻防(AI負債リスクに身構えるCDS スペースX好決算や韓国株高で安心感 ソフトバンクG、伸びたのに結局伸びきらない) 5位 (40) テリロジーホールディングス(5133) Y K 掲 6位 (36) アドバンテスト(6857) Y K 掲 AIコメント アドテスト、AI需要追い風で株価急騰か(METAやLAM RESEA / 円高でセリアや神戸物産が急伸、金利低下でソフトバンクグループも/日経平均反発【今日の注目株＆日本株市場見通し】「デイリーZAi」9月4日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
+        "heat_score": 11.0
+      },
       "sources": [
         {
           "name": "チャートなび",
           "type": "investor",
-          "title": "ソフトバンクG、データセンター懸念で株価反落",
-          "url": "https://chartnavi.com/scan/wadai/date/_20260926/"
+          "title": "ウインテスト(6721) Y K 掲 AIコメント ウインテスト、Ｓ高連発で投資家熱狂！(海外大手半導体企業とNDA締結 本人確認ツール500社導入 会社が活発にIRを出すように) 3位 (43) サイバートラスト(4498) Y K 掲 AIコメント サイバートラスト、PQC関連でS高(耐量子計算機暗号（PQC）の流れ 高市首相がPHP重大脆弱性対応を呼びかけ サイバーセキュリティ関連株への注目) 4位 (41) ソフトバンクグループ(9984) Y K 掲 AIコメント ソフトバンクG、AIリスクと株価の攻防(AI負債リスクに身構えるCDS スペースX好決算や韓国株高で安心感 ソフトバンクG、伸びたのに結局伸びきらない) 5位 (40) テリロジーホールディングス(5133) Y K 掲 6位 (36) アドバンテスト(6857) Y K 掲 AIコメント アドテスト、AI需要追い風で株価急騰か(METAやLAM RESEA",
+          "url": "https://chartnavi.com/scan/wadai/date/_20261022/"
+        },
+        {
+          "name": "ニュース・話題検索",
+          "type": "ニュース",
+          "title": "円高でセリアや神戸物産が急伸、金利低下でソフトバンクグループも/日経平均反発【今日の注目株＆日本株市場見通し】「デイリーZAi」9月4日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
+          "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE41Rl9qY1h0d2NCSFZnaWRIRWFBV054TlBramtacnNpU2FWa0tZZ2RWdk84OGFXaE4wYW5VVzBfclBpTVRkNDh1bW1OdXExQmNkeFNSQXF5bElzWVI4WEdCdEZQbnJ2NkhiYmNwcTZlT2ljX01uVEJvWjRqR2VHWlE?oc=5"
         }
       ],
-      "explanation": {
-        "why_selected": "投資家話題ランキング4位＋当日の話題化",
-        "what_is_happening": "ソフトバンクG、データセンター懸念で株価反落",
-        "material_category": "AI・半導体/データセンターテーマ",
-        "score_breakdown": {
-          "source_types": 1,
-          "mentions": 1,
-          "investor_rank": 4
-        }
-      },
-      "movement_type": "AI・半導体/データセンターテーマ"
+      "selection_eligible": true
     },
     {
-      "code": "3905",
-      "name": "データセクション",
-      "market": null,
+      "code": "9434",
+      "name": "ソフトバンク",
+      "market": "プライム（内国株式）",
       "industry": null,
       "source_types": [
-        "investor"
+        "YouTube",
+        "テーマ",
+        "ニュース"
       ],
-      "score": 75,
+      "score": 23.3,
       "kabu_score": null,
       "signal": null,
       "rsi14": null,
       "change": null,
-      "reason": "データセクション、大口受注で株価続伸！",
+      "volume_ratio": null,
+      "heat_score": 10.0,
+      "selection_basis": [
+        "3種類の情報源",
+        "同日8件の言及"
+      ],
+      "reason": "3種類の情報源＋同日8件の言及（話題強度10.0）。",
+      "movement_type": "複数情報源で話題",
+      "material_summary": "ソフトバンクGが米警備大手の買収検討、三菱電機は鴻海から出資/日経平均反落【今日の注目株＆日本株市場見通し】「デイリーZAi」10月19日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
+      "explanation": {
+        "why_selected": "3種類の情報源",
+        "what_is_happening": "ソフトバンクGが米警備大手の買収検討、三菱電機は鴻海から出資/日経平均反落【今日の注目株＆日本株市場見通し】「デイリーZAi」10月19日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
+        "material_category": "株価下落・警戒",
+        "score_breakdown": {
+          "source_types": 3,
+          "mentions": 8,
+          "investor_rank": null
+        }
+      },
+      "research_memo": {
+        "headline": "ソフトバンクGが米警備大手の買収検討、三菱電機は鴻海から出資/日経平均反落【今日の注目株＆日本株市場見通し】「デイリーZAi」10月19日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
+        "summary": "【話題の事実】情報源は3種類（YouTube・テーマ・ニュース）。同日言及は8件。【材料】ソフトバンクGが米警備大手の買収検討、三菱電機は鴻海から出資/日経平均反落【今日の注目株＆日本株市場見通し】「デイリーZAi」10月19日号（ダイヤモンド・ザイ） - Yahoo!ニュース / オープンAIの上場延期でソフトバンクGが急落、神戸物産は大幅高/日経平均続落【今日の注目株＆日本株市場見通し】「デイリーZAi」9月14日号(ダイヤモンド・ザイ) - Yahoo!ファイナンス / ソフトバンクG買い先行、住友電工・NECはメタと海底ケーブル/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月24日号（ダイヤモンド・ザイ） - Yahoo!ニュース【値動き確認】日次株価データからの確認材料はありません。",
+        "why": "【選定理由】複数種類の情報源で同日に言及が重なったため、単一記事だけの話題ではないと判断して残しました。",
+        "category": "株価下落・警戒",
+        "evidence": [
+          "情報源は3種類（YouTube・テーマ・ニュース）",
+          "同日言及は8件"
+        ],
+        "check_point": "見出しだけでは因果関係を断定しません。決算短信・適時開示・原記事本文など、リンク先の一次情報を確認してください。",
+        "source_count": 3,
+        "mention_count": 8,
+        "sources": [
+          "YouTube",
+          "テーマ",
+          "ニュース"
+        ],
+        "detail": "ソフトバンクGが米警備大手の買収検討、三菱電機は鴻海から出資/日経平均反落【今日の注目株＆日本株市場見通し】「デイリーZAi」10月19日号（ダイヤモンド・ザイ） - Yahoo!ニュース / オープンAIの上場延期でソフトバンクGが急落、神戸物産は大幅高/日経平均続落【今日の注目株＆日本株市場見通し】「デイリーZAi」9月14日号(ダイヤモンド・ザイ) - Yahoo!ファイナンス / ソフトバンクG買い先行、住友電工・NECはメタと海底ケーブル/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月24日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
+        "heat_score": 10.0
+      },
+      "sources": [
+        {
+          "name": "ニュース・話題検索",
+          "type": "ニュース",
+          "title": "ソフトバンクGが米警備大手の買収検討、三菱電機は鴻海から出資/日経平均反落【今日の注目株＆日本株市場見通し】「デイリーZAi」10月19日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
+          "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTFBlelVzUGZDdTYtamQxSDBDdmwxMlUwejI5QzhidFJkMERmclVWU1g2NzZyVklWX2dKeW8xbUVEcDd4V21CZ2Ffb1RuOG5aTGczYllvU0FIZUlGWmZEbnJmbXM3SHpmeGJzekc1ZjBiYkxRSHM5dmZlTHVuaFRLc2s?oc=5"
+        },
+        {
+          "name": "ニュース・話題検索",
+          "type": "ニュース",
+          "title": "オープンAIの上場延期でソフトバンクGが急落、神戸物産は大幅高/日経平均続落【今日の注目株＆日本株市場見通し】「デイリーZAi」9月14日号(ダイヤモンド・ザイ) - Yahoo!ファイナンス",
+          "url": "https://news.google.com/rss/articles/CBMihwFBVV95cUxONEhZN05BZVppbU5UWkVQZ0VYb1RWUHhxSkxYeWZTaDV6Z1JtZnNkdGg1cFRVblpvMG4xT29ZRFRla2lDcm5KbmNtUy1BMi16RFJwa191QzdtTVB4R3VhOW56eXMwR2ZCcldkRTdibThGdEdIeU1FR0phWk5IM0VTbFZ0dEU3VjQ?oc=5"
+        },
+        {
+          "name": "ニュース・話題検索",
+          "type": "ニュース",
+          "title": "ソフトバンクG買い先行、住友電工・NECはメタと海底ケーブル/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月24日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
+          "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE5ob0trUkc1ZThBQ25zcURRcGtkNHJ4bTlLbmdpeW9JZUtjWXVXWVhScmg0cU9VSE04aVFwV0lpUmFwRTBqdzB0SkxfWER4YXkxb1F2bVdzSWFMeXF4dm9VUFJldm5FcWtBaU9OdjY0OUVFS2R0ZGhIakNmbkxVcDA?oc=5"
+        },
+        {
+          "name": "ニュース・話題検索",
+          "type": "ニュース",
+          "title": "円高でセリアや神戸物産が急伸、金利低下でソフトバンクグループも/日経平均反発【今日の注目株＆日本株市場見通し】「デイリーZAi」9月4日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
+          "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE41Rl9qY1h0d2NCSFZnaWRIRWFBV054TlBramtacnNpU2FWa0tZZ2RWdk84OGFXaE4wYW5VVzBfclBpTVRkNDh1bW1OdXExQmNkeFNSQXF5bElzWVI4WEdCdEZQbnJ2NkhiYmNwcTZlT2ljX01uVEJvWjRqR2VHWlE?oc=5"
+        },
+        {
+          "name": "ニュース・話題検索",
+          "type": "ニュース",
+          "title": "オープンAIの上場延期でソフトバンクGが急落、神戸物産は大幅高/日経平均続落【今日の注目株＆日本株市場見通し】「デイリーZAi」9月14日号 (ダイヤモンド・ザイ) - Yahoo!ニュース",
+          "url": "https://news.google.com/rss/articles/CBMijgFBVV95cUxPM1hEZUl6clU3R2tCTFVIWWw0ZTRlREtJYzRpVHdnLTR2N0tKM2hadms4bmJpNEViMnpfbGFUUFFsOGNhR0gtejdFQnh1TFFNcG0xaUdKUXF6cDFkM3N1WHUxeFR5anVwa0paNnVsM3hxRDdRSWZReHd4REE4Q3pTT0JQeXdKOTktVy1HT2pn?oc=5"
+        },
+        {
+          "name": "テーマ・業界検索",
+          "type": "テーマ",
+          "title": "「AIデータセンター」関連銘柄を紹介！ オープンAIがソフトバンクGやオラクルなどと提携して｢巨大AIデータセンター｣建設を発表するなど、世界中で需要拡大！ - ダイヤモンド・オンライン",
+          "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTFBxR1ZjdFBnRjctRnBUYWpKNFhHYTRZSUN2NE85eUtjcEZlakVhaTlhZzdqMUlvYkR3ZUR5RjQtMWNvX2JKX0Y4bVFiYjkzUEZOTFBV?oc=5"
+        }
+      ],
+      "selection_eligible": true
+    },
+    {
+      "code": "8035",
+      "name": "東京エレクトロン",
+      "market": "プライム（内国株式）",
+      "industry": null,
+      "source_types": [
+        "investor",
+        "アナリスト"
+      ],
+      "score": 14.7,
+      "kabu_score": null,
+      "signal": null,
+      "rsi14": null,
+      "change": null,
+      "volume_ratio": null,
+      "heat_score": 10.0,
+      "selection_basis": [
+        "2種類の情報源",
+        "同日4件の言及"
+      ],
+      "reason": "2種類の情報源＋同日4件の言及（話題強度10.0）。",
+      "movement_type": "複数情報源で話題",
+      "material_summary": "びたのに結局伸びきらない) 5位 (40) テリロジーホールディングス(5133) Y K 掲 6位 (36) アドバンテスト(6857) Y K 掲 AIコメント アドテスト、AI需要追い風で株価急騰か(METAやLAM RESEARCHの決算好調 韓国半導体株急反発が追い風 AI・半導体需要の旺盛さ) 7位 (32) 太陽誘電(6976) Y K 掲 8位 (32) イビデン(4062) Y K 掲 9位 (31) 東京エレクトロン(8035) Y K 掲 10位 (30) アクリート(4395) Y K 掲 AIコメント PQC材料でアクリート連想買いか！(PQC関連材料で資金流入 サイバーセキュリティクラウド、サイバートラストとの連想買い 量子×サイバーセキュリティへの期待) (adsbygoogle = window.adsbygoogle || []).push({}); 前場の注目ポイント AIに前場の概況を聞いて",
+      "explanation": {
+        "why_selected": "投資家話題ランキング8位＋2種類の情報源",
+        "what_is_happening": "びたのに結局伸びきらない) 5位 (40) テリロジーホールディングス(5133) Y K 掲 6位 (36) アドバンテスト(6857) Y K 掲 AIコメント アドテスト、AI需要追い風で株価急騰か(METAやLAM RESEARCHの決算好調 韓国半導体株急反発が追い風 AI・半導体需要の旺盛さ) 7位 (32) 太陽誘電(6976) Y K 掲 8位 (32) イビデン(4062) Y K 掲 9位 (31) 東京エレクトロン(8035) Y K 掲 10位 (30) アクリート(4395) Y K 掲 AIコメント PQC材料でアクリート連想買いか！(PQC関連材料で資金流入 サイバーセキュリティクラウド、サイバートラストとの連想買い 量子×サイバーセキュリティへの期待) (adsbygoogle = window.adsbygoogle || []).push({}); 前場の注目ポイント AIに前場の概況を聞いて",
+        "material_category": "株価上昇・需給/値動き",
+        "score_breakdown": {
+          "source_types": 2,
+          "mentions": 4,
+          "investor_rank": 8
+        }
+      },
+      "research_memo": {
+        "headline": "びたのに結局伸びきらない) 5位 (40) テリロジーホールディングス(5133) Y K 掲 6位 (36) アドバンテスト(6857) Y K 掲 AIコメント アドテスト、AI需要追い風で株価急騰か(METAやLAM RESEARCHの決算好調 韓国半導体株急反発が追い風 AI・半導体需要の旺盛さ) 7位 (32) 太陽誘電(6976) Y K 掲 8位 (32) イビデン(4062) Y K 掲 9位 (31) 東京エレクトロン(8035) Y K 掲 10位 (30) アクリート(4395) Y K 掲 AIコメント PQC材料でアクリート連想買いか！(PQC関連材料で資金流入 サイバーセキュリティクラウド、サイバートラストとの連想買い 量子×サイバーセキュリティへの期待) (adsbygoogle = window.adsbygoogle || []).push({}); 前場の注目ポイント AIに前場の概況を聞いて",
+        "summary": "【話題の事実】投資家話題ランキングは8位。情報源は2種類（投資家話題・アナリスト）。同日言及は4件。【材料】びたのに結局伸びきらない) 5位 (40) テリロジーホールディングス(5133) Y K 掲 6位 (36) アドバンテスト(6857) Y K 掲 AIコメント アドテスト、AI需要追い風で株価急騰か(METAやLAM RESEARCHの決算好調 韓国半導体株急反発が追い風 AI・半導体需要の旺盛さ) 7位 (32) 太陽誘電(6976) Y K 掲 8位 (32) イビデン(4062) Y K 掲 9位 (31) 東京エレクトロン(8035) Y K 掲 10位 (30) アクリート(4395) Y K 掲 AIコメント PQC材料でアクリート連想買いか！(PQC関連材料で資金流入 サイバーセキュリティクラウド、サイバートラストとの連想買い 量子×サイバーセキュリティへの期待) (adsbygoogle = window.adsbygoogle || []).push({}); 前場の注目ポイント AIに前場の概況を聞いて / 決算レポート：東京エレクトロン（業績好調。先端ロジック、先端メモリともに製造装置需要の増加が続こう） - トウシル / 特集：5Gの現状と展望（日本電気、アンリツ） 銘柄レポート：東京エレクトロン（2021年3月期会社予想を公表、二桁増収増益へ） - トウシル【値動き確認】日次株価データからの確認材料はありません。",
+        "why": "【選定理由】複数種類の情報源で同日に言及が重なったため、単一記事だけの話題ではないと判断して残しました。",
+        "category": "株価上昇・需給/値動き",
+        "evidence": [
+          "投資家話題ランキングは8位",
+          "情報源は2種類（投資家話題・アナリスト）",
+          "同日言及は4件"
+        ],
+        "check_point": "見出しだけでは因果関係を断定しません。決算短信・適時開示・原記事本文など、リンク先の一次情報を確認してください。",
+        "source_count": 2,
+        "mention_count": 4,
+        "sources": [
+          "投資家話題",
+          "アナリスト"
+        ],
+        "detail": "びたのに結局伸びきらない) 5位 (40) テリロジーホールディングス(5133) Y K 掲 6位 (36) アドバンテスト(6857) Y K 掲 AIコメント アドテスト、AI需要追い風で株価急騰か(METAやLAM RESEARCHの決算好調 韓国半導体株急反発が追い風 AI・半導体需要の旺盛さ) 7位 (32) 太陽誘電(6976) Y K 掲 8位 (32) イビデン(4062) Y K 掲 9位 (31) 東京エレクトロン(8035) Y K 掲 10位 (30) アクリート(4395) Y K 掲 AIコメント PQC材料でアクリート連想買いか！(PQC関連材料で資金流入 サイバーセキュリティクラウド、サイバートラストとの連想買い 量子×サイバーセキュリティへの期待) (adsbygoogle = window.adsbygoogle || []).push({}); 前場の注目ポイント AIに前場の概況を聞いて / 決算レポート：東京エレクトロン（業績好調。先端ロジック、先端メモリともに製造装置需要の増加が続こう） - トウシル / 特集：5Gの現状と展望（日本電気、アンリツ） 銘柄レポート：東京エレクトロン（2021年3月期会社予想を公表、二桁増収増益へ） - トウシル",
+        "heat_score": 10.0
+      },
       "sources": [
         {
           "name": "チャートなび",
           "type": "investor",
-          "title": "データセクション、大口受注で株価続伸！",
-          "url": "https://chartnavi.com/scan/wadai/date/_20260926/"
+          "title": "びたのに結局伸びきらない) 5位 (40) テリロジーホールディングス(5133) Y K 掲 6位 (36) アドバンテスト(6857) Y K 掲 AIコメント アドテスト、AI需要追い風で株価急騰か(METAやLAM RESEARCHの決算好調 韓国半導体株急反発が追い風 AI・半導体需要の旺盛さ) 7位 (32) 太陽誘電(6976) Y K 掲 8位 (32) イビデン(4062) Y K 掲 9位 (31) 東京エレクトロン(8035) Y K 掲 10位 (30) アクリート(4395) Y K 掲 AIコメント PQC材料でアクリート連想買いか！(PQC関連材料で資金流入 サイバーセキュリティクラウド、サイバートラストとの連想買い 量子×サイバーセキュリティへの期待) (adsbygoogle = window.adsbygoogle || []).push({}); 前場の注目ポイント AIに前場の概況を聞いて",
+          "url": "https://chartnavi.com/scan/wadai/date/_20261022/"
+        },
+        {
+          "name": "アナリスト・レポート検索",
+          "type": "アナリスト",
+          "title": "決算レポート：東京エレクトロン（業績好調。先端ロジック、先端メモリともに製造装置需要の増加が続こう） - トウシル",
+          "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBVbktBa3ZWd3BDdmNyaU4tRlMxdDNxeTdhMmhpM2FjMENRWkI3WHpjUVdOX0dZanJVeG5QN0QtcmwtZFFaV1N6MzZxT3NwdnZLYzVDWDBrSHdGUQ?oc=5"
+        },
+        {
+          "name": "アナリスト・レポート検索",
+          "type": "アナリスト",
+          "title": "特集：5Gの現状と展望（日本電気、アンリツ） 銘柄レポート：東京エレクトロン（2021年3月期会社予想を公表、二桁増収増益へ） - トウシル",
+          "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1KTEZCR0czdi1tZ0FZRXhxLXBDdGJ2ZFBiNVRfbFF5Z1huTlhRYTRVTGRkT2hVRHI5dkZBYUR5aVRPNDZtNXRyRUM5RjdZbXFMQlBYZUY0RXQxdw?oc=5"
+        },
+        {
+          "name": "アナリスト・レポート検索",
+          "type": "アナリスト",
+          "title": "決算レポート：東京エレクトロン（会社側の2026年3月期業績予想は下方修正された。TSMCに関する情報漏洩事件が捜査中） - トウシル",
+          "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBYS3pTc2JDeUpHemcxRzQzU3A3aDBDMlAwTXBTZmZTZ2ZwX241Wm4tRWV6YmI1RE9PZngwYlBMcUU0UGpEQ09fck5PblYwNTBPU00zQjJqR0U0QQ?oc=5"
         }
       ],
+      "selection_eligible": true
+    },
+    {
+      "code": "285A",
+      "name": "キオクシアホールディングス",
+      "market": "プライム（内国株式）",
+      "industry": null,
+      "source_types": [
+        "アナリスト",
+        "ニュース"
+      ],
+      "score": 9.0,
+      "kabu_score": 40,
+      "signal": "WATCH",
+      "rsi14": 25.0,
+      "change": 2.82,
+      "volume_ratio": 1.27,
+      "heat_score": 8.0,
+      "selection_basis": [
+        "2種類の情報源",
+        "同日3件の言及"
+      ],
+      "reason": "2種類の情報源＋同日3件の言及（話題強度8.0）。",
+      "movement_type": "複数情報源で話題",
+      "material_summary": "SKハイニックスの自社株買いでキオクシアホールディングス急伸！/日経平均反発【今日の注目株＆日本株市場見通し】「デイリーZAi」8月20日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
       "explanation": {
-        "why_selected": "投資家話題ランキング5位＋当日の話題化",
-        "what_is_happening": "データセクション、大口受注で株価続伸！",
-        "material_category": "受注・案件材料",
+        "why_selected": "2種類の情報源",
+        "what_is_happening": "SKハイニックスの自社株買いでキオクシアホールディングス急伸！/日経平均反発【今日の注目株＆日本株市場見通し】「デイリーZAi」8月20日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
+        "material_category": "株価上昇・需給/値動き",
         "score_breakdown": {
-          "source_types": 1,
-          "mentions": 1,
-          "investor_rank": 5
+          "source_types": 2,
+          "mentions": 3,
+          "investor_rank": null
         }
       },
-      "movement_type": "受注・案件材料"
+      "research_memo": {
+        "headline": "SKハイニックスの自社株買いでキオクシアホールディングス急伸！/日経平均反発【今日の注目株＆日本株市場見通し】「デイリーZAi」8月20日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
+        "summary": "【話題の事実】情報源は2種類（アナリスト・ニュース）。同日言及は3件。【材料】SKハイニックスの自社株買いでキオクシアホールディングス急伸！/日経平均反発【今日の注目株＆日本株市場見通し】「デイリーZAi」8月20日号（ダイヤモンド・ザイ） - Yahoo!ニュース / ［動画］決算レポート：キオクシアホールディングス（大幅増収増益が続く。株価に極端な割安感がある） - トウシル / 決算レポート：キオクシアホールディングス（大幅増収増益が続く。株価に極端な割安感がある） - トウシル【値動き確認】株価は前日比+2.82%。出来高は平常比1.3倍。",
+        "why": "【選定理由】複数種類の情報源で同日に言及が重なったため、単一記事だけの話題ではないと判断して残しました。",
+        "category": "株価上昇・需給/値動き",
+        "evidence": [
+          "情報源は2種類（アナリスト・ニュース）",
+          "同日言及は3件",
+          "株価は前日比+2.82%",
+          "出来高は平常比1.3倍"
+        ],
+        "check_point": "見出しだけでは因果関係を断定しません。決算短信・適時開示・原記事本文など、リンク先の一次情報を確認してください。",
+        "source_count": 2,
+        "mention_count": 3,
+        "sources": [
+          "アナリスト",
+          "ニュース"
+        ],
+        "detail": "SKハイニックスの自社株買いでキオクシアホールディングス急伸！/日経平均反発【今日の注目株＆日本株市場見通し】「デイリーZAi」8月20日号（ダイヤモンド・ザイ） - Yahoo!ニュース / ［動画］決算レポート：キオクシアホールディングス（大幅増収増益が続く。株価に極端な割安感がある） - トウシル / 決算レポート：キオクシアホールディングス（大幅増収増益が続く。株価に極端な割安感がある） - トウシル",
+        "heat_score": 8.0
+      },
+      "sources": [
+        {
+          "name": "ニュース・話題検索",
+          "type": "ニュース",
+          "title": "SKハイニックスの自社株買いでキオクシアホールディングス急伸！/日経平均反発【今日の注目株＆日本株市場見通し】「デイリーZAi」8月20日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
+          "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE1sYWwya0NPN2pySk1jaTFOWm9sWGxCS0hqUC1ad2xKNXhXbzNUM1dHZ2syT3lzZVA2TWphT2ltV3NvaFgtVEh6MURweW5vS3lGcEp1cUk0ZGRmQ0NhQzJaa1RQM1o0UGJDczBGWFNEdDB1MU52NUd1NWNGUTlWa00?oc=5"
+        },
+        {
+          "name": "アナリスト・レポート検索",
+          "type": "アナリスト",
+          "title": "［動画］決算レポート：キオクシアホールディングス（大幅増収増益が続く。株価に極端な割安感がある） - トウシル",
+          "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5BR20yZUk4UzBGVzllN0dwOXl1bFFOVlRfZnVDQk5pN1NndGRRd0FPdVY2Qlc2MFJMN1BWclhiVlAzMFM4bFdnb1pRelhUZVhyOWIwbXRXek5RQQ?oc=5"
+        },
+        {
+          "name": "アナリスト・レポート検索",
+          "type": "アナリスト",
+          "title": "決算レポート：キオクシアホールディングス（大幅増収増益が続く。株価に極端な割安感がある） - トウシル",
+          "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1wTzBxd0VHNGN5MmQyTVFSNzJud1VHVm9kSlNLNHh1Y3RMa3loXzl6aDlBQWRNam5CWEVnM2ZZd09IQzFnbGFmT2hJNlhtWkpybGhQZ2wxR2RMZw?oc=5"
+        }
+      ],
+      "selection_eligible": true
     }
   ]
 }
