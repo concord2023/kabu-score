@@ -84,6 +84,45 @@
     throw new Error(errors.join(' / ') || '最新スナップショットを取得できません');
   }
 
+  // Fetch genuinely current quotes on demand, as the previously working
+  // version did. The published JSON snapshot is only a fallback: re-reading a
+  // static file cannot itself refresh market prices.
+  async function fetchLiveQuotes(codes) {
+    const symbols = codes.map(c => c.endsWith('.T') ? c : `${c}.T`).join(',');
+    const url = 'https://query1.finance.yahoo.com/v7/finance/spark?' + new URLSearchParams({
+      symbols, range: '1d', interval: '1m', indicators: 'close',
+      includeTimestamps: 'false', includePrePost: 'false', corsDomain: 'finance.yahoo.com'
+    });
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
+    let response;
+    try {
+      response = await fetch(url, { cache: 'no-store', mode: 'cors', signal: controller.signal });
+    } finally {
+      clearTimeout(timeout);
+    }
+    if (!response.ok) throw new Error(`Yahoo Finance HTTP ${response.status}`);
+    const data = await response.json();
+    const out = {};
+    for (const item of (data?.spark?.result || [])) {
+      const meta = (item?.response || [])[0]?.meta || {};
+      const symbol = meta.symbol || item.symbol;
+      const price = Number(meta.regularMarketPrice);
+      if (!symbol || !Number.isFinite(price) || price <= 0) continue;
+      const prev = Number(meta.previousClose ?? meta.chartPreviousClose);
+      const change = Number.isFinite(prev) && prev > 0 ? price - prev : null;
+      const stamp = Number(meta.regularMarketTime);
+      out[String(symbol).replace(/\.T$/, '')] = {
+        symbol, price, previous_close: Number.isFinite(prev) ? prev : null,
+        change, change_pct: change != null && prev > 0 ? change / prev * 100 : null,
+        market_time: stamp ? new Date(stamp * 1000).toISOString() : null,
+        quote_type: 'yahoo_browser_live'
+      };
+    }
+    if (!Object.keys(out).length) throw new Error('Yahoo Financeから有効な株価が返りませんでした');
+    return out;
+  }
+
   function dailyQuoteFor(code, ranking) {
     const row = (ranking?.ranking || []).find(x => String(x.code) === String(code));
     if (!row) return null;
@@ -157,11 +196,39 @@
       const ranking = await fetchRanking();
       const rowDays = (ranking?.ranking || []).map(x => jstDay(x?.details?.date || x?.date)).filter(Boolean).sort();
       const dailyDay = rowDays.length ? rowDays[rowDays.length - 1] : jstDay(ranking?.updated_at);
+
+      // First attempt a fresh Yahoo request on the button click. This is the
+      // actual live path; the static snapshot below is only a backup.
+      let liveQuotes = {};
+      let liveError = null;
+      try { liveQuotes = await fetchLiveQuotes(codes); } catch (e) { liveError = e; }
+      if (Object.keys(liveQuotes).length) {
+        const livePayload = {
+          updated_at: new Date().toISOString(), market_date: dailyDay,
+          source: 'Yahoo Finance browser live', requested: codes.length,
+          quotes: liveQuotes, fallback: false
+        };
+        const appliedLive = applyActualQuotes(rows, livePayload, dailyDay);
+        storeQuotes(liveQuotes, dailyDay, livePayload);
+        if (appliedLive && typeof window.kabuScoreApplyRealtime === 'function') window.kabuScoreApplyRealtime();
+        if (appliedLive === codes.length) {
+          const elapsed = ((performance.now() - started) / 1000).toFixed(1);
+          updateStatus(`ライブ取得 ${appliedLive}/${codes.length}銘柄｜Yahoo Finance｜${elapsed}秒｜日本時間`, 'ok');
+          return;
+        }
+      }
+
       let payload = null;
       let snapshotError = null;
       try { payload = await fetchSnapshot(); } catch (e) { snapshotError = e; }
+      // If Yahoo returned some symbols but the snapshot is unavailable, retain
+      // and display those fresh quotes rather than discarding them.
+      if (!payload && Object.keys(liveQuotes).length) {
+        payload = { updated_at: new Date().toISOString(), market_date: dailyDay,
+          requested: codes.length, quotes: liveQuotes, source: 'Yahoo Finance browser live', fallback: false };
+      }
 
-      if (!payload) {
+      if (!payload && !Object.keys(liveQuotes).length) {
         if (!ranking) throw snapshotError || new Error('株価データも日次データも取得できませんでした');
         updateStatus(`リアルタイム取得失敗｜日次データを維持（${dailyDay || '日付不明'}）｜${snapshotError?.message || 'スナップショットなし'}`, 'error');
         return;
@@ -169,11 +236,14 @@
 
       const payloadDay = jstDay(payload.market_date) || Object.values(payload.quotes || {})
         .map(q => jstDay(q?.market_time)).filter(Boolean).sort().slice(-1)[0] || null;
-      if (dailyDay && payloadDay && payloadDay < dailyDay) {
+      if (!Object.keys(liveQuotes).length && dailyDay && payloadDay && payloadDay < dailyDay) {
         updateStatus(`古い株価スナップショットのため適用しません｜日次データ ${dailyDay} を維持｜スナップショット ${payloadDay}`, 'warn');
         return;
       }
 
+      if (Object.keys(liveQuotes).length) {
+        payload = { ...payload, quotes: { ...(payload.quotes || {}), ...liveQuotes }, source: 'Yahoo Finance browser live + snapshot' };
+      }
       const applied = applyActualQuotes(rows, payload, dailyDay);
       storeQuotes(payload.quotes, dailyDay, payload);
       if (applied && typeof window.kabuScoreApplyRealtime === 'function') window.kabuScoreApplyRealtime();
@@ -182,12 +252,12 @@
       const stamp = formatJst(payload.updated_at);
       const elapsed = ((performance.now() - started) / 1000).toFixed(1);
       const requested = Number(payload.requested) || codes.length;
-      const fallback = Boolean(payload.fallback) || actualCount < requested || applied < codes.length;
+      const fallback = Boolean(payload.fallback) || actualCount < requested || applied < codes.length || Boolean(liveError);
       const ageMinutes = payload.updated_at ? Math.max(0, Math.floor((Date.now() - new Date(payload.updated_at).getTime()) / 60000)) : null;
       const stale = ageMinutes == null || !Number.isFinite(ageMinutes) || ageMinutes >= 10;
       const freshness = stale ? `｜⚠ スナップショットが古い（${ageMinutes == null || !Number.isFinite(ageMinutes) ? '更新時刻不明' : `${ageMinutes}分前`}）` : `｜${ageMinutes}分前`;
       if (applied > 0) {
-        updateStatus(`${fallback ? '一部取得' : '取得'} ${applied}/${codes.length}銘柄｜サーバー更新 ${stamp}（日本時間）${freshness}｜${elapsed}秒${fallback ? '｜未取得分は日次データ' : ''}`, stale ? 'error' : fallback ? 'warn' : 'ok');
+        updateStatus(`${fallback ? '一部取得' : '取得'} ${applied}/${codes.length}銘柄｜サーバー更新 ${stamp}（日本時間）${freshness}｜${elapsed}秒${fallback ? `｜未取得分は日次データ${liveError ? `（直接取得: ${liveError.message}）` : ''}` : ''}`, stale ? 'error' : fallback ? 'warn' : 'ok');
       } else {
         updateStatus(`リアルタイム値なし｜日次データを維持｜スナップショット更新 ${stamp}（日本時間）｜Yahoo取得 ${actualCount}/${requested}${freshness}`, 'warn');
       }
