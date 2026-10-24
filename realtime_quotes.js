@@ -84,42 +84,84 @@
     throw new Error(errors.join(' / ') || '最新スナップショットを取得できません');
   }
 
-  // Fetch genuinely current quotes on demand, as the previously working
-  // version did. The published JSON snapshot is only a fallback: re-reading a
-  // static file cannot itself refresh market prices.
-  async function fetchLiveQuotes(codes) {
-    const symbols = codes.map(c => c.endsWith('.T') ? c : `${c}.T`).join(',');
-    const url = 'https://query1.finance.yahoo.com/v7/finance/spark?' + new URLSearchParams({
-      symbols, range: '1d', interval: '1m', indicators: 'close',
-      includeTimestamps: 'false', includePrePost: 'false', corsDomain: 'finance.yahoo.com'
-    });
+  // Direct Yahoo Finance retrieval, rebuilt as an isolated module.
+  // Try the multi-symbol Spark endpoint first; if its response is blocked,
+  // empty, or has a different shape, retry each ticker through the Chart API.
+  // Static JSON is intentionally not considered a live quote.
+  function parseYahooItem(item, fallbackSymbol) {
+    const response = (item?.response || [])[0] || item || {};
+    const meta = response.meta || item?.meta || {};
+    const symbol = String(meta.symbol || item?.symbol || fallbackSymbol || '');
+    const priceCandidates = [meta.regularMarketPrice, meta.postMarketPrice, meta.preMarketPrice];
+    const price = priceCandidates.map(Number).find(n => Number.isFinite(n) && n > 0);
+    if (!symbol || price == null) return null;
+    const prevCandidates = [meta.previousClose, meta.chartPreviousClose];
+    const prev = prevCandidates.map(Number).find(n => Number.isFinite(n) && n > 0);
+    const stamp = Number(meta.regularMarketTime || meta.postMarketTime || meta.preMarketTime);
+    const change = prev != null ? price - prev : null;
+    return {
+      symbol, price, previous_close: prev ?? null, change,
+      change_pct: change != null && prev > 0 ? change / prev * 100 : null,
+      market_time: stamp > 0 ? new Date(stamp * 1000).toISOString() : null,
+      quote_type: 'yahoo_browser_live'
+    };
+  }
+
+  async function fetchWithTimeout(url, timeoutMs = 7000) {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000);
-    let response;
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
     try {
-      response = await fetch(url, { cache: 'no-store', mode: 'cors', signal: controller.signal });
+      const response = await fetch(url, { cache: 'no-store', mode: 'cors', credentials: 'omit', signal: controller.signal });
+      if (!response.ok) throw new Error(`Yahoo HTTP ${response.status}`);
+      return await response.json();
     } finally {
-      clearTimeout(timeout);
+      clearTimeout(timer);
     }
-    if (!response.ok) throw new Error(`Yahoo Finance HTTP ${response.status}`);
-    const data = await response.json();
+  }
+
+  async function fetchLiveQuotes(codes) {
+    const symbols = [...new Set(codes.map(c => String(c).trim()).filter(Boolean)
+      .map(c => c.endsWith('.T') ? c : `${c}.T`))];
+    if (!symbols.length) throw new Error('取得対象の銘柄コードがありません');
     const out = {};
-    for (const item of (data?.spark?.result || [])) {
-      const meta = (item?.response || [])[0]?.meta || {};
-      const symbol = meta.symbol || item.symbol;
-      const price = Number(meta.regularMarketPrice);
-      if (!symbol || !Number.isFinite(price) || price <= 0) continue;
-      const prev = Number(meta.previousClose ?? meta.chartPreviousClose);
-      const change = Number.isFinite(prev) && prev > 0 ? price - prev : null;
-      const stamp = Number(meta.regularMarketTime);
-      out[String(symbol).replace(/\.T$/, '')] = {
-        symbol, price, previous_close: Number.isFinite(prev) ? prev : null,
-        change, change_pct: change != null && prev > 0 ? change / prev * 100 : null,
-        market_time: stamp ? new Date(stamp * 1000).toISOString() : null,
-        quote_type: 'yahoo_browser_live'
-      };
+    const errors = [];
+
+    // Path A: one request for all symbols. This was the original fast path.
+    try {
+      const url = 'https://query1.finance.yahoo.com/v7/finance/spark?' + new URLSearchParams({
+        symbols: symbols.join(','), range: '1d', interval: '1m', indicators: 'close',
+        includeTimestamps: 'false', includePrePost: 'false', corsDomain: 'finance.yahoo.com'
+      });
+      const data = await fetchWithTimeout(url, 8000);
+      const results = data?.spark?.result || data?.spark?.results || [];
+      for (const item of results) {
+        const q = parseYahooItem(item, item?.symbol);
+        if (q) out[q.symbol.replace(/\.T$/, '')] = q;
+      }
+    } catch (e) { errors.push(`Spark: ${e?.message || e}`); }
+
+    // Path B: Chart API per missing ticker. Avoid losing every ticker because
+    // one symbol or the batch endpoint failed; cap concurrency to four.
+    const missing = symbols.filter(s => !out[s.replace(/\.T$/, '')]);
+    let cursor = 0;
+    const workers = Array.from({ length: Math.min(4, missing.length) }, async () => {
+      while (cursor < missing.length) {
+        const symbol = missing[cursor++];
+        try {
+          const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?range=1d&interval=1m&includePrePost=false`;
+          const data = await fetchWithTimeout(url, 7000);
+          const result = data?.chart?.result?.[0];
+          const q = result ? parseYahooItem({ symbol, meta: result.meta }, symbol) : null;
+          if (q) out[q.symbol.replace(/\.T$/, '')] = q;
+          else errors.push(`${symbol}: 有効な価格がありません`);
+        } catch (e) { errors.push(`${symbol}: ${e?.message || e}`); }
+      }
+    });
+    await Promise.all(workers);
+    if (!Object.keys(out).length) {
+      const reason = errors.slice(0, 3).join(' / ') || 'Yahoo Financeから有効な株価が返りませんでした';
+      throw new Error(reason);
     }
-    if (!Object.keys(out).length) throw new Error('Yahoo Financeから有効な株価が返りませんでした');
     return out;
   }
 
