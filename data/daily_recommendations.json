@@ -1,13 +1,13 @@
 {
-  "updated_at": "2026-10-27T23:24:05.565653+09:00",
-  "date": "2026-10-27",
+  "updated_at": "2026-10-29T00:04:30.715458+09:00",
+  "date": "2026-10-29",
   "title": "今日の注目5選",
   "status": "ok",
   "method": "同日公開の投資家話題・ニュース/開示・大量保有・カタリスト・アナリスト・テーマ・YouTubeを複数の検索角度から収集。投資家話題順位、情報源の種類、同日言及数、株価/出来高、具体的材料を組み合わせ、複数のルートのいずれかを満たす銘柄を最大5件表示する。無理に5件へ水増ししない。これはBUY判定ではない。",
   "source_policy": "各記事・動画へのリンクと発信元を保存。外部情報の注目度とkabu-scoreの総合BUY判定は別物として表示する。",
   "errors": [],
-  "candidate_pool": 81,
-  "eligible_count": 14,
+  "candidate_pool": 68,
+  "eligible_count": 11,
   "candidates": [
     {
       "code": "6857",
@@ -16,64 +16,56 @@
       "industry": null,
       "source_types": [
         "YouTube",
-        "investor",
         "アナリスト",
-        "ニュース"
+        "ニュース",
+        "開示"
       ],
-      "score": 29.6,
+      "score": 24.2,
       "kabu_score": null,
       "signal": null,
       "rsi14": null,
       "change": null,
       "volume_ratio": null,
-      "heat_score": 15.0,
+      "heat_score": 10.0,
       "selection_basis": [
-        "投資家話題2位以内",
         "4種類の情報源",
-        "同日7件の言及"
+        "同日8件の言及"
       ],
-      "reason": "投資家話題2位以内＋4種類の情報源＋同日7件の言及（話題強度15.0）。",
+      "reason": "4種類の情報源＋同日8件の言及（話題強度10.0）。",
       "movement_type": "複数情報源で話題",
-      "material_summary": "ア、迷走続く需給悪化の重圧(大幅なギャップアップからの寄り天、その後の失速 米国市場や韓国市場の半導体関連株との乖離 信用買い残の多さと東芝の売り圧力による需給の悪化) 2位 (384) データセクション(3905) Y K 掲 AIコメント データセク3連S高！AIデータセンター事業が加速(AIデータセンター事業の商業稼働開始 大口受注案件の稼働開始 タイ・オーストラリアでのデータセンター投資追い風) 3位 (115) アドバンテスト(6857) Y K 掲 AIコメント アドバンテスト、決算控え急反発！AI・半導体関連が相場を牽引(決算発表を目前に控え、押し目買い優勢の流れ SOX指数2.8％上昇でAI・半導体関連がリバウンド 日経平均の上げ幅の半分超を押し上げる寄与度) 4位 (114) サイバートラスト(4498) Y K 掲 AIコメント サイバートラスト S高連発！決算控え相場を席巻(ストップ高連発の勢い 10月29",
+      "material_summary": "来週（8/31～9/4）の日経平均株価の予想レンジは、6万4000～6万9000円！ 米･長期金利の動向や、キオクシア、アドバンテストなど半導体株の動向に注目！ - ダイヤモンド・オンライン",
       "explanation": {
-        "why_selected": "投資家話題ランキング2位＋4種類の情報源",
-        "what_is_happening": "ア、迷走続く需給悪化の重圧(大幅なギャップアップからの寄り天、その後の失速 米国市場や韓国市場の半導体関連株との乖離 信用買い残の多さと東芝の売り圧力による需給の悪化) 2位 (384) データセクション(3905) Y K 掲 AIコメント データセク3連S高！AIデータセンター事業が加速(AIデータセンター事業の商業稼働開始 大口受注案件の稼働開始 タイ・オーストラリアでのデータセンター投資追い風) 3位 (115) アドバンテスト(6857) Y K 掲 AIコメント アドバンテスト、決算控え急反発！AI・半導体関連が相場を牽引(決算発表を目前に控え、押し目買い優勢の流れ SOX指数2.8％上昇でAI・半導体関連がリバウンド 日経平均の上げ幅の半分超を押し上げる寄与度) 4位 (114) サイバートラスト(4498) Y K 掲 AIコメント サイバートラスト S高連発！決算控え相場を席巻(ストップ高連発の勢い 10月29",
-        "material_category": "株価上昇・需給/値動き",
+        "why_selected": "4種類の情報源",
+        "what_is_happening": "来週（8/31～9/4）の日経平均株価の予想レンジは、6万4000～6万9000円！ 米･長期金利の動向や、キオクシア、アドバンテストなど半導体株の動向に注目！ - ダイヤモンド・オンライン",
+        "material_category": "AI・半導体/データセンターテーマ",
         "score_breakdown": {
           "source_types": 4,
-          "mentions": 7,
-          "investor_rank": 2
+          "mentions": 8,
+          "investor_rank": null
         }
       },
       "research_memo": {
-        "headline": "ア、迷走続く需給悪化の重圧(大幅なギャップアップからの寄り天、その後の失速 米国市場や韓国市場の半導体関連株との乖離 信用買い残の多さと東芝の売り圧力による需給の悪化) 2位 (384) データセクション(3905) Y K 掲 AIコメント データセク3連S高！AIデータセンター事業が加速(AIデータセンター事業の商業稼働開始 大口受注案件の稼働開始 タイ・オーストラリアでのデータセンター投資追い風) 3位 (115) アドバンテスト(6857) Y K 掲 AIコメント アドバンテスト、決算控え急反発！AI・半導体関連が相場を牽引(決算発表を目前に控え、押し目買い優勢の流れ SOX指数2.8％上昇でAI・半導体関連がリバウンド 日経平均の上げ幅の半分超を押し上げる寄与度) 4位 (114) サイバートラスト(4498) Y K 掲 AIコメント サイバートラスト S高連発！決算控え相場を席巻(ストップ高連発の勢い 10月29",
-        "summary": "【話題の事実】投資家話題ランキングは2位。情報源は4種類（YouTube・投資家話題・アナリスト・ニュース）。同日言及は7件。【材料】ア、迷走続く需給悪化の重圧(大幅なギャップアップからの寄り天、その後の失速 米国市場や韓国市場の半導体関連株との乖離 信用買い残の多さと東芝の売り圧力による需給の悪化) 2位 (384) データセクション(3905) Y K 掲 AIコメント データセク3連S高！AIデータセンター事業が加速(AIデータセンター事業の商業稼働開始 大口受注案件の稼働開始 タイ・オーストラリアでのデータセンター投資追い風) 3位 (115) アドバンテスト(6857) Y K 掲 AIコメント アドバンテスト、決算控え急反発！AI・半導体関連が相場を牽引(決算発表を目前に控え、押し目買い優勢の流れ SOX指数2.8％上昇でAI・半導体関連がリバウンド 日経平均の上げ幅の半分超を押し上げる寄与度) 4位 (114) サイバートラスト(4498) Y K 掲 AIコメント サイバートラスト S高連発！決算控え相場を席巻(ストップ高連発の勢い 10月29 / 来週（8/31～9/4）の日経平均株価の予想レンジは、6万4000～6万9000円！ 米･長期金利の動向や、キオクシア、アドバンテストなど半導体株の動向に注目！ - ダイヤモンド・オンライン / 日経平均6万円でも恩恵なし…なぜ？ 対策は/アドバンテスト急落/日経平均反落【今日の注目株＆日本株市場見通し】「デイリーZAi」4月28日号 - ダイヤモンド・オンライン【値動き確認】日次株価データからの確認材料はありません。",
-        "why": "【選定理由】投資家話題の上位に入り、上記の情報量・材料・値動きの確認がそろったため、当日の注目候補として残しました。",
-        "category": "株価上昇・需給/値動き",
+        "headline": "来週（8/31～9/4）の日経平均株価の予想レンジは、6万4000～6万9000円！ 米･長期金利の動向や、キオクシア、アドバンテストなど半導体株の動向に注目！ - ダイヤモンド・オンライン",
+        "summary": "【話題の事実】情報源は4種類（YouTube・アナリスト・ニュース・開示）。同日言及は8件。【材料】来週（8/31～9/4）の日経平均株価の予想レンジは、6万4000～6万9000円！ 米･長期金利の動向や、キオクシア、アドバンテストなど半導体株の動向に注目！ - ダイヤモンド・オンライン / (株)アドバンテスト【6857】：株価・株式情報（夜間PTS含む） - Yahoo!ファイナンス / 決算レポート：アドバンテスト（会社側は2026年3月期業績予想を上方修正した） - トウシル【値動き確認】日次株価データからの確認材料はありません。",
+        "why": "【選定理由】複数種類の情報源で同日に言及が重なったため、単一記事だけの話題ではないと判断して残しました。",
+        "category": "AI・半導体/データセンターテーマ",
         "evidence": [
-          "投資家話題ランキングは2位",
-          "情報源は4種類（YouTube・投資家話題・アナリスト・ニュース）",
-          "同日言及は7件"
+          "情報源は4種類（YouTube・アナリスト・ニュース・開示）",
+          "同日言及は8件"
         ],
         "check_point": "見出しだけでは因果関係を断定しません。決算短信・適時開示・原記事本文など、リンク先の一次情報を確認してください。",
         "source_count": 4,
-        "mention_count": 7,
+        "mention_count": 8,
         "sources": [
           "YouTube",
-          "投資家話題",
           "アナリスト",
-          "ニュース"
+          "ニュース",
+          "開示"
         ],
-        "detail": "ア、迷走続く需給悪化の重圧(大幅なギャップアップからの寄り天、その後の失速 米国市場や韓国市場の半導体関連株との乖離 信用買い残の多さと東芝の売り圧力による需給の悪化) 2位 (384) データセクション(3905) Y K 掲 AIコメント データセク3連S高！AIデータセンター事業が加速(AIデータセンター事業の商業稼働開始 大口受注案件の稼働開始 タイ・オーストラリアでのデータセンター投資追い風) 3位 (115) アドバンテスト(6857) Y K 掲 AIコメント アドバンテスト、決算控え急反発！AI・半導体関連が相場を牽引(決算発表を目前に控え、押し目買い優勢の流れ SOX指数2.8％上昇でAI・半導体関連がリバウンド 日経平均の上げ幅の半分超を押し上げる寄与度) 4位 (114) サイバートラスト(4498) Y K 掲 AIコメント サイバートラスト S高連発！決算控え相場を席巻(ストップ高連発の勢い 10月29 / 来週（8/31～9/4）の日経平均株価の予想レンジは、6万4000～6万9000円！ 米･長期金利の動向や、キオクシア、アドバンテストなど半導体株の動向に注目！ - ダイヤモンド・オンライン / 日経平均6万円でも恩恵なし…なぜ？ 対策は/アドバンテスト急落/日経平均反落【今日の注目株＆日本株市場見通し】「デイリーZAi」4月28日号 - ダイヤモンド・オンライン",
-        "heat_score": 15.0
+        "detail": "来週（8/31～9/4）の日経平均株価の予想レンジは、6万4000～6万9000円！ 米･長期金利の動向や、キオクシア、アドバンテストなど半導体株の動向に注目！ - ダイヤモンド・オンライン / (株)アドバンテスト【6857】：株価・株式情報（夜間PTS含む） - Yahoo!ファイナンス / 決算レポート：アドバンテスト（会社側は2026年3月期業績予想を上方修正した） - トウシル",
+        "heat_score": 10.0
       },
       "sources": [
-        {
-          "name": "チャートなび",
-          "type": "investor",
-          "title": "ア、迷走続く需給悪化の重圧(大幅なギャップアップからの寄り天、その後の失速 米国市場や韓国市場の半導体関連株との乖離 信用買い残の多さと東芝の売り圧力による需給の悪化) 2位 (384) データセクション(3905) Y K 掲 AIコメント データセク3連S高！AIデータセンター事業が加速(AIデータセンター事業の商業稼働開始 大口受注案件の稼働開始 タイ・オーストラリアでのデータセンター投資追い風) 3位 (115) アドバンテスト(6857) Y K 掲 AIコメント アドバンテスト、決算控え急反発！AI・半導体関連が相場を牽引(決算発表を目前に控え、押し目買い優勢の流れ SOX指数2.8％上昇でAI・半導体関連がリバウンド 日経平均の上げ幅の半分超を押し上げる寄与度) 4位 (114) サイバートラスト(4498) Y K 掲 AIコメント サイバートラスト S高連発！決算控え相場を席巻(ストップ高連発の勢い 10月29",
-          "url": "https://chartnavi.com/scan/wadai/date/_20261027/"
-        },
         {
           "name": "ニュース・材料検索",
           "type": "ニュース",
@@ -81,16 +73,22 @@
           "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE5xTTJ4RHpnSzVySDlFamlwck40SHBTUDlJNE5FQWFkRk1Tb2NuYUFLUGlQdHpxZEEwMmNYVzRVdVpFbDVLS0tsMWJINnNoeTh3NEZJ?oc=5"
         },
         {
-          "name": "ニュース・話題検索",
-          "type": "ニュース",
-          "title": "日経平均6万円でも恩恵なし…なぜ？ 対策は/アドバンテスト急落/日経平均反落【今日の注目株＆日本株市場見通し】「デイリーZAi」4月28日号 - ダイヤモンド・オンライン",
-          "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE13bzR0WkxGVlFoVVNsazRFOGVvZ3BQblhxc2lVZkRPVDExelhpSTVnNkJlUVR3di1LaGRMSjdKM1B1eXdFRERyQjZaS1ZIRHFKWVJj?oc=5"
+          "name": "大量保有・開示検索",
+          "type": "開示",
+          "title": "(株)アドバンテスト【6857】：株価・株式情報（夜間PTS含む） - Yahoo!ファイナンス",
+          "url": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE80ODFhVkl4c0RrbGt6VUdSSFRUNE9jVlNhWU5fcUY5UWk0ckJJUV85bFMxd2h1TU5rTXhLcDAtMnFoZzlUZ1VYcG85WG9tRk5jY1E?oc=5"
         },
         {
-          "name": "ニュース・話題検索",
-          "type": "ニュース",
-          "title": "金利低下でアドバンテストなど半導体株急伸、霞ヶ関Cは上方修正/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月18日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
-          "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE5GYUNBUGIzV2liM21LbnBqNF9TUDlQcjMzT29GWlcyX0FqZlc3Q0p4cC1Da3FRaWFtbHBkYnJWUmJVYlg5ZmwwSy1QRndhNXQ3X2RKSVpibWEwcE1wM1V3ZE9OWl8xdHVnd05EY2RibVhBdEZ0RmFKeExab0xNRUk?oc=5"
+          "name": "アナリスト・レポート検索",
+          "type": "アナリスト",
+          "title": "決算レポート：アドバンテスト（会社側は2026年3月期業績予想を上方修正した） - トウシル",
+          "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE9wVlJfMnlQR1I1WnRxUEhSdFlhVzlUSWcwaTF3a3ZWR3dsdm1EeTh0SzMyLTdZQkJHcXo1UUc3cTdMb0ROcDdOVFpsODI4dFg4UE1jaWotMjYyUQ?oc=5"
+        },
+        {
+          "name": "アナリスト・レポート検索",
+          "type": "アナリスト",
+          "title": "［動画］銘柄レポート：アドバンテスト（楽天証券の業績予想を上方修正し、目標株価を引き上げる） - トウシル",
+          "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1lS3EwV3l6REVSa3FJb2txczJQQWZXWU8zdVJBQ0w0c09IY3JkeS1TSDM2aUZVTFJkVHV1NW5LUHNoWlNORWw3cmZYVXJmMGJwdFhLV3B3anN6Zw?oc=5"
         },
         {
           "name": "アナリスト・レポート検索",
@@ -101,179 +99,8 @@
         {
           "name": "YouTube検索",
           "type": "YouTube",
-          "title": "【12日で8000円下落】AI・半導体株は決算で反転できる？アドバンテスト・キオクシアから読む今週の勝負所【今週の相場解説】 - YouTube",
-          "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTFB4TVN0bHpsbjZwbWtXV2RXUTlOMHJuOHBFM1ZadHU5VWQxV21VN0RydG1maVJHVmJaRFdkX1d3ZTFQcnZnTEFmT3N1dUs1eFJjenNMQWx3?oc=5"
-        }
-      ],
-      "selection_eligible": true
-    },
-    {
-      "code": "7970",
-      "name": "信越ポリマー",
-      "market": "プライム（内国株式）",
-      "industry": null,
-      "source_types": [
-        "YouTube",
-        "investor",
-        "ニュース"
-      ],
-      "score": 14.9,
-      "kabu_score": null,
-      "signal": null,
-      "rsi14": null,
-      "change": null,
-      "volume_ratio": null,
-      "heat_score": 11.0,
-      "selection_basis": [
-        "3種類の情報源",
-        "同日3件の言及"
-      ],
-      "reason": "3種類の情報源＋同日3件の言及（話題強度11.0）。",
-      "movement_type": "複数情報源で話題",
-      "material_summary": "ア、決算控え急騰か 09:10 信越ポリ、自社株買いも発表し急騰 注目のキーワード この24時間で投資家がよく発言したワードについてAIが解説します。 キオクシア キオクシアの株価が低迷し、一部投資家が損失を被っている状況。 半導体 日本市場全体で半導体関連銘柄が弱く、投資家の不安が増大している。 今日、急騰し始めた銘柄 今日動き始めた銘柄(初動株)を速報します。 09:04 SCHOO(264A) Y K 掲 09:10 信越ポリマー(7970) Y K 掲 09:10 早稲田アカデミー(4718) Y K 掲 09:22 倉元製作所(5216) Y K 掲 09:53 夢みつけ隊(2673) Y K 掲 10:02 鈴茂器工(6405) Y K 掲 14:03 大日本塗料(4611) Y K 掲 14:37 メディカルシステムネットワーク(4350) Y K 掲 よく発言されたワード 投資家が発言したワードを9分おきにチェッ",
-      "explanation": {
-        "why_selected": "投資家話題ランキング10位＋3種類の情報源",
-        "what_is_happening": "ア、決算控え急騰か 09:10 信越ポリ、自社株買いも発表し急騰 注目のキーワード この24時間で投資家がよく発言したワードについてAIが解説します。 キオクシア キオクシアの株価が低迷し、一部投資家が損失を被っている状況。 半導体 日本市場全体で半導体関連銘柄が弱く、投資家の不安が増大している。 今日、急騰し始めた銘柄 今日動き始めた銘柄(初動株)を速報します。 09:04 SCHOO(264A) Y K 掲 09:10 信越ポリマー(7970) Y K 掲 09:10 早稲田アカデミー(4718) Y K 掲 09:22 倉元製作所(5216) Y K 掲 09:53 夢みつけ隊(2673) Y K 掲 10:02 鈴茂器工(6405) Y K 掲 14:03 大日本塗料(4611) Y K 掲 14:37 メディカルシステムネットワーク(4350) Y K 掲 よく発言されたワード 投資家が発言したワードを9分おきにチェッ",
-        "material_category": "株価上昇・需給/値動き",
-        "score_breakdown": {
-          "source_types": 3,
-          "mentions": 3,
-          "investor_rank": 10
-        }
-      },
-      "research_memo": {
-        "headline": "ア、決算控え急騰か 09:10 信越ポリ、自社株買いも発表し急騰 注目のキーワード この24時間で投資家がよく発言したワードについてAIが解説します。 キオクシア キオクシアの株価が低迷し、一部投資家が損失を被っている状況。 半導体 日本市場全体で半導体関連銘柄が弱く、投資家の不安が増大している。 今日、急騰し始めた銘柄 今日動き始めた銘柄(初動株)を速報します。 09:04 SCHOO(264A) Y K 掲 09:10 信越ポリマー(7970) Y K 掲 09:10 早稲田アカデミー(4718) Y K 掲 09:22 倉元製作所(5216) Y K 掲 09:53 夢みつけ隊(2673) Y K 掲 10:02 鈴茂器工(6405) Y K 掲 14:03 大日本塗料(4611) Y K 掲 14:37 メディカルシステムネットワーク(4350) Y K 掲 よく発言されたワード 投資家が発言したワードを9分おきにチェッ",
-        "summary": "【話題の事実】投資家話題ランキングは10位。情報源は3種類（YouTube・投資家話題・ニュース）。同日言及は3件。【材料】ア、決算控え急騰か 09:10 信越ポリ、自社株買いも発表し急騰 注目のキーワード この24時間で投資家がよく発言したワードについてAIが解説します。 キオクシア キオクシアの株価が低迷し、一部投資家が損失を被っている状況。 半導体 日本市場全体で半導体関連銘柄が弱く、投資家の不安が増大している。 今日、急騰し始めた銘柄 今日動き始めた銘柄(初動株)を速報します。 09:04 SCHOO(264A) Y K 掲 09:10 信越ポリマー(7970) Y K 掲 09:10 早稲田アカデミー(4718) Y K 掲 09:22 倉元製作所(5216) Y K 掲 09:53 夢みつけ隊(2673) Y K 掲 10:02 鈴茂器工(6405) Y K 掲 14:03 大日本塗料(4611) Y K 掲 14:37 メディカルシステムネットワーク(4350) Y K 掲 よく発言されたワード 投資家が発言したワードを9分おきにチェッ / 信越ポリマーとコーエーテクモが上方修正、神戸物産は月次堅調/日経平均反発【今日の注目株＆日本株市場見通し】「デイリーZAi」10月27日号（ダイヤモンド・ザイ） - Yahoo!ニュース / 総利回り8.5%登場！出た！株式１０分割！信越ポリマー上方修正・増配。コーエーテクモ上方修正増配～あす上がる株 2026年１０月２７日（火）に上がる銘柄。最新の日本株情報。高配当株の株価やデイトレ情報 - YouTube【値動き確認】日次株価データからの確認材料はありません。",
-        "why": "【選定理由】複数種類の情報源で同日に言及が重なったため、単一記事だけの話題ではないと判断して残しました。",
-        "category": "株価上昇・需給/値動き",
-        "evidence": [
-          "投資家話題ランキングは10位",
-          "情報源は3種類（YouTube・投資家話題・ニュース）",
-          "同日言及は3件"
-        ],
-        "check_point": "見出しだけでは因果関係を断定しません。決算短信・適時開示・原記事本文など、リンク先の一次情報を確認してください。",
-        "source_count": 3,
-        "mention_count": 3,
-        "sources": [
-          "YouTube",
-          "投資家話題",
-          "ニュース"
-        ],
-        "detail": "ア、決算控え急騰か 09:10 信越ポリ、自社株買いも発表し急騰 注目のキーワード この24時間で投資家がよく発言したワードについてAIが解説します。 キオクシア キオクシアの株価が低迷し、一部投資家が損失を被っている状況。 半導体 日本市場全体で半導体関連銘柄が弱く、投資家の不安が増大している。 今日、急騰し始めた銘柄 今日動き始めた銘柄(初動株)を速報します。 09:04 SCHOO(264A) Y K 掲 09:10 信越ポリマー(7970) Y K 掲 09:10 早稲田アカデミー(4718) Y K 掲 09:22 倉元製作所(5216) Y K 掲 09:53 夢みつけ隊(2673) Y K 掲 10:02 鈴茂器工(6405) Y K 掲 14:03 大日本塗料(4611) Y K 掲 14:37 メディカルシステムネットワーク(4350) Y K 掲 よく発言されたワード 投資家が発言したワードを9分おきにチェッ / 信越ポリマーとコーエーテクモが上方修正、神戸物産は月次堅調/日経平均反発【今日の注目株＆日本株市場見通し】「デイリーZAi」10月27日号（ダイヤモンド・ザイ） - Yahoo!ニュース / 総利回り8.5%登場！出た！株式１０分割！信越ポリマー上方修正・増配。コーエーテクモ上方修正増配～あす上がる株 2026年１０月２７日（火）に上がる銘柄。最新の日本株情報。高配当株の株価やデイトレ情報 - YouTube",
-        "heat_score": 11.0
-      },
-      "sources": [
-        {
-          "name": "チャートなび",
-          "type": "investor",
-          "title": "ア、決算控え急騰か 09:10 信越ポリ、自社株買いも発表し急騰 注目のキーワード この24時間で投資家がよく発言したワードについてAIが解説します。 キオクシア キオクシアの株価が低迷し、一部投資家が損失を被っている状況。 半導体 日本市場全体で半導体関連銘柄が弱く、投資家の不安が増大している。 今日、急騰し始めた銘柄 今日動き始めた銘柄(初動株)を速報します。 09:04 SCHOO(264A) Y K 掲 09:10 信越ポリマー(7970) Y K 掲 09:10 早稲田アカデミー(4718) Y K 掲 09:22 倉元製作所(5216) Y K 掲 09:53 夢みつけ隊(2673) Y K 掲 10:02 鈴茂器工(6405) Y K 掲 14:03 大日本塗料(4611) Y K 掲 14:37 メディカルシステムネットワーク(4350) Y K 掲 よく発言されたワード 投資家が発言したワードを9分おきにチェッ",
-          "url": "https://chartnavi.com/scan/wadai/date/_20261027/"
-        },
-        {
-          "name": "ニュース・話題検索",
-          "type": "ニュース",
-          "title": "信越ポリマーとコーエーテクモが上方修正、神戸物産は月次堅調/日経平均反発【今日の注目株＆日本株市場見通し】「デイリーZAi」10月27日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
-          "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTFBEMzlsUlctZklLWHZZMmhWRjU0a05oR1RGLU5xVUV1OTNybkhKYkh5TDMyQmktVGVSRzhsU3dDeUsxbVM2WWtNM2sxNHlCalhWQjZ2dXNrd3FuMGZOOWVmNmRQRE9nNXcwZVhZZFZhdUZXdVZfUlkzSnpkWDhXZEk?oc=5"
-        },
-        {
-          "name": "YouTube検索",
-          "type": "YouTube",
-          "title": "総利回り8.5%登場！出た！株式１０分割！信越ポリマー上方修正・増配。コーエーテクモ上方修正増配～あす上がる株 2026年１０月２７日（火）に上がる銘柄。最新の日本株情報。高配当株の株価やデイトレ情報 - YouTube",
-          "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTFB2RUhXV3gzakVpQ2xXSU5BSXlCaENKRU5MZWpQUDdwQWM5ZFRZbVk2YVdSLUNGWlN0MHYwU2psMXJ4YmFGRVFUcURGOW9kRmtVODJfc1Vn?oc=5"
-        }
-      ],
-      "selection_eligible": true
-    },
-    {
-      "code": "9434",
-      "name": "ソフトバンク",
-      "market": "プライム（内国株式）",
-      "industry": null,
-      "source_types": [
-        "YouTube",
-        "テーマ",
-        "ニュース"
-      ],
-      "score": 21.3,
-      "kabu_score": null,
-      "signal": null,
-      "rsi14": null,
-      "change": null,
-      "volume_ratio": null,
-      "heat_score": 10.0,
-      "selection_basis": [
-        "3種類の情報源",
-        "同日7件の言及"
-      ],
-      "reason": "3種類の情報源＋同日7件の言及（話題強度10.0）。",
-      "movement_type": "複数情報源で話題",
-      "material_summary": "ソフトバンクGが米警備大手の買収検討、三菱電機は鴻海から出資/日経平均反落【今日の注目株＆日本株市場見通し】「デイリーZAi」10月19日号(ダイヤモンド・ザイ) - Yahoo!ファイナンス",
-      "explanation": {
-        "why_selected": "3種類の情報源",
-        "what_is_happening": "ソフトバンクGが米警備大手の買収検討、三菱電機は鴻海から出資/日経平均反落【今日の注目株＆日本株市場見通し】「デイリーZAi」10月19日号(ダイヤモンド・ザイ) - Yahoo!ファイナンス",
-        "material_category": "株価下落・警戒",
-        "score_breakdown": {
-          "source_types": 3,
-          "mentions": 7,
-          "investor_rank": null
-        }
-      },
-      "research_memo": {
-        "headline": "ソフトバンクGが米警備大手の買収検討、三菱電機は鴻海から出資/日経平均反落【今日の注目株＆日本株市場見通し】「デイリーZAi」10月19日号(ダイヤモンド・ザイ) - Yahoo!ファイナンス",
-        "summary": "【話題の事実】情報源は3種類（YouTube・テーマ・ニュース）。同日言及は7件。【材料】ソフトバンクGが米警備大手の買収検討、三菱電機は鴻海から出資/日経平均反落【今日の注目株＆日本株市場見通し】「デイリーZAi」10月19日号(ダイヤモンド・ザイ) - Yahoo!ファイナンス / オープンAIの上場延期でソフトバンクGが急落、神戸物産は大幅高/日経平均続落【今日の注目株＆日本株市場見通し】「デイリーZAi」9月14日号(ダイヤモンド・ザイ) - Yahoo!ファイナンス / ソフトバンクG買い先行、住友電工・NECはメタと海底ケーブル/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月24日号（ダイヤモンド・ザイ） - Yahoo!ニュース【値動き確認】日次株価データからの確認材料はありません。",
-        "why": "【選定理由】複数種類の情報源で同日に言及が重なったため、単一記事だけの話題ではないと判断して残しました。",
-        "category": "株価下落・警戒",
-        "evidence": [
-          "情報源は3種類（YouTube・テーマ・ニュース）",
-          "同日言及は7件"
-        ],
-        "check_point": "見出しだけでは因果関係を断定しません。決算短信・適時開示・原記事本文など、リンク先の一次情報を確認してください。",
-        "source_count": 3,
-        "mention_count": 7,
-        "sources": [
-          "YouTube",
-          "テーマ",
-          "ニュース"
-        ],
-        "detail": "ソフトバンクGが米警備大手の買収検討、三菱電機は鴻海から出資/日経平均反落【今日の注目株＆日本株市場見通し】「デイリーZAi」10月19日号(ダイヤモンド・ザイ) - Yahoo!ファイナンス / オープンAIの上場延期でソフトバンクGが急落、神戸物産は大幅高/日経平均続落【今日の注目株＆日本株市場見通し】「デイリーZAi」9月14日号(ダイヤモンド・ザイ) - Yahoo!ファイナンス / ソフトバンクG買い先行、住友電工・NECはメタと海底ケーブル/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月24日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
-        "heat_score": 10.0
-      },
-      "sources": [
-        {
-          "name": "ニュース・話題検索",
-          "type": "ニュース",
-          "title": "ソフトバンクGが米警備大手の買収検討、三菱電機は鴻海から出資/日経平均反落【今日の注目株＆日本株市場見通し】「デイリーZAi」10月19日号(ダイヤモンド・ザイ) - Yahoo!ファイナンス",
-          "url": "https://news.google.com/rss/articles/CBMihwFBVV95cUxNcElESFZjQmViVHFEekJlUkxrM0dDOE1ubkhxeE82Mm45aE1PakJZclo2djBkVEhUanZLZjRzREVBZ1A4R2J1a2RMdG53c2ZxaDM2emw2bVlmTHBvMGw3OWJJRUhmOHJka1AyOG13NjZBQVNoS2dDNUxmYWNnYlJpNTBiMVZTSGM?oc=5"
-        },
-        {
-          "name": "ニュース・話題検索",
-          "type": "ニュース",
-          "title": "オープンAIの上場延期でソフトバンクGが急落、神戸物産は大幅高/日経平均続落【今日の注目株＆日本株市場見通し】「デイリーZAi」9月14日号(ダイヤモンド・ザイ) - Yahoo!ファイナンス",
-          "url": "https://news.google.com/rss/articles/CBMihwFBVV95cUxONEhZN05BZVppbU5UWkVQZ0VYb1RWUHhxSkxYeWZTaDV6Z1JtZnNkdGg1cFRVblpvMG4xT29ZRFRla2lDcm5KbmNtUy1BMi16RFJwa191QzdtTVB4R3VhOW56eXMwR2ZCcldkRTdibThGdEdIeU1FR0phWk5IM0VTbFZ0dEU3VjQ?oc=5"
-        },
-        {
-          "name": "ニュース・話題検索",
-          "type": "ニュース",
-          "title": "ソフトバンクG買い先行、住友電工・NECはメタと海底ケーブル/日経平均続伸【今日の注目株＆日本株市場見通し】「デイリーZAi」9月24日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
-          "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE5ob0trUkc1ZThBQ25zcURRcGtkNHJ4bTlLbmdpeW9JZUtjWXVXWVhScmg0cU9VSE04aVFwV0lpUmFwRTBqdzB0SkxfWER4YXkxb1F2bVdzSWFMeXF4dm9VUFJldm5FcWtBaU9OdjY0OUVFS2R0ZGhIakNmbkxVcDA?oc=5"
-        },
-        {
-          "name": "ニュース・話題検索",
-          "type": "ニュース",
-          "title": "円高でセリアや神戸物産が急伸、金利低下でソフトバンクグループも/日経平均反発【今日の注目株＆日本株市場見通し】「デイリーZAi」9月4日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
-          "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE41Rl9qY1h0d2NCSFZnaWRIRWFBV054TlBramtacnNpU2FWa0tZZ2RWdk84OGFXaE4wYW5VVzBfclBpTVRkNDh1bW1OdXExQmNkeFNSQXF5bElzWVI4WEdCdEZQbnJ2NkhiYmNwcTZlT2ljX01uVEJvWjRqR2VHWlE?oc=5"
-        },
-        {
-          "name": "ニュース・話題検索",
-          "type": "ニュース",
-          "title": "オープンAIの上場延期でソフトバンクGが急落、神戸物産は大幅高/日経平均続落【今日の注目株＆日本株市場見通し】「デイリーZAi」9月14日号 (ダイヤモンド・ザイ) - Yahoo!ニュース",
-          "url": "https://news.google.com/rss/articles/CBMijgFBVV95cUxPM1hEZUl6clU3R2tCTFVIWWw0ZTRlREtJYzRpVHdnLTR2N0tKM2hadms4bmJpNEViMnpfbGFUUFFsOGNhR0gtejdFQnh1TFFNcG0xaUdKUXF6cDFkM3N1WHUxeFR5anVwa0paNnVsM3hxRDdRSWZReHd4REE4Q3pTT0JQeXdKOTktVy1HT2pn?oc=5"
-        },
-        {
-          "name": "テーマ・業界検索",
-          "type": "テーマ",
-          "title": "「AIデータセンター」関連銘柄を紹介！ オープンAIがソフトバンクGやオラクルなどと提携して｢巨大AIデータセンター｣建設を発表するなど、世界中で需要拡大！ - ダイヤモンド・オンライン",
-          "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTFBxR1ZjdFBnRjctRnBUYWpKNFhHYTRZSUN2NE85eUtjcEZlakVhaTlhZzdqMUlvYkR3ZUR5RjQtMWNvX2JKX0Y4bVFiYjkzUEZOTFBV?oc=5"
+          "title": "【ライブ】日経平均株価上昇 アドバンテスト 三菱UFJ/ブロードコム好決算 ディスコ半導体銘柄影響/四季報発売直前注目銘柄解説/株式投資/最新情報｜3月5日(木)〈Every Stock NEWS〉 - YouTube",
+          "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTFBRZk11RlgyUXhzSXlmbXVNbHkwZlBSZlJCcHlYWE1IWklQLUpQMUVTdkNJcGN2eU5TY3k0b0Y3VXlfWjFyTlpkYzV6Qld3OEdtLURxM0FB?oc=5"
         }
       ],
       "selection_eligible": true
@@ -288,18 +115,18 @@
         "ニュース",
         "開示"
       ],
-      "score": 16.7,
+      "score": 11.7,
       "kabu_score": null,
       "signal": null,
       "rsi14": null,
       "change": null,
       "volume_ratio": null,
-      "heat_score": 10.0,
+      "heat_score": 9.0,
       "selection_basis": [
         "3種類の情報源",
-        "同日5件の言及"
+        "同日3件の言及"
       ],
-      "reason": "3種類の情報源＋同日5件の言及（話題強度10.0）。",
+      "reason": "3種類の情報源＋同日3件の言及（話題強度9.0）。",
       "movement_type": "複数情報源で話題",
       "material_summary": "ファナックやKOA、川崎汽船が上方修正！ 半導体装置は売り/日経平均続落【今日の注目株＆日本株市場見通し】「デイリーZAi」10月26日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
       "explanation": {
@@ -308,29 +135,29 @@
         "material_category": "決算・業績材料",
         "score_breakdown": {
           "source_types": 3,
-          "mentions": 5,
+          "mentions": 3,
           "investor_rank": null
         }
       },
       "research_memo": {
         "headline": "ファナックやKOA、川崎汽船が上方修正！ 半導体装置は売り/日経平均続落【今日の注目株＆日本株市場見通し】「デイリーZAi」10月26日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
-        "summary": "【話題の事実】情報源は3種類（YouTube・ニュース・開示）。同日言及は5件。【材料】ファナックやKOA、川崎汽船が上方修正！ 半導体装置は売り/日経平均続落【今日の注目株＆日本株市場見通し】「デイリーZAi」10月26日号（ダイヤモンド・ザイ） - Yahoo!ニュース / キオクシアは株式分割＆自社株買い！ ファナックは部材調達難/日経平均反落【今日の注目株＆日本株市場見通し】「デイリーZAi」8月3日号 (ダイヤモンド・ザイ) - Yahoo!ニュース / キオクシアは株式分割＆自社株買い！ ファナックは部材調達難/日経平均反落【今日の注目株＆日本株市場見通し】「デイリーZAi」8月3日号（ダイヤモンド・ザイ） - Yahoo!ニュース【値動き確認】日次株価データからの確認材料はありません。",
+        "summary": "【話題の事実】情報源は3種類（YouTube・ニュース・開示）。同日言及は3件。【材料】ファナックやKOA、川崎汽船が上方修正！ 半導体装置は売り/日経平均続落【今日の注目株＆日本株市場見通し】「デイリーZAi」10月26日号（ダイヤモンド・ザイ） - Yahoo!ニュース / ファナック(株)【6954】：株価・株式情報（夜間PTS含む） - Yahoo!ファイナンス / 【8月3日(月)東京株式市場】日経平均株価は3日ぶり反落📉607円安／#協調介入 、市場は何を警戒？／#キオクシア 上昇、株主還元強化を好感／#ファナック 急落、市場予想届かず4カ月ぶり安値 - YouTube【値動き確認】日次株価データからの確認材料はありません。",
         "why": "【選定理由】複数種類の情報源で同日に言及が重なったため、単一記事だけの話題ではないと判断して残しました。",
         "category": "決算・業績材料",
         "evidence": [
           "情報源は3種類（YouTube・ニュース・開示）",
-          "同日言及は5件"
+          "同日言及は3件"
         ],
         "check_point": "見出しだけでは因果関係を断定しません。決算短信・適時開示・原記事本文など、リンク先の一次情報を確認してください。",
         "source_count": 3,
-        "mention_count": 5,
+        "mention_count": 3,
         "sources": [
           "YouTube",
           "ニュース",
           "開示"
         ],
-        "detail": "ファナックやKOA、川崎汽船が上方修正！ 半導体装置は売り/日経平均続落【今日の注目株＆日本株市場見通し】「デイリーZAi」10月26日号（ダイヤモンド・ザイ） - Yahoo!ニュース / キオクシアは株式分割＆自社株買い！ ファナックは部材調達難/日経平均反落【今日の注目株＆日本株市場見通し】「デイリーZAi」8月3日号 (ダイヤモンド・ザイ) - Yahoo!ニュース / キオクシアは株式分割＆自社株買い！ ファナックは部材調達難/日経平均反落【今日の注目株＆日本株市場見通し】「デイリーZAi」8月3日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
-        "heat_score": 10.0
+        "detail": "ファナックやKOA、川崎汽船が上方修正！ 半導体装置は売り/日経平均続落【今日の注目株＆日本株市場見通し】「デイリーZAi」10月26日号（ダイヤモンド・ザイ） - Yahoo!ニュース / ファナック(株)【6954】：株価・株式情報（夜間PTS含む） - Yahoo!ファイナンス / 【8月3日(月)東京株式市場】日経平均株価は3日ぶり反落📉607円安／#協調介入 、市場は何を警戒？／#キオクシア 上昇、株主還元強化を好感／#ファナック 急落、市場予想届かず4カ月ぶり安値 - YouTube",
+        "heat_score": 9.0
       },
       "sources": [
         {
@@ -338,18 +165,6 @@
           "type": "ニュース",
           "title": "ファナックやKOA、川崎汽船が上方修正！ 半導体装置は売り/日経平均続落【今日の注目株＆日本株市場見通し】「デイリーZAi」10月26日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
           "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTFBfNG5kdndpajFrMmlKMF85aGlEMmFmWGhnWEVGaVBQWGtYWngza29GUVdMdU5nejdJN3VGbkx2em10d2NtU3BnX25MWUF0cTNlLWhhNFdTeEdlVFM5bTFpMTBOQThteUY0aW9jMW1GQlh1MlRhMFhQNEtnekJYNmc?oc=5"
-        },
-        {
-          "name": "ニュース・話題検索",
-          "type": "ニュース",
-          "title": "キオクシアは株式分割＆自社株買い！ ファナックは部材調達難/日経平均反落【今日の注目株＆日本株市場見通し】「デイリーZAi」8月3日号 (ダイヤモンド・ザイ) - Yahoo!ニュース",
-          "url": "https://news.google.com/rss/articles/CBMijgFBVV95cUxNLXE0VnFKdVBld1NkejIwYzM0dlVoV2M5cWFYelJPNExTME00NFJrNGRRQXBxZFJYS3hsajJqQ0VUY3hvNVAxYjItaEJpbnNCMXhqWDhBTzBmMm1NemNNWnFET3djdV9NQVNpWDB6RjA5YnIyNUVtaUp2QjhBY085cUhsQnI5bnVsUXdxSXV3?oc=5"
-        },
-        {
-          "name": "ニュース・話題検索",
-          "type": "ニュース",
-          "title": "キオクシアは株式分割＆自社株買い！ ファナックは部材調達難/日経平均反落【今日の注目株＆日本株市場見通し】「デイリーZAi」8月3日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
-          "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTFAxdUFlNDM3Z0FtcmxlRlZDNklleERUSVVQaGZlazFOU0kyUUU5MUltSDMxMGltRGw5WTZiT29xSFlmZUtwQVlZbkN6MUNIMi1TT0hkVjg5UFhFUkNXTVcwRE91Q285eF81VnMtRnMtVWhtcXNJcE1sQldsekQyNE0?oc=5"
         },
         {
           "name": "大量保有・開示検索",
@@ -360,22 +175,22 @@
         {
           "name": "YouTube検索",
           "type": "YouTube",
-          "title": "日経平均は243円安スタート、前日SOX指数小幅高でAI・半導体株下げは限定的？／地銀再編期待や長期金地上昇で銀行株⇧【10月26日(月)寄り付き】松本の個別銘柄解説：ファナック、滋賀銀、池田泉州HD - YouTube",
-          "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTFBOVktzUFBCbjRpNkt3TTBwclByejBoTjZRMnhKZEtaMXRCaURRdjVmcGVfNEFTYjhLNndFa0Zsak1OMlcxd3FBdTZfX0s1R3lMZlU0OXZB?oc=5"
+          "title": "【8月3日(月)東京株式市場】日経平均株価は3日ぶり反落📉607円安／#協調介入 、市場は何を警戒？／#キオクシア 上昇、株主還元強化を好感／#ファナック 急落、市場予想届かず4カ月ぶり安値 - YouTube",
+          "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE9fek1DNnZNV0xiQl9FTkV2b09IdVBvNXlXNFNTakRubnZGbzZfdU9aRHdpQ3h2ZGYyaUNXZnJOdGRUTWgzQWhjaUdXZ2U3c2tnd0F5RmRR?oc=5"
         }
       ],
       "selection_eligible": true
     },
     {
-      "code": "9984",
-      "name": "ソフトバンクグループ",
+      "code": "9434",
+      "name": "ソフトバンク",
       "market": "プライム（内国株式）",
       "industry": null,
       "source_types": [
-        "investor",
-        "ニュース"
+        "YouTube",
+        "テーマ"
       ],
-      "score": 12.0,
+      "score": 16.3,
       "kabu_score": null,
       "signal": null,
       "rsi14": null,
@@ -384,53 +199,224 @@
       "heat_score": 8.0,
       "selection_basis": [
         "2種類の情報源",
-        "同日2件の言及"
+        "同日7件の言及"
       ],
-      "reason": "2種類の情報源＋同日2件の言及（話題強度8.0）。",
+      "reason": "2種類の情報源＋同日7件の言及（話題強度8.0）。",
       "movement_type": "複数情報源で話題",
-      "material_summary": "柄との連動性) 5位 (66) 豊和工業(6203) Y K 掲 AIコメント 豊和工業、乱高下も3000円通過点か(政府の防衛費拡大検討で注目 プロドローンとの協業で生産体制強化 出来高1000万株超え、異常な値動き) 6位 (65) イビデン(4062) Y K 掲 AIコメント イビデン、AI・半導体株物色で急騰(AI・半導体株物色の追い風 インテル株への評価の動き 日経平均押し上げへの寄与) 7位 (59) ソフトバンクグループ(9984) Y K 掲 AIコメント ソフトバンクG、AI期待で急反発！売られすぎ感からの反攻(米アンソロピック上場期待でAI関連への追い風 直近下落による売られすぎ感からの反発 日経平均押し上げに貢献する寄与度上位銘柄) 8位 (56) ユビキタスＡＩ(3858) Y K 掲 AIコメント ユビキタスAI、脆弱性発見でS高張り付き(Penzzerによる未知の情報漏えい脆弱性発見 IoT・産業機",
+      "material_summary": "「AIデータセンター」関連銘柄を紹介！ オープンAIがソフトバンクGやオラクルなどと提携して｢巨大AIデータセンター｣建設を発表するなど、世界中で需要拡大！ - ダイヤモンド・オンライン",
       "explanation": {
-        "why_selected": "投資家話題ランキング6位＋2種類の情報源",
-        "what_is_happening": "柄との連動性) 5位 (66) 豊和工業(6203) Y K 掲 AIコメント 豊和工業、乱高下も3000円通過点か(政府の防衛費拡大検討で注目 プロドローンとの協業で生産体制強化 出来高1000万株超え、異常な値動き) 6位 (65) イビデン(4062) Y K 掲 AIコメント イビデン、AI・半導体株物色で急騰(AI・半導体株物色の追い風 インテル株への評価の動き 日経平均押し上げへの寄与) 7位 (59) ソフトバンクグループ(9984) Y K 掲 AIコメント ソフトバンクG、AI期待で急反発！売られすぎ感からの反攻(米アンソロピック上場期待でAI関連への追い風 直近下落による売られすぎ感からの反発 日経平均押し上げに貢献する寄与度上位銘柄) 8位 (56) ユビキタスＡＩ(3858) Y K 掲 AIコメント ユビキタスAI、脆弱性発見でS高張り付き(Penzzerによる未知の情報漏えい脆弱性発見 IoT・産業機",
-        "material_category": "株価上昇・需給/値動き",
+        "why_selected": "2種類の情報源",
+        "what_is_happening": "「AIデータセンター」関連銘柄を紹介！ オープンAIがソフトバンクGやオラクルなどと提携して｢巨大AIデータセンター｣建設を発表するなど、世界中で需要拡大！ - ダイヤモンド・オンライン",
+        "material_category": "AI・半導体/データセンターテーマ",
         "score_breakdown": {
           "source_types": 2,
-          "mentions": 2,
-          "investor_rank": 6
+          "mentions": 7,
+          "investor_rank": null
         }
       },
       "research_memo": {
-        "headline": "柄との連動性) 5位 (66) 豊和工業(6203) Y K 掲 AIコメント 豊和工業、乱高下も3000円通過点か(政府の防衛費拡大検討で注目 プロドローンとの協業で生産体制強化 出来高1000万株超え、異常な値動き) 6位 (65) イビデン(4062) Y K 掲 AIコメント イビデン、AI・半導体株物色で急騰(AI・半導体株物色の追い風 インテル株への評価の動き 日経平均押し上げへの寄与) 7位 (59) ソフトバンクグループ(9984) Y K 掲 AIコメント ソフトバンクG、AI期待で急反発！売られすぎ感からの反攻(米アンソロピック上場期待でAI関連への追い風 直近下落による売られすぎ感からの反発 日経平均押し上げに貢献する寄与度上位銘柄) 8位 (56) ユビキタスＡＩ(3858) Y K 掲 AIコメント ユビキタスAI、脆弱性発見でS高張り付き(Penzzerによる未知の情報漏えい脆弱性発見 IoT・産業機",
-        "summary": "【話題の事実】投資家話題ランキングは6位。情報源は2種類（投資家話題・ニュース）。同日言及は2件。【材料】柄との連動性) 5位 (66) 豊和工業(6203) Y K 掲 AIコメント 豊和工業、乱高下も3000円通過点か(政府の防衛費拡大検討で注目 プロドローンとの協業で生産体制強化 出来高1000万株超え、異常な値動き) 6位 (65) イビデン(4062) Y K 掲 AIコメント イビデン、AI・半導体株物色で急騰(AI・半導体株物色の追い風 インテル株への評価の動き 日経平均押し上げへの寄与) 7位 (59) ソフトバンクグループ(9984) Y K 掲 AIコメント ソフトバンクG、AI期待で急反発！売られすぎ感からの反攻(米アンソロピック上場期待でAI関連への追い風 直近下落による売られすぎ感からの反発 日経平均押し上げに貢献する寄与度上位銘柄) 8位 (56) ユビキタスＡＩ(3858) Y K 掲 AIコメント ユビキタスAI、脆弱性発見でS高張り付き(Penzzerによる未知の情報漏えい脆弱性発見 IoT・産業機 / 円高でセリアや神戸物産が急伸、金利低下でソフトバンクグループも/日経平均反発【今日の注目株＆日本株市場見通し】「デイリーZAi」9月4日号（ダイヤモンド・ザイ） - Yahoo!ニュース【値動き確認】日次株価データからの確認材料はありません。",
+        "headline": "「AIデータセンター」関連銘柄を紹介！ オープンAIがソフトバンクGやオラクルなどと提携して｢巨大AIデータセンター｣建設を発表するなど、世界中で需要拡大！ - ダイヤモンド・オンライン",
+        "summary": "【話題の事実】情報源は2種類（YouTube・テーマ）。同日言及は7件。【材料】「AIデータセンター」関連銘柄を紹介！ オープンAIがソフトバンクGやオラクルなどと提携して｢巨大AIデータセンター｣建設を発表するなど、世界中で需要拡大！ - ダイヤモンド・オンライン / 日経平均株価 下落/ソフトバンクG 米警備大手の買収検討/山田さんが注目する決算銘柄・業種特集！株式投資/最新情報｜10月19日(月)〈Every Stock NEWS〉 - YouTube / 【6月23日(火)東京株式市場】日経平均株価は9日ぶり反落📉7万円下回る／アーム株安の影響でソフトバンクG急落／太陽誘電は投資判断引き下げで下落／フジクラ一時14%高まで上昇、目標株価に接近 - YouTube【値動き確認】日次株価データからの確認材料はありません。",
         "why": "【選定理由】複数種類の情報源で同日に言及が重なったため、単一記事だけの話題ではないと判断して残しました。",
-        "category": "株価上昇・需給/値動き",
+        "category": "AI・半導体/データセンターテーマ",
         "evidence": [
-          "投資家話題ランキングは6位",
-          "情報源は2種類（投資家話題・ニュース）",
-          "同日言及は2件"
+          "情報源は2種類（YouTube・テーマ）",
+          "同日言及は7件"
         ],
         "check_point": "見出しだけでは因果関係を断定しません。決算短信・適時開示・原記事本文など、リンク先の一次情報を確認してください。",
         "source_count": 2,
-        "mention_count": 2,
+        "mention_count": 7,
         "sources": [
-          "投資家話題",
-          "ニュース"
+          "YouTube",
+          "テーマ"
         ],
-        "detail": "柄との連動性) 5位 (66) 豊和工業(6203) Y K 掲 AIコメント 豊和工業、乱高下も3000円通過点か(政府の防衛費拡大検討で注目 プロドローンとの協業で生産体制強化 出来高1000万株超え、異常な値動き) 6位 (65) イビデン(4062) Y K 掲 AIコメント イビデン、AI・半導体株物色で急騰(AI・半導体株物色の追い風 インテル株への評価の動き 日経平均押し上げへの寄与) 7位 (59) ソフトバンクグループ(9984) Y K 掲 AIコメント ソフトバンクG、AI期待で急反発！売られすぎ感からの反攻(米アンソロピック上場期待でAI関連への追い風 直近下落による売られすぎ感からの反発 日経平均押し上げに貢献する寄与度上位銘柄) 8位 (56) ユビキタスＡＩ(3858) Y K 掲 AIコメント ユビキタスAI、脆弱性発見でS高張り付き(Penzzerによる未知の情報漏えい脆弱性発見 IoT・産業機 / 円高でセリアや神戸物産が急伸、金利低下でソフトバンクグループも/日経平均反発【今日の注目株＆日本株市場見通し】「デイリーZAi」9月4日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
+        "detail": "「AIデータセンター」関連銘柄を紹介！ オープンAIがソフトバンクGやオラクルなどと提携して｢巨大AIデータセンター｣建設を発表するなど、世界中で需要拡大！ - ダイヤモンド・オンライン / 日経平均株価 下落/ソフトバンクG 米警備大手の買収検討/山田さんが注目する決算銘柄・業種特集！株式投資/最新情報｜10月19日(月)〈Every Stock NEWS〉 - YouTube / 【6月23日(火)東京株式市場】日経平均株価は9日ぶり反落📉7万円下回る／アーム株安の影響でソフトバンクG急落／太陽誘電は投資判断引き下げで下落／フジクラ一時14%高まで上昇、目標株価に接近 - YouTube",
         "heat_score": 8.0
       },
       "sources": [
         {
-          "name": "チャートなび",
-          "type": "investor",
-          "title": "柄との連動性) 5位 (66) 豊和工業(6203) Y K 掲 AIコメント 豊和工業、乱高下も3000円通過点か(政府の防衛費拡大検討で注目 プロドローンとの協業で生産体制強化 出来高1000万株超え、異常な値動き) 6位 (65) イビデン(4062) Y K 掲 AIコメント イビデン、AI・半導体株物色で急騰(AI・半導体株物色の追い風 インテル株への評価の動き 日経平均押し上げへの寄与) 7位 (59) ソフトバンクグループ(9984) Y K 掲 AIコメント ソフトバンクG、AI期待で急反発！売られすぎ感からの反攻(米アンソロピック上場期待でAI関連への追い風 直近下落による売られすぎ感からの反発 日経平均押し上げに貢献する寄与度上位銘柄) 8位 (56) ユビキタスＡＩ(3858) Y K 掲 AIコメント ユビキタスAI、脆弱性発見でS高張り付き(Penzzerによる未知の情報漏えい脆弱性発見 IoT・産業機",
-          "url": "https://chartnavi.com/scan/wadai/date/_20261027/"
+          "name": "テーマ・業界検索",
+          "type": "テーマ",
+          "title": "「AIデータセンター」関連銘柄を紹介！ オープンAIがソフトバンクGやオラクルなどと提携して｢巨大AIデータセンター｣建設を発表するなど、世界中で需要拡大！ - ダイヤモンド・オンライン",
+          "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTFBxR1ZjdFBnRjctRnBUYWpKNFhHYTRZSUN2NE85eUtjcEZlakVhaTlhZzdqMUlvYkR3ZUR5RjQtMWNvX2JKX0Y4bVFiYjkzUEZOTFBV?oc=5"
         },
         {
-          "name": "ニュース・話題検索",
-          "type": "ニュース",
-          "title": "円高でセリアや神戸物産が急伸、金利低下でソフトバンクグループも/日経平均反発【今日の注目株＆日本株市場見通し】「デイリーZAi」9月4日号（ダイヤモンド・ザイ） - Yahoo!ニュース",
-          "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE41Rl9qY1h0d2NCSFZnaWRIRWFBV054TlBramtacnNpU2FWa0tZZ2RWdk84OGFXaE4wYW5VVzBfclBpTVRkNDh1bW1OdXExQmNkeFNSQXF5bElzWVI4WEdCdEZQbnJ2NkhiYmNwcTZlT2ljX01uVEJvWjRqR2VHWlE?oc=5"
+          "name": "YouTube検索",
+          "type": "YouTube",
+          "title": "日経平均株価 下落/ソフトバンクG 米警備大手の買収検討/山田さんが注目する決算銘柄・業種特集！株式投資/最新情報｜10月19日(月)〈Every Stock NEWS〉 - YouTube",
+          "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE5uckdUcURvaFNlY2dxdGU1aXk3OENMbGpZY3N6ZTZ0cjZ0N1M4ZWtueWpTSURDWTF1RVU1eGt6bEhhdDBLRVVCMnZ3cU5jTFJGQzZDQlBB?oc=5"
+        },
+        {
+          "name": "YouTube検索",
+          "type": "YouTube",
+          "title": "【6月23日(火)東京株式市場】日経平均株価は9日ぶり反落📉7万円下回る／アーム株安の影響でソフトバンクG急落／太陽誘電は投資判断引き下げで下落／フジクラ一時14%高まで上昇、目標株価に接近 - YouTube",
+          "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE5ka0VaeVpzZlozcmZ6S0dTZXNDLTNoeUp1d2cyRkl2QWlTSlZIajlYc1RWT2dsR19aS21sdlZYV296ZzJ4MHRjMDM2YlBYSlAtTjBvTk53?oc=5"
+        },
+        {
+          "name": "YouTube検索",
+          "type": "YouTube",
+          "title": "【ライブ】日経平均株価 大幅下落/ソフトバンクGが急落/SBI ステーブルコイン発行/《決算速報》 西松屋 オークワ 壱番屋/株式投資/最新情報｜6月26日(金)〈Every Stock NEWS〉 - YouTube",
+          "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTFBGeVQ4T2ZaWkJpcVVuVV9MamhwZmlWWDV2Z04xRDhDOGpxQURrU3NsckVsTTgtVXhMbzM4U0lJemhnYzBIbXF1YXRNZ2Y3R3Btd1VpckFn?oc=5"
+        },
+        {
+          "name": "YouTube検索",
+          "type": "YouTube",
+          "title": "【ライブ】日経平均株価 大幅続落 １ドル160円台へ /ソフトバンクG 下落/東京のオフィス空室率が上昇/《決算速報》象印/株式投資/最新情報｜3月30日(月)〈Every Stock NEWS〉 - YouTube",
+          "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE91RkJNcWY2Z09Bb042SlpBbF9hRDB4c3dNa1BuNml3WHpncmh5TDJKOE5uT1NndFBDRV9ZVmhLX1FicGd5SWJNNzBKb09kWlYwVzBEQUt3?oc=5"
+        },
+        {
+          "name": "YouTube検索",
+          "type": "YouTube",
+          "title": "【6月3日(水)東京株式市場】日経平均株価は最高値更新📈初の6万8000円台／ソフトバンクGは利益確定売りか／IHIや三菱重など宇宙・防衛関連銘柄が下落／日経平均は2倍でも日本経済は2倍ではない - YouTube",
+          "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE42blowczQtQW1INEt0V0NwMTVlbVFibXExcUwzSEUyM29iNmRUdHJ1RHB5cXo4NU5iUk0ya1RrVzhQcmc0ZlBIX0lydzZkOV9vQUhyb3RR?oc=5"
+        }
+      ],
+      "selection_eligible": true
+    },
+    {
+      "code": "8035",
+      "name": "東京エレクトロン",
+      "market": "プライム（内国株式）",
+      "industry": null,
+      "source_types": [
+        "YouTube",
+        "アナリスト"
+      ],
+      "score": 12.5,
+      "kabu_score": null,
+      "signal": null,
+      "rsi14": null,
+      "change": null,
+      "volume_ratio": null,
+      "heat_score": 8.0,
+      "selection_basis": [
+        "2種類の情報源",
+        "同日5件の言及"
+      ],
+      "reason": "2種類の情報源＋同日5件の言及（話題強度8.0）。",
+      "movement_type": "複数情報源で話題",
+      "material_summary": "決算レポート：東京エレクトロン（業績好調。先端ロジック、先端メモリともに製造装置需要の増加が続こう） - トウシル",
+      "explanation": {
+        "why_selected": "2種類の情報源",
+        "what_is_happening": "決算レポート：東京エレクトロン（業績好調。先端ロジック、先端メモリともに製造装置需要の増加が続こう） - トウシル",
+        "material_category": "決算・業績材料",
+        "score_breakdown": {
+          "source_types": 2,
+          "mentions": 5,
+          "investor_rank": null
+        }
+      },
+      "research_memo": {
+        "headline": "決算レポート：東京エレクトロン（業績好調。先端ロジック、先端メモリともに製造装置需要の増加が続こう） - トウシル",
+        "summary": "【話題の事実】情報源は2種類（YouTube・アナリスト）。同日言及は5件。【材料】決算レポート：東京エレクトロン（業績好調。先端ロジック、先端メモリともに製造装置需要の増加が続こう） - トウシル / 決算レポート：東京エレクトロン（今期会社予想は上方修正された）、アマゾン・ドット・コム（北米が業績好調。AWSでは生成AIの品揃えが進む） - トウシル / 特集：5Gの現状と展望（日本電気、アンリツ） 銘柄レポート：東京エレクトロン（2021年3月期会社予想を公表、二桁増収増益へ） - トウシル【値動き確認】日次株価データからの確認材料はありません。",
+        "why": "【選定理由】複数種類の情報源で同日に言及が重なったため、単一記事だけの話題ではないと判断して残しました。",
+        "category": "決算・業績材料",
+        "evidence": [
+          "情報源は2種類（YouTube・アナリスト）",
+          "同日言及は5件"
+        ],
+        "check_point": "見出しだけでは因果関係を断定しません。決算短信・適時開示・原記事本文など、リンク先の一次情報を確認してください。",
+        "source_count": 2,
+        "mention_count": 5,
+        "sources": [
+          "YouTube",
+          "アナリスト"
+        ],
+        "detail": "決算レポート：東京エレクトロン（業績好調。先端ロジック、先端メモリともに製造装置需要の増加が続こう） - トウシル / 決算レポート：東京エレクトロン（今期会社予想は上方修正された）、アマゾン・ドット・コム（北米が業績好調。AWSでは生成AIの品揃えが進む） - トウシル / 特集：5Gの現状と展望（日本電気、アンリツ） 銘柄レポート：東京エレクトロン（2021年3月期会社予想を公表、二桁増収増益へ） - トウシル",
+        "heat_score": 8.0
+      },
+      "sources": [
+        {
+          "name": "アナリスト・レポート検索",
+          "type": "アナリスト",
+          "title": "決算レポート：東京エレクトロン（業績好調。先端ロジック、先端メモリともに製造装置需要の増加が続こう） - トウシル",
+          "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBVbktBa3ZWd3BDdmNyaU4tRlMxdDNxeTdhMmhpM2FjMENRWkI3WHpjUVdOX0dZanJVeG5QN0QtcmwtZFFaV1N6MzZxT3NwdnZLYzVDWDBrSHdGUQ?oc=5"
+        },
+        {
+          "name": "アナリスト・レポート検索",
+          "type": "アナリスト",
+          "title": "決算レポート：東京エレクトロン（今期会社予想は上方修正された）、アマゾン・ドット・コム（北米が業績好調。AWSでは生成AIの品揃えが進む） - トウシル",
+          "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBxQnI1TmRBNnRmSjRZbFlJS0tEOVpPNkdTRE5PdmI3WjJSdngtd0lqNDhSZm9CR0thdl9BaW9TcFFyenA5X21qN1NfUWRJUndJcklpSkhQVmN4QQ?oc=5"
+        },
+        {
+          "name": "アナリスト・レポート検索",
+          "type": "アナリスト",
+          "title": "特集：5Gの現状と展望（日本電気、アンリツ） 銘柄レポート：東京エレクトロン（2021年3月期会社予想を公表、二桁増収増益へ） - トウシル",
+          "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1KTEZCR0czdi1tZ0FZRXhxLXBDdGJ2ZFBiNVRfbFF5Z1huTlhRYTRVTGRkT2hVRHI5dkZBYUR5aVRPNDZtNXRyRUM5RjdZbXFMQlBYZUY0RXQxdw?oc=5"
+        },
+        {
+          "name": "アナリスト・レポート検索",
+          "type": "アナリスト",
+          "title": "2022年4-6月期決算レポート：東京エレクトロン（会社側は2022年暦年の半導体製造装置市場見通しを引き下げた） - トウシル",
+          "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1TNGdfeEJEemtIVHNObWRXVUx0V1NqNVlPcHdqUUhfd0QxWERUYVFybFh0S0szVUd3LTlDODQ5b19QdW8xT3dUSW9yaTh2TXFRMnNSXzg0Y0tudw?oc=5"
+        },
+        {
+          "name": "YouTube検索",
+          "type": "YouTube",
+          "title": "【ライブ】日経平均株価下落/商船三井 上場来高値/半導体株下落 東京エレクトロン キオクシア アドバンテスト/株式投資/最新情報｜3月19日(木)〈Every Stock NEWS〉 - YouTube",
+          "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE1vWXIxaDdqSzRZemxLaVYzZWFyV0VQMkdXUjYtRWRZbFVKZDNvQzB5WmMyWVhpenkzVDlLSl9sLWRwOFNIUVFhcE1sWHFiaUZSUlpKMkdn?oc=5"
+        }
+      ],
+      "selection_eligible": true
+    },
+    {
+      "code": "285A",
+      "name": "キオクシアホールディングス",
+      "market": "プライム（内国株式）",
+      "industry": null,
+      "source_types": [
+        "アナリスト"
+      ],
+      "score": 2.0,
+      "kabu_score": 55,
+      "signal": "WATCH",
+      "rsi14": 31.5,
+      "change": 13.76,
+      "volume_ratio": 2.05,
+      "heat_score": 8.0,
+      "selection_basis": [
+        "前日比+13.76%",
+        "出来高平常比2.0倍"
+      ],
+      "reason": "前日比+13.76%＋出来高平常比2.0倍（話題強度8.0）。",
+      "movement_type": "急騰＋出来高集中",
+      "material_summary": "決算レポート：キオクシアホールディングス（大幅増収増益が続く。株価に極端な割安感がある） - トウシル",
+      "explanation": {
+        "why_selected": "当日の話題化",
+        "what_is_happening": "決算レポート：キオクシアホールディングス（大幅増収増益が続く。株価に極端な割安感がある） - トウシル",
+        "material_category": "決算・業績材料",
+        "score_breakdown": {
+          "source_types": 1,
+          "mentions": 1,
+          "investor_rank": null
+        }
+      },
+      "research_memo": {
+        "headline": "決算レポート：キオクシアホールディングス（大幅増収増益が続く。株価に極端な割安感がある） - トウシル",
+        "summary": "【話題の事実】情報源は1種類（アナリスト）。同日言及は1件。【材料】決算レポート：キオクシアホールディングス（大幅増収増益が続く。株価に極端な割安感がある） - トウシル【値動き確認】株価は前日比+13.76%。出来高は平常比2.0倍。",
+        "why": "【選定理由】外部情報だけで十分な熱量を確認できるかを追加条件で確認したうえで掲載しています。",
+        "category": "決算・業績材料",
+        "evidence": [
+          "情報源は1種類（アナリスト）",
+          "同日言及は1件",
+          "株価は前日比+13.76%",
+          "出来高は平常比2.0倍"
+        ],
+        "check_point": "見出しだけでは因果関係を断定しません。決算短信・適時開示・原記事本文など、リンク先の一次情報を確認してください。",
+        "source_count": 1,
+        "mention_count": 1,
+        "sources": [
+          "アナリスト"
+        ],
+        "detail": "決算レポート：キオクシアホールディングス（大幅増収増益が続く。株価に極端な割安感がある） - トウシル",
+        "heat_score": 8.0
+      },
+      "sources": [
+        {
+          "name": "アナリスト・レポート検索",
+          "type": "アナリスト",
+          "title": "決算レポート：キオクシアホールディングス（大幅増収増益が続く。株価に極端な割安感がある） - トウシル",
+          "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1wTzBxd0VHNGN5MmQyTVFSNzJud1VHVm9kSlNLNHh1Y3RMa3loXzl6aDlBQWRNam5CWEVnM2ZZd09IQzFnbGFmT2hJNlhtWkpybGhQZ2wxR2RMZw?oc=5"
         }
       ],
       "selection_eligible": true
