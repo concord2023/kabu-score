@@ -108,15 +108,36 @@
   }
 
   async function fetchWithTimeout(url, timeoutMs = 7000) {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), timeoutMs);
-    try {
-      const response = await fetch(url, { cache: 'no-store', mode: 'cors', credentials: 'omit', signal: controller.signal });
-      if (!response.ok) throw new Error(`Yahoo HTTP ${response.status}`);
-      return await response.json();
-    } finally {
-      clearTimeout(timer);
+    // Yahoo's public JSON endpoints do not consistently send CORS headers.
+    // Try a CORS-enabled relay first, then the direct Yahoo URL for browsers
+    // or environments where direct access is permitted. Never treat a failed
+    /// opaque response as a valid quote.
+    const attempts = [
+      { url: 'https://proxy.cors.dev/' + url, label: 'Yahoo relay' },
+      { url, label: 'Yahoo direct' }
+    ];
+    const errors = [];
+    for (const attempt of attempts) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        const response = await fetch(attempt.url, {
+          cache: 'no-store', mode: 'cors', credentials: 'omit', signal: controller.signal
+        });
+        if (!response.ok) {
+          const proxyReason = response.headers?.get?.('X-Cors-Error');
+          throw new Error(`${attempt.label} HTTP ${response.status}${proxyReason ? ` (${proxyReason})` : ''}`);
+        }
+        const data = await response.json();
+        if (!data || typeof data !== 'object') throw new Error(`${attempt.label}: JSON応答が不正です`);
+        return data;
+      } catch (e) {
+        errors.push(`${attempt.label}: ${e?.message || e}`);
+      } finally {
+        clearTimeout(timer);
+      }
     }
+    throw new Error(errors.join(' / '));
   }
 
   async function fetchLiveQuotes(codes) {

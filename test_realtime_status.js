@@ -13,6 +13,7 @@ async function run(mode) {
   };
   const row = { dataset: { liveCode: '7203' }, classList: { add() {} }, querySelector: s => cells[s] || null };
   const store = () => { const m = new Map(); return { setItem: (k,v)=>m.set(k,v), getItem:k=>m.get(k)||null, removeItem:k=>m.delete(k) }; };
+  const fetchAttempts = [];
   const context = {
     console, Date, Number, String, Object, Array, Math, Intl, JSON, Promise, URLSearchParams, AbortController,
     setTimeout, clearTimeout, performance: { now: (()=>{let n=0;return ()=>++n;})() },
@@ -25,6 +26,7 @@ async function run(mode) {
       visibilityState: 'visible'
     },
     fetch: async url => {
+      fetchAttempts.push(String(url));
       const ok = (body, statusCode=200) => ({ok:statusCode>=200&&statusCode<300,status:statusCode,json:async()=>body});
       if (String(url).includes('query1.finance.yahoo.com/v7/finance/spark')) {
         if (mode === 'live') return ok({spark:{result:[{symbol:'7203.T',response:[{meta:{symbol:'7203.T',regularMarketPrice:3010,previousClose:3000,regularMarketTime:Math.floor(Date.now()/1000)}}]}]}});
@@ -48,6 +50,7 @@ async function run(mode) {
   await new Promise(r=>setTimeout(r,10));
   await clickHandler();
   const finalStatus = status.textContent;
+  if (mode === 'live' && !fetchAttempts.some(u => u.startsWith('https://proxy.cors.dev/https://query1.finance.yahoo.com/'))) throw new Error('CORS relay was not attempted');
   // Emulate the inline page's restore/apply function firing after the button.
   context.window.kabuScoreApplyRealtime();
   if (status.textContent !== finalStatus) throw new Error(`status overwritten: ${finalStatus} -> ${status.textContent}`);
