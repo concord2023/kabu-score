@@ -25,6 +25,7 @@ const deviationPairHtml=(daily,weekly)=>`<div class="deviation-pair"><div><span 
 const REALTIME_STORAGE_KEY='kabuScoreRealtimeQuotesV2';
 const REALTIME_STORAGE_KEY_LEGACY='kabuScoreRealtimeQuotes';
 function marketDay(v){if(!v)return null;const m=String(v).match(/(\d{4}-\d{2}-\d{2})/);return m?m[1]:null;}
+function formatMarketTime(v){const d=new Date(v);if(Number.isNaN(d.getTime()))return esc(String(v).replace('T',' ').slice(0,16));return new Intl.DateTimeFormat('ja-JP',{timeZone:'Asia/Tokyo',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(d).replaceAll('/','-');}
 function readRealtimeSaved(){
   const keys=[REALTIME_STORAGE_KEY,REALTIME_STORAGE_KEY_LEGACY];
   for(const storage of [localStorage,sessionStorage]) for(const key of keys){
@@ -47,7 +48,7 @@ function applyRealtimeToRows(){
     const p=row.querySelector('.live-price'),c=row.querySelector('.live-change'),t=row.querySelector('.live-time');
     if(p)p.textContent=fmtPrice(q.price);
     if(c){c.textContent=pct(q.change_pct);c.className=`quote-change live-change ${changeClass(q.change_pct)}`;}
-    if(t)t.textContent=q.market_time?`更新 ${String(q.market_time).replace('T',' ').slice(0,16)}`:'更新時刻不明';
+    if(t)t.textContent=q.market_time?`更新 ${formatMarketTime(q.market_time)}`:'更新時刻不明';
     row.classList.add('live-updated'); applied++;
   });
   if(applied){const st=document.getElementById('realtimeStatus');if(st&&!st.dataset.statusOwner)st.textContent=`保存済みリアルタイム値 ${applied}銘柄`;}

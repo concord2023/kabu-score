@@ -69,6 +69,20 @@ s=ud.calc(r, breadth_info={'breadth':{'6d':100,'10d':100,'15d':100,'25d':100},'n
 for k in ('ma5','ma20','ma25','ma75','ma200','rsi14','rsi14_weekly','macd','macd_signal','macd_hist','bb_daily','bb_weekly','chart_history'):
     assert_true(k in s, f'missing calc field {k}')
 assert_true(s['diagnostic']['ma200_ready'], '200MA should be ready')
+fresh_chart = {'price': 100, 'date': '2026-11-06',
+               'chart_history': [{'date': '2026-11-06'}]}
+assert_true(ud.has_fresh_chart_data(fresh_chart, '2026-11-06'),
+            'fresh chart should pass market-date validation')
+assert_true(not ud.has_fresh_chart_data(fresh_chart, '2026-11-09'),
+            'old chart must fail market-date validation')
+stale_chart = dict(fresh_chart, data_stale=True)
+assert_true(not ud.has_fresh_chart_data(stale_chart, '2026-11-06'),
+            'fallback data must not count as a fresh update')
+chart_lag = {'price': 100, 'date': '2026-11-06',
+             'chart_history': [{'date': '2026-11-05'}]}
+assert_true(not ud.has_fresh_chart_data(chart_lag, '2026-11-06'),
+            'chart history behind the stock metric date must fail validation')
+
 assert_true(s['diagnostic']['weekly_rsi_ready'], 'weekly RSI should be ready')
 assert_true(all(k in s for k in ('weekly_ma5','monthly_ma6','monthly_ma12','monthly_ma18')), 'weekly/monthly MA fields must be present')
 assert_true(s['weekly_ma5'] is not None, '5-week MA should be available')

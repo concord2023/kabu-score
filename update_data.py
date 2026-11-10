@@ -1939,6 +1939,19 @@ def load_cached_supply(code, max_age_days=10, reference_date=None):
         return None
 
 
+
+
+def has_fresh_chart_data(stock, latest_market_date):
+    """Return True only when the saved stock metrics and chart reach the probed market date."""
+    if not isinstance(stock, dict) or stock.get('price') is None or stock.get('data_stale'):
+        return False
+    expected = str(latest_market_date or '')
+    stock_date = str(stock.get('date') or '')
+    history = stock.get('chart_history') or []
+    chart_date = str(history[-1].get('date') or '') if history else ''
+    return bool(expected and stock_date >= expected and chart_date >= expected)
+
+
 def main():
     # Keep the previous successful per-stock analysis available as a safety net.
     # A transient fetch failure must never be converted into the legitimate
@@ -1961,6 +1974,7 @@ def main():
 
     out = {
         'updated_at': now_jst().isoformat(),
+        'latest_market_date': None,
         'source': 'IRBANK API + 豆腐ハードボイルド（騰落銘柄数）',
         'api_strategy': 'price:800-row target/stock; weekly margin:1 endpoint/stock only when cache is stale; valuations:20 fiscal years/stock; Yahoo company forecast PER/EPS/stock; breadth:1/run; monthly MACD:1000-row target only for weekly-RSI<=30; quota preflight via /usage',
         'stocks': {},
@@ -1979,6 +1993,7 @@ def main():
         probe_date = probe_rows[0]['date']
     else:
         probe_date = now_jst().date().isoformat()
+    out['latest_market_date'] = probe_date
 
     cached_supply = {}
     stale_supply_items = []
@@ -2109,7 +2124,6 @@ def main():
                 stale = dict(previous)
                 stale['data_stale'] = True
                 stale['data_error'] = str(e)
-                stale['updated_at'] = out['updated_at']
                 out['stocks'][code] = stale
                 out['diagnostics'].append({
                     'code': code, 'status': 'stale', 'error': str(e),
@@ -2128,7 +2142,16 @@ def main():
 
     out['breadth_status'] = 'ok' if breadth_cache else 'unavailable'
     out['breadth_error'] = breadth_error
-    out['successful_stocks'] = sum(1 for s in out['stocks'].values() if s.get('price') is not None)
+    out['successful_stocks'] = sum(
+        1 for s in out['stocks'].values()
+        if has_fresh_chart_data(s, probe_date)
+    )
+    out['stale_stocks'] = sum(1 for s in out['stocks'].values() if s.get('data_stale'))
+    out['market_date_mismatch_stocks'] = sum(
+        1 for s in out['stocks'].values()
+        if s.get('price') is not None and not s.get('data_stale')
+        and not has_fresh_chart_data(s, probe_date)
+    )
     out['failed_stocks'] = len(out['stocks']) - out['successful_stocks']
 
     if out['successful_stocks'] == 0:
@@ -2147,7 +2170,10 @@ def main():
         json.dump(out, f, ensure_ascii=False, indent=2)
     print(json.dumps({
         'updated_at': out['updated_at'],
+        'latest_market_date': out['latest_market_date'],
         'successful_stocks': out['successful_stocks'],
+        'stale_stocks': out['stale_stocks'],
+        'market_date_mismatch_stocks': out['market_date_mismatch_stocks'],
         'failed_stocks': out['failed_stocks'],
         'breadth_status': out['breadth_status'],
         'api_strategy': out['api_strategy'],
