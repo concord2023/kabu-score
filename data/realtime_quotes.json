@@ -1,234 +1,195 @@
 {
-  "updated_at": "2026-11-10T03:43:11.370416+09:00",
-  "last_attempt_at": "2026-11-10T03:43:11.370416+09:00",
-  "market_date": "2026-11-09",
-  "source": "Yahoo Finance chart API",
+  "updated_at": "2026-11-10T15:22:16.623901+09:00",
+  "last_attempt_at": "2026-11-10T15:22:16.623901+09:00",
+  "market_date": "2026-11-10",
+  "source": "Yahoo Finance spark API",
   "source_host": "https://query1.finance.yahoo.com",
-  "count": 24,
-  "requested": 24,
+  "count": 20,
+  "requested": 20,
   "quotes": {
     "5803": {
       "symbol": "5803.T",
-      "price": 3080.0,
-      "previous_close": 2962.0,
-      "change": 118.0,
-      "change_pct": 3.9838,
-      "market_time": "2026-11-09T15:30:00+09:00",
-      "quote_type": "yahoo_chart"
+      "price": 3047.0,
+      "previous_close": 3080.0,
+      "change": -33.0,
+      "change_pct": -1.0714,
+      "market_time": "2026-11-10T15:07:15+09:00",
+      "quote_type": "yahoo"
     },
     "6758": {
       "symbol": "6758.T",
-      "price": 4297.0,
-      "previous_close": 4142.0,
-      "change": 155.0,
-      "change_pct": 3.7422,
-      "market_time": "2026-11-09T15:30:00+09:00",
-      "quote_type": "yahoo_chart"
+      "price": 4256.0,
+      "previous_close": 4297.0,
+      "change": -41.0,
+      "change_pct": -0.9542,
+      "market_time": "2026-11-10T15:07:12+09:00",
+      "quote_type": "yahoo"
     },
     "6701": {
       "symbol": "6701.T",
-      "price": 4479.0,
-      "previous_close": 4317.0,
-      "change": 162.0,
-      "change_pct": 3.7526,
-      "market_time": "2026-11-09T15:30:00+09:00",
-      "quote_type": "yahoo_chart"
+      "price": 4402.0,
+      "previous_close": 4479.0,
+      "change": -77.0,
+      "change_pct": -1.7191,
+      "market_time": "2026-11-10T15:07:13+09:00",
+      "quote_type": "yahoo"
     },
     "6762": {
       "symbol": "6762.T",
-      "price": 2112.0,
-      "previous_close": 2107.0,
-      "change": 5.0,
-      "change_pct": 0.2373,
-      "market_time": "2026-11-09T15:30:00+09:00",
-      "quote_type": "yahoo_chart"
+      "price": 2253.0,
+      "previous_close": 2112.0,
+      "change": 141.0,
+      "change_pct": 6.6761,
+      "market_time": "2026-11-10T15:07:14+09:00",
+      "quote_type": "yahoo"
     },
     "6506": {
       "symbol": "6506.T",
-      "price": 3579.0,
-      "previous_close": 3445.0,
-      "change": 134.0,
-      "change_pct": 3.8897,
-      "market_time": "2026-11-09T15:30:00+09:00",
-      "quote_type": "yahoo_chart"
+      "price": 3796.0,
+      "previous_close": 3579.0,
+      "change": 217.0,
+      "change_pct": 6.0631,
+      "market_time": "2026-11-10T15:07:13+09:00",
+      "quote_type": "yahoo"
     },
     "6501": {
       "symbol": "6501.T",
-      "price": 4702.0,
-      "previous_close": 4542.0,
-      "change": 160.0,
-      "change_pct": 3.5227,
-      "market_time": "2026-11-09T15:30:00+09:00",
-      "quote_type": "yahoo_chart"
+      "price": 4887.0,
+      "previous_close": 4702.0,
+      "change": 185.0,
+      "change_pct": 3.9345,
+      "market_time": "2026-11-10T15:07:12+09:00",
+      "quote_type": "yahoo"
     },
     "8306": {
       "symbol": "8306.T",
-      "price": 3366.0,
-      "previous_close": 3224.0,
-      "change": 142.0,
-      "change_pct": 4.4045,
-      "market_time": "2026-11-09T15:30:00+09:00",
-      "quote_type": "yahoo_chart"
+      "price": 3454.0,
+      "previous_close": 3366.0,
+      "change": 88.0,
+      "change_pct": 2.6144,
+      "market_time": "2026-11-10T15:07:10+09:00",
+      "quote_type": "yahoo"
     },
     "7203": {
       "symbol": "7203.T",
-      "price": 3491.0,
-      "previous_close": 3338.0,
-      "change": 153.0,
-      "change_pct": 4.5836,
-      "market_time": "2026-11-09T15:30:00+09:00",
-      "quote_type": "yahoo_chart"
+      "price": 3429.0,
+      "previous_close": 3491.0,
+      "change": -62.0,
+      "change_pct": -1.776,
+      "market_time": "2026-11-10T15:07:14+09:00",
+      "quote_type": "yahoo"
     },
     "1802": {
       "symbol": "1802.T",
-      "price": 3039.0,
-      "previous_close": 2936.0,
-      "change": 103.0,
-      "change_pct": 3.5082,
-      "market_time": "2026-11-09T15:30:00+09:00",
-      "quote_type": "yahoo_chart"
+      "price": 3127.0,
+      "previous_close": 3039.0,
+      "change": 88.0,
+      "change_pct": 2.8957,
+      "market_time": "2026-11-10T15:07:04+09:00",
+      "quote_type": "yahoo"
     },
     "9065": {
       "symbol": "9065.T",
-      "price": 1726.5,
-      "previous_close": 1687.5,
-      "change": 39.0,
-      "change_pct": 2.3111,
-      "market_time": "2026-11-09T15:30:00+09:00",
-      "quote_type": "yahoo_chart"
+      "price": 1741.0,
+      "previous_close": 1726.5,
+      "change": 14.5,
+      "change_pct": 0.8398,
+      "market_time": "2026-11-10T15:07:01+09:00",
+      "quote_type": "yahoo"
     },
     "3923": {
       "symbol": "3923.T",
-      "price": 1127.0,
-      "previous_close": 1059.5,
-      "change": 67.5,
-      "change_pct": 6.3709,
-      "market_time": "2026-11-09T15:30:00+09:00",
-      "quote_type": "yahoo_chart"
+      "price": 1153.5,
+      "previous_close": 1127.0,
+      "change": 26.5,
+      "change_pct": 2.3514,
+      "market_time": "2026-11-10T15:07:14+09:00",
+      "quote_type": "yahoo"
     },
     "6920": {
       "symbol": "6920.T",
-      "price": 32480.0,
-      "previous_close": 32040.0,
-      "change": 440.0,
-      "change_pct": 1.3733,
-      "market_time": "2026-11-09T15:30:00+09:00",
-      "quote_type": "yahoo_chart"
+      "price": 35190.0,
+      "previous_close": 32480.0,
+      "change": 2710.0,
+      "change_pct": 8.3436,
+      "market_time": "2026-11-10T15:07:15+09:00",
+      "quote_type": "yahoo"
     },
     "485A": {
       "symbol": "485A.T",
-      "price": 1526.0,
-      "previous_close": 1617.0,
-      "change": -91.0,
-      "change_pct": -5.6277,
-      "market_time": "2026-11-09T15:30:00+09:00",
-      "quote_type": "yahoo_chart"
+      "price": 1623.0,
+      "previous_close": 1526.0,
+      "change": 97.0,
+      "change_pct": 6.3565,
+      "market_time": "2026-11-10T15:07:04+09:00",
+      "quote_type": "yahoo"
     },
     "8591": {
       "symbol": "8591.T",
-      "price": 5538.0,
-      "previous_close": 5401.0,
-      "change": 137.0,
-      "change_pct": 2.5366,
-      "market_time": "2026-11-09T15:30:00+09:00",
-      "quote_type": "yahoo_chart"
+      "price": 5239.0,
+      "previous_close": 5538.0,
+      "change": -299.0,
+      "change_pct": -5.3991,
+      "market_time": "2026-11-10T15:07:04+09:00",
+      "quote_type": "yahoo"
     },
     "8001": {
       "symbol": "8001.T",
-      "price": 2350.0,
-      "previous_close": 2241.0,
-      "change": 109.0,
-      "change_pct": 4.8639,
-      "market_time": "2026-11-09T15:30:00+09:00",
-      "quote_type": "yahoo_chart"
+      "price": 2372.5,
+      "previous_close": 2350.0,
+      "change": 22.5,
+      "change_pct": 0.9574,
+      "market_time": "2026-11-10T15:06:48+09:00",
+      "quote_type": "yahoo"
     },
     "8058": {
       "symbol": "8058.T",
-      "price": 5170.0,
-      "previous_close": 4958.0,
-      "change": 212.0,
-      "change_pct": 4.2759,
-      "market_time": "2026-11-09T15:30:00+09:00",
-      "quote_type": "yahoo_chart"
+      "price": 5310.0,
+      "previous_close": 5170.0,
+      "change": 140.0,
+      "change_pct": 2.7079,
+      "market_time": "2026-11-10T15:07:13+09:00",
+      "quote_type": "yahoo"
     },
     "6752": {
       "symbol": "6752.T",
-      "price": 2974.5,
-      "previous_close": 3008.0,
-      "change": -33.5,
-      "change_pct": -1.1137,
-      "market_time": "2026-11-09T15:30:00+09:00",
-      "quote_type": "yahoo_chart"
+      "price": 3187.0,
+      "previous_close": 2974.5,
+      "change": 212.5,
+      "change_pct": 7.1441,
+      "market_time": "2026-11-10T15:07:14+09:00",
+      "quote_type": "yahoo"
     },
     "285A": {
       "symbol": "285A.T",
-      "price": 8302.0,
-      "previous_close": 8511.0,
-      "change": -209.0,
-      "change_pct": -2.4556,
-      "market_time": "2026-11-09T15:30:00+09:00",
-      "quote_type": "yahoo_chart"
+      "price": 9078.0,
+      "previous_close": 8302.0,
+      "change": 776.0,
+      "change_pct": 9.3471,
+      "market_time": "2026-11-10T15:07:15+09:00",
+      "quote_type": "yahoo"
     },
     "6301": {
       "symbol": "6301.T",
-      "price": 5971.0,
-      "previous_close": 5801.0,
-      "change": 170.0,
-      "change_pct": 2.9305,
-      "market_time": "2026-11-09T15:30:00+09:00",
-      "quote_type": "yahoo_chart"
+      "price": 6149.0,
+      "previous_close": 5971.0,
+      "change": 178.0,
+      "change_pct": 2.9811,
+      "market_time": "2026-11-10T15:07:15+09:00",
+      "quote_type": "yahoo"
     },
     "6367": {
       "symbol": "6367.T",
-      "price": 22445.0,
-      "previous_close": 21790.0,
-      "change": 655.0,
-      "change_pct": 3.006,
-      "market_time": "2026-11-09T15:30:00+09:00",
-      "quote_type": "yahoo_chart"
-    },
-    "9989": {
-      "symbol": "9989.T",
-      "price": 3908.0,
-      "previous_close": 3739.0,
-      "change": 169.0,
-      "change_pct": 4.5199,
-      "market_time": "2026-11-09T15:30:00+09:00",
-      "quote_type": "yahoo_chart"
-    },
-    "2329": {
-      "symbol": "2329.T",
-      "price": 464.0,
-      "previous_close": 461.0,
-      "change": 3.0,
-      "change_pct": 0.6508,
-      "market_time": "2026-11-09T15:30:00+09:00",
-      "quote_type": "yahoo_chart"
-    },
-    "3465": {
-      "symbol": "3465.T",
-      "price": 3050.0,
-      "previous_close": 3150.0,
-      "change": -100.0,
-      "change_pct": -3.1746,
-      "market_time": "2026-11-09T15:30:00+09:00",
-      "quote_type": "yahoo_chart"
-    },
-    "7278": {
-      "symbol": "7278.T",
-      "price": 5170.0,
-      "previous_close": 5050.0,
-      "change": 120.0,
-      "change_pct": 2.3762,
-      "market_time": "2026-11-09T15:30:00+09:00",
-      "quote_type": "yahoo_chart"
+      "price": 22990.0,
+      "previous_close": 22445.0,
+      "change": 545.0,
+      "change_pct": 2.4282,
+      "market_time": "2026-11-10T15:06:31+09:00",
+      "quote_type": "yahoo"
     }
   },
   "fallback": false,
   "rejected_old_quotes": [],
-  "errors": [
-    "https://query1.finance.yahoo.com: HTTP Error 400: Bad Request",
-    "https://query2.finance.yahoo.com: HTTP Error 400: Bad Request"
-  ],
+  "errors": [],
   "note": "Yahoo取得値は銘柄ごとに市場日を検証。Daily stock updateより古い値は公開せず、同日の日次値で補完します。"
 }
