@@ -46,11 +46,17 @@ jobs:
           from datetime import datetime, time
           from pathlib import Path
           from zoneinfo import ZoneInfo
+
           tz = ZoneInfo('Asia/Tokyo')
           now = datetime.now(tz)
+          data = {}
+          try:
+              data = json.loads(Path('data/stocks.json').read_text(encoding='utf-8'))
+          except Exception as exc:
+              print(f'Could not read stocks.json; backup will run: {exc}')
+
           updated = None
           try:
-              data = json.loads(Path('data/decision_ranking.json').read_text(encoding='utf-8'))
               raw = data.get('updated_at')
               if raw:
                   updated = datetime.fromisoformat(raw.replace('Z', '+00:00'))
@@ -58,10 +64,37 @@ jobs:
                       updated = updated.replace(tzinfo=tz)
                   updated = updated.astimezone(tz)
           except Exception as exc:
-              print(f'Could not read prior update timestamp; backup will run: {exc}')
-          skip = bool(updated and updated.date() == now.date() and updated.time().replace(tzinfo=None) >= time(17, 10))
+              print(f'Could not parse data update timestamp; backup will run: {exc}')
+
+          market_date = str(data.get('latest_market_date') or '')
+          stocks = data.get('stocks') or {}
+          checks = []
+          for code, stock in stocks.items():
+              history = stock.get('chart_history') or []
+              latest_chart_date = str(history[-1].get('date') or '') if history else ''
+              stock_date = str(stock.get('date') or '')
+              fresh = (
+                  stock.get('price') is not None
+                  and not stock.get('data_stale')
+                  and market_date
+                  and stock_date >= market_date
+                  and latest_chart_date >= market_date
+              )
+              checks.append((code, fresh, stock_date, latest_chart_date))
+
+          all_charts_fresh = bool(checks) and all(item[1] for item in checks)
+          updated_today = bool(updated and updated.date() == now.date()
+                               and updated.time().replace(tzinfo=None) >= time(17, 10))
+          skip = updated_today and all_charts_fresh
+
           print(f'Current JST: {now.isoformat()}')
-          print(f'Last ranking update: {updated.isoformat() if updated else "unknown"}')
+          print(f'Data update timestamp: {updated.isoformat() if updated else "unknown"}')
+          print(f'Expected latest market date: {market_date or "unknown"}')
+          print(f'Chart freshness: {sum(1 for item in checks if item[1])}/{len(checks)}')
+          if not all_charts_fresh:
+              for code, fresh, stock_date, chart_date in checks:
+                  if not fresh:
+                      print(f'STALE {code}: stock_date={stock_date}, chart_date={chart_date}')
           print(f'Skip backup: {skip}')
           with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as f:
               f.write(f'skip={str(skip).lower()}\n')
