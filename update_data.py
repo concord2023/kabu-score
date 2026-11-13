@@ -7,6 +7,7 @@ import urllib.parse
 import urllib.request
 import re
 import calendar
+from email.utils import parsedate_to_datetime
 from datetime import datetime, timezone, timedelta
 from html.parser import HTMLParser
 from pathlib import Path
@@ -71,9 +72,10 @@ _request_count = 0
 _rate_wait_seconds = 0.0
 _retry_count = 0
 _http_seconds = 0.0
-# Absolute safety ceiling: even with retries, this process must never issue
-# the 4000th IRBANK request.  The normal daily path is far below this.
-MAX_API_REQUESTS = 3999
+# Hard process ceiling for the current Free quota (200 requests/day).
+# /usage is not quota-consuming, but is counted locally by get(), so the
+# dynamic ceiling below includes the usage-check attempts.
+MAX_API_REQUESTS = 200
 _api_usage = None
 
 
@@ -143,9 +145,25 @@ def get(path, params=None, retries=4):
                 retry_after = e.headers.get('Retry-After')
                 if retry_after:
                     try:
-                        delay = max(2.0, float(retry_after))
+                        delay = max(1.0, float(retry_after))
                     except ValueError:
-                        delay = min(30.0, 2 ** attempt)
+                        try:
+                            retry_at = parsedate_to_datetime(retry_after)
+                            if retry_at.tzinfo is None:
+                                retry_at = retry_at.replace(tzinfo=timezone.utc)
+                            delay = max(1.0, (retry_at - datetime.now(timezone.utc)).total_seconds())
+                        except Exception:
+                            delay = min(30.0, 2 ** attempt)
+                    # A long Retry-After is normally the daily reset window,
+                    # not a short per-minute throttle. Never leave Actions
+                    # sleeping for hours or blindly replay a daily-quota 429.
+                    if delay > 120:
+                        raise IRBankRateLimitError(
+                            f'IRBANK 429 rate_limited; Retry-After={delay:.0f}s. '
+                            f'Quota/rate limit reached; stop without retry. '
+                            f'error_code={error_code or "unknown"}; '
+                            f'{error.get("message", str(e))}'
+                        ) from e
                 else:
                     delay = min(30.0, 2 ** attempt)
                 if attempt == retries - 1:
@@ -176,26 +194,47 @@ def check_api_usage(watch_count):
     limit = _api_usage.get('limit')
     resets_at = _api_usage.get('resets_at')
     if remaining is None:
-        print('IRBANK usage: unavailable (continuing; endpoint returned no remaining count)')
-        return
-    # Hard upper-bound the normal daily path before any stock request starts.
-    # For each stock: up to 2 price pages, 1 weekly-margin request, and (only
-    # when weekly RSI<=30) up to 3 additional long-history price pages. One
-    # probe price request, one breadth request, and up to 4 attempts per API
-    # call are included. This deliberately overestimates the normal run.
-    # The resulting ceiling is still far below IRBANK's 4000/day limit.
-    logical_calls = 2 + watch_count * 7
-    worst_case_requests = logical_calls * 4
-    minimum_needed = max(10, worst_case_requests)
-    print(f'IRBANK usage: remaining={remaining}/{limit} resets_at={resets_at}')
+        raise IRBankRateLimitError(
+            'IRBANK /usage から残り回数を確認できないため、安全のため更新を中止します。'
+        )
+    # Calculate the normal daily path from the actual implementation rather
+    # than multiplying every call by all four retry attempts.  With 20 stocks:
+    #   price history: 1 probe + 2 pages for each remaining stock = 39
+    #   stale weekly margin cache: at most 20 calls
+    #   historical PER: 20 calls
+    #   monthly-MACD expansion: at most 2 pages per stock = 40 calls
+    # Total upper bound = 119 quota-consuming requests (plus free /usage).
+    # Keep a 20% retry reserve, and set a dynamic hard ceiling to the quota
+    # remaining today.  This avoids both the old false rejection at 200/day
+    # and any attempt to exceed the actual remaining quota.
+    price_requests = 1 + max(0, watch_count - 1) * 2 if watch_count else 0
+    supply_requests = watch_count
+    valuation_requests = watch_count
+    monthly_requests = watch_count * 2
+    worst_case_requests = price_requests + supply_requests + valuation_requests + monthly_requests
+    retry_reserve = max(10, (worst_case_requests + 4) // 5)
+    minimum_needed = worst_case_requests + retry_reserve
+    print(
+        f'IRBANK usage: remaining={remaining}/{limit} resets_at={resets_at}; '
+        f'estimated={worst_case_requests}, retry_reserve={retry_reserve}, '
+        f'preflight_required={minimum_needed}'
+    )
     if int(remaining) <= 0:
         raise IRBankRateLimitError(
             f'IRBANKの日次API上限に到達しています（remaining=0）。次回リセット: {resets_at}'
         )
     if int(remaining) < minimum_needed:
         raise IRBankRateLimitError(
-            f'IRBANKの残りAPI枠が少なすぎます（remaining={remaining}）。通常更新の最低見積り={minimum_needed}。次回リセット: {resets_at}'
+            f'IRBANKの残りAPI枠が不足しています（remaining={remaining}）。'
+            f'通常更新の最大見積り={worst_case_requests}＋再試行予備={retry_reserve}。'
+            f'次回リセット: {resets_at}'
         )
+    # get() counts /usage locally even though IRBANK does not charge it.
+    # Therefore allow only the preflight budget (including its retry reserve),
+    # never more than the remaining quota or the 200-call process ceiling.
+    global MAX_API_REQUESTS
+    MAX_API_REQUESTS = min(200, _request_count + min(int(remaining), minimum_needed))
+    print(f'IRBANK hard request ceiling for this run: {MAX_API_REQUESTS} attempts')
 
 
 # Optional manual stock addition from GitHub Actions workflow_dispatch.
