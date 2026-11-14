@@ -1,0 +1,29 @@
+name: Tests
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run offline release validation and regression tests
+        env:
+          # Dummy value only: update_data.py refuses to import without it.
+          # All tests below are offline and never call the real API.
+          IRBANK_API_KEY: offline-ci-dummy
+        run: |
+          python validate_release.py
+          python test_tora_rsi.py
+          python test_regime_classification_regression.py
+          python test_watchlist_persistence.py
+          python test_monthly_chart_macd.py
+          python test_parse_yahoo_forecast.py
