@@ -86,6 +86,7 @@ def compact(stock, regime, decision, company):
 
 
 def main():
+    ud.require_api_key()
     if not os.environ.get('IRBANK_API_KEY'):
         raise SystemExit('IRBANK_API_KEY is not set')
 

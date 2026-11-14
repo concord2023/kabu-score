@@ -13,1914 +13,179 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 from regime_model_v2 import classify_regime, decide
+import market_data
+from market_data import IRBankRateLimitError, TableParser, check_api_usage, collect_per_data, fetch_breadth_and_nikkei, fetch_historical_per, fetch_supply_batch, fetch_yahoo_forecast_per, fetch_yahoo_forward_pe_timeseries, fetch_yahoo_pbr_dividend, get, get_all_prices, normalize_security_code, now_jst, resolve_security_query, screening_metric
+from forecast_parsers import _parse_yahoo_forecast_text, _parse_yahoo_pbr_dividend_text, fiscal_year_end_date
+from indicators import pct, signal_icons, rsi14, rsi14_wilder, ema_series, macd_series, weekly_closes, monthly_closes, monthly_macd_bottom_signal, breadth_points, relative_points, candle_reversal_signals, breakout_signal, bollinger, bollinger_sigma_position, bollinger_signal, build_period_chart_history
+from calc import calc, supply_points, supply_status
 
-API = 'https://api.irbank.net/v1'
-TOKEN = os.environ.get('IRBANK_API_KEY')
-if not TOKEN:
-    raise SystemExit('IRBANK_API_KEY is not set')
+def require_api_key():
+    """Fail fast when IRBANK_API_KEY is not set.
 
-with open('watchlist.json', encoding='utf-8') as f:
-    watch_data = json.load(f)
-watch = watch_data.get('stocks', [])
+    Until Phase B4 this check ran at import time; it now runs only from
+    entry points so importing update_data has no side effects.
+    """
+    if not market_data.TOKEN:
+        raise SystemExit('IRBANK_API_KEY is not set')
 
-# User-added stocks are kept separately so replacing the source ZIP does not
-# silently erase additions that were made through the app/GitHub workflow.
+
 CUSTOM_WATCHLIST = 'data/custom_watchlist.json'
-try:
-    with open(CUSTOM_WATCHLIST, encoding='utf-8') as f:
-        custom_items = json.load(f).get('stocks', [])
-except (FileNotFoundError, json.JSONDecodeError):
-    custom_items = []
-existing_watch_codes = {
-    re.sub(r'[^0-9A-Z]', '', str(x.get('code') if isinstance(x, dict) else x).strip().upper())
-    for x in watch
-}
-for item in custom_items:
-    code = re.sub(r'[^0-9A-Z]', '', str(item.get('code') if isinstance(item, dict) else item).strip().upper())
-    if code and code not in existing_watch_codes:
-        watch.append(item)
-        existing_watch_codes.add(code)
-
-# Base-watchlist deletions are kept separately from the source ZIP so a source
-# replacement does not silently re-add a stock the user intentionally removed.
 EXCLUDED_WATCHLIST = 'data/watchlist_exclusions.json'
-try:
-    with open(EXCLUDED_WATCHLIST, encoding='utf-8') as f:
-        excluded_codes = {re.sub(r'[^0-9A-Z]', '', str(x).strip().upper()) for x in json.load(f).get('codes', [])}
-except (FileNotFoundError, json.JSONDecodeError):
-    excluded_codes = set()
-if excluded_codes:
-    watch = [x for x in watch if re.sub(r'[^0-9A-Z]', '', str(x.get('code') if isinstance(x, dict) else x).strip().upper()) not in excluded_codes]
-watch_data['stocks'] = watch
 
-# Materialize the effective watchlist before analysis. Custom additions are
-# stored separately under data/ so they survive source ZIP replacement, but
-# rank_decisions.py and the public app read watchlist.json. Without persisting
-# the merged list here, an already-present custom addition can be analyzed in
-# update_data.py yet never reach watchlist.json, making the Issue appear
-# successful while the newly added stock remains invisible to the app.
-_base_watch = json.loads(Path('watchlist.json').read_text(encoding='utf-8')).get('stocks', [])
-if watch != _base_watch:
-    with open('watchlist.json', 'w', encoding='utf-8') as f:
-        json.dump(watch_data, f, ensure_ascii=False, indent=2)
-
-# Keep API traffic below IRBANK's current 60 requests/minute limit.
-# 1.05s means at most ~57 requests/minute, leaving a small safety margin.
-MIN_REQUEST_INTERVAL = 1.05
-_last_request_at = 0.0
-_request_count = 0
-_rate_wait_seconds = 0.0
-_retry_count = 0
-_http_seconds = 0.0
-# Hard process ceiling for the current Free quota (200 requests/day).
-# /usage is not quota-consuming, but is counted locally by get(), so the
-# dynamic ceiling below includes the usage-check attempts.
-MAX_API_REQUESTS = 200
-_api_usage = None
+# Effective watchlist state. Populated by load_watchlist(); importing this
+# module no longer reads or writes watchlist.json.
+watch_data = {'stocks': []}
+watch = []
+excluded_codes = set()
 
 
-def now_jst():
-    return datetime.now(timezone(timedelta(hours=9)))
+def load_watchlist():
+    """Load watchlist.json, merge custom additions, apply exclusions, and
+    materialize the effective list back into watchlist.json.
 
+    This is exactly the sequence that used to run at import time (Phase B4).
+    Returns watch_data and updates the module globals watch / excluded_codes.
+    """
+    global watch_data, watch, excluded_codes
+    with open('watchlist.json', encoding='utf-8') as f:
+        watch_data = json.load(f)
+    watch = watch_data.get('stocks', [])
 
-def rate_limit_wait():
-    global _last_request_at, _rate_wait_seconds
-    wait = MIN_REQUEST_INTERVAL - (time.monotonic() - _last_request_at)
-    if wait > 0:
-        time.sleep(wait)
-        _rate_wait_seconds += wait
-    _last_request_at = time.monotonic()
-
-
-class IRBankRateLimitError(RuntimeError):
-    pass
-
-
-def _http_error_payload(error):
+    # User-added stocks are kept separately so replacing the source ZIP does not
+    # silently erase additions that were made through the app/GitHub workflow.
     try:
-        raw = error.read().decode('utf-8', errors='replace')
-        return json.loads(raw) if raw else {}
-    except Exception:
-        return {}
+        with open(CUSTOM_WATCHLIST, encoding='utf-8') as f:
+            custom_items = json.load(f).get('stocks', [])
+    except (FileNotFoundError, json.JSONDecodeError):
+        custom_items = []
+    existing_watch_codes = {
+        re.sub(r'[^0-9A-Z]', '', str(x.get('code') if isinstance(x, dict) else x).strip().upper())
+        for x in watch
+    }
+    for item in custom_items:
+        code = re.sub(r'[^0-9A-Z]', '', str(item.get('code') if isinstance(item, dict) else item).strip().upper())
+        if code and code not in existing_watch_codes:
+            watch.append(item)
+            existing_watch_codes.add(code)
 
+    # Base-watchlist deletions are kept separately from the source ZIP so a source
+    # replacement does not silently re-add a stock the user intentionally removed.
+    try:
+        with open(EXCLUDED_WATCHLIST, encoding='utf-8') as f:
+            excluded_codes = {re.sub(r'[^0-9A-Z]', '', str(x).strip().upper()) for x in json.load(f).get('codes', [])}
+    except (FileNotFoundError, json.JSONDecodeError):
+        excluded_codes = set()
+    if excluded_codes:
+        watch = [x for x in watch if re.sub(r'[^0-9A-Z]', '', str(x.get('code') if isinstance(x, dict) else x).strip().upper()) not in excluded_codes]
+    watch_data['stocks'] = watch
 
-def get(path, params=None, retries=4):
-    global _request_count, _retry_count, _http_seconds
-    url = API + path
-    if params:
-        url += '?' + urllib.parse.urlencode(params)
-    last_error = None
-    for attempt in range(retries):
-        if _request_count >= MAX_API_REQUESTS:
-            raise IRBankRateLimitError(
-                f'IRBANK request safety ceiling reached ({MAX_API_REQUESTS}); no further request will be sent.'
-            )
-        rate_limit_wait()
-        _request_count += 1
-        req = urllib.request.Request(
-            url,
-            headers={
-                'Authorization': f'Bearer {TOKEN}',
-                'User-Agent': 'kabu-score/11.0'
-            },
-        )
-        try:
-            request_started = time.monotonic()
-            with urllib.request.urlopen(req, timeout=30) as r:
-                payload = json.load(r)
-            _http_seconds += time.monotonic() - request_started
-            return payload
-        except urllib.error.HTTPError as e:
-            _http_seconds += time.monotonic() - request_started
-            _retry_count += 1
-            last_error = e
-            body = _http_error_payload(e)
-            error = body.get('error') if isinstance(body, dict) else {}
-            error_code = error.get('code') if isinstance(error, dict) else None
-            if e.code == 429:
-                # IRBANK uses 429 for both per-minute and daily limits.  The
-                # response contains retry information; never blindly repeat a
-                # daily-limit failure for minutes.  This makes a quota outage
-                # fail fast instead of making GitHub Actions appear hung.
-                retry_after = e.headers.get('Retry-After')
-                if retry_after:
-                    try:
-                        delay = max(1.0, float(retry_after))
-                    except ValueError:
-                        try:
-                            retry_at = parsedate_to_datetime(retry_after)
-                            if retry_at.tzinfo is None:
-                                retry_at = retry_at.replace(tzinfo=timezone.utc)
-                            delay = max(1.0, (retry_at - datetime.now(timezone.utc)).total_seconds())
-                        except Exception:
-                            delay = min(30.0, 2 ** attempt)
-                    # A long Retry-After is normally the daily reset window,
-                    # not a short per-minute throttle. Never leave Actions
-                    # sleeping for hours or blindly replay a daily-quota 429.
-                    if delay > 120:
-                        raise IRBankRateLimitError(
-                            f'IRBANK 429 rate_limited; Retry-After={delay:.0f}s. '
-                            f'Quota/rate limit reached; stop without retry. '
-                            f'error_code={error_code or "unknown"}; '
-                            f'{error.get("message", str(e))}'
-                        ) from e
-                else:
-                    delay = min(30.0, 2 ** attempt)
-                if attempt == retries - 1:
-                    raise IRBankRateLimitError(
-                        f'IRBANK 429 rate_limited after {retries} attempts: {error_code or "unknown"}; {error.get("message", str(e))}'
-                    ) from e
-                time.sleep(delay)
-                continue
-            if e.code not in (500, 502, 503, 504):
-                message = error.get('message') if isinstance(error, dict) else None
-                raise RuntimeError(f'IRBANK HTTP {e.code} {error_code or ""}: {message or e}') from e
-            delay = min(30, 2 ** attempt)
-            time.sleep(delay)
-        except (urllib.error.URLError, TimeoutError) as e:
-            _http_seconds += time.monotonic() - request_started
-            _retry_count += 1
-            last_error = e
-            time.sleep(min(30, 2 ** attempt))
-    raise RuntimeError(f'IRBANK request failed after retries: {url}: {last_error}')
+    # Materialize the effective watchlist before analysis. Custom additions are
+    # stored separately under data/ so they survive source ZIP replacement, but
+    # rank_decisions.py and the public app read watchlist.json. Without persisting
+    # the merged list here, an already-present custom addition can be analyzed in
+    # update_data.py yet never reach watchlist.json, making the Issue appear
+    # successful while the newly added stock remains invisible to the app.
+    _base_watch = json.loads(Path('watchlist.json').read_text(encoding='utf-8')).get('stocks', [])
+    if watch != _base_watch:
+        with open('watchlist.json', 'w', encoding='utf-8') as f:
+            json.dump(watch_data, f, ensure_ascii=False, indent=2)
+    return watch_data
 
-
-def check_api_usage(watch_count):
-    """Fail early when today's IRBANK quota cannot support a normal run."""
-    global _api_usage
-    usage = get('/usage', retries=2)
-    _api_usage = usage if isinstance(usage, dict) else {}
-    remaining = _api_usage.get('remaining')
-    limit = _api_usage.get('limit')
-    resets_at = _api_usage.get('resets_at')
-    if remaining is None:
-        raise IRBankRateLimitError(
-            'IRBANK /usage から残り回数を確認できないため、安全のため更新を中止します。'
-        )
-    # Calculate the normal daily path from the actual implementation rather
-    # than multiplying every call by all four retry attempts.  With 20 stocks:
-    #   price history: 1 probe + 2 pages for each remaining stock = 39
-    #   stale weekly margin cache: at most 20 calls
-    #   historical PER: 20 calls
-    #   monthly-MACD expansion: at most 2 pages per stock = 40 calls
-    # Total upper bound = 119 quota-consuming requests (plus free /usage).
-    # Keep a 20% retry reserve, and set a dynamic hard ceiling to the quota
-    # remaining today.  This avoids both the old false rejection at 200/day
-    # and any attempt to exceed the actual remaining quota.
-    price_requests = 1 + max(0, watch_count - 1) * 2 if watch_count else 0
-    supply_requests = watch_count
-    valuation_requests = watch_count
-    monthly_requests = watch_count * 2
-    worst_case_requests = price_requests + supply_requests + valuation_requests + monthly_requests
-    retry_reserve = max(10, (worst_case_requests + 4) // 5)
-    minimum_needed = worst_case_requests + retry_reserve
-    print(
-        f'IRBANK usage: remaining={remaining}/{limit} resets_at={resets_at}; '
-        f'estimated={worst_case_requests}, retry_reserve={retry_reserve}, '
-        f'preflight_required={minimum_needed}'
-    )
-    if int(remaining) <= 0:
-        raise IRBankRateLimitError(
-            f'IRBANKの日次API上限に到達しています（remaining=0）。次回リセット: {resets_at}'
-        )
-    if int(remaining) < minimum_needed:
-        raise IRBankRateLimitError(
-            f'IRBANKの残りAPI枠が不足しています（remaining={remaining}）。'
-            f'通常更新の最大見積り={worst_case_requests}＋再試行予備={retry_reserve}。'
-            f'次回リセット: {resets_at}'
-        )
-    # get() counts /usage locally even though IRBANK does not charge it.
-    # Therefore allow only the preflight budget (including its retry reserve),
-    # never more than the remaining quota or the 200-call process ceiling.
-    global MAX_API_REQUESTS
-    MAX_API_REQUESTS = min(200, _request_count + min(int(remaining), minimum_needed))
-    print(f'IRBANK hard request ceiling for this run: {MAX_API_REQUESTS} attempts')
 
 
 # Optional manual stock addition from GitHub Actions workflow_dispatch.
 # The input may be either a security code (e.g. 6323) or a company name
 # (e.g. ローツェ). IRBANK resolves the official code/name automatically.
-def resolve_security_query(query):
-    raw = str(query or '').strip()
-    if not raw:
-        return None
+def apply_stock_change_from_env():
+    """Apply DELETE_STOCK_QUERY / ADD_STOCK_QUERY from the environment.
 
-    normalized_code = re.sub(r'[^0-9A-Z]', '', raw.upper())
-    if re.fullmatch(r'[0-9A-Z]{4,5}', normalized_code):
-        meta = get(f'/securities/{normalized_code}')
-        return meta
-
-    # IRBANK supports partial matching by company name or security code.
-    result = get('/securities', {'q': raw, 'limit': 20})
-    securities = result.get('securities') or []
-    if not securities:
-        raise SystemExit(f'銘柄が見つかりませんでした: {raw}')
-
-    # Prefer an exact company-name match. Otherwise use the first matching
-    # listed security returned by IRBANK's code/name search.
-    exact = next((x for x in securities if str(x.get('name') or '').strip() == raw), None)
-    meta = exact or securities[0]
-    code = str(meta.get('code') or '').strip().upper()
-    if not re.fullmatch(r'[0-9A-Z]{4,5}', code):
-        raise SystemExit(f'有効な証券コードを取得できませんでした: {raw}')
-    return get(f'/securities/{code}')
-
-delete_query = os.environ.get('DELETE_STOCK_QUERY', os.environ.get('DELETE_STOCK_CODE', '')).strip()
-if delete_query:
-    delete_code = re.sub(r'[^0-9A-Z]', '', delete_query.upper())
-    if not re.fullmatch(r'[0-9A-Z]{4,5}', delete_code):
-        raise SystemExit(f'削除対象の証券コードが不正です: {delete_query}')
-    before = len(watch)
-    watch = [x for x in watch if re.sub(r'[^0-9A-Z]', '', str(x.get('code') if isinstance(x, dict) else x).strip().upper()) != delete_code]
-    removed = before != len(watch)
-    watch_data['stocks'] = watch
-    Path(EXCLUDED_WATCHLIST).parent.mkdir(parents=True, exist_ok=True)
-    try:
-        with open(EXCLUDED_WATCHLIST, encoding='utf-8') as f:
-            excluded_data = json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError):
-        excluded_data = {'codes': []}
-    excluded = {re.sub(r'[^0-9A-Z]', '', str(x).strip().upper()) for x in excluded_data.get('codes', [])}
-    excluded.add(delete_code)
-    excluded_data['codes'] = sorted(excluded)
-    with open(EXCLUDED_WATCHLIST, 'w', encoding='utf-8') as f:
-        json.dump(excluded_data, f, ensure_ascii=False, indent=2)
-    # If it was an app-added stock, remove it from the persistent custom list too.
-    try:
-        with open(CUSTOM_WATCHLIST, encoding='utf-8') as f:
-            custom_data = json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError):
-        custom_data = {'stocks': []}
-    custom_data['stocks'] = [x for x in custom_data.get('stocks', []) if re.sub(r'[^0-9A-Z]', '', str(x.get('code') if isinstance(x, dict) else x).strip().upper()) != delete_code]
-    Path(CUSTOM_WATCHLIST).parent.mkdir(parents=True, exist_ok=True)
-    with open(CUSTOM_WATCHLIST, 'w', encoding='utf-8') as f:
-        json.dump(custom_data, f, ensure_ascii=False, indent=2)
-    with open('watchlist.json', 'w', encoding='utf-8') as f:
-        json.dump(watch_data, f, ensure_ascii=False, indent=2)
-    print(f'Deleted stock from watchlist: {delete_code} (found={removed})')
-
-add_query = os.environ.get('ADD_STOCK_QUERY', os.environ.get('ADD_STOCK_CODE', '')).strip()
-if add_query:
-    meta = resolve_security_query(add_query)
-    add_code = str(meta.get('code') or '').strip().upper()
-    resolved_name = str(meta.get('name') or '').strip()
-    resolved_industry = meta.get('industry')
-    listing_status = meta.get('listing_status')
-
-    if not resolved_name or not add_code:
-        raise SystemExit(f'銘柄情報を取得できませんでした: {add_query}')
-    if listing_status == 'delisted':
-        raise SystemExit(f'上場廃止銘柄のため追加できません: {add_code} {resolved_name}')
-
-    existing_codes = {
-        re.sub(r'[^0-9A-Z]', '', str(x.get('code') if isinstance(x, dict) else x).strip().upper())
-        for x in watch
-    }
-    if add_code in excluded_codes:
-        excluded_codes.discard(add_code)
-        Path(EXCLUDED_WATCHLIST).parent.mkdir(parents=True, exist_ok=True)
-        with open(EXCLUDED_WATCHLIST, 'w', encoding='utf-8') as f:
-            json.dump({'codes': sorted(excluded_codes)}, f, ensure_ascii=False, indent=2)
-    if add_code not in existing_codes:
-        item = {'code': add_code, 'name': resolved_name}
-        if resolved_industry:
-            item['industry'] = resolved_industry
-        watch.append(item)
+    This is exactly the sequence that used to run at import time (Phase B4):
+    deletion first, then addition, persisting watchlist.json and the
+    custom/exclusion sidecar files. Called from main() before analysis so
+    the daily workflow's Issue/dispatch-driven stock changes still take
+    effect in the same run.
+    """
+    global watch, watch_data
+    delete_query = os.environ.get('DELETE_STOCK_QUERY', os.environ.get('DELETE_STOCK_CODE', '')).strip()
+    if delete_query:
+        delete_code = re.sub(r'[^0-9A-Z]', '', delete_query.upper())
+        if not re.fullmatch(r'[0-9A-Z]{4,5}', delete_code):
+            raise SystemExit(f'削除対象の証券コードが不正です: {delete_query}')
+        before = len(watch)
+        watch = [x for x in watch if re.sub(r'[^0-9A-Z]', '', str(x.get('code') if isinstance(x, dict) else x).strip().upper()) != delete_code]
+        removed = before != len(watch)
         watch_data['stocks'] = watch
-        Path(CUSTOM_WATCHLIST).parent.mkdir(parents=True, exist_ok=True)
+        Path(EXCLUDED_WATCHLIST).parent.mkdir(parents=True, exist_ok=True)
+        try:
+            with open(EXCLUDED_WATCHLIST, encoding='utf-8') as f:
+                excluded_data = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError):
+            excluded_data = {'codes': []}
+        excluded = {re.sub(r'[^0-9A-Z]', '', str(x).strip().upper()) for x in excluded_data.get('codes', [])}
+        excluded.add(delete_code)
+        excluded_data['codes'] = sorted(excluded)
+        with open(EXCLUDED_WATCHLIST, 'w', encoding='utf-8') as f:
+            json.dump(excluded_data, f, ensure_ascii=False, indent=2)
+        # If it was an app-added stock, remove it from the persistent custom list too.
         try:
             with open(CUSTOM_WATCHLIST, encoding='utf-8') as f:
                 custom_data = json.load(f)
         except (FileNotFoundError, json.JSONDecodeError):
             custom_data = {'stocks': []}
-        custom_stocks = custom_data.setdefault('stocks', [])
-        custom_codes = {re.sub(r'[^0-9A-Z]', '', str(x.get('code') if isinstance(x, dict) else x).strip().upper()) for x in custom_stocks}
-        if add_code not in custom_codes:
-            custom_stocks.append(item)
+        custom_data['stocks'] = [x for x in custom_data.get('stocks', []) if re.sub(r'[^0-9A-Z]', '', str(x.get('code') if isinstance(x, dict) else x).strip().upper()) != delete_code]
+        Path(CUSTOM_WATCHLIST).parent.mkdir(parents=True, exist_ok=True)
         with open(CUSTOM_WATCHLIST, 'w', encoding='utf-8') as f:
             json.dump(custom_data, f, ensure_ascii=False, indent=2)
         with open('watchlist.json', 'w', encoding='utf-8') as f:
             json.dump(watch_data, f, ensure_ascii=False, indent=2)
-        print(f'Added stock to watchlist: {add_code} {resolved_name}')
-    else:
-        print(f'Stock already exists in watchlist: {add_code} {resolved_name}')
+        print(f'Deleted stock from watchlist: {delete_code} (found={removed})')
 
-def get_all_prices(code, minimum=800):
-    # Fetch enough history for the 75/200MA plus the strict monthly-MACD bottom
-    # signal. 800 sessions gives roughly 30+ monthly closes for established names.
-    # Do NOT reject
-    # a newly listed stock merely because it has fewer than 200 sessions: in that
-    # case 25/75MA and the other available indicators should still work, while
-    # 200MA remains explicitly unavailable. This is important for newer names
-    # such as 485A (PowerX). IRBANK supports cursor pagination.
-    rows = []
-    attribution = {}
-    cursor = None
-    seen = set()
-    while True:
-        params = {'limit': 500}
-        if cursor:
-            params['cursor'] = cursor
-        data = get(f'/securities/{code}/prices', params)
-        attribution = data.get('attribution') or attribution
-        page = data.get('prices') or []
-        for x in page:
-            d = x.get('date')
-            if not d or d in seen:
-                continue
-            if x.get('close') is None and x.get('adj_close') is None:
-                continue
-            seen.add(d)
-            rows.append(x)
-        cursor = data.get('next_cursor')
-        if len(rows) >= minimum or not cursor:
-            break
+    add_query = os.environ.get('ADD_STOCK_QUERY', os.environ.get('ADD_STOCK_CODE', '')).strip()
+    if add_query:
+        meta = resolve_security_query(add_query)
+        add_code = str(meta.get('code') or '').strip().upper()
+        resolved_name = str(meta.get('name') or '').strip()
+        resolved_industry = meta.get('industry')
+        listing_status = meta.get('listing_status')
 
-    if not rows:
-        raise ValueError(f'No price rows returned for {code}')
-    rows.sort(key=lambda x: x['date'], reverse=True)
-    # ``minimum`` is a target, not a hard validity gate.  New listings can
-    # legitimately have fewer than 200 sessions; calc() then exposes exactly
-    # which indicators are unavailable instead of turning the whole stock into
-    # a generic error.  At least 15 observations are needed for RSI(14).
-    if len(rows) < 15:
-        raise ValueError(f'Not enough price history for {code}: {len(rows)} rows (15 sessions required for basic RSI)')
-    if len(rows) < minimum:
-        print(f'Price history partial: {code} rows={len(rows)} target={minimum}; continuing with available history')
-    return rows, attribution
+        if not resolved_name or not add_code:
+            raise SystemExit(f'銘柄情報を取得できませんでした: {add_query}')
+        if listing_status == 'delisted':
+            raise SystemExit(f'上場廃止銘柄のため追加できません: {add_code} {resolved_name}')
 
-
-class TableParser(HTMLParser):
-    def __init__(self):
-        super().__init__()
-        self.tables = []
-        self._table = None
-        self._row = None
-        self._cell = None
-        self._text = []
-
-    def handle_starttag(self, tag, attrs):
-        if tag == 'table':
-            self._table = []
-        elif tag == 'tr' and self._table is not None:
-            self._row = []
-        elif tag in ('td', 'th') and self._row is not None:
-            self._cell = []
-
-    def handle_data(self, data):
-        if self._cell is not None:
-            self._cell.append(data)
-
-    def handle_endtag(self, tag):
-        if tag in ('td', 'th') and self._cell is not None and self._row is not None:
-            self._row.append(' '.join(''.join(self._cell).split()))
-            self._cell = None
-        elif tag == 'tr' and self._row is not None and self._table is not None:
-            if self._row:
-                self._table.append(self._row)
-            self._row = None
-        elif tag == 'table' and self._table is not None:
-            if self._table:
-                self.tables.append(self._table)
-            self._table = None
-
-
-def fetch_breadth_and_nikkei(target_date):
-    """Fetch one public breadth table once per daily run.
-
-    This is deliberately optional: a source-side delay must not invalidate all
-    18 stock calculations. Market breadth is context, not a hard buy filter.
-    """
-    url = 'https://tofuhardboiled.com/updownratio/'
-    req = urllib.request.Request(
-        url, headers={'User-Agent': 'Mozilla/5.0 (compatible; kabu-score/10.0)'}
-    )
-    with urllib.request.urlopen(req, timeout=8) as r:
-        html = r.read().decode('utf-8', errors='ignore')
-
-    p = TableParser()
-    p.feed(html)
-    daily = []
-    for table in p.tables:
-        for row in table:
-            if len(row) >= 10 and re.fullmatch(r'\d{4}/\d{2}/\d{2}', row[0]):
-                try:
-                    daily.append((
-                        row[0],
-                        int(row[3].replace(',', '')),
-                        int(row[4].replace(',', '')),
-                        float(row[2].replace(',', '')),
-                    ))
-                except Exception:
-                    pass
-    daily.sort(key=lambda x: x[0], reverse=True)
-    target = target_date.replace('-', '/')
-    idx = next((i for i, x in enumerate(daily) if x[0] == target), None)
-    if idx is None:
-        raise RuntimeError(f'Breadth source has no row for {target_date}')
-
-    def ratio(n):
-        part = daily[idx:idx + n]
-        if len(part) < n:
-            return None
-        up = sum(x[1] for x in part)
-        down = sum(x[2] for x in part)
-        return round(up / down * 100, 2) if down else None
-
-    nikkei_value = daily[idx][3]
-    nikkei_change = None
-    if idx + 1 < len(daily) and daily[idx + 1][3]:
-        nikkei_change = round((nikkei_value / daily[idx + 1][3] - 1) * 100, 2)
-
-    return {
-        'date': target_date,
-        'breadth': {
-            '6d': ratio(6), '10d': ratio(10),
-            '15d': ratio(15), '25d': ratio(25),
-        },
-        'nikkei_value': nikkei_value,
-        'nikkei_change': nikkei_change,
-        'source_url': url,
-        'source': '豆腐ハードボイルド（東証プライムの値上がり・値下がり銘柄数から算出）',
-    }
-
-
-def normalize_security_code(value):
-    """Return a clean IRBANK security code from a watchlist item/value."""
-    if isinstance(value, dict):
-        value = value.get('code')
-    if value is None:
-        return None
-    code = str(value).strip().upper()
-    if not re.fullmatch(r'[0-9A-Z]{4,5}', code):
-        raise ValueError(f'Invalid security code: {value!r}')
-    return code
-
-
-def screening_metric(code, name, target_date, field):
-    """Read one supply metric for one exact security.
-
-    The final V8 architecture intentionally keeps supply data independent from
-    the BUY decision.  We query by name, then *strictly* match security_code.
-    We never accept the first screening result because partial-name searches
-    can otherwise attach another company's metric to the requested stock.
-    """
-    code = normalize_security_code(code)
-    if not code:
-        return None, None
-
-    attempts = []
-    if target_date:
-        attempts.append(target_date)
-    attempts.append('now')
-
-    last_error = None
-    for as_of in dict.fromkeys(attempts):
-        try:
-            data = get('/screening', {
-                'name': name,
-                'sort_by': field,
-                'sort_order': 'desc',
-                'as_of': as_of,
-                'limit': 100,
-            })
-            matches = data.get('securities') or []
-            match = next(
-                (x for x in matches if normalize_security_code(x.get('security_code')) == code),
-                None,
-            )
-            if match is None:
-                continue
-            for metric in match.get('metrics') or []:
-                if metric.get('field') == field and metric.get('value') is not None:
-                    return metric.get('value'), metric.get('as_of')
-        except Exception as e:
-            last_error = e
-
-    if last_error:
-        raise last_error
-    return None, None
-
-
-def fetch_supply_batch(target_date, watch_items):
-    """Fetch weekly margin data with one API call per stock.
-
-    IRBANK added GET /securities/{code}/weekly-margin-balance on 2026-09-16.
-    It returns buy balance, sell balance, weekly changes and credit ratio in
-    one response, replacing the old 5 screening requests per stock.
-    """
-    result = {}
-    errors = []
-    for item in watch_items:
-        code = normalize_security_code(item.get('code') if isinstance(item, dict) else item)
-        if not code:
-            continue
-        row = {
-            'date': target_date,
-            'status': 'unavailable',
-            'source_url': f'https://api.irbank.net/v1/securities/{code}/weekly-margin-balance',
-            'source_note': 'IRBANK API 週次信用残高（信用買い残・信用売り残・前週比・信用倍率）',
-            'missing_fields': ['marginBuyBalance','marginSellBalance','marginBuyBalanceChangeWow','marginSellBalanceChangeWow','marginRatio'],
-            'field_dates': {},
-            'api_errors': [],
+        existing_codes = {
+            re.sub(r'[^0-9A-Z]', '', str(x.get('code') if isinstance(x, dict) else x).strip().upper())
+            for x in watch
         }
-        try:
-            data = get(f'/securities/{code}/weekly-margin-balance', {'period': '26w'})
-            weeks = data.get('weeks') or []
-            usable = [w for w in weeks if w.get('report_date')]
-            if not usable:
-                raise ValueError('weekly margin data is empty')
-            w = usable[-1]
-            row['date'] = w.get('report_date') or target_date
-            row['marginBuyBalance'] = w.get('buy_balance_total')
-            row['marginSellBalance'] = w.get('sell_balance_total')
-            row['marginBuyBalanceChangeWow'] = w.get('buy_balance_change')
-            row['marginSellBalanceChangeWow'] = w.get('sell_balance_change')
-            row['marginRatio'] = w.get('margin_ratio')
-            mapping = {
-                'marginBuyBalance': row.get('marginBuyBalance'),
-                'marginSellBalance': row.get('marginSellBalance'),
-                'marginBuyBalanceChangeWow': row.get('marginBuyBalanceChangeWow'),
-                'marginSellBalanceChangeWow': row.get('marginSellBalanceChangeWow'),
-                'marginRatio': row.get('marginRatio'),
-            }
-            row['missing_fields'] = [k for k,v in mapping.items() if v is None]
-            row['field_dates'] = {k: row['date'] for k,v in mapping.items() if v is not None}
-            row['buy_balance'] = row.get('marginBuyBalance')
-            row['sell_balance'] = row.get('marginSellBalance')
-            row['credit_ratio'] = row.get('marginRatio')
-            row['buy_change'] = row.get('marginBuyBalanceChangeWow')
-            row['sell_change'] = row.get('marginSellBalanceChangeWow')
-            if row['buy_balance'] is not None and row['sell_balance'] is not None:
-                row['net_balance'] = row['buy_balance'] - row['sell_balance']
-            if row['buy_change'] is not None and row['sell_change'] is not None:
-                row['net_change'] = row['buy_change'] - row['sell_change']
-            if not row['missing_fields']:
-                row['status'] = 'complete'
-            elif len(row['missing_fields']) < 5:
-                row['status'] = 'partial'
-        except Exception as e:
-            row['api_errors'].append(f'{code}: {e}')
-            errors.append(row['api_errors'][-1])
-        row['api_partial'] = row['status'] != 'complete'
-        result[code] = row
-    return result, errors
-
-def supply_points(s):
-    """Supply context score using net credit-balance pressure.
-
-    Net change = buy-balance change minus sell-balance change.
-    Negative means the future sell-pressure side is shrinking relative to
-    future buy-pressure side, so supply is improving.
-    """
-    if not s:
-        return 0, {}
-    p = 0
-    detail = {}
-    bc, sc, r = s.get('buy_change'), s.get('sell_change'), s.get('credit_ratio')
-    net_change = s.get('net_change')
-    detail['buy_balance_change'] = '減少（改善方向）' if bc is not None and bc < 0 else '増加（重い方向）' if bc is not None and bc > 0 else '横ばい/不明'
-    detail['sell_balance_change'] = '増加（改善方向）' if sc is not None and sc > 0 else '減少（支え弱化）' if sc is not None and sc < 0 else '横ばい/不明'
-    detail['net_change'] = net_change
-    if net_change is not None:
-        detail['net_change_direction'] = '改善' if net_change < 0 else '悪化' if net_change > 0 else '横ばい'
-        if net_change < 0:
-            p += 5
-        elif net_change == 0:
-            p += 1
-    detail['credit_ratio_level'] = r
-    if r is not None:
-        p += 5 if r <= 3 else 3 if r <= 6 else 1 if r <= 10 else 0
-    return min(p, 12), detail
-
-
-def supply_status(s):
-    if not s or s.get('credit_ratio') is None:
-        return 'データ不足', '信用倍率データが取得できないため需給判定は保留。'
-    r = float(s['credit_ratio'])
-    bc, sc = s.get('buy_change'), s.get('sell_change')
-    net_change = s.get('net_change')
-
-    # The ratio describes the level; the net change describes the direction.
-    # Both are used so that a small increase in sell-balance cannot mask a
-    # much larger increase in buy-balance.
-    if r >= 10:
-        if net_change is not None and net_change < 0:
-            return '重い', f'信用倍率{r:.2f}倍と高水準。ただしネット需給は改善（買い残前週比−売り残前週比={net_change:,.0f}）。まだ重さは残る。'
-        return '重い', f'信用倍率{r:.2f}倍と高水準。買い残−売り残のネット需給も軽くなく、上値の重さに注意。'
-
-    if net_change is not None and net_change > 0:
-        return '重い', f'信用倍率{r:.2f}倍。ネット需給が悪化（買い残前週比−売り残前週比={net_change:,.0f}）しており、買い残増加が売り残増加を上回る。'
-
-    if net_change is not None and net_change < 0:
-        if r <= 3:
-            return '軽い', f'信用倍率{r:.2f}倍で、ネット需給も改善（{net_change:,.0f}）。買い残−売り残の偏りが小さく、需給は軽い。'
-        return '改善方向', f'信用倍率{r:.2f}倍。ネット需給が改善（買い残前週比−売り残前週比={net_change:,.0f}）。'
-
-    if r <= 3:
-        return '軽い', f'信用倍率{r:.2f}倍で、買い残−売り残の偏りは比較的小さい。'
-    return '中立', f'信用倍率{r:.2f}倍。ネット需給の方向が確認できず、需給だけでは方向を決めにくい。'
-
-def pct(a, b):
-    return ((a / b) - 1) * 100 if a is not None and b not in (None, 0) else None
-
-
-def signal_icons(candle_signal, breakout, supply_info, volume_ratio, price_change, vs20, ret5, range_position60, rsi_daily=None, rsi_weekly=None, bb_daily=None, bb_weekly=None, monthly_bottom=None):
-    """Expose independent technical/supply clues as icons.
-
-    These are clues, not recommendations. Each icon can light independently;
-    the aggregate BUY decision remains separate in regime_model_v2.decide().
-    """
-    icons = []
-    candle = candle_signal or {}
-    supply = supply_info or {}
-
-    # Aggregate BUY is deliberately not inferred here.
-    # Bottom-volume: meaningful volume appearing in a genuine bottom zone.
-    bottom_volume = bool(candle.get('bottom_zone')) and volume_ratio is not None and volume_ratio >= 1.5
-    if bottom_volume:
-        icons.append({
-            'code': 'BOTTOM_VOLUME', 'icon': '💥', 'label': '大底出来高',
-            'strength': 'strong' if volume_ratio >= 2.0 else 'medium',
-            'reason': f"底値圏で出来高が{volume_ratio:.1f}倍。反転の裏付け候補。"
-        })
-
-    # Candlestick reversal clue.
-    if candle.get('status') in ('大底反転サイン', '大底反転候補'):
-        icons.append({
-            'code': 'BOTTOM_REVERSAL', 'icon': '🕯️', 'label': '大底反転',
-            'strength': 'strong' if candle.get('status') == '大底反転サイン' else 'medium',
-            'reason': candle.get('reason', '')
-        })
-
-    # Breakout clue is independent from pullback/bottom logic.
-    if breakout.get('confirmed'):
-        icons.append({
-            'code': 'RANGE_BREAKOUT', 'icon': '📈', 'label': 'レンジブレイク',
-            'strength': 'strong', 'reason': breakout.get('reason', '')
-        })
-    elif breakout.get('status') == 'レンジ抜け候補':
-        icons.append({
-            'code': 'RANGE_BREAKOUT_WATCH', 'icon': '📈', 'label': 'ブレイク候補',
-            'strength': 'medium', 'reason': breakout.get('reason', '')
-        })
-
-    # Supply-side buying clue: use BOTH the credit-ratio level and the net
-    # weekly change.  A small increase in sell-balance must not trigger a BUY
-    # icon when buy-balance is increasing much more.
-    bc = supply.get('buy_change')
-    sc = supply.get('sell_change')
-    cr = supply.get('credit_ratio')
-    net_change = supply.get('net_change')
-    if net_change is not None and cr is not None and net_change < 0 and cr <= 6:
-        icons.append({
-            'code': 'SUPPLY_BUY', 'icon': '📦', 'label': '需給買いサイン',
-            'strength': 'strong' if cr <= 3 else 'medium',
-            'reason': f'ネット需給改善（買い残前週比−売り残前週比={net_change:,.0f}）＋信用倍率{cr:.2f}倍。買い残増加より売り残増加／買い残減少が優勢。'
-        })
-    elif net_change is not None and net_change < 0 and cr is not None:
-        icons.append({
-            'code': 'SUPPLY_IMPROVING', 'icon': '📦', 'label': '需給改善',
-            'strength': 'medium',
-            'reason': f'ネット需給は改善（買い残前週比−売り残前週比={net_change:,.0f}）だが、信用倍率{cr:.2f}倍のため「需給買い」までは付けない。'
-        })
-
-    # Explicit RSI threshold clues. These are independent warning/opportunity
-    # icons and do not alter the aggregate BUY decision.
-    if rsi_daily is not None and rsi_daily < 30:
-        icons.append({
-            'code': 'RSI_DAILY_OVERSOLD', 'icon': '🔵', 'label': '日足RSI30割れ',
-            'strength': 'strong', 'reason': f'日足RSI(14)={rsi_daily:.1f}。30未満の売られ過ぎ水準。'
-        })
-    elif rsi_daily is not None and rsi_daily > 70:
-        icons.append({
-            'code': 'RSI_DAILY_OVERBOUGHT', 'icon': '🔴', 'label': '日足RSI70超え',
-            'strength': 'strong', 'reason': f'日足RSI(14)={rsi_daily:.1f}。70超の買われ過ぎ水準。'
-        })
-    if rsi_weekly is not None and rsi_weekly < 30:
-        icons.append({
-            'code': 'RSI_WEEKLY_OVERSOLD', 'icon': '🔵', 'label': '週足RSI30割れ',
-            'strength': 'strong', 'reason': f'週足RSI(14)={rsi_weekly:.1f}。30未満の売られ過ぎ水準。'
-        })
-    elif rsi_weekly is not None and rsi_weekly > 70:
-        icons.append({
-            'code': 'RSI_WEEKLY_OVERBOUGHT', 'icon': '🔴', 'label': '週足RSI70超え',
-            'strength': 'strong', 'reason': f'週足RSI(14)={rsi_weekly:.1f}。70超の買われ過ぎ水準。'
-        })
-
-    # Very strict multi-timeframe bottom clue.
-    mb = monthly_bottom or {}
-    if mb.get('active'):
-        icons.append({
-            'code': 'MONTHLY_MACD_BOTTOM', 'icon': '🟣', 'label': '大底候補（月足MACD）',
-            'strength': 'strong', 'reason': mb.get('reason', '')
-        })
-
-    # Bollinger-band breakout clues. These are independent signals and do not
-    # automatically change the aggregate BUY decision. We use closing-price
-    # breaks outside +/-2 sigma, not intraday touches.
-    for bb in (bb_daily, bb_weekly):
-        if bb:
-            icons.append(bb)
-
-    # Overextension warning is useful beside positive clues.
-    if vs20 is not None and vs20 >= 15:
-        icons.append({
-            'code': 'EXTENDED', 'icon': '⚠️', 'label': '過熱警戒',
-            'strength': 'medium', 'reason': f'20日MAから{vs20:.1f}%上方。追い買いは慎重に。'
-        })
-
-    return icons
-
-
-def rsi14(vals):
-    if len(vals) < 15:
-        return None
-    gains, losses = [], []
-    for i in range(1, 15):
-        d = vals[i - 1] - vals[i]
-        gains.append(max(d, 0))
-        losses.append(max(-d, 0))
-    ag, al = sum(gains) / 14, sum(losses) / 14
-    if al == 0:
-        return 100.0
-    return 100 - (100 / (1 + ag / al))
-
-
-def rsi14_wilder(vals):
-    """Standard Wilder RSI(14), accepting newest-first values.
-
-    The existing rsi14() is intentionally retained for the app's historical
-    score calculations. The strict Prime "トラさん" scanner uses this
-    conventional Wilder form so its <=30 gate matches common charting tools.
-    """
-    if len(vals) < 15:
-        return None
-    chronological = [float(v) for v in reversed(vals)]
-    gains = []
-    losses = []
-    for i in range(1, len(chronological)):
-        d = chronological[i] - chronological[i - 1]
-        gains.append(max(d, 0.0))
-        losses.append(max(-d, 0.0))
-    if len(gains) < 14:
-        return None
-    avg_gain = sum(gains[:14]) / 14
-    avg_loss = sum(losses[:14]) / 14
-    for gain, loss in zip(gains[14:], losses[14:]):
-        avg_gain = (avg_gain * 13 + gain) / 14
-        avg_loss = (avg_loss * 13 + loss) / 14
-    if avg_loss == 0:
-        return 100.0
-    return 100 - (100 / (1 + avg_gain / avg_loss))
-
-
-def ema_series(values, period):
-    """Return standard EMA values in chronological order."""
-    if not values or period <= 0:
-        return []
-    alpha = 2 / (period + 1)
-    out = []
-    ema = float(values[0])
-    out.append(ema)
-    for value in values[1:]:
-        ema = (float(value) - ema) * alpha + ema
-        out.append(ema)
-    return out
-
-
-def macd_series(vals, fast=12, slow=26, signal=9):
-    """Return MACD/Signal/Histogram in newest-first order."""
-    if len(vals) < slow:
-        return [], [], []
-    chronological = list(reversed([float(v) for v in vals]))
-    fast_ema = ema_series(chronological, fast)
-    slow_ema = ema_series(chronological, slow)
-    macd = [f - sl for f, sl in zip(fast_ema, slow_ema)]
-    sig = ema_series(macd, signal)
-    hist = [m - sg for m, sg in zip(macd, sig)]
-    return list(reversed(macd)), list(reversed(sig)), list(reversed(hist))
-
-
-def weekly_closes(rows):
-    """Return one closing price per ISO calendar week, newest first."""
-    seen = set()
-    closes = []
-    for row in rows:
-        date = row.get('date')
-        if not date:
-            continue
-        try:
-            key = __import__('datetime').date.fromisoformat(date).isocalendar()[:2]
-        except Exception:
-            continue
-        if key in seen:
-            continue
-        raw = row.get('adj_close') if row.get('adj_close') is not None else row.get('close')
-        if raw is None:
-            continue
-        seen.add(key)
-        closes.append(float(raw))
-    return closes
-
-
-def monthly_closes(rows):
-    """Return one adjusted closing price per ISO calendar month, newest first."""
-    seen = set()
-    closes = []
-    for row in rows:
-        date = row.get('date')
-        if not date:
-            continue
-        try:
-            key = date[:7]
-            __import__('datetime').date.fromisoformat(date)
-        except Exception:
-            continue
-        if key in seen:
-            continue
-        raw = row.get('adj_close') if row.get('adj_close') is not None else row.get('close')
-        if raw is None:
-            continue
-        seen.add(key)
-        closes.append(float(raw))
-    return closes
-
-def monthly_macd_bottom_signal(monthly_vals, weekly_rsi):
-    """Bottom clue: expose monthly MACD state separately from the weekly RSI gate."""
-    result = {
-        'active': False, 'state': 'データ不足', 'macd_active': False, 'weekly_rsi_ok': False,
-        'monthly_points': len(monthly_vals), 'macd': None, 'signal': None,
-        'hist': None, 'prev_hist': None, 'prev2_hist': None, 'hist_change': None, 'hist_change_prev': None,
-        'reason': '月足MACDに必要な履歴が不足しています。'
-    }
-    if weekly_rsi is not None:
-        result['weekly_rsi_ok'] = weekly_rsi <= 30
-    if len(monthly_vals) < 30:
-        result['reason'] = f'月足データが不足（{len(monthly_vals)}か月）。30か月以上を必要とします。'
-        return result
-    m, sig, hist = macd_series(monthly_vals)
-    if len(hist) < 3:
-        return result
-    h0, h1, h2 = hist[0], hist[1], hist[2]
-    result.update({
-        'macd': m[0], 'signal': sig[0], 'hist': h0,
-        'prev_hist': h1, 'prev2_hist': h2,
-        'hist_change': h0 - h1, 'hist_change_prev': h1 - h2
-    })
-    golden_cross = h0 >= 0 and h1 < 0
-    pre_golden = h0 < 0 and h0 > h1 > h2
-    if golden_cross:
-        result['macd_active'] = True
-        result['state'] = '月足MACDゴールデンクロス'
-    elif pre_golden:
-        result['macd_active'] = True
-        result['state'] = '月足MACD GC手前・差分縮小'
-    else:
-        result['state'] = '月足MACD条件未達'
-
-    result['active'] = bool(result['weekly_rsi_ok'] and result['macd_active'])
-    if result['active']:
-        if golden_cross:
-            result['reason'] = f'週足RSI {weekly_rsi:.1f}（30以下）＋月足MACDがゴールデンクロス。'
-        else:
-            result['reason'] = f'週足RSI {weekly_rsi:.1f}（30以下）＋月足MACDはGC前でヒストグラムが2か月連続縮小。'
-    elif not result['weekly_rsi_ok']:
-        result['reason'] = f'月足MACDは「{result["state"]}」ですが、週足RSI条件（30以下）は未成立です。'
-    else:
-        result['reason'] = f"週足RSIは30以下ですが、月足MACDは「{result['state']}」です。"
-    return result
-
-def breadth_points(b):
-    if not b:
-        return 0, {'6d': 0, '10d': 0, '15d': 0, '25d': 0}
-
-    def pts6(x):
-        if x <= 60: return 15
-        if x <= 70: return 13
-        if x <= 80: return 10
-        if x <= 90: return 6
-        if x <= 100: return 3
-        return 0
-
-    def pts10(x):
-        if x <= 70: return 10
-        if x <= 80: return 8
-        if x <= 90: return 6
-        if x <= 100: return 3
-        return 0
-
-    def pts15(x):
-        if x <= 80: return 5
-        if x <= 90: return 4
-        if x <= 100: return 2
-        return 0
-
-    def pts25(x):
-        if x <= 100: return 10
-        if x <= 110: return 6
-        if x <= 115: return 3
-        return 0
-
-    p = {
-        '6d': pts6(b['6d']), '10d': pts10(b['10d']),
-        '15d': pts15(b['15d']), '25d': pts25(b['25d'])
-    }
-    return min(sum(p.values()), 35), p
-
-
-def relative_points(x):
-    if x is None: return 0
-    if x <= -7: return 10
-    if x <= -5: return 8
-    if x <= -3: return 6
-    if x <= -2: return 3
-    return 0
-
-
-
-def candle_reversal_signals(rows):
-    """Detect bottom/reversal candlesticks conservatively.
-
-    A candlestick by itself is NOT a bottom signal.  "大底反転" is only
-    exposed when the price is genuinely in a prior-decline/bottom context.
-    This prevents ordinary hammers/dojis in healthy trends from lighting up
-    most of the watchlist.
-    """
-    def n(v):
-        try:
-            return float(v) if v is not None else None
-        except (TypeError, ValueError):
-            return None
-
-    def candle(r):
-        o, h, l, c = (n(r.get(k)) for k in ('open', 'high', 'low', 'close'))
-        if None in (o, h, l, c):
-            return None
-        rng = max(h - l, 1e-9)
-        body = abs(c - o)
-        upper = h - max(o, c)
-        lower = min(o, c) - l
-        return {
-            'date': r.get('date'), 'open': o, 'high': h, 'low': l, 'close': c,
-            'body': body, 'range': rng, 'upper': upper, 'lower': lower,
-            'bull': c > o, 'bear': c < o,
-        }
-
-    cs = [candle(r) for r in rows[:6]]
-    if not cs or cs[0] is None:
-        return {'status': 'データ不足', 'patterns': [], 'recent_patterns': [],
-                'bottom_zone': False, 'confirmation': '不明', 'lookback_days': 2}
-
-    closes = []
-    for r in rows[:61]:
-        v = n(r.get('adj_close') if r.get('adj_close') is not None else r.get('close'))
-        if v is not None:
-            closes.append(v)
-
-    current = cs[0]
-    prev = cs[1] if len(cs) > 1 else None
-    patterns = []
-
-    # Pattern detection is intentionally strict.  The current/previous
-    # 2 sessions are enough; older patterns are stale for a daily alert.
-    for i, c in enumerate(cs[:2]):
-        if c is None:
-            continue
-        p = cs[i + 1] if i + 1 < len(cs) else None
-        if c['body'] <= c['range'] * 0.35 and c['lower'] >= max(c['body'] * 2.5, c['range'] * 0.45) \
-                and c['upper'] <= max(c['body'] * 0.6, c['range'] * 0.10) \
-                and c['close'] >= c['low'] + c['range'] * 0.65:
-            patterns.append(('hammer', 'ハンマー'))
-        if p and p['bear'] and c['bull'] and c['open'] <= p['close'] and c['close'] >= p['open'] \
-                and c['body'] >= c['range'] * 0.45:
-            patterns.append(('bullish_engulfing', '陽線の包み足'))
-        if p and p['bear'] and c['bull'] and c['close'] > (p['open'] + p['close']) / 2 \
-                and c['close'] < p['open'] and c['body'] >= c['range'] * 0.30:
-            patterns.append(('piercing', '切り返し'))
-        if p and abs(c['low'] / p['low'] - 1) <= 0.003 and c['bull'] and c['close'] >= c['open'] + c['body'] * 0.5:
-            patterns.append(('tweezer_bottom', '毛抜き底'))
-        if p and i == 0 and p['bear'] and p['body'] > p['range'] * 0.45 and c['bull'] \
-                and c['close'] > (p['open'] + p['close']) / 2:
-            patterns.append(('morning_star', '明けの明星型'))
-
-    # Deduplicate.
-    unique = []
-    seen = set()
-    for code, label in patterns:
-        if code not in seen:
-            seen.add(code)
-            unique.append({'code': code, 'label': label})
-
-    # A bottom zone requires BOTH proximity to a recent low and evidence of
-    # a meaningful prior decline.  The old OR-based rule was too permissive.
-    bottom_zone = False
-    zone_reason = '大底圏の条件を満たしていない'
-    decline_context = False
-    pos20 = pos60 = dd60 = ret20 = None
-    if len(closes) >= 21:
-        low20 = min(closes[1:21])
-        high20 = max(closes[1:21])
-        pos20 = (closes[0] - low20) / low20 * 100 if low20 else None
-        ret20 = (closes[0] / closes[20] - 1) * 100 if closes[20] else None
-        decline_context = (ret20 is not None and ret20 <= -10) or (pos20 is not None and pos20 <= 5)
-        if len(closes) >= 61:
-            low60 = min(closes[1:61])
-            high60 = max(closes[1:61])
-            pos60 = (closes[0] - low60) / low60 * 100 if low60 else None
-            dd60 = (closes[0] / high60 - 1) * 100 if high60 else None
-            # Require meaningful drawdown + proximity to the 60d low.
-            bottom_zone = decline_context and pos60 is not None and pos60 <= 15 and dd60 is not None and dd60 <= -15
-        else:
-            bottom_zone = decline_context and pos20 is not None and pos20 <= 8
-        if bottom_zone:
-            zone_reason = '大きな下落後で、直近安値に近い底値圏'
-
-    # Confirmation is based on the current candle itself, not on reclaiming
-    # the previous day's high.  This keeps the bottom/reversal check anchored
-    # to the broader 20/60-day decline context instead of making the signal
-    # depend on a single immediately preceding day's price.
-    confirmed = bool(current and current['bull'] and current['close'] >= current['low'] + current['range'] * 0.60)
-    confirmation = ('反転方向の値動きを確認（当日陽線・終値が値幅の上側）'
-                    if confirmed else
-                    ('反発の形はあるが、当日の反転方向は弱い' if current and current['bull']
-                     else '当日は陰線。反転方向の確認待ち'))
-
-    if not unique:
-        status = 'なし'
-        strength = '—'
-        reason = '直近2営業日に明確な強い反転ローソク足なし。'
-    elif bottom_zone:
-        # Do not call an unconfirmed candle a "signal".  It is a candidate.
-        if confirmed:
-            status = '大底反転サイン'
-            strength = '強'
-            reason = f"{', '.join(x['label'] for x in unique)}。{zone_reason}。{confirmation}。"
-        else:
-            status = '大底反転候補'
-            strength = '中'
-            reason = f"{', '.join(x['label'] for x in unique)}。{zone_reason}。{confirmation}。"
-    else:
-        # Avoid the vague label "反転サイン". Show the actual detected
-        # candle pattern(s) so the user can tell what triggered the clue.
-        labels = '・'.join(x['label'] for x in unique)
-        status = labels
-        strength = '中' if confirmed else '弱'
-        reason = f"{labels}。ただし大底圏の条件は未達。{confirmation}。"
-
-    return {
-        'status': status,
-        'strength': strength,
-        'patterns': unique,
-        'recent_patterns': unique,
-        'bottom_zone': bottom_zone,
-        'zone_reason': zone_reason,
-        'confirmation': confirmation,
-        'reason': reason,
-        'lookback_days': 2,
-        'decline_context': decline_context,
-        'position20': round(pos20, 1) if pos20 is not None else None,
-        'position60': round(pos60, 1) if pos60 is not None else None,
-        'drawdown60': round(dd60, 1) if dd60 is not None else None,
-        'ret20': round(ret20, 1) if ret20 is not None else None,
-    }
-
-def breakout_signal(rows):
-    """Detect a recent range breakout primarily from price action.
-
-    A breakout is different from a bottom reversal. We use the *intraday high*
-    of the prior 20 sessions as the range ceiling, then look for a closing
-    breakout and continued holding above that level. Breakout-day volume is a
-    useful strength clue, but is NOT a mandatory condition: a valid price
-    breakout can occur without unusually high volume.
-    """
-    def n(v):
-        try:
-            return float(v) if v is not None else None
-        except (TypeError, ValueError):
-            return None
-
-    closes=[]; highs=[]; vols=[]; dates=[]
-    for r in rows[:45]:
-        c=n(r.get('adj_close') if r.get('adj_close') is not None else r.get('close'))
-        h=n(r.get('high'))
-        v=n(r.get('volume'))
-        if c is not None:
-            closes.append(c); highs.append(h if h is not None else c); vols.append(v); dates.append(r.get('date'))
-    if len(closes) < 22:
-        return {'status':'データ不足','is_breakout':False,'confirmed':False,'reason':'レンジ判定に必要な日足データ不足'}
-
-    current=closes[0]
-    ma20=sum(closes[1:21])/20
-    current_range_high=max(highs[1:21])
-    candidates=[]
-    for i in range(min(6, len(closes)-20)):
-        prior_highs=highs[i+1:i+21]
-        if len(prior_highs)<20: continue
-        level=max(prior_highs)
-        c=closes[i]
-        v=vols[i] if i < len(vols) else None
-        base=[x for x in vols[i+1:i+21] if x is not None and x>0]
-        vr=(v/(sum(base)/len(base))) if v is not None and base else None
-        # Close at least 0.5% above the prior range ceiling.
-        if c > level*1.005:
-            candidates.append({'i':i,'date':dates[i],'close':c,'level':level,'volume_ratio':vr})
-    if not candidates:
-        return {
-            'status':'なし','is_breakout':False,'confirmed':False,
-            'breakout_level':round(current_range_high,2),'breakout_trigger':round(current_range_high*1.005,2),'breakout_date':None,
-            'current_price':round(current,2),'current_volume':round(vols[0],0) if vols and vols[0] is not None else None,
-            'avg_volume20':round(sum([v for v in vols[1:21] if v is not None and v>0])/len([v for v in vols[1:21] if v is not None and v>0]),0) if any(v is not None and v>0 for v in vols[1:21]) else None,
-            'volume_reference_ratio':1.5,'volume_reference':None,
-            'breakout_volume_ratio':None,'distance_from_breakout':round((current/current_range_high-1)*100,2),
-            'reason':f'現在値{current:.0f}円。20日レンジ上限{current_range_high:.0f}円、明確な終値ブレイク目安{current_range_high*1.005:.0f}円。出来高増加はブレイクの信頼度をみる参考材料で、必須条件ではありません。' 
-        }
-
-    b=candidates[0]
-    held=current >= b['level']*0.99
-    volume_ok=b['volume_ratio'] is not None and b['volume_ratio']>=1.5
-    ma_ok=current > ma20
-    ret5=(current/closes[5]-1)*100 if len(closes)>5 else None
-    trend_ok=ret5 is not None and ret5>0
-    dist=(current/b['level']-1)*100
-    extension_ok=dist <= 15
-    confirmed=held and ma_ok and trend_ok and extension_ok
-    if confirmed:
-        status='レンジ抜け・再上昇'
-        strength='強' if volume_ok else '中'
-        volume_note=(f"突破日の出来高は直前20日平均の{b['volume_ratio']:.1f}倍" if b['volume_ratio'] is not None else '突破日の出来高は未確認')
-        if not volume_ok:
-            volume_note += '（出来高増加なしでも価格条件を満たすためブレイク判定）'
-        reason=f"{b['date']}に20日レンジ高値{b['level']:.0f}円を終値で上抜け。{volume_note}。現在も突破水準を維持。"
-    elif held:
-        status='レンジ抜け候補'
-        strength='中'
-        reason=f"{b['date']}にレンジ高値を上抜け。突破後は水準を維持しているが、出来高/20MA/上昇継続/過熱度の確認待ち。"
-    else:
-        status='ブレイク失敗警戒'
-        strength='弱'
-        reason=f"一度レンジ高値を上抜けたが、現在は突破水準{b['level']:.0f}円を下回る。"
-    return {
-        'status':status,'strength':strength,'is_breakout':True,'confirmed':confirmed,
-        'breakout_level':round(b['level'],2),'breakout_trigger':round(b['level']*1.005,2),'breakout_date':b['date'],
-        'current_price':round(current,2),'current_volume':round(vols[0],0) if vols and vols[0] is not None else None,
-        'avg_volume20':round(sum([v for v in vols[1:21] if v is not None and v>0])/len([v for v in vols[1:21] if v is not None and v>0]),0) if any(v is not None and v>0 for v in vols[1:21]) else None,
-        'volume_reference_ratio':1.5,
-        'volume_reference':round((sum([v for v in vols[1:21] if v is not None and v>0])/len([v for v in vols[1:21] if v is not None and v>0]))*1.5,0) if any(v is not None and v>0 for v in vols[1:21]) else None,
-        'breakout_volume_ratio':round(b['volume_ratio'],2) if b['volume_ratio'] is not None else None,
-        'distance_from_breakout':round(dist,2),'held':held,'volume_ok':volume_ok,
-        'ma20_ok':ma_ok,'trend_ok':trend_ok,'extension_ok':extension_ok,
-        'ret5':round(ret5,2) if ret5 is not None else None,
-        'reason':reason
-    }
-
-def bollinger(vals, period=25, sigma=2):
-    """Return Bollinger middle/upper/lower for newest-first close values."""
-    if len(vals) < period:
-        return None, None, None
-    window = vals[:period]
-    mid = statistics.mean(window)
-    sd = statistics.stdev(window) if len(window) >= 2 else 0.0
-    return mid, mid + sigma * sd, mid - sigma * sd
-
-def bollinger_sigma_position(current, mid, upper, sigma=2):
-    """Return current price's position in standard-deviation units.
-
-    The Bollinger bands are calculated as mid +/- sigma*SD, so SD can be
-    recovered from (upper-mid)/sigma without changing the existing band logic.
-    """
-    if current is None or mid is None or upper is None or sigma in (None, 0):
-        return None
-    sd = (float(upper) - float(mid)) / float(sigma)
-    if sd == 0:
-        return 0.0
-    return (float(current) - float(mid)) / sd
-
-def bollinger_signal(current, mid, upper, lower, timeframe, period):
-    if current is None or upper is None or lower is None:
-        return None
-    if current > upper:
-        return {
-            'code': f'BB_{timeframe}_UPPER_BREAK', 'icon': '🟠',
-            'label': f'{"日足" if timeframe == "DAILY" else "週足"}BB+2σ超え',
-            'strength': 'strong',
-            'reason': f'{"日足" if timeframe == "DAILY" else "週足"}終値が{period}{"日" if timeframe == "DAILY" else "週"}ボリンジャー+2σを上抜け。強い上昇の可能性がある一方、過熱にも注意。'
-        }
-    if current < lower:
-        return {
-            'code': f'BB_{timeframe}_LOWER_BREAK', 'icon': '🔵',
-            'label': f'{"日足" if timeframe == "DAILY" else "週足"}BB-2σ割れ',
-            'strength': 'strong',
-            'reason': f'{"日足" if timeframe == "DAILY" else "週足"}終値が{period}{"日" if timeframe == "DAILY" else "週"}ボリンジャー-2σを下抜け。強い下落圧力の可能性がある一方、売られ過ぎにも注意。'
-        }
-    return None
-
-
-def build_period_chart_history(rows, timeframe, limit):
-    """Build aggregated OHLCV chart data for weekly/monthly tabs.
-
-    Input rows are newest-first daily rows.  The returned series is chronological
-    so the browser can draw left-to-right.  This is presentation data only; all
-    trading decisions continue to use the daily calculation pipeline.
-    """
-    if timeframe not in ('weekly', 'monthly'):
-        return []
-    groups = {}
-    for row in rows:
-        date = row.get('date')
-        if not date:
-            continue
-        try:
-            d = __import__('datetime').date.fromisoformat(date)
-        except Exception:
-            continue
-        key = d.isocalendar()[:2] if timeframe == 'weekly' else (d.year, d.month)
-        groups.setdefault(key, []).append(row)
-
-    periods = []
-    for key, items in groups.items():
-        items = sorted(items, key=lambda z: str(z.get('date') or ''))
-        if not items:
-            continue
-        def adj_price(z, field):
-            raw = z.get(field)
-            if raw is None:
-                return None
+        if add_code in excluded_codes:
+            excluded_codes.discard(add_code)
+            Path(EXCLUDED_WATCHLIST).parent.mkdir(parents=True, exist_ok=True)
+            with open(EXCLUDED_WATCHLIST, 'w', encoding='utf-8') as f:
+                json.dump({'codes': sorted(excluded_codes)}, f, ensure_ascii=False, indent=2)
+        if add_code not in existing_codes:
+            item = {'code': add_code, 'name': resolved_name}
+            if resolved_industry:
+                item['industry'] = resolved_industry
+            watch.append(item)
+            watch_data['stocks'] = watch
+            Path(CUSTOM_WATCHLIST).parent.mkdir(parents=True, exist_ok=True)
             try:
-                raw = float(raw)
-            except (TypeError, ValueError):
-                return None
-            try:
-                raw_close = float(z.get('close')) if z.get('close') is not None else None
-                adj_close = float(z.get('adj_close')) if z.get('adj_close') is not None else None
-            except (TypeError, ValueError):
-                raw_close = adj_close = None
-            if raw_close and adj_close is not None:
-                return raw * (adj_close / raw_close)
-            return raw
-        opens = [adj_price(z, 'open') for z in items]
-        highs = [adj_price(z, 'high') for z in items]
-        lows = [adj_price(z, 'low') for z in items]
-        closes = [adj_price(z, 'close') for z in items]
-        volumes = [float(z.get('volume')) for z in items if z.get('volume') is not None]
-        if not any(v is not None for v in closes):
-            continue
-        periods.append({
-            'date': items[-1].get('date'),
-            'open': round(opens[0], 2) if opens[0] is not None else None,
-            'high': round(max(v for v in highs if v is not None), 2) if any(v is not None for v in highs) else None,
-            'low': round(min(v for v in lows if v is not None), 2) if any(v is not None for v in lows) else None,
-            'close': round(closes[-1], 2) if closes[-1] is not None else None,
-            'volume': sum(volumes) if volumes else None,
-        })
-
-    periods.sort(key=lambda z: str(z.get('date') or ''))
-    # Calculate period indicators from the full available monthly history, then
-    # trim only the presentation window.  Trimming to 18 months before MACD
-    # calculation made MACD(12,26,9) impossible because macd_series requires
-    # at least 26 monthly closes, even though the underlying daily history was
-    # already long enough.
-    newest_all = list(reversed(periods))
-    vals = [r['close'] for r in newest_all if r.get('close') is not None]
-    macd_values, macd_signal_values, macd_hist_values = macd_series(vals)
-    newest = newest_all[:limit]
-    out = []
-    for idx, r in enumerate(newest):
-        def ma(window):
-            v = vals[idx:idx + window]
-            return round(statistics.mean(v), 2) if len(v) >= window else None
-        win25 = vals[idx:idx + 25]
-        bb_mid, bb_upper, bb_lower = bollinger(win25, 25, 2)
-        vol_window = [float(z['volume']) for z in newest[idx+1:idx+21] if z.get('volume') is not None]
-        out_row = {
-            **r,
-            # Period-specific MA sets: daily=5/25/75/200, weekly=5/13/26/52,
-            # monthly=6/12/18.  Keep the field names explicit so the UI cannot
-            # accidentally draw daily MA periods on weekly/monthly charts.
-            'bb25_mid': round(bb_mid, 2) if bb_mid is not None else None,
-            'bb25_upper': round(bb_upper, 2) if bb_upper is not None else None,
-            'bb25_lower': round(bb_lower, 2) if bb_lower is not None else None,
-            'volume_ma20': round(statistics.mean(vol_window), 0) if vol_window else None,
-            'rsi14': round(rsi14(vals[idx:]), 1) if len(vals) - idx >= 15 else None,
-            'macd': round(macd_values[idx], 3) if idx < len(macd_values) else None,
-            'macd_signal': round(macd_signal_values[idx], 3) if idx < len(macd_signal_values) else None,
-            'macd_hist': round(macd_hist_values[idx], 3) if idx < len(macd_hist_values) else None,
-        }
-        if timeframe == 'weekly':
-            out_row.update({
-                'ma5': ma(5), 'ma13': ma(13), 'ma26': ma(26), 'ma52': ma(52),
-            })
-        elif timeframe == 'monthly':
-            out_row.update({
-                'ma6': ma(6), 'ma12': ma(12), 'ma18': ma(18),
-            })
+                with open(CUSTOM_WATCHLIST, encoding='utf-8') as f:
+                    custom_data = json.load(f)
+            except (FileNotFoundError, json.JSONDecodeError):
+                custom_data = {'stocks': []}
+            custom_stocks = custom_data.setdefault('stocks', [])
+            custom_codes = {re.sub(r'[^0-9A-Z]', '', str(x.get('code') if isinstance(x, dict) else x).strip().upper()) for x in custom_stocks}
+            if add_code not in custom_codes:
+                custom_stocks.append(item)
+            with open(CUSTOM_WATCHLIST, 'w', encoding='utf-8') as f:
+                json.dump(custom_data, f, ensure_ascii=False, indent=2)
+            with open('watchlist.json', 'w', encoding='utf-8') as f:
+                json.dump(watch_data, f, ensure_ascii=False, indent=2)
+            print(f'Added stock to watchlist: {add_code} {resolved_name}')
         else:
-            out_row.update({
-                'ma5': ma(5), 'ma25': ma(25), 'ma75': ma(75), 'ma200': ma(200),
-            })
-        out.append(out_row)
-    return list(reversed(out))
+            print(f'Stock already exists in watchlist: {add_code} {resolved_name}')
 
-
-def calc(rows, breadth_info=None, supply_info=None):
-    vals = []
-    for x in rows:
-        raw = x.get('adj_close') if x.get('adj_close') is not None else x.get('close')
-        if raw is not None:
-            vals.append(float(raw))
-    if not vals:
-        raise ValueError('No usable close data')
-
-    close = float(rows[0].get('close') if rows[0].get('close') is not None else vals[0])
-    change = pct(close, float(rows[1].get('close'))) if len(rows) > 1 and rows[1].get('close') is not None else None
-    vols = [x.get('volume') for x in rows]
-    base = [float(v) for v in vols[1:21] if v is not None]
-    vr = (float(vols[0]) / statistics.mean(base)) if vols and vols[0] is not None and base else None
-
-    # Standard moving averages include the current close.  The breakout/range
-    # windows below intentionally remain prior-session windows where applicable.
-    ma5 = statistics.mean(vals[:5]) if len(vals) >= 5 else None
-    ma20 = statistics.mean(vals[:20]) if len(vals) >= 20 else None
-    ma25 = statistics.mean(vals[:25]) if len(vals) >= 25 else None
-    ma75 = statistics.mean(vals[:75]) if len(vals) >= 75 else None
-    ma200 = statistics.mean(vals[:200]) if len(vals) >= 200 else None
-    bb_daily_mid, bb_daily_upper, bb_daily_lower = bollinger(vals, 25, 2)
-    high20 = max(vals[1:21]) if len(vals) >= 21 else None
-    low20 = min(vals[1:21]) if len(vals) >= 21 else None
-    high60 = max(vals[1:61]) if len(vals) >= 61 else None
-    low60 = min(vals[1:61]) if len(vals) >= 61 else None
-    r5 = pct(vals[0], vals[5]) if len(vals) > 5 else None
-    r10 = pct(vals[0], vals[10]) if len(vals) > 10 else None
-    r20 = pct(vals[0], vals[20]) if len(vals) > 20 else None
-    rsi = rsi14(vals)
-    macd_values, macd_signal_values, macd_hist_values = macd_series(vals)
-    macd_now = macd_values[0] if macd_values else None
-    macd_signal_now = macd_signal_values[0] if macd_signal_values else None
-    macd_hist_now = macd_hist_values[0] if macd_hist_values else None
-    weekly_vals = weekly_closes(rows)
-    weekly_ma5 = statistics.mean(weekly_vals[:5]) if len(weekly_vals) >= 5 else None
-    weekly_vs5 = pct(weekly_vals[0], weekly_ma5) if weekly_vals and weekly_ma5 is not None else None
-    rsi_weekly = rsi14(weekly_vals)
-    monthly_vals = monthly_closes(rows)
-    monthly_ma6 = statistics.mean(monthly_vals[:6]) if len(monthly_vals) >= 6 else None
-    monthly_ma12 = statistics.mean(monthly_vals[:12]) if len(monthly_vals) >= 12 else None
-    monthly_ma18 = statistics.mean(monthly_vals[:18]) if len(monthly_vals) >= 18 else None
-    monthly_bottom = monthly_macd_bottom_signal(monthly_vals, rsi_weekly)
-    bb_weekly_mid, bb_weekly_upper, bb_weekly_lower = bollinger(weekly_vals, 13, 2)
-    bb_daily_signal = bollinger_signal(vals[0], bb_daily_mid, bb_daily_upper, bb_daily_lower, 'DAILY', 25)
-    bb_weekly_signal = bollinger_signal(weekly_vals[0] if weekly_vals else None, bb_weekly_mid, bb_weekly_upper, bb_weekly_lower, 'WEEKLY', 13)
-    bb_daily_sigma = bollinger_sigma_position(vals[0], bb_daily_mid, bb_daily_upper, 2)
-    bb_weekly_sigma = bollinger_sigma_position(weekly_vals[0] if weekly_vals else None, bb_weekly_mid, bb_weekly_upper, 2)
-    d5 = pct(vals[0], ma5)
-    d20 = pct(vals[0], ma20)
-    d25 = pct(vals[0], ma25)
-    d75 = pct(vals[0], ma75)
-    d200 = pct(vals[0], ma200)
-    drawdown60 = pct(vals[0], high60)
-    range_position60 = ((vals[0]-low60)/(high60-low60)*100) if high60 is not None and low60 is not None and high60 != low60 else None
-    volatility20 = (statistics.stdev(vals[:20]) / statistics.mean(vals[:20]) * 100) if len(vals) >= 20 and statistics.mean(vals[:20]) else None
-
-    daily = 15 if change is not None and change <= -7 else 12 if change is not None and change <= -5 else 9 if change is not None and change <= -3 else 6 if change is not None and change <= -2 else 3 if change is not None and change <= -1 else 0
-    vol = 10 if vr is not None and vr >= 1.8 else 8 if vr is not None and vr >= 1.5 else 6 if vr is not None and vr >= 1.3 else 3 if vr is not None and vr >= 1.15 else 0
-    weak = 10 if d20 is not None and d20 <= -12 else 8 if d20 is not None and d20 <= -8 else 6 if d20 is not None and d20 <= -5 else 3 if d20 is not None and d20 <= -3 else 0
-    rp = 10 if rsi is not None and rsi <= 25 else 8 if rsi is not None and rsi <= 30 else 5 if rsi is not None and rsi <= 35 else 2 if rsi is not None and rsi <= 40 else 0
-    tp = 10 if d75 is not None and d75 <= -10 else 7 if d75 is not None and d75 <= -5 else 4 if d75 is not None and d75 <= 0 else 0
-
-    bp, bdetail = breadth_points((breadth_info or {}).get('breadth'))
-    nikkei_change = (breadth_info or {}).get('nikkei_change')
-    rel = (change - nikkei_change) if change is not None and nikkei_change is not None else None
-    relp = relative_points(rel)
-    sp, sdetail = supply_points(supply_info)
-    sstatus, sreason = supply_status(supply_info)
-    total = min(daily + vol + weak + rp + tp + bp + relp + sp, 100)
-
-    def deviation_text(v, ma):
-        if v is None: return '判定不可'
-        if v <= -10: return f'{ma}から大きく下（弱い）'
-        if v <= -5: return f'{ma}から下（押し目/下落）'
-        if v < 0: return f'{ma}をやや下回る'
-        if v < 5: return f'{ma}付近'
-        if v < 10: return f'{ma}を上回る'
-        return f'{ma}から大きく上（高値警戒）'
-    if rsi is None: rsi_text = '判定不可'
-    elif rsi < 30: rsi_text = f'RSI {rsi:.1f}（売られ過ぎ）'
-    elif rsi <= 40: rsi_text = f'RSI {rsi:.1f}（弱め）'
-    elif rsi < 60: rsi_text = f'RSI {rsi:.1f}（中立）'
-    elif rsi < 70: rsi_text = f'RSI {rsi:.1f}（強め）'
-    else: rsi_text = f'RSI {rsi:.1f}（過熱警戒）'
-    if vr is None: volume_text = '判定不可'
-    elif vr >= 1.8: volume_text = '出来高急増'
-    elif vr >= 1.3: volume_text = '出来高増'
-    elif vr >= 0.8: volume_text = '平常圏'
-    else: volume_text = '出来高少なめ'
-    if range_position60 is None: range_text = '判定不可'
-    elif range_position60 <= 20: range_text = '60日レンジ下側（底値圏）'
-    elif range_position60 <= 40: range_text = '60日レンジやや下'
-    elif range_position60 < 60: range_text = '60日レンジ中間'
-    elif range_position60 < 80: range_text = '60日レンジやや上'
-    else: range_text = '60日レンジ上側（高値圏）'
-    momentum_text = '反発' if change is not None and change > 0 else '下落' if change is not None and change < 0 else '横ばい'
-    candle_signal = candle_reversal_signals(rows)
-    breakout = breakout_signal(rows)
-    icons = signal_icons(candle_signal, breakout, supply_info, vr, change, d20, r5, range_position60, rsi, rsi_weekly, bb_daily_signal, bb_weekly_signal, monthly_bottom)
-
-    # Keep a compact recent history for the UI chart.  The chart is intentionally
-    # presentation data only; decisions continue to use the full calculation above.
-    chart_history = []
-    for idx, r in enumerate(rows[:100]):
-        raw_close = r.get('adj_close') if r.get('adj_close') is not None else r.get('close')
-        if raw_close is None: continue
-        close_i = float(raw_close)
-        def adj_price(z, field):
-            raw = z.get(field)
-            if raw is None:
-                return None
-            try:
-                raw = float(raw)
-            except (TypeError, ValueError):
-                return None
-            # IRBANK supplies adjusted close but OHLC can remain unadjusted around
-            # stock splits.  Apply the same adjustment factor to OHLC so candles
-            # and moving averages stay on one price scale (important for 485A).
-            raw_close = z.get('close')
-            adj_close = z.get('adj_close')
-            try:
-                raw_close = float(raw_close) if raw_close is not None else None
-                adj_close = float(adj_close) if adj_close is not None else None
-            except (TypeError, ValueError):
-                raw_close = adj_close = None
-            if raw_close and adj_close is not None:
-                return raw * (adj_close / raw_close)
-            return raw
-
-        close_adj = adj_price(r, 'close')
-        # Chart moving averages include the candle's current session, matching the
-        # standard MA definition and the values shown in the detail metrics.
-        win5 = [adj_price(z, 'close') for z in rows[idx:idx+5]]
-        win25 = [adj_price(z, 'close') for z in rows[idx:idx+25]]
-        win75 = [adj_price(z, 'close') for z in rows[idx:idx+75]]
-        win200 = [adj_price(z, 'close') for z in rows[idx:idx+200]]
-        win5 = [v for v in win5 if v is not None]
-        win25 = [v for v in win25 if v is not None]
-        win75 = [v for v in win75 if v is not None]
-        win200 = [v for v in win200 if v is not None]
-        bb_win = win25
-        bb_mid, bb_upper, bb_lower = bollinger(bb_win, 25, 2)
-        chart_history.append({
-            'date': r.get('date'),
-            'open': round(adj_price(r, 'open'), 2) if adj_price(r, 'open') is not None else None,
-            'high': round(adj_price(r, 'high'), 2) if adj_price(r, 'high') is not None else None,
-            'low': round(adj_price(r, 'low'), 2) if adj_price(r, 'low') is not None else None,
-            'close': round(close_adj, 2) if close_adj is not None else round(close_i, 2),
-            'ma5': round(statistics.mean(win5), 2) if len(win5) >= 5 else None,
-            'ma25': round(statistics.mean(win25), 2) if len(win25) >= 25 else None,
-            'ma75': round(statistics.mean(win75), 2) if len(win75) >= 75 else None,
-            'ma200': round(statistics.mean(win200), 2) if len(win200) >= 200 else None,
-            'bb25_mid': round(bb_mid, 2) if bb_mid is not None else None,
-            'bb25_upper': round(bb_upper, 2) if bb_upper is not None else None,
-            'bb25_lower': round(bb_lower, 2) if bb_lower is not None else None,
-            'volume': float(r.get('volume')) if r.get('volume') is not None else None,
-            'volume_ma20': round(statistics.mean([float(z.get('volume')) for z in rows[idx+1:idx+21] if z.get('volume') is not None]), 0) if [z.get('volume') for z in rows[idx+1:idx+21] if z.get('volume') is not None] else None,
-            'rsi14': round(rsi14(vals[idx:]), 1) if len(vals) - idx >= 15 else None,
-            'macd': round(macd_values[idx], 3) if idx < len(macd_values) else None,
-            'macd_signal': round(macd_signal_values[idx], 3) if idx < len(macd_signal_values) else None,
-            'macd_hist': round(macd_hist_values[idx], 3) if idx < len(macd_hist_values) else None,
-        })
-    chart_history.reverse()
-    chart_history_weekly = build_period_chart_history(rows, 'weekly', 60)
-    chart_history_monthly = build_period_chart_history(rows, 'monthly', 36)
-
-    return {
-        'date': rows[0].get('date'), 'price': close,
-        'change': round(change, 2) if change is not None else None,
-        'volume': vols[0] if vols else None,
-        'volume_ratio': round(vr, 2) if vr is not None else None,
-        'volume_ratio_basis': '当日出来高 ÷ 直前20営業日の平均出来高',
-        'volume_surge_threshold': 1.8,
-        # Prior 5-session high is used for the explicit "uptrend continuation"
-        # buy trigger.  The current close is intentionally excluded.
-        'high5_prev': round(max(vals[1:6]), 2) if len(vals) >= 6 else None,
-        'breakout5_prev': bool(len(vals) >= 6 and close > max(vals[1:6])),
-        'ma5': round(ma5, 2) if ma5 is not None else None,
-        'ma20': round(ma20, 2) if ma20 is not None else None,
-        'ma25': round(ma25, 2) if ma25 is not None else None,
-        'ma75': round(ma75, 2) if ma75 is not None else None,
-        'ma200': round(ma200, 2) if ma200 is not None else None,
-        'vs5': round(d5, 2) if d5 is not None else None,
-        'vs20': round(d20, 2) if d20 is not None else None,
-        'vs25': round(d25, 2) if d25 is not None else None,
-        'vs75': round(d75, 2) if d75 is not None else None,
-        'vs200': round(d200, 2) if d200 is not None else None,
-        'bb_daily': {'period':25,'sigma':2,'middle':round(bb_daily_mid,2) if bb_daily_mid is not None else None,'upper':round(bb_daily_upper,2) if bb_daily_upper is not None else None,'lower':round(bb_daily_lower,2) if bb_daily_lower is not None else None,'position_sigma':round(bb_daily_sigma,2) if bb_daily_sigma is not None else None,'status':bb_daily_signal['code'] if bb_daily_signal else 'なし'},
-        'bb_weekly': {'period':13,'sigma':2,'middle':round(bb_weekly_mid,2) if bb_weekly_mid is not None else None,'upper':round(bb_weekly_upper,2) if bb_weekly_upper is not None else None,'lower':round(bb_weekly_lower,2) if bb_weekly_lower is not None else None,'position_sigma':round(bb_weekly_sigma,2) if bb_weekly_sigma is not None else None,'status':bb_weekly_signal['code'] if bb_weekly_signal else 'なし'},
-        'high20': round(high20, 2) if high20 is not None else None,
-        'low20': round(low20, 2) if low20 is not None else None,
-        'high60': round(high60, 2) if high60 is not None else None,
-        'low60': round(low60, 2) if low60 is not None else None,
-        'drawdown60': round(drawdown60, 2) if drawdown60 is not None else None,
-        'range_position60': round(range_position60, 1) if range_position60 is not None else None,
-        'volatility20': round(volatility20, 2) if volatility20 is not None else None,
-        'ret5': round(r5, 2) if r5 is not None else None,
-        'ret10': round(r10, 2) if r10 is not None else None,
-        'ret20': round(r20, 2) if r20 is not None else None,
-        'rsi14': round(rsi, 1) if rsi is not None else None,
-        'rsi14_weekly': round(rsi_weekly, 1) if rsi_weekly is not None else None,
-        'weekly_ma5': round(weekly_ma5, 2) if weekly_ma5 is not None else None,
-        'weekly_vs5': round(weekly_vs5, 2) if weekly_vs5 is not None else None,
-        'monthly_ma6': round(monthly_ma6, 2) if monthly_ma6 is not None else None,
-        'monthly_ma12': round(monthly_ma12, 2) if monthly_ma12 is not None else None,
-        'monthly_ma18': round(monthly_ma18, 2) if monthly_ma18 is not None else None,
-        'macd': round(macd_now, 3) if macd_now is not None else None,
-        'macd_signal': round(macd_signal_now, 3) if macd_signal_now is not None else None,
-        'macd_hist': round(macd_hist_now, 3) if macd_hist_now is not None else None,
-        'monthly_rsi_bottom_signal': monthly_bottom,
-        'monthly_macd': round(monthly_bottom['macd'], 3) if monthly_bottom.get('macd') is not None else None,
-        'monthly_macd_signal': round(monthly_bottom['signal'], 3) if monthly_bottom.get('signal') is not None else None,
-        'monthly_macd_hist': round(monthly_bottom['hist'], 3) if monthly_bottom.get('hist') is not None else None,
-        'monthly_macd_state': monthly_bottom.get('state'),
-        'monthly_points': monthly_bottom.get('monthly_points', len(monthly_vals)),
-        'score': total, 'score_max': 100,
-        'data_points': len(vals), 'rows_received': len(rows),
-        'candle_signal': candle_signal,
-        'breakout_signal': breakout,
-        'signal_icons': icons,
-        'chart_history': chart_history,
-        'chart_history_weekly': chart_history_weekly,
-        'chart_history_monthly': chart_history_monthly,
-        'interpretation': {
-            'vs5': deviation_text(d5, '5日MA'), 'vs20': deviation_text(d20, '20日MA'), 'vs25': deviation_text(d25, '25日MA'), 'vs75': deviation_text(d75, '75日MA'), 'vs200': deviation_text(d200, '200日MA'),
-            'rsi': rsi_text, 'rsi_daily': rsi_text, 'rsi_weekly': (f'RSI {rsi_weekly:.1f}（売られ過ぎ）' if rsi_weekly is not None and rsi_weekly < 30 else f'RSI {rsi_weekly:.1f}（過熱警戒）' if rsi_weekly is not None and rsi_weekly > 70 else f'RSI {rsi_weekly:.1f}（中立）' if rsi_weekly is not None else '判定不可'), 'volume': volume_text, 'range60': range_text, 'momentum': momentum_text,
-        },
-        'diagnostic': {
-            'usable_points': len(vals), 'rsi_ready': len(vals) >= 15, 'weekly_rsi_ready': len(weekly_vals) >= 15, 'weekly_points': len(weekly_vals), 'weekly_ma5_ready': len(weekly_vals) >= 5,
-            'ma20_ready': len(vals) >= 20, 'ma25_ready': len(vals) >= 25, 'ma75_ready': len(vals) >= 75, 'ma200_ready': len(vals) >= 200,
-            'monthly_macd_ready': len(monthly_vals) >= 30, 'monthly_points': len(monthly_vals),
-            'monthly_ma6_ready': len(monthly_vals) >= 6, 'monthly_ma12_ready': len(monthly_vals) >= 12,
-            'monthly_ma18_ready': len(monthly_vals) >= 18,
-        },
-        'breadth': (breadth_info or {}).get('breadth') or {'6d': None, '10d': None, '15d': None, '25d': None},
-        'breadth_points': bp, 'breadth_breakdown': bdetail,
-        'nikkei_change': nikkei_change,
-        'nikkei_value': (breadth_info or {}).get('nikkei_value'),
-        'relative_strength': round(rel, 2) if rel is not None else None,
-        'supply': {**(supply_info or {'date': None, 'status': 'unavailable'}), 'status': sstatus, 'reason': sreason},
-        'supply_status': sstatus,
-        'supply_reason': sreason,
-        'supply_points': sp, 'supply_breakdown': sdetail,
-        'relative_points': relp,
-        'score_breakdown': {
-            'daily_drop': daily, 'volume': vol, 'vs20': weak,
-            'rsi14': rp, 'vs75': tp, 'breadth': bp,
-            'relative_strength': relp, 'supply': sp,
-        },
-        'breadth_source': (breadth_info or {}).get('source_url'),
-        'breadth_error': (breadth_info or {}).get('error'),
-    }
-
-
-
-def fiscal_year_end_date(fiscal_year):
-    """Convert IRBANK fiscal-year label YYYY/MM to the fiscal month-end date."""
-    m = re.fullmatch(r'(\d{4})/(\d{2})', str(fiscal_year or ''))
-    if not m:
-        return None
-    year, month = int(m.group(1)), int(m.group(2))
-    day = calendar.monthrange(year, month)[1]
-    return f'{year:04d}-{month:02d}-{day:02d}'
-
-
-def fetch_historical_per(code):
-    """Fetch the 20-fiscal-year actual PER series from IRBANK.
-
-    IRBANK's /valuations.per is based on each fiscal period's adjusted
-    closing price divided by that period's actual EPS.  This is the historical
-    annual actual-PER series used by the PER chart; it is not current forecast
-    EPS applied retroactively.
-    """
-    data = get('/valuations', {'security_code': code, 'years': 20})
-    history = data.get('history') or [] if isinstance(data, dict) else []
-    rows = []
-    for row in history:
-        if not isinstance(row, dict):
-            continue
-        per = row.get('per')
-        fy = row.get('fiscal_year')
-        if fy and isinstance(per, (int, float)) and per > 0:
-            rows.append({
-                'fiscal_year': str(fy),
-                'date': fiscal_year_end_date(fy),
-                'per': round(float(per), 3),
-                'per_source': row.get('per_source'),
-                'stock_price': row.get('stock_price_adjusted'),
-                'eps': row.get('eps_adjusted'),
-            })
-    rows.sort(key=lambda x: x.get('date') or '')
-    return {
-        'history': rows,
-        'per_5y_avg': data.get('per_5y_avg') if isinstance(data, dict) else None,
-        'attribution': data.get('attribution') if isinstance(data, dict) else None,
-    }
-
-
-def fetch_yahoo_forward_pe_timeseries(code):
-    """Fetch current Yahoo forward P/E from fundamentals-timeseries."""
-    import time as _time
-    code = str(code).strip().upper()
-    symbol = code + '.T'
-    end_ts = int(_time.time())
-    start_ts = end_ts - 45 * 86400
-    errors = []
-    for host in ('https://query1.finance.yahoo.com', 'https://query2.finance.yahoo.com'):
-        url = host + '/ws/fundamentals-timeseries/v1/finance/timeseries/' + urllib.parse.quote(symbol)
-        params = {'symbol': symbol, 'type': 'trailingForwardPeRatio', 'period1': start_ts, 'period2': end_ts}
-        try:
-            req = urllib.request.Request(url + '?' + urllib.parse.urlencode(params), headers={'User-Agent':'Mozilla/5.0 (compatible; kabu-score/15.0)','Accept':'application/json','Referer':'https://finance.yahoo.com/'})
-            with urllib.request.urlopen(req, timeout=15) as r:
-                obj = json.loads(r.read().decode('utf-8','replace'))
-            result = ((obj.get('timeseries') or {}).get('result') or [])
-            for item in result:
-                vals = item.get('trailingForwardPeRatio') or []
-                for row in reversed(vals):
-                    rv = row.get('reportedValue') if isinstance(row,dict) else None
-                    raw = rv.get('raw') if isinstance(rv,dict) else row.get('raw') if isinstance(row,dict) else None
-                    try: pe = float(raw)
-                    except (TypeError,ValueError): continue
-                    if pe > 0: return pe
-            errors.append(host + ': unavailable')
-        except Exception as e:
-            errors.append(host + ': ' + str(e))
-    raise RuntimeError('Yahoo forward P/E unavailable (' + '; '.join(errors) + ')')
-
-
-def _parse_yahoo_forecast_text(raw):
-    from html import unescape
-    text = unescape(re.sub(r'<[^>]+>', ' ', raw or ''))
-    text = text.replace('\u00a0',' ').replace('\u200b','').replace('\ufeff','')
-    text = re.sub(r'\s+', ' ', text)
-    pe_m = re.search(r'PER\s*（\s*会社予想\s*）\s*(?:用語\s*)?(?:(?:\([^)]*\))|(?:（[^）]*）))?\s*([0-9]{1,5}(?:\.[0-9]+)?)\s*倍', text)
-    eps_m = re.search(r'EPS\s*（\s*会社予想\s*）\s*(?:用語\s*)?(?:(?:\([^)]*\))|(?:（[^）]*）))?\s*([0-9][0-9,]*(?:\.[0-9]+)?)', text)
-    date_m = re.search(r'直近の決算発表日は\s*(\d{4})年\s*(\d{1,2})月\s*(\d{1,2})日', text)
-    pe = float(pe_m.group(1)) if pe_m else None
-    eps = float(eps_m.group(1).replace(',','')) if eps_m else None
-    switch_date = f'{date_m.group(1)}-{int(date_m.group(2)):02d}-{int(date_m.group(3)):02d}' if date_m else None
-    return pe, eps, switch_date
-
-
-def fetch_yahoo_forecast_per(code):
-    """Read current company-forecast PER/EPS from Yahoo."""
-    code = str(code).strip().upper()
-    errors=[]
-    try:
-        pe = fetch_yahoo_forward_pe_timeseries(code)
-        return {'forecast_pe':round(pe,3),'forecast_eps':None,'switch_date':None,'source':'Yahoo Finance fundamentals-timeseries（会社予想PER）','switch_date_basis':'Yahoo fundamentals-timeseries'}
-    except Exception as e:
-        errors.append('timeseries: '+str(e))
-    for host in ('https://query1.finance.yahoo.com','https://query2.finance.yahoo.com'):
-        try:
-            qurl = host + '/v7/finance/quote?' + urllib.parse.urlencode({'symbols':code+'.T'})
-            req=urllib.request.Request(qurl,headers={'User-Agent':'Mozilla/5.0 (compatible; kabu-score/15.0)','Accept':'application/json'})
-            with urllib.request.urlopen(req,timeout=15) as r: obj=json.loads(r.read().decode('utf-8','replace'))
-            rows=((obj.get('quoteResponse') or {}).get('result') or [])
-            if rows:
-                q=rows[0]; pe=q.get('forwardPE'); eps=q.get('epsForward') if q.get('epsForward') is not None else q.get('forwardEps')
-                if pe is not None or eps is not None:
-                    pe=float(pe) if pe is not None else None; eps=float(eps) if eps is not None else None
-                    if pe is None and eps and q.get('regularMarketPrice'): pe=float(q['regularMarketPrice'])/eps
-                    return {'forecast_pe':round(pe,3) if pe and pe>0 else None,'forecast_eps':round(eps,3) if eps and eps>0 else None,'switch_date':None,'source':'Yahoo Finance quote API（会社予想PER/EPS）','switch_date_basis':'Yahoo quote API'}
-            errors.append(host+': unavailable')
-        except Exception as e: errors.append(host+': '+str(e))
-    url='https://finance.yahoo.co.jp/quote/'+urllib.parse.quote(code)+'.T'; texts=[]
-    for target in (url,'https://r.jina.ai/https://finance.yahoo.co.jp/quote/'+urllib.parse.quote(code)+'.T','https://r.jina.ai/http://finance.yahoo.co.jp/quote/'+urllib.parse.quote(code)+'.T'):
-        try:
-            req=urllib.request.Request(target,headers={'User-Agent':'Mozilla/5.0 (compatible; kabu-score/15.0)','Accept':'text/plain,text/html'})
-            with urllib.request.urlopen(req,timeout=20) as r: texts.append(r.read().decode('utf-8','ignore'))
-            if texts: break
-        except Exception as e: errors.append('page: '+str(e))
-    for raw in texts:
-        pe,eps,switch_date=_parse_yahoo_forecast_text(raw)
-        if pe is not None or eps is not None:
-            return {'forecast_pe':round(pe,3) if pe is not None else None,'forecast_eps':round(eps,3) if eps is not None else None,'switch_date':switch_date,'source':'Yahoo!ファイナンス（会社予想PER/EPS）','switch_date_basis':'直近の決算発表日'}
-    raise RuntimeError('Yahooから会社予想PER/EPSを取得できませんでした ('+'; '.join(errors)+')')
-
-def _parse_yahoo_pbr_dividend_text(raw):
-    """Parse PBR and company-forecast dividend yield from Yahoo Japan quote text."""
-    from html import unescape
-    text = unescape(re.sub(r'<[^>]+>', ' ', raw or ''))
-    text = text.replace('\u00a0', ' ').replace('\u200b', '').replace('\ufeff', '')
-    text = re.sub(r'\s+', ' ', text)
-
-    # Yahoo Japan currently exposes these as:
-    # 配当利回り（会社予想） ... 0.77%
-    # PBR（実績） ... (連)13.42倍
-    div_m = re.search(
-        r'配当利回り\s*（\s*会社予想\s*）\s*(?:用語\s*)?([0-9]{1,4}(?:\.[0-9]+)?)\s*%',
-        text
-    )
-    pbr_m = re.search(
-        r'PBR\s*（\s*実績\s*）\s*(?:用語\s*)?(?:(?:\([^)]*\))|(?:（[^）]*）))?\s*([0-9]{1,6}(?:\.[0-9]+)?)\s*倍',
-        text
-    )
-    # Fallback for markup/text variants that omit the parenthetical label.
-    if div_m is None:
-        div_m = re.search(r'配当利回り[^%]{0,80}?([0-9]{1,4}(?:\.[0-9]+)?)\s*%', text)
-    if pbr_m is None:
-        pbr_m = re.search(r'PBR[^0-9]{0,80}?([0-9]{1,6}(?:\.[0-9]+)?)\s*倍', text)
-
-    pbr = float(pbr_m.group(1)) if pbr_m else None
-    dividend_yield = float(div_m.group(1)) if div_m else None
-    if pbr is not None and pbr <= 0:
-        pbr = None
-    if dividend_yield is not None and dividend_yield < 0:
-        dividend_yield = None
-    return pbr, dividend_yield
-
-
-def fetch_yahoo_pbr_dividend(code):
-    """Fetch current PBR and company-forecast dividend yield from Yahoo.
-
-    Prefer the quote API, but fall back to Yahoo Japan's public quote page.
-    The fallback is important because Yahoo Japan currently exposes PBR and
-    company-forecast dividend yield on the quote page even when the global
-    quote API omits those fields.
-    """
-    code = str(code).strip().upper()
-    errors = []
-
-    # Fast path: Yahoo global quote API.
-    for host in ('https://query1.finance.yahoo.com', 'https://query2.finance.yahoo.com'):
-        try:
-            qurl = host + '/v7/finance/quote?' + urllib.parse.urlencode({'symbols': code + '.T'})
-            req = urllib.request.Request(
-                qurl,
-                headers={'User-Agent': 'Mozilla/5.0 (compatible; kabu-score/15.0)', 'Accept': 'application/json'}
-            )
-            with urllib.request.urlopen(req, timeout=15) as r:
-                obj = json.loads(r.read().decode('utf-8', 'replace'))
-            rows = ((obj.get('quoteResponse') or {}).get('result') or [])
-            if not rows:
-                errors.append(host + ': unavailable')
-                continue
-            q = rows[0]
-            pbr = q.get('priceToBook')
-            if pbr is not None:
-                try:
-                    pbr = float(pbr)
-                    if pbr <= 0:
-                        pbr = None
-                except (TypeError, ValueError):
-                    pbr = None
-
-            div_raw = q.get('dividendYield')
-            if div_raw is None:
-                div_raw = q.get('trailingAnnualDividendYield')
-            dividend_yield = None
-            if div_raw is not None:
-                try:
-                    div_raw = float(div_raw)
-                    dividend_yield = div_raw * 100.0 if abs(div_raw) <= 1.5 else div_raw
-                    if dividend_yield < 0:
-                        dividend_yield = None
-                except (TypeError, ValueError):
-                    dividend_yield = None
-
-            if pbr is not None or dividend_yield is not None:
-                return {
-                    'pbr': round(pbr, 3) if pbr is not None else None,
-                    'dividend_yield': round(dividend_yield, 3) if dividend_yield is not None else None,
-                    'source': 'Yahoo Finance quote API',
-                }
-            errors.append(host + ': PBR/dividend fields omitted')
-        except Exception as e:
-            errors.append(host + ': ' + str(e))
-
-    # Reliable fallback: Yahoo Japan public quote page / Jina text relay.
-    targets = (
-        'https://finance.yahoo.co.jp/quote/' + urllib.parse.quote(code) + '.T',
-        'https://r.jina.ai/https://finance.yahoo.co.jp/quote/' + urllib.parse.quote(code) + '.T',
-        'https://r.jina.ai/http://finance.yahoo.co.jp/quote/' + urllib.parse.quote(code) + '.T',
-    )
-    for target in targets:
-        try:
-            req = urllib.request.Request(
-                target,
-                headers={'User-Agent': 'Mozilla/5.0 (compatible; kabu-score/15.0)', 'Accept': 'text/plain,text/html'}
-            )
-            with urllib.request.urlopen(req, timeout=20) as r:
-                raw = r.read().decode('utf-8', 'ignore')
-            pbr, dividend_yield = _parse_yahoo_pbr_dividend_text(raw)
-            if pbr is not None or dividend_yield is not None:
-                return {
-                    'pbr': round(pbr, 3) if pbr is not None else None,
-                    'dividend_yield': round(dividend_yield, 3) if dividend_yield is not None else None,
-                    'source': 'Yahoo!ファイナンス（参考指標）',
-                }
-            errors.append('page: PBR/dividend not found')
-        except Exception as e:
-            errors.append('page: ' + str(e))
-
-    # Second fallback: MINKABU public valuation/dividend pages. Yahoo can
-    # occasionally omit or block the reference-indicator fields from automated
-    # requests even though they are visible in the browser. Keep this outside
-    # the IRBANK quota because it is an external web source.
-    try:
-        valuation_url = 'https://minkabu.jp/stock/' + urllib.parse.quote(code) + '/daily_valuation'
-        req = urllib.request.Request(valuation_url, headers={'User-Agent': 'Mozilla/5.0 (compatible; kabu-score/16.0)', 'Accept': 'text/html'})
-        with urllib.request.urlopen(req, timeout=20) as r:
-            raw = r.read().decode('utf-8', 'ignore')
-        text = re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', ' ', raw)).replace('\u00a0', ' ')
-        pbr_m = re.search(r'PBR\s*\(倍\)[^0-9]{0,120}([0-9]{1,6}(?:\.[0-9]+)?)', text)
-        if pbr_m is None:
-            pbr_m = re.search(r'PBR[^0-9]{0,120}([0-9]{1,6}(?:\.[0-9]+)?)', text)
-        pbr = float(pbr_m.group(1)) if pbr_m else None
-        dividend_yield = None
-        # Prefer the dedicated dividend page because it exposes the current
-        # company-forecast yield rather than only the historical valuation yield.
-        div_url = 'https://minkabu.jp/stock/' + urllib.parse.quote(code) + '/dividend'
-        req = urllib.request.Request(div_url, headers={'User-Agent': 'Mozilla/5.0 (compatible; kabu-score/16.0)', 'Accept': 'text/html'})
-        with urllib.request.urlopen(req, timeout=20) as r:
-            div_raw = r.read().decode('utf-8', 'ignore')
-        div_text = re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', ' ', div_raw)).replace('\u00a0', ' ')
-        div_m = re.search(r'配当利回り[^%]{0,120}?([0-9]{1,4}(?:\.[0-9]+)?)\s*%', div_text)
-        if div_m:
-            dividend_yield = float(div_m.group(1))
-        if pbr is not None or dividend_yield is not None:
-            return {
-                'pbr': round(pbr, 3) if pbr is not None else None,
-                'dividend_yield': round(dividend_yield, 3) if dividend_yield is not None else None,
-                'source': 'みんかぶ（バリュエーション／配当情報）',
-            }
-        errors.append('minkabu: PBR/dividend not found')
-    except Exception as e:
-        errors.append('minkabu: ' + str(e))
-
-    return {
-        'pbr': None,
-        'dividend_yield': None,
-        'source': 'Yahoo!ファイナンス／みんかぶ（参考指標）',
-        'error': '; '.join(errors),
-    }
-
-def collect_per_data(code):
-    """Collect all PER inputs during Daily stock update; UI only reads saved data."""
-    actual = fetch_historical_per(code)
-    try:
-        forecast = fetch_yahoo_forecast_per(code)
-        forecast_error = None
-    except Exception as e:
-        forecast = {
-            'forecast_pe': None, 'forecast_eps': None, 'switch_date': None,
-            'source': 'Yahoo!ファイナンス（会社予想PER/EPS）',
-            'switch_date_basis': '取得できず',
-        }
-        forecast_error = str(e)
-    return {
-        'actual_history': actual.get('history', []),
-        'per_5y_avg': actual.get('per_5y_avg'),
-        'actual_attribution': actual.get('attribution'),
-        'forecast': forecast,
-        'forecast_error': forecast_error,
-        'updated_at': now_jst().isoformat(),
-    }
 
 
 def load_cached_supply(code, max_age_days=10, reference_date=None):
@@ -1979,6 +244,10 @@ def main():
     # A transient fetch failure must never be converted into the legitimate
     # classification state UNKNOWN/判定不能.  If a stock cannot be refreshed,
     # retain its last complete classification and mark it stale instead.
+    require_api_key()
+    load_watchlist()
+    apply_stock_change_from_env()
+
     previous_stocks = {}
     try:
         with open('data/stocks.json', encoding='utf-8') as f:
@@ -2033,7 +302,7 @@ def main():
     if stale_supply_items:
         fresh_supply, supply_batch_errors = fetch_supply_batch(probe_date, stale_supply_items)
         supply_batch_cache.update(fresh_supply)
-    print(f'Daily setup: watch={len(watch)} cache_supply={len(cached_supply)} refresh_supply={len(stale_supply_items)} requests={_request_count} elapsed={time.monotonic()-run_started:.1f}s')
+    print(f'Daily setup: watch={len(watch)} cache_supply={len(cached_supply)} refresh_supply={len(stale_supply_items)} requests={market_data._request_count} elapsed={time.monotonic()-run_started:.1f}s')
 
     for idx, item in enumerate(watch, start=1):
         if isinstance(item, str):
@@ -2160,7 +429,7 @@ def main():
                     'error': str(e), 'data_stale': False
                 }
                 out['diagnostics'].append({'code': code, 'status': 'error', 'error': str(e)})
-        print(f'Daily progress: {idx}/{len(watch)} {code} requests={_request_count} elapsed={time.monotonic()-run_started:.1f}s')
+        print(f'Daily progress: {idx}/{len(watch)} {code} requests={market_data._request_count} elapsed={time.monotonic()-run_started:.1f}s')
 
     out['breadth_status'] = 'ok' if breadth_cache else 'unavailable'
     out['breadth_error'] = breadth_error
@@ -2182,12 +451,12 @@ def main():
     os.makedirs('data', exist_ok=True)
     out['timing'] = {
         'total_seconds': round(time.monotonic() - run_started, 1),
-        'api_requests': _request_count,
-        'rate_limit_wait_seconds': round(_rate_wait_seconds, 1),
-        'retry_count': _retry_count,
-        'http_seconds': round(_http_seconds, 1),
+        'api_requests': market_data._request_count,
+        'rate_limit_wait_seconds': round(market_data._rate_wait_seconds, 1),
+        'retry_count': market_data._retry_count,
+        'http_seconds': round(market_data._http_seconds, 1),
     }
-    out['irbank_usage_at_start'] = _api_usage
+    out['irbank_usage_at_start'] = market_data._api_usage
     with open('data/stocks.json', 'w', encoding='utf-8') as f:
         json.dump(out, f, ensure_ascii=False, indent=2)
     print(json.dumps({

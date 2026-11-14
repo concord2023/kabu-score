@@ -1,36 +1,32 @@
-"""Regression tests for _parse_yahoo_forecast_text in update_data.py.
+"""Regression tests for _parse_yahoo_forecast_text in forecast_parsers.py.
 
-update_data.py has import-time side effects (it requires IRBANK_API_KEY and
-reads/writes watchlist.json), so this test does NOT import the module.
-Instead it extracts the single _parse_yahoo_forecast_text function with ast
-and execs only that function.
+The parser now lives in forecast_parsers.py (extracted from update_data.py
+in Phase B1) as a pure function, so this test imports it directly.
 
 It also guards against the historical bug this file was written for:
 _parse_yahoo_forecast_text used to be defined twice in update_data.py
 (only the later definition was effective, and the two regexes differed
-slightly). There must be exactly one definition, and it must keep handling
-the PER（会社予想） / EPS（会社予想） patterns that both old definitions
+slightly). It must be defined exactly once, in forecast_parsers.py, and
+update_data.py must not redefine it. It must keep handling the
+PER（会社予想） / EPS（会社予想） patterns that both old definitions
 targeted.
 """
 import ast
-import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-SOURCE = (ROOT / 'update_data.py').read_text(encoding='utf-8')
 
 
-def load_parser():
-    tree = ast.parse(SOURCE)
-    defs = [n for n in tree.body
-            if isinstance(n, ast.FunctionDef) and n.name == '_parse_yahoo_forecast_text']
-    assert len(defs) == 1, f'_parse_yahoo_forecast_text must be defined exactly once, found {len(defs)}'
-    namespace = {'re': re}
-    exec(compile(ast.Module(body=[defs[0]], type_ignores=[]), 'update_data.py', 'exec'), namespace)
-    return namespace['_parse_yahoo_forecast_text']
+def _defs_in(filename, name):
+    tree = ast.parse((ROOT / filename).read_text(encoding='utf-8'))
+    return [n for n in tree.body
+            if isinstance(n, ast.FunctionDef) and n.name == name]
 
 
-parse = load_parser()
+assert len(_defs_in('forecast_parsers.py', '_parse_yahoo_forecast_text')) == 1,     '_parse_yahoo_forecast_text must be defined exactly once, in forecast_parsers.py'
+assert len(_defs_in('update_data.py', '_parse_yahoo_forecast_text')) == 0,     'update_data.py must not redefine _parse_yahoo_forecast_text'
+
+from forecast_parsers import _parse_yahoo_forecast_text as parse
 
 
 def test_basic_forecast_with_date():

@@ -36,7 +36,7 @@ The Daily stock update workflow runs only the watchlist analysis. The all-listed
 全上場銘柄を一度に800営業日以上取得する方式はAPIリクエスト数が多いため、手動の `recommendation-scan.yml` は2段階方式とする。
 1. 各銘柄から直近約120営業日だけを1回取得し、週足RSI(14)<=30（Wilder方式）を一次選別。
 2. 一次選別を通過した銘柄だけ800営業日以上を取得し、月足MACDを含む通常の `decide()` で詳細判定。
-通常の `daily-update.yml` を唯一の定期更新ワークフローとして使用する。平日17:10（日本時間）を本実行、17:40を予備実行とし、17:10以降に当日データが更新済みなら予備実行は分析を重複させず終了する。旧 `Update stock scores` は使用しない。
+通常の `daily-update.yml` を唯一の定期更新ワークフローとして使用する。スケジュールは平日17:10（日本時間）の単一実行のみで、予備実行・自動リトライはない。旧 `Update stock scores` は使用しない。
 
 
 ## 銘柄の追加・削除

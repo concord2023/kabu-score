@@ -1,5 +1,8 @@
+import os
+os.environ.setdefault('IRBANK_API_KEY', 'offline-test-token')
 from datetime import date, timedelta
-from regime_model_v2 import classify_regime
+from regime_model_v2 import classify_regime, _weekly_closes
+import update_data as ud
 
 
 def rows_from_closes(closes):
@@ -47,7 +50,18 @@ def test_current_range_setup_is_range_transition():
     assert regime['regime'] == 'RANGE_TRANSITION', regime
 
 
+def test_weekly_closes_implementations_agree():
+    # Characteristic test (Phase A safety net): on a tidy newest-first series,
+    # update_data.weekly_closes (floats) and regime_model_v2._weekly_closes
+    # ({date, close}) must select the same close for every ISO week.
+    rows = rows_from_closes([300 - i * 0.7 for i in range(180)])
+    from_update_data = ud.weekly_closes(rows)
+    from_regime = [x['close'] for x in _weekly_closes(rows)]
+    assert from_update_data == from_regime, (from_update_data[:5], from_regime[:5])
+
+
 if __name__ == '__main__':
     test_established_uptrend_is_not_demoted_by_stale_breakout_level()
     test_current_range_setup_is_range_transition()
+    test_weekly_closes_implementations_agree()
     print('REGIME CLASSIFICATION REGRESSION OK')

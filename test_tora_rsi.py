@@ -38,3 +38,11 @@ assert actual > 30.0
 assert not (actual <= 30.0)
 
 print(f'TORA RSI REGRESSION OK: {actual:.6f} (hard gate rejects >30)')
+
+# Golden values (Phase A safety net): pin BOTH RSI variants on a fixed series.
+# rsi14 (simple) and rsi14_wilder intentionally differ; neither may drift.
+_golden_series = [100, 102, 101, 105, 103, 108, 107, 110, 108, 112, 115, 113, 118, 120, 117, 121, 124, 122, 126, 130, 128]
+_golden_nf = list(reversed(_golden_series))
+assert math.isclose(ud.rsi14(_golden_nf), 74.4186046511628, rel_tol=0, abs_tol=1e-9), ud.rsi14(_golden_nf)
+assert math.isclose(ud.rsi14_wilder(_golden_nf), 73.86273604224766, rel_tol=0, abs_tol=1e-9), ud.rsi14_wilder(_golden_nf)
+print('RSI GOLDEN VALUES OK: rsi14=74.418605 rsi14_wilder=73.862736 (intentionally different)')
