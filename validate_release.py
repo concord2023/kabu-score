@@ -313,7 +313,7 @@ assert_true('isActualQuote' in rt_js and 'quote_type' in rt_js and 'daily_rankin
 assert_true('async function fetchLiveQuotes(codes)' in rt_js and 'query1.finance.yahoo.com/v7/finance/spark?' in rt_js and "quote_type: 'yahoo_browser_live'" in rt_js, 'button must attempt live Yahoo quotes before relying on a static snapshot')
 assert_true("el.dataset.statusOwner = 'realtime-button'" in rt_js, 'button result must be marked so later restore calls cannot overwrite it')
 assert_true('if(st&&!st.dataset.statusOwner)' in (ROOT/'index.html').read_text(encoding='utf-8'), 'inline restore must not overwrite the real-time result message')
-assert_true('realtime_quotes.js?v=20261023-live-fetch' in (ROOT/'index.html').read_text(encoding='utf-8'), 'realtime script URL must be cache-busted for live quote fetch fix')
+assert_true('realtime_quotes.js?v=20261115-market-day' in (ROOT/'index.html').read_text(encoding='utf-8'), 'realtime script URL must be cache-busted for live quote fetch fix')
 assert_true('const updated=formatUpdateTime(d.updated_at)' in (ROOT/'index.html').read_text(encoding='utf-8'), 'main page update timestamp must be displayed in JST')
 for page in ['dashboard.html','recommendations.html','daily_recommendations.html','signals.html','bottom.html']:
     page_text=(ROOT/page).read_text(encoding='utf-8')

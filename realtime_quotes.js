@@ -44,6 +44,15 @@
     });
   };
 
+  // The ranking's market day is the newest row date, not the calendar day
+  // the file was generated on. updated_at is a wall-clock generation
+  // timestamp and lands on the next day when the daily job runs past
+  // midnight, so it must only be a fallback when no row dates exist.
+  function rankingMarketDay(ranking) {
+    const rowDays = (ranking?.ranking || []).map(x => jstDay(x?.details?.date || x?.date)).filter(Boolean).sort();
+    return rowDays.length ? rowDays[rowDays.length - 1] : jstDay(ranking?.updated_at);
+  }
+
   function updateStatus(text, kind) {
     const el = document.getElementById('realtimeStatus');
     if (!el) return;
@@ -257,8 +266,7 @@
     const started = performance.now();
     try {
       const ranking = await fetchRanking();
-      const rowDays = (ranking?.ranking || []).map(x => jstDay(x?.details?.date || x?.date)).filter(Boolean).sort();
-      const dailyDay = rowDays.length ? rowDays[rowDays.length - 1] : jstDay(ranking?.updated_at);
+      const dailyDay = rankingMarketDay(ranking);
 
       // First attempt a fresh Yahoo request on the button click. This is the
       // actual live path; the static snapshot below is only a backup.
@@ -335,7 +343,7 @@
     // Restore values after a tab switch without touching the status message.
     try {
       const ranking = await fetchRanking();
-      const dailyDay = jstDay(ranking?.updated_at);
+      const dailyDay = rankingMarketDay(ranking);
       const payload = await fetchSnapshot();
       if (dailyDay && jstDay(payload.market_date) && jstDay(payload.market_date) < dailyDay) return;
       storeQuotes(payload.quotes, dailyDay, payload);
