@@ -1662,23 +1662,6 @@ def fetch_historical_per(code):
     }
 
 
-def _parse_yahoo_forecast_text(raw):
-    """Parse Yahoo Japan quote text; works with HTML or a text relay response."""
-    from html import unescape
-    text = unescape(re.sub(r'<[^>]+>', ' ', raw or ''))
-    text = re.sub(r'\s+', ' ', text)
-    # Current Yahoo pages expose e.g. PER（会社予想） -> (連)11.23倍 and
-    # EPS（会社予想） -> (連)265.55.  Keep the parser tolerant of markup/spacing.
-    pe_m = re.search(r'PER（会社予想）\s*(?:用語\s*)?(?:(?:\([^)]*\))|(?:（[^）]*）))?\s*([0-9]{1,5}(?:\.[0-9]+)?)\s*倍', text)
-    eps_m = re.search(r'EPS（会社予想）\s*(?:用語\s*)?(?:(?:\([^)]*\))|(?:（[^）]*）))?\s*([0-9][0-9,]*(?:\.[0-9]+)?)', text)
-    date_m = re.search(r'直近の決算発表日は\s*(\d{4})年\s*(\d{1,2})月\s*(\d{1,2})日', text)
-    pe = float(pe_m.group(1)) if pe_m else None
-    eps = float(eps_m.group(1).replace(',', '')) if eps_m else None
-    switch_date = None
-    if date_m:
-        switch_date = f'{date_m.group(1)}-{int(date_m.group(2)):02d}-{int(date_m.group(3)):02d}'
-    return pe, eps, switch_date
-
 def fetch_yahoo_forward_pe_timeseries(code):
     """Fetch current Yahoo forward P/E from fundamentals-timeseries."""
     import time as _time
