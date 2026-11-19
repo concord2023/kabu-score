@@ -109,6 +109,53 @@ async function runRestore(mode) {
   return saved ? `stored market_day=${saved.market_day} quotes=${Object.keys(saved.quotes||{}).length}` : 'nothing stored';
 }
 
+// --- Restore must not downgrade newer saved live quotes --------------------
+// Regression (reported 2026-11-19): the user fetched live quotes in the
+// browser on the current market day, opened another screen, and came back
+// to the list. restoreSnapshot() then stored the server snapshot — still
+// carrying the previous market day's close, with a market_date equal to
+// the ranking day so the stale guard passed — unconditionally over the
+// saved live quotes, so the values reverted. The restore must keep the
+// newer quote per symbol, in both directions.
+async function runRestorePreserve(mode) {
+  let loadHandler;
+  const store = () => { const m = new Map(); return { setItem: (k,v)=>m.set(k,v), getItem:k=>m.get(k)||null, removeItem:k=>m.delete(k) }; };
+  const localStorage = store();
+  const savedQuote = mode === 'preserve-newer'
+    ? { price: 999, change: 9, change_pct: 0.9, market_time: '2026-11-14T10:00:00+09:00', quote_type: 'yahoo_browser_live' }
+    : { price: 111, change: 1, change_pct: 0.1, market_time: '2026-11-13T09:00:00+09:00', quote_type: 'yahoo_browser_live' };
+  localStorage.setItem('kabuScoreRealtimeQuotesV2', JSON.stringify({ saved_at: '2026-11-14T01:20:00.000Z', market_day: '2026-11-13', source: 'test', quotes: { '7203': savedQuote } }));
+  const context = {
+    console, Date, Number, String, Object, Array, Math, Intl, JSON, Promise, URLSearchParams, AbortController,
+    setTimeout, clearTimeout, performance: { now: () => 0 },
+    localStorage, sessionStorage: store(),
+    window: { addEventListener: (n,fn)=>{ if(n==='load')loadHandler=fn; }, kabuScoreApplyRealtime: () => {} },
+    document: {
+      getElementById: () => null,
+      querySelectorAll: () => [],
+      addEventListener: () => {},
+      visibilityState: 'visible'
+    },
+    fetch: async url => {
+      const ok = (body, statusCode=200) => ({ok:statusCode>=200&&statusCode<300,status:statusCode,json:async()=>body});
+      if (String(url).includes('decision_ranking.json')) return ok(CROSSDAY_RANKING);
+      if (String(url).includes('raw.githubusercontent.com') || String(url).includes('realtime_quotes.json')) {
+        return ok({updated_at:'2026-11-14T01:16:00+09:00',market_date:'2026-11-13',requested:1,fallback:false,source:'Yahoo Finance spark API',quotes:{'7203':{price:456,change:2,change_pct:0.44,market_time:'2026-11-13T15:00:00+09:00',quote_type:'yahoo'}}});
+      }
+      return ok({},404);
+    }
+  };
+  vm.runInNewContext(source, context, {filename:'realtime_quotes.js'});
+  loadHandler();
+  await new Promise(r=>setTimeout(r,50));
+  const raw = localStorage.getItem('kabuScoreRealtimeQuotesV2');
+  const saved = raw ? JSON.parse(raw) : null;
+  if (!saved || !saved.quotes || !saved.quotes['7203']) throw new Error(`restore preserve (${mode}) failed: no stored quote`);
+  if (mode === 'preserve-newer' && saved.quotes['7203'].price !== 999) throw new Error('restore preserve failed: older snapshot overwrote the newer saved live quote, price=' + saved.quotes['7203'].price);
+  if (mode === 'snapshot-newer' && saved.quotes['7203'].price !== 456) throw new Error('restore preserve failed: newer snapshot was not applied, price=' + saved.quotes['7203'].price);
+  return `stored price=${saved.quotes['7203'].price}`;
+}
+
 // Same cross-midnight scenario through the inline restore path in index.html
 // (applyRealtimeToRows). The helper block is extracted from the real page so
 // the test exercises the shipped code, with only formatting helpers stubbed.
@@ -159,6 +206,8 @@ async function runInlineRestore(mode) {
   console.log('FAILURE:', await run('fail'));
   console.log('RESTORE CROSSDAY:', await runRestore('crossday'));
   console.log('RESTORE STALE:', await runRestore('stale'));
+  console.log('RESTORE PRESERVE NEWER:', await runRestorePreserve('preserve-newer'));
+  console.log('RESTORE SNAPSHOT NEWER:', await runRestorePreserve('snapshot-newer'));
   console.log('INLINE RESTORE CROSSDAY:', await runInlineRestore('crossday'));
   console.log('INLINE RESTORE STALE:', await runInlineRestore('stale'));
   console.log('REALTIME STATUS PERSISTENCE TEST OK');
