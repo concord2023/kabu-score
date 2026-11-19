@@ -339,6 +339,46 @@
     }
   }
 
+  function readSavedQuotes() {
+    for (const storage of [localStorage, sessionStorage]) {
+      for (const key of STORAGE_KEYS) {
+        try {
+          const v = JSON.parse(storage.getItem(key) || 'null');
+          if (v && typeof v === 'object' && v.quotes && Object.keys(v.quotes).length) return v;
+        } catch (_) { /* storage can be disabled */ }
+      }
+    }
+    return null;
+  }
+
+  function quoteTimeMs(q, fallbackDay) {
+    const t = Date.parse(q?.market_time || '');
+    if (Number.isFinite(t)) return t;
+    const d = Date.parse(fallbackDay || '');
+    return Number.isFinite(d) ? d : 0;
+  }
+
+  // Merge two quote maps, keeping the newer quote per symbol. A server
+  // snapshot must never downgrade quotes the user already fetched live
+  // in the browser: the snapshot can carry the previous market day's
+  // close while its market_date still passes the daily-day guard, which
+  // made live values revert when returning to the list.
+  function mergeQuotesNewest(savedQuotes, savedDay, snapshotQuotes, snapshotDay) {
+    const merged = {};
+    const codes = new Set([...Object.keys(savedQuotes || {}), ...Object.keys(snapshotQuotes || {})]);
+    for (const rawCode of codes) {
+      const code = String(rawCode).replace(/\.T$/, '');
+      const savedQ = (savedQuotes || {})[rawCode] || (savedQuotes || {})[code] || (savedQuotes || {})[`${code}.T`];
+      const snapQ = (snapshotQuotes || {})[rawCode] || (snapshotQuotes || {})[code] || (snapshotQuotes || {})[`${code}.T`];
+      if (savedQ && snapQ) {
+        merged[code] = quoteTimeMs(savedQ, savedDay) > quoteTimeMs(snapQ, snapshotDay) ? savedQ : snapQ;
+      } else if (savedQ || snapQ) {
+        merged[code] = savedQ || snapQ;
+      }
+    }
+    return merged;
+  }
+
   async function restoreSnapshot() {
     // Restore values after a tab switch without touching the status message.
     try {
@@ -346,7 +386,11 @@
       const dailyDay = rankingMarketDay(ranking);
       const payload = await fetchSnapshot();
       if (dailyDay && jstDay(payload.market_date) && jstDay(payload.market_date) < dailyDay) return;
-      storeQuotes(payload.quotes, dailyDay, payload);
+      const saved = readSavedQuotes();
+      const merged = saved
+        ? mergeQuotesNewest(saved.quotes, saved.market_day, payload.quotes, payload.market_date)
+        : payload.quotes;
+      storeQuotes(merged, dailyDay, payload);
       if (typeof window.kabuScoreApplyRealtime === 'function') window.kabuScoreApplyRealtime();
     } catch (_) { /* keep current table and status if network is unavailable */ }
   }
