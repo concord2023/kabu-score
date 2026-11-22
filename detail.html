@@ -77,20 +77,28 @@ function chartHover(timeframe,index,event){const x=window.__chartStock;if(!x)ret
   const seq=prov?(prov.replace?[...piv.slice(0,-1),prov]:[...piv,prov]):piv.slice();
   const UP='#dc2626',DOWN='#2563eb',FLAT='#94a3b8';
   const segments=[];
-  let trend='flat';
+  // 脚の色はトレンド状態（up/down/none）の遷移で決める。
+  // トレンドが終了した脚はグレーにし、none 区間では安値（高値）が切り上がった（切り下がった）うえで
+  // 直近スイング高値（安値）を抜けた脚から赤（青）にする。prevH/prevL は現在の脚の始点より前の直近スイング高値・安値。
+  let legState='none',prevH=null,prevL=null;
   for(let k=1;k<seq.length;k++){
-    const sub=seq.slice(0,k+1);
-    const hs=sub.filter(p=>p.type==='H'),ls=sub.filter(p=>p.type==='L');
+    const from=seq[k-1],to=seq[k];
     let color=FLAT;
-    if(hs.length>=2&&ls.length>=2){
-      const hh=hs[hs.length-1].v>hs[hs.length-2].v,hl=ls[ls.length-1].v>ls[ls.length-2].v;
-      const lh=hs[hs.length-1].v<hs[hs.length-2].v,ll=ls[ls.length-1].v<ls[ls.length-2].v;
-      if(hh&&hl){color=UP;trend='up';}
-      else if(lh&&ll){color=DOWN;trend='down';}
-      else if(trend==='up'&&seq[k].type==='L'&&ll){color=FLAT;trend='flat';}
-      else if(trend==='down'&&seq[k].type==='H'&&hh){color=FLAT;trend='flat';}
+    if(to.type==='H'){
+      if(legState==='down'){
+        if(prevH&&to.v>prevH.v){color=FLAT;legState='none';}
+        else color=DOWN;
+      }else if(legState==='up')color=UP;
+      else if(prevH&&prevL&&to.v>prevH.v&&from.v>prevL.v){color=UP;legState='up';}
+    }else{
+      if(legState==='up'){
+        if(prevL&&to.v<prevL.v){color=FLAT;legState='none';}
+        else color=UP;
+      }else if(legState==='down')color=DOWN;
+      else if(prevH&&prevL&&to.v<prevL.v&&from.v<prevH.v){color=DOWN;legState='down';}
     }
-    segments.push({i1:seq[k-1].i,v1:seq[k-1].v,i2:seq[k].i,v2:seq[k].v,color,dashed:!!prov&&k===seq.length-1});
+    segments.push({i1:from.i,v1:from.v,i2:to.i,v2:to.v,color,dashed:!!prov&&k===seq.length-1});
+    if(from.type==='H')prevH=from;else prevL=from;
   }
   const cH=piv.filter(p=>p.type==='H'),cL=piv.filter(p=>p.type==='L');
   let state='横ばい',stateColor=FLAT;
