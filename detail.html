@@ -80,6 +80,8 @@ function chartHover(timeframe,index,event){const x=window.__chartStock;if(!x)ret
   // 脚の色はトレンド状態（up/down/none）の遷移で決める。
   // トレンドが終了した脚はグレーにし、none 区間では安値（高値）が切り上がった（切り下がった）うえで
   // 直近スイング高値（安値）を抜けた脚から赤（青）にする。prevH/prevL は現在の脚の始点より前の直近スイング高値・安値。
+  // 最後の未確定脚（prov）は、その脚を処理した後の状態が up/down（トレンド確定済み）なら実線、
+  // none（トレンド未確定の遷移中）のときだけ点線にする。
   let legState='none',prevH=null,prevL=null;
   for(let k=1;k<seq.length;k++){
     const from=seq[k-1],to=seq[k];
@@ -97,7 +99,7 @@ function chartHover(timeframe,index,event){const x=window.__chartStock;if(!x)ret
       }else if(legState==='down')color=DOWN;
       else if(prevH&&prevL&&to.v<prevL.v&&from.v<prevH.v){color=DOWN;legState='down';}
     }
-    segments.push({i1:from.i,v1:from.v,i2:to.i,v2:to.v,color,dashed:!!prov&&k===seq.length-1});
+    segments.push({i1:from.i,v1:from.v,i2:to.i,v2:to.v,color,dashed:!!prov&&k===seq.length-1&&legState==='none'});
     if(from.type==='H')prevH=from;else prevL=from;
   }
   const cH=piv.filter(p=>p.type==='H'),cL=piv.filter(p=>p.type==='L');
@@ -155,7 +157,7 @@ function chart(x,timeframe='daily'){
   const visibleMas=maPaths.some(v=>v.path); const maLegend=maPaths.map((m,i)=>`<span><i class="dot ma${i}"></i>${m.label}</span>`).join(''); const maSvg=maPaths.map((m,i)=>`<path d="${m.path}" fill="none" stroke="${['#16a34a','#0ea5e9','#8b5cf6','#ef4444'][i]||'#334155'}" stroke-width="${i===maPaths.length-1?2.5:1.8}"/>`).join('');
   const dow=(timeframe==='weekly'||timeframe==='monthly')?dowTheory(h):null;
   const zzSvg=dow?dow.segments.map(s=>`<line x1="${points[s.i1].x.toFixed(1)}" y1="${yy(s.v1).toFixed(1)}" x2="${points[s.i2].x.toFixed(1)}" y2="${yy(s.v2).toFixed(1)}" stroke="${s.color}" stroke-width="2.4" stroke-linecap="round" opacity="0.92"${s.dashed?' stroke-dasharray="7 5"':''}/>`).join(''):'';
-  const dowHead=dow?`<div class="charttitle">${labels[timeframe]}トレンド（ダウ理論）: <span style="color:${dow.stateColor}">${dow.state}</span></div><div class="legend"><span><i class="dot" style="background:#dc2626"></i>上昇トレンド</span><span><i class="dot" style="background:#2563eb"></i>下降トレンド</span><span><i class="dot" style="background:#94a3b8"></i>トレンド終了・横ばい</span><span>点線は未確定の脚</span></div>`:'';
+  const dowHead=dow?`<div class="charttitle">${labels[timeframe]}トレンド（ダウ理論）: <span style="color:${dow.stateColor}">${dow.state}</span></div><div class="legend"><span><i class="dot" style="background:#dc2626"></i>上昇トレンド</span><span><i class="dot" style="background:#2563eb"></i>下降トレンド</span><span><i class="dot" style="background:#94a3b8"></i>トレンド終了・横ばい</span><span>点線はトレンド未確定の脚</span></div>`:'';
   return `<div class="chartbox"><div class="charttabs">${tabs}</div>${dowHead}<div class="chartwrap"><svg class="chartsvg" viewBox="0 0 ${w} ${H}" preserveAspectRatio="none"><g>${grid}</g><line x1="${left}" y1="${top}" x2="${left}" y2="${top+mainH}" class="axisline"/><text x="10" y="${top+8}" class="axislabel">価格（円）</text><g>${candles}</g><path d="${bbup}" fill="none" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4 3"/><path d="${bblow}" fill="none" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4 3"/>${maSvg}${zzSvg}${profileSvg}
   <line x1="${left}" y1="${volTop}" x2="${plotRight}" y2="${volTop}" class="panelline"/><text x="10" y="${volTop+11}" class="axislabel">出来高</text><g>${volumeBars}</g><path d="${volumeMa}" fill="none" stroke="#64748b" stroke-width="1.2"/><text x="${plotRight}" y="${volTop+11}" class="panelvalue" text-anchor="end">20期間平均</text>
   <line x1="${left}" y1="${rsiTop}" x2="${plotRight}" y2="${rsiTop}" class="panelline"/><text x="10" y="${rsiTop+11}" class="axislabel">RSI(14)</text><line x1="${left}" y1="${rsi70.toFixed(1)}" x2="${plotRight}" y2="${rsi70.toFixed(1)}" class="threshold"/><line x1="${left}" y1="${rsi30.toFixed(1)}" x2="${plotRight}" y2="${rsi30.toFixed(1)}" class="threshold"/><text x="${left-7}" y="${(rsi70+3).toFixed(1)}" class="axisprice" text-anchor="end">70</text><text x="${left-7}" y="${(rsi30+3).toFixed(1)}" class="axisprice" text-anchor="end">30</text><path d="${rsiPath}" fill="none" stroke="#7c3aed" stroke-width="1.8"/>
