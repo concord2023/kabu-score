@@ -80,21 +80,30 @@ function chartHover(timeframe,index,event){const x=window.__chartStock;if(!x)ret
   // 脚の色はトレンド状態（up/down/none）の遷移で決める。
   // トレンドが終了した脚はグレーにし、none 区間では安値（高値）が切り上がった（切り下がった）うえで
   // 直近スイング高値（安値）を抜けた脚から赤（青）にする。prevH/prevL は現在の脚の始点より前の直近スイング高値・安値。
+  // 例外: トレンドを割る脚でも、反対側の切り下げ（切り上げ）が既に成立している場合
+  // （脚の始点の高値が前回高値より低い／始点の安値が前回安値より高い）は、その脚から新トレンド確定として
+  // 直接 down（up）へ遷移させる。directLast は最後の脚でこの直接確定が起きた方向を記録する。
   // 最後の未確定脚（prov）は、その脚を処理した後の状態が up/down（トレンド確定済み）なら実線、
   // none（トレンド未確定の遷移中）のときだけ点線にする。
-  let legState='none',prevH=null,prevL=null;
+  let legState='none',prevH=null,prevL=null,directLast=null;
   for(let k=1;k<seq.length;k++){
     const from=seq[k-1],to=seq[k];
     let color=FLAT;
     if(to.type==='H'){
       if(legState==='down'){
-        if(prevH&&to.v>prevH.v){color=FLAT;legState='none';}
+        if(prevH&&to.v>prevH.v){
+          if(prevL&&from.v>prevL.v){color=UP;legState='up';if(k===seq.length-1)directLast='up';}
+          else{color=FLAT;legState='none';}
+        }
         else color=DOWN;
       }else if(legState==='up')color=UP;
       else if(prevH&&prevL&&to.v>prevH.v&&from.v>prevL.v){color=UP;legState='up';}
     }else{
       if(legState==='up'){
-        if(prevL&&to.v<prevL.v){color=FLAT;legState='none';}
+        if(prevL&&to.v<prevL.v){
+          if(prevH&&from.v<prevH.v){color=DOWN;legState='down';if(k===seq.length-1)directLast='down';}
+          else{color=FLAT;legState='none';}
+        }
         else color=UP;
       }else if(legState==='down')color=DOWN;
       else if(prevH&&prevL&&to.v<prevL.v&&from.v<prevH.v){color=DOWN;legState='down';}
@@ -111,6 +120,9 @@ function chartHover(timeframe,index,event){const x=window.__chartStock;if(!x)ret
     if(hh&&hl){if(Number.isFinite(lastClose)&&lastClose<cL[cL.length-1].v)state='上昇トレンド終了';else{state='上昇トレンド中';stateColor=UP;}}
     else if(lh&&ll){if(Number.isFinite(lastClose)&&lastClose>cH[cH.length-1].v)state='下降トレンド終了';else{state='下降トレンド中';stateColor=DOWN;}}
   }
+  // 最後の未確定脚で直接確定が起きた場合は、ラベルも新トレンドにする。
+  if(prov&&directLast==='down'){state='下降トレンド中';stateColor=DOWN;}
+  else if(prov&&directLast==='up'){state='上昇トレンド中';stateColor=UP;}
   return {segments,state,stateColor};
 }
 function chart(x,timeframe='daily'){
