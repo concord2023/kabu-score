@@ -35,46 +35,74 @@ ${metric('需給',ss,'',supplyClass(ss))}${metric('信用倍率',s.credit_ratio,
 </div>${bo.status&&bo.status!=='なし'&&bo.status!=='データ不足'?`<div class="candle" style="background:#eff6ff;border-color:#bfdbfe"><strong>📈 ${esc(bo.status)}（${esc(bo.strength||'—')}）</strong><div class="confirm">${esc(bo.reason||'')}</div></div>`:''}${c.status&&c.status!=='なし'&&c.status!=='データ不足'?`<div class="candle"><strong>🕯️ ${esc(c.status)}（${esc(c.strength||'—')}）</strong><div>${(c.patterns||[]).map(v=>`<span class="pattern">${esc(v.label)}</span>`).join('')}</div><div class="confirm">${esc(c.reason||'')} <b>${esc(c.confirmation||'')}</b></div></div>`:''}`}
 function chartHover(timeframe,index,event){const x=window.__chartStock;if(!x)return;const h=(timeframe==='daily'?x.details?.chart_history:timeframe==='weekly'?x.details?.chart_history_weekly:x.details?.chart_history_monthly)||[];const r=h[index];if(!r)return;const wrap=document.querySelector('.chartwrap');const tip=document.getElementById('chart-hover-wrap');const line=document.getElementById('chart-crosshair-html');if(!wrap||!tip||!line)return;const w=820,left=58,right=16,profileW=(timeframe==='daily'||timeframe==='weekly')?112:0,plotRight=w-right-profileW;const xPos=left+(h.length-1?index/(h.length-1):0)*(plotRight-left);const H=Number(wrap.dataset.chartH)||300;const fmt=(v,d=2)=>v==null||!Number.isFinite(Number(v))?'—':Number(v).toFixed(d);const ma1=r.ma5,ma2=timeframe==='weekly'?r.ma13:r.ma25,ma3=timeframe==='weekly'?r.ma26:r.ma75;const rows=[`<b>${esc(String(r.date||''))}</b>`,`始値 ${fmt(r.open)} / 高値 ${fmt(r.high)} / 安値 ${fmt(r.low)} / 終値 ${fmt(r.close)}`,`出来高 ${Number.isFinite(Number(r.volume))?Number(r.volume).toLocaleString('ja-JP'):'—'}`,`MA ${fmt(ma1)} / ${fmt(ma2)} / ${fmt(ma3)}`,`RSI ${fmt(r.rsi14,1)} / MACD ${fmt(r.macd,3)} / Signal ${fmt(r.macd_signal,3)} / Hist ${fmt(r.macd_hist,3)}`];tip.innerHTML=rows.join('<br>');tip.style.display='block';const pct=xPos/w*100;tip.style.left=Math.min(72,Math.max(2,pct+2))+'%';tip.style.top='8px';const wrapRect=wrap.getBoundingClientRect();const svgRect=document.querySelector('.chartsvg')?.getBoundingClientRect();const scaleX=svgRect&&svgRect.width?svgRect.width/w:1;const lineLeft=(xPos*scaleX)+(svgRect?svgRect.left-wrapRect.left:0);line.style.left=Math.max(0,Math.min(wrapRect.width-1,lineLeft))+'px';line.style.height=Math.max(H*scaleX,wrapRect.height)+'px';line.style.display='block';}function chartHoverAt(event,timeframe){const target=event.currentTarget;const x=window.__chartStock;if(!target||!x)return;const h=(timeframe==='daily'?x.details?.chart_history:timeframe==='weekly'?x.details?.chart_history_weekly:x.details?.chart_history_monthly)||[];if(!h.length)return;const rect=target.getBoundingClientRect();const clientX=event.clientX??(event.touches&&event.touches[0]?.clientX);if(!Number.isFinite(clientX))return;const ratio=Math.max(0,Math.min(1,(clientX-rect.left)/rect.width));const index=Math.max(0,Math.min(h.length-1,Math.round(ratio*(h.length-1))));chartHover(timeframe,index,event);}function hideChartHover(){const tip=document.getElementById('chart-hover-wrap');const line=document.getElementById('chart-crosshair-html');if(tip)tip.style.display='none';if(line)line.style.display='none';}function dowTheory(h){
   const closes=h.map(r=>Number(r.close)),highs=h.map(r=>Number(r.high)),lows=h.map(r=>Number(r.low));
-  const n=2,raw=[];
-  for(let i=n;i<h.length-n;i++){
-    const hi=highs[i],lo=lows[i];
-    if(!Number.isFinite(hi)||!Number.isFinite(lo))continue;
-    let isH=true,isL=true;
-    for(let j=i-n;j<=i+n;j++){
-      if(j===i)continue;
-      if(!Number.isFinite(highs[j])||highs[j]>hi||(j>i&&highs[j]===hi))isH=false;
-      if(!Number.isFinite(lows[j])||lows[j]<lo||(j>i&&lows[j]===lo))isL=false;
+  // ピボット検出は逐次ルールに一本化する: バーを先頭からたどり、方向と候補の極値バーを保持する。
+  // 下降方向では安値を更新するたびに底候補をそのバーへ移し、底候補バーの高値を後のバーが
+  // 上抜けたら、底候補の安値をピボットとして確定して上へ反転する（天井側は対称）。
+  // 同値の極値は後のバーを優先する（候補は <= / >= で移す）。1本のバーが候補バーの反対側を
+  // 抜けた場合は、そのバーの安値・高値の更新より反転を優先する。
+  // 初期は方向なしで天井・底の両候補を追跡し、先に反転条件が成立した側の候補を最初の
+  // ピボットとする（同一バーで両側が成立したら候補バーが早い方、同点なら底側を優先）。
+  // その際、それより前に現れた反対側の極値があれば先頭ピボットとして前に置く。
+  // 系列の最後に残った候補の極値が未確定の終端になり、seq の末尾に付く（piv は確定分のみ）。
+  const fin=i=>Number.isFinite(highs[i])&&Number.isFinite(lows[i]);
+  const argExt=(from,to,type)=>{
+    let best=-1;
+    for(let i=from+1;i<=to;i++){
+      if(!fin(i))continue;
+      if(best<0||(type==='H'?highs[i]>=highs[best]:lows[i]<=lows[best]))best=i;
     }
-    if(isH)raw.push({i,type:'H',v:hi});
-    if(isL)raw.push({i,type:'L',v:lo});
-  }
-  raw.sort((a,b)=>a.i-b.i||(a.type==='H'?-1:1));
+    return best;
+  };
   const piv=[];
-  for(const p of raw){
-    const last=piv[piv.length-1];
-    if(last&&last.type===p.type){
-      if((p.type==='H'&&p.v>last.v)||(p.type==='L'&&p.v<last.v))piv[piv.length-1]=p;
-    }else piv.push(p);
-  }
-  let prov=null;
-  if(piv.length){
-    const lastP=piv[piv.length-1];
-    let extI=-1,extV=lastP.v;
-    for(let i=lastP.i+1;i<h.length;i++){
-      const v=lastP.type==='H'?highs[i]:lows[i];
-      if(Number.isFinite(v)&&((lastP.type==='H'&&v>extV)||(lastP.type==='L'&&v<extV))){extV=v;extI=i;}
-    }
-    if(extI>=0)prov={i:extI,type:lastP.type,v:extV,replace:true};
-    else{
-      let oi=-1,ov=lastP.type==='H'?Infinity:-Infinity;
-      for(let i=lastP.i+1;i<h.length;i++){
-        const v=lastP.type==='H'?lows[i]:highs[i];
-        if(Number.isFinite(v)&&((lastP.type==='H'&&v<ov)||(lastP.type==='L'&&v>ov))){ov=v;oi=i;}
+  let seq=[];
+  let first=-1;
+  for(let i=0;i<h.length;i++){if(fin(i)){first=i;break;}}
+  if(first>=0){
+    let dir=null,candI=-1,startI=first+1;
+    let hiC=first,loC=first;
+    for(let i=first+1;i<h.length&&dir===null;i++){
+      if(!fin(i))continue;
+      if(highs[i]>=highs[hiC])hiC=i;
+      if(lows[i]<=lows[loC])loC=i;
+      const trigUp=loC<i&&highs[i]>highs[loC];
+      const trigDn=hiC<i&&lows[i]<lows[hiC];
+      if(!trigUp&&!trigDn)continue;
+      if(trigUp&&(!trigDn||loC<=hiC)){
+        if(hiC<loC)piv.push({i:hiC,type:'H',v:highs[hiC]});
+        piv.push({i:loC,type:'L',v:lows[loC]});
+        dir='up';candI=argExt(loC,i,'H');
+      }else{
+        if(loC<hiC)piv.push({i:loC,type:'L',v:lows[loC]});
+        piv.push({i:hiC,type:'H',v:highs[hiC]});
+        dir='down';candI=argExt(hiC,i,'L');
       }
-      if(oi>=0)prov={i:oi,type:lastP.type==='H'?'L':'H',v:ov,replace:false};
+      startI=i+1;
+    }
+    if(dir===null){
+      // 最後まで反転が起きなかった場合は、両極値を時系列順に並べただけの列にする。
+      seq=hiC===loC?[{i:hiC,type:'H',v:highs[hiC]}]
+        :hiC<loC?[{i:hiC,type:'H',v:highs[hiC]},{i:loC,type:'L',v:lows[loC]}]
+        :[{i:loC,type:'L',v:lows[loC]},{i:hiC,type:'H',v:highs[hiC]}];
+    }else{
+      for(let i=startI;i<h.length;i++){
+        if(!fin(i))continue;
+        if(dir==='down'){
+          if(highs[i]>highs[candI]){
+            const pc=candI;
+            piv.push({i:pc,type:'L',v:lows[pc]});
+            dir='up';candI=argExt(pc,i,'H');
+          }else if(lows[i]<=lows[candI])candI=i;
+        }else{
+          if(lows[i]<lows[candI]){
+            const pc=candI;
+            piv.push({i:pc,type:'H',v:highs[pc]});
+            dir='down';candI=argExt(pc,i,'L');
+          }else if(highs[i]>=highs[candI])candI=i;
+        }
+      }
+      seq=[...piv,{i:candI,type:dir==='down'?'L':'H',v:dir==='down'?lows[candI]:highs[candI]}];
     }
   }
-  const seq=prov?(prov.replace?[...piv.slice(0,-1),prov]:[...piv,prov]):piv.slice();
   const UP='#dc2626',DOWN='#2563eb',FLAT='#94a3b8';
   const segments=[];
   // 脚の色はトレンド状態（up/down/none）の遷移で決める。
@@ -83,7 +111,7 @@ function chartHover(timeframe,index,event){const x=window.__chartStock;if(!x)ret
   // 例外: トレンドを割る脚でも、反対側の切り下げ（切り上げ）が既に成立している場合
   // （脚の始点の高値が前回高値より低い／始点の安値が前回安値より高い）は、その脚から新トレンド確定として
   // 直接 down（up）へ遷移させる。directLast は最後の脚でこの直接確定が起きた方向を記録する。
-  // 最後の未確定脚（prov）は、その脚を処理した後の状態が up/down（トレンド確定済み）なら実線、
+  // 最後の脚（未確定の終端への脚）は、その脚を処理した後の状態が up/down（トレンド確定済み）なら実線、
   // none（トレンド未確定の遷移中）のときだけ点線にする。
   let legState='none',prevH=null,prevL=null,directLast=null;
   for(let k=1;k<seq.length;k++){
@@ -108,7 +136,7 @@ function chartHover(timeframe,index,event){const x=window.__chartStock;if(!x)ret
       }else if(legState==='down')color=DOWN;
       else if(prevH&&prevL&&to.v<prevL.v&&from.v<prevH.v){color=DOWN;legState='down';}
     }
-    segments.push({i1:from.i,v1:from.v,i2:to.i,v2:to.v,color,dashed:!!prov&&k===seq.length-1&&legState==='none'});
+    segments.push({i1:from.i,v1:from.v,i2:to.i,v2:to.v,color,dashed:k===seq.length-1&&legState==='none'});
     if(from.type==='H')prevH=from;else prevL=from;
   }
   const cH=piv.filter(p=>p.type==='H'),cL=piv.filter(p=>p.type==='L');
@@ -120,9 +148,9 @@ function chartHover(timeframe,index,event){const x=window.__chartStock;if(!x)ret
     if(hh&&hl){if(Number.isFinite(lastClose)&&lastClose<cL[cL.length-1].v)state='上昇トレンド終了';else{state='上昇トレンド中';stateColor=UP;}}
     else if(lh&&ll){if(Number.isFinite(lastClose)&&lastClose>cH[cH.length-1].v)state='下降トレンド終了';else{state='下降トレンド中';stateColor=DOWN;}}
   }
-  // 最後の未確定脚で直接確定が起きた場合は、ラベルも新トレンドにする。
-  if(prov&&directLast==='down'){state='下降トレンド中';stateColor=DOWN;}
-  else if(prov&&directLast==='up'){state='上昇トレンド中';stateColor=UP;}
+  // 最後の脚で直接確定が起きた場合は、ラベルも新トレンドにする。
+  if(directLast==='down'){state='下降トレンド中';stateColor=DOWN;}
+  else if(directLast==='up'){state='上昇トレンド中';stateColor=UP;}
   return {segments,state,stateColor};
 }
 function chart(x,timeframe='daily'){
