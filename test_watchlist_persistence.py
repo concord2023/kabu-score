@@ -18,7 +18,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 MODULES = ['update_data.py', 'regime_model_v2.py', 'forecast_parsers.py',
-           'indicators.py', 'calc.py', 'market_data.py']
+           'indicators.py', 'calc.py', 'market_data.py', 'volume_profile.py']
 
 RUNNER = """
 import json

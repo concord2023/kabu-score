@@ -18,6 +18,7 @@ from market_data import IRBankRateLimitError, TableParser, check_api_usage, coll
 from forecast_parsers import _parse_yahoo_forecast_text, _parse_yahoo_pbr_dividend_text, fiscal_year_end_date
 from indicators import pct, signal_icons, rsi14, rsi14_wilder, ema_series, macd_series, weekly_closes, monthly_closes, monthly_macd_bottom_signal, breadth_points, relative_points, candle_reversal_signals, breakout_signal, bollinger, bollinger_sigma_position, bollinger_signal, build_period_chart_history
 from calc import calc, supply_points, supply_status
+from volume_profile import fetch_volume_profile
 
 def require_api_key():
     """Fail fast when IRBANK_API_KEY is not set.
@@ -261,6 +262,7 @@ def main():
     breadth_error = None
     supply_batch_cache = {}
     supply_batch_errors = []
+    volume_profile_failures = []
     run_started = time.monotonic()
 
     out = {
@@ -391,6 +393,22 @@ def main():
                 'valuation_source': valuation_data.get('source'),
                 'valuation_error': valuation_data.get('error'),
             })
+            # Volume-by-price profile from Yahoo hourly bars (volume_profile.py).
+            # A profile fetch failure must not fail the stock's daily analysis
+            # and must never be backfilled with a guess: keep the previously
+            # saved profile when one exists and record the failure so the run
+            # summary names the affected stocks.
+            profile_status = 'ok'
+            try:
+                s['volume_profile'] = fetch_volume_profile(code)
+            except Exception as profile_error:
+                previous_profile = (previous_stocks.get(code) or {}).get('volume_profile')
+                if previous_profile:
+                    s['volume_profile'] = previous_profile
+                    profile_status = 'kept-previous: ' + str(profile_error)
+                else:
+                    profile_status = 'error: ' + str(profile_error)
+                volume_profile_failures.append({'code': code, 'status': profile_status})
             out['stocks'][code] = s
             out['diagnostics'].append({
                 'code': code, 'status': 'ok', 'rows_received': len(rows),
@@ -402,6 +420,7 @@ def main():
                 'per_forecast_eps': (s.get('per_forecast') or {}).get('forecast_eps'),
                 'per_forecast_pe': (s.get('per_forecast') or {}).get('forecast_pe'),
                 'per_error': s.get('per_forecast_error'),
+                'volume_profile': profile_status,
             })
         except Exception as e:
             # Do not turn an ordinary refresh failure into 判定不能.  判定不能 is
@@ -431,6 +450,7 @@ def main():
                 out['diagnostics'].append({'code': code, 'status': 'error', 'error': str(e)})
         print(f'Daily progress: {idx}/{len(watch)} {code} requests={market_data._request_count} elapsed={time.monotonic()-run_started:.1f}s')
 
+    out['volume_profile_failures'] = volume_profile_failures
     out['breadth_status'] = 'ok' if breadth_cache else 'unavailable'
     out['breadth_error'] = breadth_error
     out['successful_stocks'] = sum(
@@ -466,6 +486,7 @@ def main():
         'stale_stocks': out['stale_stocks'],
         'market_date_mismatch_stocks': out['market_date_mismatch_stocks'],
         'failed_stocks': out['failed_stocks'],
+        'volume_profile_failures': out['volume_profile_failures'],
         'breadth_status': out['breadth_status'],
         'api_strategy': out['api_strategy'],
         'timing': out['timing'],
